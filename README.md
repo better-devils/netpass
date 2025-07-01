@@ -38,8 +38,16 @@ In other words, you'll need to run the following command in a Terminal/command p
 ```bash
 dkp-pacman -S 3ds-dev 3ds-curl 3ds-opusfile
 ```
+Or if you are using a customized Pacman install:
+```bash
+pacman -S 3ds-dev 3ds-curl 3ds-opusfile
+```
 
-Furthermore, you need to have `ffmpeg` and `python` and `python-pyyaml` installed.
+Furthermore, you need to have `FFmpeg` and `Python` and `python-pyyaml` installed.
+Links to FFmpeg, Python, PythonPyyAML:
+[FFMpeg](https://ffmpeg.org/)
+[Python](https://www.python.org)
+[Python-PyYAML](https://pypi.org/project/PyYAML/)
 
 Be sure to run `make codegen` first.
 ```bash
