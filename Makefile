@@ -197,7 +197,7 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 #export _3DSXDEPS	:=	$(if $(NO_SMDH),,$(OUTPUT).smdh)
 
 export APP_ICON := $(TOPDIR)/$(BUILD)/icon.png
-
+# If you have python 3 you may have to replase "python" with "python3"
 BANNERTOOL	?=	bannertool
 FFMPEG		?=	ffmpeg
 PYTHON		?=	python
