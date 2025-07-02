@@ -41,7 +41,7 @@ str_toggle_titles_off: "(AUS)"
 str_report_mii_name: "Numm Mii: %s"
 str_report_mario_kart_7_greeting: "Grouss: %s"
 str_report_mii_plaza_last_game: "Lescht Spill: %s"
-str_report_mii_plaza_country: "Land: %s - %s"
+str_report_mii_plaza_country: "Heemecht: %s - %s"
 str_report_mii_plaza_greeting: "Begréissung: %s"
 str_report_mii_plaza_custom_message: "Äre personaliséiert Begréissung: %s"
 str_report_mii_plaza_custom_reply: "Hir personaliséiert Äntwert: %s"
@@ -55,7 +55,7 @@ str_update_patches_desc: "Fir NetPass richteg z'installéieren, ginn e puer Sysm
   and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen ze
   kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
   d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Patches geschriwwe sinn."
-str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Patches-aktualiséiere.
+str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Patches-Aktualiséiere.
   Gewisen wannechgelift dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "Aktualiséiere Patches erfollegräich! Är Konsole
   wäert elo nei ufänken."
