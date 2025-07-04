@@ -26,9 +26,19 @@ str_system_language: '系統語言'
 str_language_pick: '語言:'
 str_no_location_twice: '您不能連續兩次選擇同一位置！'
 str_back_alley: 後巷
-str_back_alley_message: 讓我們再獲得更多通行證
+str_back_alley_message: 讓我們再獲得更多通行證!
 str_back_alley_pay: 購買一個通行證 {playcoin}%d
 str_report_user: 檢舉一位用戶
 str_report_user_hint: 檢舉 "%s"
 str_cancel: 取消
 str_submit: 提交
+str_check_inboxes: 檢查收件匣
+str_toggle_titles: 切換式遊戲
+str_toggle_titles_on: (開啟)
+str_toggle_titles_off: (關閉)
+str_report_mii_name: 'Mii 名稱: %s'
+str_report_mario_kart_7_greeting: 賀詞：%s
+str_report_mii_plaza_last_game: '上一場遊戲: %s'
+str_report_mii_plaza_country: 國家：%s - %s
+str_report_mii_plaza_greeting: 賀詞：%s
+str_report_mii_plaza_custom_message: 您的自訂訊息： %s
