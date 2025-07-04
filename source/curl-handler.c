@@ -229,6 +229,7 @@ void curl_multi_loop_request_setup(int i) {
 	// add version header
 	char header_netpass_version[100];
 #ifdef _VERSION_GIT_SHA_
+	// cppcheck-suppress invalidPrintfArgType_s
 	snprintf(header_netpass_version, sizeof(header_netpass_version),
 			 "3ds-netpass-version: v%d.%d.%d-%s",
 			 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, _VERSION_GIT_SHA_);

@@ -42,6 +42,7 @@ int main() {
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
+	// cppcheck-suppress invalidPrintfArgType_s
 	printf("+%s", _VERSION_GIT_SHA_);
 #endif
 	printf("\n");
