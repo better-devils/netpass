@@ -43,7 +43,7 @@ Or if you are using a customized Pacman install:
 pacman -S 3ds-dev 3ds-curl 3ds-opusfile
 ```
 
-Furthermore, you need to have `FFmpeg` and `Python` and `python-pyyaml` installed.
+Furthermore, you need to have `FFmpeg` and `Python3` and `python-pyyaml` installed.
 Links to FFmpeg, Python, PythonPyyAML:
 [FFMpeg](https://ffmpeg.org/)
 [Python](https://www.python.org)
