@@ -6,7 +6,7 @@ str_httpstatus_error: 'Codice stato HTTP %d'
 str_3ds_error: 'Codice errore 3DS %08lx'
 str_at_home: 'Sei a casa.'
 str_goto_train_station: 'Vai alla Stazione'
-str_at_train_station: 'Sei alla Stazione.'
+str_at_train_station: 'Sei in Stazione.'
 str_goto_plaza: 'Vai in Piazza'
 str_at_plaza: 'Sei in Piazza.'
 str_goto_mall: 'Vai al Centro Commerciale'
@@ -87,3 +87,16 @@ str_welcome_message: Prima di avviare NetPass, ti preghiamo di leggere e accetta
 str_view_rules: Vedi regole
 str_view_privacy: Vedi Politica sulla Privacy
 str_continue: Continua
+str_bg_music: Musica di sottofondo
+str_update_patches_poweroff_clear_desc: Patch rimosse con successo! La console verrà
+  riavviata.
+str_skip: Salta
+str_install: Installa
+str_remove: Rimuovi
+str_prompt_dl_pass: Sei sicuro di voler scaricare questo pass?
+str_report_integration: Questo messaggio proviene da un'integrazione. Per segnalarlo,
+  invia un messaggio al team di moderazione dell'integrazione in questione.
+str_bad_os_version: "NetPass richiede il sistema operativo 3DS 11.15.0 o superiore
+  per funzionare correttamente. Sfortunatamente, sembra che tu stia usando una versione
+  più vecchia. Aggiorna il sistema e avvia nuovamente NetPass.\n\nPremi un tasto qualsiasi
+  per uscire"
