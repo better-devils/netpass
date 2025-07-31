@@ -22,6 +22,7 @@
 #include <3ds/synchronization.h>
 #include "cecd.h"
 #include "utils.h"
+#include "ctr_results.h"
 #include <3ds/ipc.h>
 
 #include <string.h>
@@ -40,15 +41,31 @@ void waitForNoSpr(void) {
 Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
 	Handle state_change_handle;
 	Result res = 0;
-	res = cecdGetChangeStateEventHandle(&state_change_handle);
-	if (R_FAILED(res)) return res;
-	res = start ? cecdStart(command) : cecdStop(command);
-	if (R_FAILED(res)) return res;
 	int count = 0;
 	while (true) {
 		count++;
 		if (count > 20) {
-			return res = -1; // TODO: Figure this out
+			return res;
+		}
+		res = cecdGetChangeStateEventHandle(&state_change_handle);
+		if (!R_FAILED(res)) {
+			res = start ? cecdStart(command) : cecdStop(command);
+		}
+		if (R_FAILED(res)) {
+			if (CTR_RESULT_GET_LEVEL(res) == CTR_RESULT_LEVEL_STATUS && CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC) {
+				// ok, this error may be recoverable. Let's wait a bit and try again
+				svcSleepThread(10e9);
+				continue;
+			}
+			return res;
+		}
+		break;
+	}
+	count = 0;
+	while (true) {
+		count++;
+		if (count > 20) {
+			return ERROR_BAD_CECD_STATE;
 		}
 		svcWaitSynchronization(state_change_handle, 10e9);
 		CecStateAbbrev is_state;
@@ -474,9 +491,9 @@ Result updateStreetpassOutbox(u8* msgbuf) {
 	Result res = 0;
 	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;
 	// sanity checks
-	if (msgheader->magic != 0x6060) return -1; // bad magic
-	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return -1;
-	if (msgheader->message_size > MAX_MESSAGE_SIZE) return -1; // prooobably too large
+	if (msgheader->magic != 0x6060) return ERROR_INVALID_MESSAGE; // bad magic
+	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return ERROR_INVALID_MESSAGE;
+	if (msgheader->message_size > MAX_MESSAGE_SIZE) return ERROR_INVALID_MESSAGE; // prooobably too large
 
 	// first fetch how large the boxbuf is
 	u8* boxbuf = malloc(sizeof(CecBoxInfoHeader));

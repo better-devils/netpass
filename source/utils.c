@@ -504,6 +504,7 @@ const char* error_desc_str_map[] = {
 	"BadReportList",
 	"InvalidMii",
 	"Errno",
+	"BadCecdState",
 };
 
 const char* error_desc_desc_map[] = {
@@ -520,6 +521,7 @@ const char* error_desc_desc_map[] = {
 	"The report list stored on the SD card is malformed.",
 	"The mii data is invalid.",
 	"See errno",
+	"The internal state of the CECD service is incorrect. Try closing NetPass and opening it again.",
 };
 
 void miscInit(void) {

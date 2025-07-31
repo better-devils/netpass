@@ -70,7 +70,7 @@ Result qr_verify(QrBuffer* buffer) {
 	res = httpRequest("POST", url, strlen(token) + 1, (u8*)token, 0, 0, 0);
 	if (R_FAILED(res)) return res;
 	int http_code = res;
-	if (http_code < 200 || http_code >= 300) return -res;
+	if (!IS_HTTP_SUCCESS(http_code)) return -res;
 	return res;
 }
 
@@ -84,7 +84,7 @@ Result qr_dl_pass(QrBuffer* buffer) {
 	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
 	if (R_FAILED(res)) goto fail;
 	int http_code = res;
-	if (http_code < 200 || http_code >= 300) {
+	if (!IS_HTTP_SUCCESS(http_code)) {
 		res = -res;
 		goto fail;
 	}

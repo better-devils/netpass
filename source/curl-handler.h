@@ -28,6 +28,8 @@ typedef struct {
 	int offset;
 } CurlReply;
 
+#define IS_HTTP_SUCCESS(x) ((x) >= 200 && (x) < 300)
+
 void initCurlReply(CurlReply* r, size_t size);
 void deinitCurlReply(CurlReply* r);
 Result curlInit(void);

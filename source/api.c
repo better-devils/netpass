@@ -145,7 +145,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 		curlFreeHandler(reply->offset);
 		return res;
 	}
-	if (http_code != 200) {
+	if (!IS_HTTP_SUCCESS(http_code)) {
 		res = -http_code;
 		goto fail;
 	}
@@ -397,6 +397,8 @@ Result getLocation(void) {
 	int http_code = res;
 	if (http_code == 200) {
 		res = *(u32*)(reply->ptr);
+	} else if (IS_HTTP_SUCCESS(http_code)) {
+		res = -1;
 	} else {
 		res = -http_code;
 	}

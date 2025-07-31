@@ -49,7 +49,7 @@ void N(init)(Scene* sc) {
 	C2D_Font str_font;
 	C2D_Font subtext_font = 0;
 	do {
-		if (err > -600 && err <= -400) {
+		if (err > -600 && err <= -200) {
 			// http status code
 			int status_code = -err;
 			snprintf(str, sizeof(str), _s(str_httpstatus_error), status_code);

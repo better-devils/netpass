@@ -86,7 +86,7 @@ void load(void) {
 		return;
 	}
 	char line[200];
-	while (fgets_blk(line, 200, f)) {
+	while (fgets_blk(line, sizeof(line), f)) {
 		char* separator = strchr(line, '=');
 		if (!separator) continue;
 		char* key = line;

@@ -183,7 +183,62 @@ enum ctr_results_description {
 	CTR_RESULT_DESCRIPTION_INVALID,
 };
 
-int32_t make_result(int level, int summary, int module, int description);
+
+// MASK_FAIL_BIT is a mask for the fail bit. (Most significant bit of u32)
+#define CTR_RESULT_MASK_FAIL_BIT (0x80000000)
+// SIZE_DESCRIPTION is the size of the description field in the error code.
+#define CTR_RESULT_SIZE_DESCRIPTION (10)
+// SIZE_MODULE is the size of the module field in the error code.
+#define CTR_RESULT_SIZE_MODULE (8)
+// SIZE_RESERVE is the size of the reserved space in the error code.
+#define CTR_RESULT_SIZE_RESERVE (3)
+// SIZE_SUMMARY is the size of the summary field in the error code.
+#define CTR_RESULT_SIZE_SUMMARY (6)
+// SIZE_LEVEL is the size of the level field in the error code.
+#define CTR_RESULT_SIZE_LEVEL (5)
+// SHIFTS_DESCRIPTION is the number of shifts to the right to get the description field.
+#define CTR_RESULT_SHIFTS_DESCRIPTION 0
+// SHIFTS_MODULE is the number of shifts to the right to get the module field.
+#define CTR_RESULT_SHIFTS_MODULE (CTR_RESULT_SHIFTS_DESCRIPTION + CTR_RESULT_SIZE_DESCRIPTION)
+// SHIFTS_RESERVE is the number of shifts to the right to get the reserved space.
+#define CTR_RESULT_SHIFTS_RESERVE (CTR_RESULT_SHIFTS_MODULE + CTR_RESULT_SIZE_MODULE)
+// SHIFTS_SUMMARY is the number of shifts to the right to get the summary field.
+#define CTR_RESULT_SHIFTS_SUMMARY (CTR_RESULT_SHIFTS_RESERVE + CTR_RESULT_SIZE_RESERVE)
+// SHIFTS_LEVEL is the number of shifts to the right to get the level field.
+#define CTR_RESULT_SHIFTS_LEVEL (CTR_RESULT_SHIFTS_SUMMARY + CTR_RESULT_SIZE_SUMMARY)
+// MASK_DESCRIPTION is a mask for the description field.
+#define CTR_RESULT_MASK_DESCRIPTION (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_DESCRIPTION) << CTR_RESULT_SHIFTS_DESCRIPTION)
+// MASK_MODULE is a mask for the module field.
+#define CTR_RESULT_MASK_MODULE (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_MODULE) << CTR_RESULT_SHIFTS_MODULE)
+// MASK_SUMMARY is a mask for the summary field.
+#define CTR_RESULT_MASK_SUMMARY (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_SUMMARY) << CTR_RESULT_SHIFTS_SUMMARY)
+// MASK_LEVEL is a mask for the level field.
+#define CTR_RESULT_MASK_LEVEL (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_LEVEL) << CTR_RESULT_SHIFTS_LEVEL)
+// MAX_DESCRIPTION is the maximum value of the description field.
+#define CTR_RESULT_MAX_DESCRIPTION (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_DESCRIPTION))
+// MAX_MODULE is the maximum value of the module field.
+#define CTR_RESULT_MAX_MODULE (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_MODULE))
+// MAX_SUMMARY is the maximum value of the summary field.
+#define CTR_RESULT_MAX_SUMMARY (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_SUMMARY))
+// MAX_LEVEL is the maximum value of the level field.
+#define CTR_RESULT_MAX_LEVEL (0xFFFFFFFF >> (32 - CTR_RESULT_SIZE_LEVEL))
+
+#define CTR_RESULT_IS_FAILURE(res) (((uint32_t)(res)) & CTR_RESULT_MASK_FAIL_BIT)
+#define CTR_RESULT_IS_SUCCESS(res) (^CTR_RESULT_IS_FAILURE(res))
+#define CTR_RESULT_GET_CODE_BITS(res, mask, shift) ((((uint32_t)(res)) & (mask)) >> (shift))
+#define CTR_RESULT_GET_LEVEL(res) CTR_RESULT_GET_CODE_BITS(res, CTR_RESULT_MASK_LEVEL, CTR_RESULT_SHIFTS_LEVEL)
+#define CTR_RESULT_GET_SUMMARY(res) CTR_RESULT_GET_CODE_BITS(res, CTR_RESULT_MASK_SUMMARY, CTR_RESULT_SHIFTS_SUMMARY)
+#define CTR_RESULT_GET_MODULE(res) CTR_RESULT_GET_CODE_BITS(res, CTR_RESULT_MASK_MODULE, CTR_RESULT_SHIFTS_MODULE)
+#define CTR_RESULT_GET_DESCRIPTION(res) CTR_RESULT_GET_CODE_BITS(res, CTR_RESULT_MASK_DESCRIPTION, CTR_RESULT_SHIFTS_DESCRIPTION)
+
+#define CTR_RESULT_SET_CODE_BITS(res, mask, shift) (((uint32_t)(res) << (shift)) & (mask))
+#define CTR_RESULT_SET_LEVEL(res) CTR_RESULT_SET_CODE_BITS(res, CTR_RESULT_MASK_LEVEL, CTR_RESULT_SHIFTS_LEVEL)
+#define CTR_RESULT_SET_SUMMARY(res) CTR_RESULT_SET_CODE_BITS(res, CTR_RESULT_MASK_SUMMARY, CTR_RESULT_SHIFTS_SUMMARY)
+#define CTR_RESULT_SET_MODULE(res) CTR_RESULT_SET_CODE_BITS(res, CTR_RESULT_MASK_MODULE, CTR_RESULT_SHIFTS_MODULE)
+#define CTR_RESULT_SET_DESCRIPTION(res) CTR_RESULT_SET_CODE_BITS(res, CTR_RESULT_MASK_DESCRIPTION, CTR_RESULT_SHIFTS_DESCRIPTION)
+
+#define CTR_RESULT_MAKE(level, summary, module, description) (CTR_RESULT_SET_LEVEL(level) | CTR_RESULT_SET_SUMMARY(summary) | CTR_RESULT_SET_MODULE(module) | CTR_RESULT_SET_DESCRIPTION(description))
+
 void set_application_desc_map(int size, const char** str_map, const char** desc_map);
 
 const char* get_level_string(int32_t res);

@@ -181,7 +181,7 @@ void curl_multi_loop_request_finish(int i) {
 	}
 	long http_code = 0;
 	curl_easy_getinfo(h->handle, CURLINFO_RESPONSE_CODE, &http_code);
-	if (!(http_code >= 200 && http_code < 300)) {
+	if (!IS_HTTP_SUCCESS(http_code)) {
 		h->res = -http_code;
 		goto cleanup;
 	}

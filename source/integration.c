@@ -33,7 +33,7 @@ Result lazy_init(void) {
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	IntegrationListHeader* list_header = (IntegrationListHeader*)reply->ptr;
-	if (http_code != 200 || list_header->magic != 0x4C49504E || list_header->version != 1) {
+	if (!IS_HTTP_SUCCESS(http_code) || list_header->magic != 0x4C49504E || list_header->version != 1) {
 		res = ERROR_BAD_INTEGRATION_LIST;
 		goto cleanup;
 	}
