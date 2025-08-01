@@ -1,6 +1,8 @@
 __pycache__
 .idea/
 .vscode/
+.clangd
+.zed/
 build/
 CmakeLists.txt
 codegen/

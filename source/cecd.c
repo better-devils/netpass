@@ -54,6 +54,7 @@ Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
 		if (R_FAILED(res)) {
 			if (CTR_RESULT_GET_LEVEL(res) == CTR_RESULT_LEVEL_STATUS && CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC) {
 				// ok, this error may be recoverable. Let's wait a bit and try again
+				printf("Retrying setting CECD state...\n");
 				svcSleepThread(10e9);
 				continue;
 			}

@@ -409,7 +409,16 @@ cleanup:
 
 Result setLocation(int location) {
 	Result res;
-	if (config.last_location == location) return -1;
+	if (config.last_location == location) return ERROR_SAME_LOCAION_TWICE;
+	
+	// first check if we have any streetpass games enabled
+	CecMboxListHeaderWithCapacities mbox_list;
+	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header);
+	if (R_FAILED(res)) return res;
+	clearIgnoredTitles(&mbox_list.header);
+	if (mbox_list.header.num_boxes == 0) return ERROR_NO_STREETPASS_GAMES;
+
+	// now actually ask the server to enter the location
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);

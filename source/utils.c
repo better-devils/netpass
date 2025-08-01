@@ -505,6 +505,8 @@ const char* error_desc_str_map[] = {
 	"InvalidMii",
 	"Errno",
 	"BadCecdState",
+	"NoStreetpassGames",
+	"SameLocationTwice",
 };
 
 const char* error_desc_desc_map[] = {
@@ -522,6 +524,8 @@ const char* error_desc_desc_map[] = {
 	"The mii data is invalid.",
 	"See errno",
 	"The internal state of the CECD service is incorrect. Try closing NetPass and opening it again.",
+	"There are no games with StreetPass enabled. Please enable StreetPass in at least one title and open NetPass again.",
+	"You can't enter the same location twice in a row.",
 };
 
 void miscInit(void) {
