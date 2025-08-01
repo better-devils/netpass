@@ -140,7 +140,7 @@ int main() {
 				}
 				waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 				initTitleData();
-				doSlotExchange();
+				doSlotExchangeRetry();
 				res = getLocation();
 				if (R_FAILED(res) && res != -1) {
 					_e(res);

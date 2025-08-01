@@ -41,28 +41,11 @@ void waitForNoSpr(void) {
 Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
 	Handle state_change_handle;
 	Result res = 0;
+	res = cecdGetChangeStateEventHandle(&state_change_handle);
+	if (R_FAILED(res)) return res;
+	res = start ? cecdStart(command) : cecdStop(command);
+	if (R_FAILED(res)) return res;
 	int count = 0;
-	while (true) {
-		count++;
-		if (count > 20) {
-			return res;
-		}
-		res = cecdGetChangeStateEventHandle(&state_change_handle);
-		if (!R_FAILED(res)) {
-			res = start ? cecdStart(command) : cecdStop(command);
-		}
-		if (R_FAILED(res)) {
-			if (CTR_RESULT_GET_LEVEL(res) == CTR_RESULT_LEVEL_STATUS && CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC) {
-				// ok, this error may be recoverable. Let's wait a bit and try again
-				printf("Retrying setting CECD state...\n");
-				svcSleepThread(10e9);
-				continue;
-			}
-			return res;
-		}
-		break;
-	}
-	count = 0;
 	while (true) {
 		count++;
 		if (count > 20) {

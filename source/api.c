@@ -365,8 +365,7 @@ Result doSlotExchange(void) {
 	goto cleanup;
 fail:
 	cecdSprDone(false);
-	_e(res);
-	printf("ERROR (%s): %08lx\n", error_origin, res);
+	printf("\nERROR (%s): %08lx\n", error_origin, res);
 cleanup:
 	for (int i = 0; i < 12; i++) {
 		if (slotinfo.slots[i]) {
@@ -382,8 +381,12 @@ cleanup:
 			title_extra_info[i].hmac_key = 0;
 		}
 	}
+	Result res_bak = res;
 	// get cecd into the normal state
 	res = waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
+	if (R_FAILED(res_bak)) {
+		return res_bak;
+	}
 	return res;
 }
 
@@ -448,11 +451,30 @@ void triggerDownloadInboxes(void) {
 	dl_inbox_status = 1;
 }
 
+Result doSlotExchangeRetry(void) {
+	int count = 0;
+	while(true) {
+		Result res = doSlotExchange();
+		if (R_FAILED(res)) {
+			if (CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC) {
+				count++;
+				if (count < 20) {
+					printf("Retrying slot exchange...\n");
+					svcSleepThread(10e9);
+					continue;
+				}
+			}
+			return res;
+		}
+		return 0;
+	}
+}
+
 void bgLoop(void* p) {
 	do {
 		dl_inbox_status = 2;
-		Result res = doSlotExchange();
-		_e(res);
+		Result res = doSlotExchangeRetry();
+		if (R_FAILED(res)) _e(res);
 		dl_inbox_status = 0;
 		for(int i = 0; i < 10*60*5; i++) {
 			svcSleepThread((u64)1000000 * 100);
