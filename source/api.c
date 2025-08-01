@@ -460,7 +460,7 @@ Result doSlotExchangeRetry(void) {
 				count++;
 				if (count < 20) {
 					printf("Retrying slot exchange...\n");
-					svcSleepThread(10e9);
+					svcSleepThread(10e3);
 					continue;
 				}
 			}
