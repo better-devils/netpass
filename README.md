@@ -1,3 +1,4 @@
+**AI Generated code is not allowed in any form in this repo**
 # NetPass: a new way to experience StreetPass!
 
 [![Translation status](https://weblate.sorunome.de/widget/netpass/app/svg-badge.svg)](https://weblate.sorunome.de/engage/netpass/)
