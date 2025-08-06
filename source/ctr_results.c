@@ -22,54 +22,6 @@
 #include "ctr_results.h"
 #include <stdio.h>
 
-// MASK_FAIL_BIT is a mask for the fail bit. (Most significant bit of u32)
-#define MASK_FAIL_BIT (0x80000000)
-// SIZE_DESCRIPTION is the size of the description field in the error code.
-#define SIZE_DESCRIPTION (10)
-// SIZE_MODULE is the size of the module field in the error code.
-#define SIZE_MODULE (8)
-// SIZE_RESERVE is the size of the reserved space in the error code.
-#define SIZE_RESERVE (3)
-// SIZE_SUMMARY is the size of the summary field in the error code.
-#define SIZE_SUMMARY (6)
-// SIZE_LEVEL is the size of the level field in the error code.
-#define SIZE_LEVEL (5)
-// SHIFTS_DESCRIPTION is the number of shifts to the right to get the description field.
-#define SHIFTS_DESCRIPTION 0
-// SHIFTS_MODULE is the number of shifts to the right to get the module field.
-#define SHIFTS_MODULE (SHIFTS_DESCRIPTION + SIZE_DESCRIPTION)
-// SHIFTS_RESERVE is the number of shifts to the right to get the reserved space.
-#define SHIFTS_RESERVE (SHIFTS_MODULE + SIZE_MODULE)
-// SHIFTS_SUMMARY is the number of shifts to the right to get the summary field.
-#define SHIFTS_SUMMARY (SHIFTS_RESERVE + SIZE_RESERVE)
-// SHIFTS_LEVEL is the number of shifts to the right to get the level field.
-#define SHIFTS_LEVEL (SHIFTS_SUMMARY + SIZE_SUMMARY)
-// MASK_DESCRIPTION is a mask for the description field.
-#define MASK_DESCRIPTION (0xFFFFFFFF >> (32 - SIZE_DESCRIPTION) << SHIFTS_DESCRIPTION)
-// MASK_MODULE is a mask for the module field.
-#define MASK_MODULE (0xFFFFFFFF >> (32 - SIZE_MODULE) << SHIFTS_MODULE)
-// MASK_SUMMARY is a mask for the summary field.
-#define MASK_SUMMARY (0xFFFFFFFF >> (32 - SIZE_SUMMARY) << SHIFTS_SUMMARY)
-// MASK_LEVEL is a mask for the level field.
-#define MASK_LEVEL (0xFFFFFFFF >> (32 - SIZE_LEVEL) << SHIFTS_LEVEL)
-// MAX_DESCRIPTION is the maximum value of the description field.
-#define MAX_DESCRIPTION (0xFFFFFFFF >> (32 - SIZE_DESCRIPTION))
-// MAX_MODULE is the maximum value of the module field.
-#define MAX_MODULE (0xFFFFFFFF >> (32 - SIZE_MODULE))
-// MAX_SUMMARY is the maximum value of the summary field.
-#define MAX_SUMMARY (0xFFFFFFFF >> (32 - SIZE_SUMMARY))
-// MAX_LEVEL is the maximum value of the level field.
-#define MAX_LEVEL (0xFFFFFFFF >> (32 - SIZE_LEVEL))
-
-#define IS_FAILURE(res) (((uint32_t)res) & MASK_FAIL_BIT)
-#define IS_SUCCESS(res) (^IS_FAILURE(res))
-#define GET_CODE_BITS(res, mask, shift) ((((uint32_t)res) & mask) >> shift)
-#define GET_LEVEL(res) GET_CODE_BITS(res, MASK_LEVEL, SHIFTS_LEVEL)
-#define GET_SUMMARY(res) GET_CODE_BITS(res, MASK_SUMMARY, SHIFTS_SUMMARY)
-#define GET_MODULE(res) GET_CODE_BITS(res, MASK_MODULE, SHIFTS_MODULE)
-#define GET_DESCRIPTION(res) GET_CODE_BITS(res, MASK_DESCRIPTION, SHIFTS_DESCRIPTION)
-
-
 const char* const level_to_string[] = {
 	"Success",
 	"Info",
@@ -1524,8 +1476,8 @@ const char* get_desc_desc_fnd(int desc) {
 }
 
 const char* get_desc_str_friends(int desc) {
-	int map_picker = GET_CODE_BITS(desc, 0b111100000, 5);
-	int map_val = GET_CODE_BITS(desc, 0b11111, 5);
+	int map_picker = CTR_RESULT_GET_CODE_BITS(desc, 0b111100000, 5);
+	int map_val = CTR_RESULT_GET_CODE_BITS(desc, 0b11111, 5);
 	const char* const map1[] = {
 		"CoreSuccess",
 		"CoreSuccessPending",
@@ -1700,8 +1652,8 @@ const char* get_desc_str_friends(int desc) {
 }
 
 const char* get_desc_desc_friends(int desc) {
-	int map_picker = GET_CODE_BITS(desc, 0b111100000, 5);
-	int map_val = GET_CODE_BITS(desc, 0b11111, 5);
+	int map_picker = CTR_RESULT_GET_CODE_BITS(desc, 0b111100000, 5);
+	int map_val = CTR_RESULT_GET_CODE_BITS(desc, 0b11111, 5);
 	const char* const map1[] = {
 		"The friends-core operation was successful.",
 		"The friends-core operation was successful, but the result is pending.",
@@ -3943,6 +3895,32 @@ const char* get_desc_desc_webbrs(int desc) {
 	return NULL;
 }
 
+int application_desc_size = 0;
+const char** application_desc_str_map = NULL;
+const char** application_desc_desc_map = NULL;
+
+void set_application_desc_map(int size, const char** str_map, const char** desc_map) {
+	application_desc_size = size;
+	application_desc_str_map = str_map;
+	application_desc_desc_map = desc_map;
+}
+
+const char* get_desc_str_application(int desc) {
+	if (!application_desc_str_map) return NULL;
+	
+	if (desc < application_desc_size) return application_desc_str_map[desc];
+	
+	return NULL;
+}
+
+const char* get_desc_desc_application(int desc) {
+	if (!application_desc_desc_map) return NULL;
+	
+	if (desc < application_desc_size) return application_desc_desc_map[desc];
+	
+	return NULL;
+}
+
 const char* (*module_desc_str[])(int) = {
 	NULL, //"cmn",
 	get_desc_str_kern,
@@ -4152,8 +4130,8 @@ const char* (*module_desc_desc[])(int) = {
 };
 
 const char* get_level_string(int32_t res) {
-	int level = GET_LEVEL(res);
-	if (IS_FAILURE(res)) {
+	int level = CTR_RESULT_GET_LEVEL(res);
+	if (CTR_RESULT_IS_FAILURE(res)) {
 		if (level < 25 || level > 31) return "Invalid";
 		return level_to_string[level - 23];
 	}
@@ -4162,8 +4140,8 @@ const char* get_level_string(int32_t res) {
 }
 
 const char* get_level_description(int32_t res) {
-	int level = GET_LEVEL(res);
-	if (IS_FAILURE(res)) {
+	int level = CTR_RESULT_GET_LEVEL(res);
+	if (CTR_RESULT_IS_FAILURE(res)) {
 		if (level < 25 || level > 31) return "Invalid Level Value.";
 		return level_description[level - 23];
 	}
@@ -4172,49 +4150,49 @@ const char* get_level_description(int32_t res) {
 }
 
 void get_level_formatted(char* dest, size_t size, int32_t res) {
-	int level = GET_LEVEL(res);
+	int level = CTR_RESULT_GET_LEVEL(res);
 	snprintf(dest, size, "%s (%d) - %s", get_level_string(res), level, get_level_description(res));
 }
 
 const char* get_summary_string(int32_t res) {
-	int summary = GET_SUMMARY(res);
+	int summary = CTR_RESULT_GET_SUMMARY(res);
 	if (summary <= 11) return summary_to_string[summary];
 	return "Invalid";
 }
 
 const char* get_summary_description(int32_t res) {
-	int summary = GET_SUMMARY(res);
+	int summary = CTR_RESULT_GET_SUMMARY(res);
 	if (summary <= 11) return summary_description[summary];
 	return "Invalid Summary Value";
 }
 
 void get_summary_formatted(char* dest, size_t size, int32_t res) {
-	int summary = GET_SUMMARY(res);
+	int summary = CTR_RESULT_GET_SUMMARY(res);
 	snprintf(dest, size, "%s (%d) - %s", get_summary_string(res), summary, get_summary_description(res));
 }
 
 const char* get_module_string(int32_t res) {
-	int module = GET_MODULE(res);
-	if (module == MAX_DESCRIPTION - 1) return "application";
+	int module = CTR_RESULT_GET_MODULE(res);
+	if (module == 254) return "application";
 	if (module <= 98) return module_to_string[module];
 	return "invalid";
 }
 
 const char* get_module_description(int32_t res) {
-	int module = GET_MODULE(res);
-	if (module == MAX_DESCRIPTION - 1) return "Application";
+	int module = CTR_RESULT_GET_MODULE(res);
+	if (module == 254) return "Application";
 	if (module <= 98) return module_description[module];
 	return "Invalid";
 }
 
 void get_module_formatted(char* dest, size_t size, int32_t res) {
-	int module = GET_MODULE(res);
+	int module = CTR_RESULT_GET_MODULE(res);
 	snprintf(dest, size, "%s (%d) - %s", get_module_string(res), module, get_module_description(res));
 }
 
 const char* get_description_string(int32_t res) {
-	int description = GET_DESCRIPTION(res);
-	int module = GET_MODULE(res);
+	int description = CTR_RESULT_GET_DESCRIPTION(res);
+	int module = CTR_RESULT_GET_MODULE(res);
 	if (module >= 0 && module <= 98) {
 		const char*(*fn)(int) = module_desc_str[module];
 		if (fn) {
@@ -4222,14 +4200,18 @@ const char* get_description_string(int32_t res) {
 			if (s) return s;
 		}
 	}
+	if (module == CTR_RESULT_MODULE_APPLICATION) {
+		const char* s = get_desc_str_application(description);
+		if (s) return s;
+	}
 	if (description == 0) return "Success";
 	if (description >= 1000) return description_to_string[description - 1000];
 	return "unknown";
 }
 
 const char* get_description_description(int32_t res) {
-	int description = GET_DESCRIPTION(res);
-	int module = GET_MODULE(res);
+	int description = CTR_RESULT_GET_DESCRIPTION(res);
+	int module = CTR_RESULT_GET_MODULE(res);
 	if (module >= 0 && module <= 98) {
 		const char*(*fn)(int) = module_desc_desc[module];
 		if (fn) {
@@ -4237,12 +4219,16 @@ const char* get_description_description(int32_t res) {
 			if (s) return s;
 		}
 	}
+	if (module == CTR_RESULT_MODULE_APPLICATION) {
+		const char* s = get_desc_desc_application(description);
+		if (s) return s;
+	}
 	if (description == 0) return "Succeeded.";
 	if (description >= 1000) return description_description[description - 1000];
 	return "Unknown.";
 }
 
 void get_description_formatted(char* dest, size_t size, int32_t res) {
-	int description = GET_DESCRIPTION(res);
+	int description = CTR_RESULT_GET_DESCRIPTION(res);
 	snprintf(dest, size, "%s (%d) - %s", get_description_string(res), description, get_description_description(res));
 }

@@ -97,7 +97,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	Result res = 0;
 	char url[50];
 	if (!metadata->title_id) {
-		return -1; // something went wrong
+		return ERROR_NO_TITLE_ID; // something went wrong
 	}
 	if (metadata->size == 0 || metadata->send_method == 1) {
 		// recv only, delete outbox
@@ -109,7 +109,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	// read extra metadata to send
 	u8* slot = malloc(metadata->size);
 	if (!slot) {
-		return -2;
+		return ERROR_OUT_OF_MEMORY;
 	}
 
 	// now it is time to *actually* fetch the slot
@@ -145,8 +145,8 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 		curlFreeHandler(reply->offset);
 		return res;
 	}
-	if (http_code != 200) {
-		res = -1;
+	if (!IS_HTTP_SUCCESS(http_code)) {
+		res = -http_code;
 		goto fail;
 	}
 	if (reply->len < sizeof(CecSlotHeader)) {
@@ -160,7 +160,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 	metadata->size = slot->size;
 	slotinfo->slots[i] = malloc(slot->size);
 	if (!slotinfo->slots[i]) {
-		res = -1;
+		res = ERROR_MISSING_SLOT_META;
 		goto fail;
 	}
 
@@ -212,7 +212,7 @@ Result doSlotExchange(void) {
 		clearIgnoredTitles(&mbox_list.header);
 		u8* buf = malloc(MAX(200, sizeof(CecMBoxInfoHeader)));
 		if (!buf) {
-			res = -1;
+			res = ERROR_OUT_OF_MEMORY;
 			error_origin = "malloc for mboxinfo";
 			goto fail;
 		}
@@ -365,8 +365,7 @@ Result doSlotExchange(void) {
 	goto cleanup;
 fail:
 	cecdSprDone(false);
-	_e(res);
-	printf("ERROR (%s): %08lx\n", error_origin, res);
+	printf("\nERROR (%s): %08lx\n", error_origin, res);
 cleanup:
 	for (int i = 0; i < 12; i++) {
 		if (slotinfo.slots[i]) {
@@ -382,8 +381,12 @@ cleanup:
 			title_extra_info[i].hmac_key = 0;
 		}
 	}
+	Result res_bak = res;
 	// get cecd into the normal state
 	res = waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
+	if (R_FAILED(res_bak)) {
+		return res_bak;
+	}
 	return res;
 }
 
@@ -397,8 +400,10 @@ Result getLocation(void) {
 	int http_code = res;
 	if (http_code == 200) {
 		res = *(u32*)(reply->ptr);
-	} else {
+	} else if (IS_HTTP_SUCCESS(http_code)) {
 		res = -1;
+	} else {
+		res = -http_code;
 	}
 cleanup:
 	curlFreeHandler(reply->offset);
@@ -407,7 +412,16 @@ cleanup:
 
 Result setLocation(int location) {
 	Result res;
-	if (config.last_location == location) return -1;
+	if (config.last_location == location) return ERROR_SAME_LOCAION_TWICE;
+	
+	// first check if we have any streetpass games enabled
+	CecMboxListHeaderWithCapacities mbox_list;
+	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header);
+	if (R_FAILED(res)) return res;
+	clearIgnoredTitles(&mbox_list.header);
+	if (mbox_list.header.num_boxes == 0) return ERROR_NO_STREETPASS_GAMES;
+
+	// now actually ask the server to enter the location
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
@@ -437,11 +451,30 @@ void triggerDownloadInboxes(void) {
 	dl_inbox_status = 1;
 }
 
+Result doSlotExchangeRetry(void) {
+	int count = 0;
+	while(true) {
+		Result res = doSlotExchange();
+		if (R_FAILED(res)) {
+			if (CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC) {
+				count++;
+				if (count < 20) {
+					printf("Retrying slot exchange...\n");
+					svcSleepThread(10e3);
+					continue;
+				}
+			}
+			return res;
+		}
+		return 0;
+	}
+}
+
 void bgLoop(void* p) {
 	do {
 		dl_inbox_status = 2;
-		Result res = doSlotExchange();
-		_e(res);
+		Result res = doSlotExchangeRetry();
+		if (R_FAILED(res)) _e(res);
 		dl_inbox_status = 0;
 		for(int i = 0; i < 10*60*5; i++) {
 			svcSleepThread((u64)1000000 * 100);

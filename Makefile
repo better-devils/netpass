@@ -112,7 +112,6 @@ LIBS	:= -lcitro2d -lcitro3d -lctru -lopusfile -lopus -logg `curl-config --libs` 
 #---------------------------------------------------------------------------------
 LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 
-CODEGEN_CFILES = ../codegen/lang_strings.c
 CODEGEN_OUTPUTS	= codegen/lang_strings.h codegen/lang_strings.c
 
 # Cppcheck options
@@ -135,7 +134,7 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
-CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CFILES		:=	$(foreach dir,$(SOURCES),$(wildcard $(dir)/*.c))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 PICAFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.v.pica)))
@@ -143,8 +142,6 @@ SHLISTFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.shlist)))
 GFXFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.t3s)))
 MUSICFILES	:=	$(foreach dir,$(MUSIC),$(notdir $(wildcard $(dir)/*.*)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
-
-CFILES += $(CODEGEN_CFILES)
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -173,7 +170,8 @@ export T3XHFILES		:=	$(patsubst %.t3s, $(BUILD)/%.h, $(GFXFILES))
 endif
 #---------------------------------------------------------------------------------
 
-export OFILES_SOURCES 	:=	$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+export OFILES_SOURCES 	:=	$(sort $(notdir $(CPPFILES:.cpp=.o)) $(notdir $(CFILES:.c=.o)) \
+							lang_strings.o)
 
 export OFILES_BIN	:=	$(addsuffix .o,$(BINFILES)) \
 			$(PICAFILES:.v.pica=.shbin.o) $(SHLISTFILES:.shlist=.shbin.o) \

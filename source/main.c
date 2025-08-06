@@ -33,6 +33,7 @@ int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
 
 	gfxInitDefault();
+	miscInit();
 	cfguInit();
 	amInit();
 	nsInit();
@@ -139,9 +140,10 @@ int main() {
 				}
 				waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 				initTitleData();
-				doSlotExchange();
+				doSlotExchangeRetry();
 				res = getLocation();
 				if (R_FAILED(res) && res != -1) {
+					_e(res);
 					printf("ERROR failed to get location: %ld\n", res);
 					location = -1;
 				} else {

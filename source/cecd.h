@@ -112,7 +112,7 @@ Result cecdSprAddSlotsMetadata(u32 size, u8* buf);
 Result cecdSprAddSlot(u32 title_id, u32 size, u8* buf);
 Result cecdSprFinaliseRecv(void);
 Result cecdSprDone(bool success);
-Result cecdGenHashConsoleUnique(u64* out);
+Result cecdGetBossUserid(u64* out);
 Handle cecdGetServHandle(void);
 
 Result updateStreetpassOutbox(u8* msgbuf);

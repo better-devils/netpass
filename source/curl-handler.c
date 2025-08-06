@@ -128,7 +128,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	}
 	if (!found_handle_slot) {
 		// TODO: dunno, wait or something?
-		return -1;
+		return ERROR_CURL_NO_FREE_HANDLE;
 	}
 
 	FILE* file = 0;
@@ -136,8 +136,8 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 		// we have a file reply
 		file = fopen(title_name, "wb");
 		if (!file) {
-			_e(-1);
-			return -2;
+			_e_errno();
+			return ERROR_ERRNO;
 		}
 	}
 	handles[curl_handle_slot].file_reply = file;
@@ -181,7 +181,7 @@ void curl_multi_loop_request_finish(int i) {
 	}
 	long http_code = 0;
 	curl_easy_getinfo(h->handle, CURLINFO_RESPONSE_CODE, &http_code);
-	if (!(http_code >= 200 && http_code < 300)) {
+	if (!IS_HTTP_SUCCESS(http_code)) {
 		h->res = -http_code;
 		goto cleanup;
 	}
@@ -208,45 +208,53 @@ void curl_multi_loop_request_setup(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();
 	if (!h->handle) {
-		h->res = -1;
+		h->res = ERROR_CURL_NO_FREE_HANDLE;
 		h->status = CURL_HANDLE_STATUS_DONE;
 		return;
 	}
 	struct curl_slist* headers = NULL;
 
 	// add mac header
-	char header_mac[25];
-	char header_mac_value[13];
-	getMacStr(header_mac_value);
-	snprintf(header_mac, sizeof(header_mac), "3ds-mac: %s", header_mac_value);
-	headers = curl_slist_append(headers, header_mac);
+	{
+		char header_mac[25];
+		char header_mac_value[13];
+		getMacStr(header_mac_value);
+		snprintf(header_mac, sizeof(header_mac), "3ds-mac: %s", header_mac_value);
+		headers = curl_slist_append(headers, header_mac);
+	}
 	
 	// add nid header
-	char header_netpass_id[100];
-	snprintf(header_netpass_id, 100, "3ds-nid: %s", netpass_id);
-	headers = curl_slist_append(headers, header_netpass_id);
+	{
+		char header_netpass_id[100];
+		snprintf(header_netpass_id, 100, "3ds-nid: %s", netpass_id);
+		headers = curl_slist_append(headers, header_netpass_id);
+	}
 	
 	// add version header
-	char header_netpass_version[100];
+	{
+		char header_netpass_version[100];
 #ifdef _VERSION_GIT_SHA_
-	// cppcheck-suppress invalidPrintfArgType_s
-	snprintf(header_netpass_version, sizeof(header_netpass_version),
-			 "3ds-netpass-version: v%d.%d.%d-%s",
-			 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, _VERSION_GIT_SHA_);
+		// cppcheck-suppress invalidPrintfArgType_s
+		snprintf(header_netpass_version, sizeof(header_netpass_version),
+				 "3ds-netpass-version: v%d.%d.%d+%s",
+				 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, _VERSION_GIT_SHA_);
 #else
-	snprintf(header_netpass_version, sizeof(header_netpass_version),
-			 "3ds-netpass-version: v%d.%d.%d",
-			 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+		snprintf(header_netpass_version, sizeof(header_netpass_version),
+				 "3ds-netpass-version: v%d.%d.%d",
+				 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #endif
-	DEBUG_PRINTF("header_netpass_version: %s\n", header_netpass_version);
-	headers = curl_slist_append(headers, header_netpass_version);
-	
+		DEBUG_PRINTF("header_netpass_version: %s\n", header_netpass_version);
+		headers = curl_slist_append(headers, header_netpass_version);
+	}
+
 	// add time header
-	char header_time[100];
-	time_t unixTime = time(NULL);
-	struct tm* ts = gmtime((const time_t *)&unixTime);
-	snprintf(header_time, 100, "3ds-time: %02i:%02i:%02i", ts->tm_hour, ts->tm_min, ts->tm_sec);
-	headers = curl_slist_append(headers, header_time);
+	{
+		char header_time[100];
+		time_t unixTime = time(NULL);
+		struct tm* ts = gmtime((const time_t *)&unixTime);
+		snprintf(header_time, sizeof(header_time), "3ds-time: %02i:%02i:%02i", ts->tm_hour, ts->tm_min, ts->tm_sec);
+		headers = curl_slist_append(headers, header_time);
+	}
 	
 	FriendKey friend_key;
 	Result res = FRD_GetMyFriendKey(&friend_key);
@@ -255,25 +263,25 @@ void curl_multi_loop_request_setup(int i) {
 		res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
 		if (R_SUCCEEDED(res)) {
 			char header_fc[100];
-			snprintf(header_fc, 100, "3ds-fc: %016llX", fc);
+			snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", fc);
 			headers = curl_slist_append(headers, header_fc);
-			u64 fc_seed;
-			res = CFGI_GetLocalFriendCodeSeed(&fc_seed);
-			if (R_SUCCEEDED(res)) {
-				char header_friend_key[100];
-				snprintf(header_friend_key, 100, "3ds-friend-code: %016llX", (fc ^ fc_seed) & 0x0000ffffffffffffll);
-				headers = curl_slist_append(headers, header_friend_key);
-			}
 		}
 	}
+	u64 boss_userid;
+	res = cecdGetBossUserid(&boss_userid);
+	if (R_SUCCEEDED(res)) {
+		char header_bossuid[100];
+		snprintf(header_bossuid, sizeof(header_bossuid), "3ds-boss-userid: %016llX", boss_userid);
+		headers = curl_slist_append(headers, header_bossuid);
+	}
 	if (h->title_name && !h->file_reply) {
-		char header_title_name[225];
-		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
+		char header_title_name[255];
+		snprintf(header_title_name, sizeof(header_title_name), "3ds-title-name: %s", h->title_name);
 		headers = curl_slist_append(headers, header_title_name);
 	}
 	if (h->hmac_key && !h->file_reply) {
 		char header_hmac_key[255];
-		snprintf(header_hmac_key, 255, "3ds-hmac-key: %s", h->hmac_key);
+		snprintf(header_hmac_key, sizeof(header_hmac_key), "3ds-hmac-key: %s", h->hmac_key);
 		headers = curl_slist_append(headers, header_hmac_key);
 	}
 
@@ -367,7 +375,7 @@ Result curlInit(void) {
 	Result res;
 	// ok, we have to init this first
 	SOC_buffer = (u32*)memalign(SOC_ALIGN, SOC_BUFFERSIZE);
-	if (!SOC_buffer) return -1;
+	if (!SOC_buffer) return ERROR_OUT_OF_MEMORY;
 	res = socInit(SOC_buffer, SOC_BUFFERSIZE);
 	if (R_FAILED(res)) return res;
 	curl_global_init(CURL_GLOBAL_ALL);

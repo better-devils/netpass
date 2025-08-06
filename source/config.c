@@ -82,12 +82,11 @@ bool isTitleIgnored(u32 title_id) {
 void load(void) {
 	FILE* f = fopen(config_path, "r");
 	if (!f) {
-		_e(-1);
-		perror("Error");
+		_e_errno();
 		return;
 	}
 	char line[200];
-	while (fgets_blk(line, 200, f)) {
+	while (fgets_blk(line, sizeof(line), f)) {
 		char* separator = strchr(line, '=');
 		if (!separator) continue;
 		char* key = line;
@@ -169,8 +168,7 @@ void load(void) {
 void configWrite(void) {
 	FILE* f = fopen(config_path, "w");
 	if (!f) {
-		_e(-1);
-		perror("Error");
+		_e_errno();
 		return;
 	}
 	char line[250];
@@ -219,6 +217,7 @@ void configInit(void) {
 bool clearPatches(void) {
 	DIR* d = opendir(PATCHES_COPY_SRCDIR);
 	if (!d) {
+		_e_errno();
 		printf("ERROR: src dir not found\n");
 		return false;
 	}
@@ -276,6 +275,7 @@ bool writePatches(void) {
 			FILE* src = fopen(srcpath, "rb");
 			FILE* dst = fopen(dstpath, "wb+");
 			if (!src || !dst) {
+				_e_errno();
 				if (src) fclose(src);
 				if (dst) fclose(dst);
 				printf("ERROR: open\n");
@@ -283,12 +283,14 @@ bool writePatches(void) {
 			}
 			size_t len = fread(buffer, 1, 0x4000, src);
 			if (!len) {
+				_e_errno();
 				fclose(src);
 				fclose(dst);
 				printf("ERROR: read\n");
 				continue;
 			}
 			if (!fwrite(buffer, len, 1, dst)) {
+				_e_errno();
 				fclose(src);
 				fclose(dst);
 				printf("ERROR: write\n");

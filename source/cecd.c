@@ -21,6 +21,8 @@
 #include <3ds/srv.h>
 #include <3ds/synchronization.h>
 #include "cecd.h"
+#include "utils.h"
+#include "ctr_results.h"
 #include <3ds/ipc.h>
 
 #include <string.h>
@@ -47,7 +49,7 @@ Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
 	while (true) {
 		count++;
 		if (count > 20) {
-			return res = -1;
+			return ERROR_BAD_CECD_STATE;
 		}
 		svcWaitSynchronization(state_change_handle, 10e9);
 		CecStateAbbrev is_state;
@@ -431,7 +433,7 @@ Result cecdSprDone(bool success) {
 	return res;
 }
 
-Result cecdGenHashConsoleUnique(u64* out) {
+Result cecdGetBossUserid(u64* out) {
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x415, 0, 0);
@@ -473,18 +475,17 @@ Result updateStreetpassOutbox(u8* msgbuf) {
 	Result res = 0;
 	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;
 	// sanity checks
-	if (msgheader->magic != 0x6060) return -1; // bad magic
-	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return -1;
-	if (msgheader->message_size > MAX_MESSAGE_SIZE) return -1; // prooobably too large
+	if (msgheader->magic != 0x6060) return ERROR_INVALID_MESSAGE; // bad magic
+	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return ERROR_INVALID_MESSAGE;
+	if (msgheader->message_size > MAX_MESSAGE_SIZE) return ERROR_INVALID_MESSAGE; // prooobably too large
 
 	// first fetch how large the boxbuf is
 	u8* boxbuf = malloc(sizeof(CecBoxInfoHeader));
 	if (!boxbuf) {
-		return -3;
+		return ERROR_OUT_OF_MEMORY;
 	}
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoHeader), boxbuf);
-	if (R_FAILED(res)) {
-		res = -2; // cecd fild not found
+	if (R_FAILED(res)) { // cecd fild not found
 		goto cleanup_box;
 	}
 	// let's open the box buffer to update the metadata in there
@@ -492,11 +493,10 @@ Result updateStreetpassOutbox(u8* msgbuf) {
 	free(boxbuf);
 	boxbuf = malloc(max_boxbuf_size);
 	if (!boxbuf) {
-		return -3;
+		return ERROR_OUT_OF_MEMORY;
 	}
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_OUTBOX_INFO, max_boxbuf_size, boxbuf);
-	if (R_FAILED(res)) {
-		res = -2; // cecd fild not found
+	if (R_FAILED(res)) { // cecd fild not found
 		goto cleanup_box;
 	}
 	CecBoxInfoHeader* boxheader = (CecBoxInfoHeader*)boxbuf;
@@ -510,14 +510,13 @@ Result updateStreetpassOutbox(u8* msgbuf) {
 		}
 	}
 	if (found_i < 0) {
-		res = -4; // not found
+		res = ERROR_DUPLICATE_MESSAGE; // not found
 		goto cleanup_box;
 	}
 	memcpy(&boxmsgs[found_i], msgheader, sizeof(CecMessageHeader));
 
 	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_OUTBOX_INFO, boxheader->file_size, boxbuf);
-	if (R_FAILED(res)) {
-		res = -2; // cecd fild not found
+	if (R_FAILED(res)) { // cecd fild not found
 		goto cleanup_box;
 	}
 	free(boxbuf);
@@ -525,7 +524,7 @@ Result updateStreetpassOutbox(u8* msgbuf) {
 	// now let's fetch the hmac and store the update
 	CecMBoxInfoHeader mboxheader;
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-	if (R_FAILED(res)) return -2;
+	if (R_FAILED(res)) return res;
 
 	// great,we have all the bits we need now
 	res = cecdWriteMessageWithHMAC(
@@ -564,7 +563,7 @@ Result addStreetpassMessage(u8* msgbuf) {
 	Result res = 0;
 	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;
 	// sanity checks
-	if (!validateStreetpassMessage(msgbuf)) return -1; // bad message
+	if (!validateStreetpassMessage(msgbuf)) return ERROR_INVALID_MESSAGE; // bad message
 
 	// update the msg header about the receive time
 	if (!msgheader->received.year) {
@@ -574,11 +573,10 @@ Result addStreetpassMessage(u8* msgbuf) {
 	// first fetch how large the boxbuf is
 	u8* boxbuf = malloc(sizeof(CecBoxInfoHeader));
 	if (!boxbuf) {
-		return -3;
+		return ERROR_OUT_OF_MEMORY;
 	}
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_INBOX_INFO, sizeof(CecBoxInfoHeader), boxbuf);
 	if (R_FAILED(res)) {
-		res = -2; // cecd fild not found
 		goto cleanup_box;
 	}
 	// let's open the box buffer to see if we can even accept a new message, or if the message has already been accepted
@@ -586,11 +584,10 @@ Result addStreetpassMessage(u8* msgbuf) {
 	free(boxbuf);
 	boxbuf = malloc(max_boxbuf_size);
 	if (!boxbuf) {
-		return -3;
+		return ERROR_OUT_OF_MEMORY;
 	}
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_INBOX_INFO, max_boxbuf_size, boxbuf);
-	if (R_FAILED(res)) {
-		res = -2; // cecd file not found
+	if (R_FAILED(res)) { // cecd file not found
 		goto cleanup_box;
 	}
 	CecBoxInfoHeader* boxheader = (CecBoxInfoHeader*)boxbuf;
@@ -598,24 +595,24 @@ Result addStreetpassMessage(u8* msgbuf) {
 
 	for (int i = 0; i < boxheader->num_messages; i++) {
 		if (0 == memcmp(boxmsgs[i].message_id, msgheader->message_id, sizeof(CecMessageId))){
-			res = -4; // already added, nothing to do
+			res = INFO_DUPLICATE_MESSAGE; // already added, nothing to do
 			goto cleanup_box;
 		}
 	}
 	if (boxheader->num_messages >= boxheader->max_num_messages) {
-		res = -5; // box already full
+		res = ERROR_BOX_FULL; // box already full
 		goto cleanup_box;
 	}
 
 	// let's see if the message is too large for this box
 	if (boxheader->max_message_size < msgheader->message_size) {
-		res = -1;
+		res = ERROR_TOO_LARGE;
 		goto cleanup_box;
 	}
 
 	// now let's check if the box would overflow
 	if (boxheader->box_size + msgheader->message_size > boxheader->max_box_size) {
-		res = -1;
+		res = ERROR_TOO_LARGE;
 		goto cleanup_box;
 	}
 
@@ -626,7 +623,7 @@ Result addStreetpassMessage(u8* msgbuf) {
 		// box stuffs is done, let's fetch the mbox, to fetch the hmac key
 		CecMBoxInfoHeader mboxheader;
 		res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-		if (R_FAILED(res)) return -2;
+		if (R_FAILED(res)) return res;
 
 		msgheader->unopened = true;
 		msgheader->new_flag = true;
@@ -645,11 +642,10 @@ Result addStreetpassMessage(u8* msgbuf) {
 	// let's see if we gotta update the metadata
 	boxbuf = malloc(max_boxbuf_size);
 	if (!boxbuf) {
-		return -3;
+		return ERROR_OUT_OF_MEMORY;
 	}
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_INBOX_INFO, max_boxbuf_size, boxbuf);
-	if (R_FAILED(res)) {
-		res = -2; // cecd fild not found
+	if (R_FAILED(res)) { // cecd fild not found
 		goto cleanup_box;
 	}
 
@@ -670,8 +666,7 @@ Result addStreetpassMessage(u8* msgbuf) {
 		boxheader->file_size += sizeof(CecMessageHeader);
 		boxheader->box_size += msgheader->message_size;
 		res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_INBOX_INFO, boxheader->file_size, boxbuf);
-		if (R_FAILED(res)) {
-			res = -2; // cecd fild not found
+		if (R_FAILED(res)) { // cecd fild not found
 			goto cleanup_box;
 		}
 		free(boxbuf);
@@ -683,14 +678,14 @@ Result addStreetpassMessage(u8* msgbuf) {
 		// gotta re-fetch the mbox header, in case it changed
 		CecMBoxInfoHeader mboxheader;
 		res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-		if (R_FAILED(res)) return -2;
+		if (R_FAILED(res)) return res;
 
 		getCurrentTime(&(mboxheader.last_received));
 		mboxheader.flag_unread = 1; // set the new notification dot
 		mboxheader.flag_new = 1;
 
 		res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-		if (R_FAILED(res)) return -2;
+		if (R_FAILED(res)) return res;
 	}
 
 	return res;

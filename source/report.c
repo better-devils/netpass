@@ -46,11 +46,17 @@
 
 ReportList* loadReportList(void) {
 	FILE* f = fopen(LOG_INDEX, "r");
-	if (!f) return NULL;
+	if (!f) {
+		_e_errno();
+		return NULL;
+	}
 
 	ReportListHeader header;
 	fread_blk(&header, sizeof(ReportListHeader), 1, f);
-	if (header.magic != 0x454C524e || header.version != 1) return NULL;
+	if (header.magic != 0x454C524e || header.version != 1) {
+		_e(ERROR_BAD_REPORT_LIST);
+		return NULL;
+	}
 	fseek(f, 0, SEEK_SET);
 	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 	
@@ -69,15 +75,22 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	size_t path_len = strlen(dirname);
 
 	DIR* d = opendir(dirname);
-	if (!d) return false;
+	if (!d) {
+		_e_errno();
+		return false;
+	}
 	struct dirent *p;
 	CecMessageHeader* buf = malloc(MAX_MESSAGE_SIZE);
-	if (!buf) return false;
+	if (!buf) {
+		_e(ERROR_OUT_OF_MEMORY);
+		return false;
+	}
 	u16 source_ident = 0;
 	while ((p=readdir(d)) && msgs->count < 12) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
 		if (!fname) {
+			_e(ERROR_OUT_OF_MEMORY);
 			free(buf);
 			return false;
 		}
@@ -87,6 +100,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 		if (!f) goto cont_loop;
 		fread_blk(buf, MAX_MESSAGE_SIZE, 1, f);
 		if (buf->magic != 0x6060) {
+			_e(ERROR_INVALID_MESSAGE);
 			fclose(f);
 			goto cont_loop;
 		}
@@ -104,9 +118,16 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 			if (entry->mii) {
 				Result r = decryptMii(&cfpb->nonce, entry->mii);
 				if (R_FAILED(r) || entry->mii->version != 3) {
+					if (R_FAILED(r)) {
+						_e(r);
+					} else {
+						_e(ERROR_INVALID_MII);
+					}
 					free(entry->mii);
 					entry->mii = 0;
 				}
+			} else {
+				_e(ERROR_OUT_OF_MEMORY);
 			}
 		}
 
@@ -228,9 +249,13 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	if (!f) {
 		// ok, file is empty, we have to create it
 		f = fopen(LOG_INDEX, "wb");
-		if (!f) return;
+		if (!f) {
+			_e_errno();
+			return;
+		}
 		list = memalign(4, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
 		if (!list) {
+			_e(ERROR_OUT_OF_MEMORY);
 			fclose(f);
 			return;
 		}
@@ -243,17 +268,26 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		free(list);
 		fclose(f);
 		f = fopen(LOG_INDEX, "rb");
-		if (!f) return;
+		if (!f) {
+			_e_errno();
+			return;
+		}
 	}
 	size_t list_file_size;
 	{
 		ReportListHeader header;
 		fread_blk(&header, sizeof(ReportListHeader), 1, f);
-		if (header.magic != 0x454C524E || header.version != 1) return;
+		if (header.magic != 0x454C524E || header.version != 1) {
+			_e(ERROR_BAD_REPORT_LIST);
+			return;
+		}
 		fseek(f, 0, SEEK_SET);
 		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 		list = memalign(4, list_file_size);
-		if (!list) return;
+		if (!list) {
+			_e(ERROR_OUT_OF_MEMORY);
+			return;
+		}
 		fread_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}
@@ -300,7 +334,11 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			if (body->cfpb.magic == 0x42504643) {
 				int prev_mii_id = e->mii.version == 3 ? e->mii.mii_id : 0;
 				Result r = decryptMii(&body->cfpb.nonce, &e->mii);
-				if (!R_FAILED(r) && prev_mii_id != e->mii.mii_id) edited = true;
+				if (R_FAILED(r)) {
+					_e(r);
+				} else if (prev_mii_id != e->mii.mii_id) {
+					edited = true;
+				}
 			}
 		}
 	} else if (e->mii.version != 3) {
@@ -308,19 +346,29 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		CFPB* cfpb = (CFPB*)memsearch(((u8*)msg) + msg->total_header_size, msg->message_size, (u8*)"CFPB", 4);
 		if (cfpb) {
 			Result r = decryptMii(&cfpb->nonce, &e->mii);
-			if (!R_FAILED(r)) edited = true;
+			if (R_FAILED(r)) {
+				_e(r);
+			} else {
+				edited = true;
+			}
 		}
 	}
 
 	if (edited) {
 		f = fopen(LOG_INDEX, "wb");
-		if (!f) goto error;
+		if (!f) {
+			_e_errno();
+			goto error;
+		}
 		fwrite_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}
 	mkdir_p(filename);
 	f = fopen(filename, "wb");
-	if (!f) goto error;
+	if (!f) {
+		_e_errno();
+		goto error;
+	}
 	fwrite_blk(msg, msg->message_size, 1, f);
 	fclose(f);
 
@@ -336,15 +384,19 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 	size_t path_len = strlen(dirname);
 
 	DIR* d = opendir(dirname);
-	if (!d) return -1;
+	if (!d) {
+		_e_errno();
+		return ERROR_ERRNO;
+	}
 
 	struct dirent *p;
 	while ((p=readdir(d))) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
 		if (!fname) {
+			_e_errno();
 			closedir(d);
-			return -1;
+			return ERROR_ERRNO;
 		}
 		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
 		// we found a file

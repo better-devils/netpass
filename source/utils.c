@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <errno.h>
 #define _NJ_INCLUDE_HEADER_ONLY
 #include "nanojpeg.c"
 
@@ -232,14 +233,14 @@ Result decryptMii(void* data, MiiData* mii) {
 	Result res = APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out);
 	if (R_FAILED(res)) goto error;
 	if (out->version != 0x03) {
-		res = -1;
+		res = ERROR_INVALID_MII;
 		goto error;
 	}
 
 	u16 crc_calc = crc16_ccitt(out, sizeof(MiiData) + 2, 0);
 	u16 crc_check = __builtin_bswap16(*(u16*)(((u8*)out) + sizeof(MiiData) + 2));
 	if (crc_calc != crc_check) {
-		res = -1;
+		res = ERROR_INVALID_MII;
 		goto error;
 	}
 
@@ -464,17 +465,69 @@ Result get_os_version(OS_VersionBin* ver) {
 }
 
 int current_error = 0;
+int current_errno = 0;
 void _e(int error) {
-	if (error) {
+	if (R_FAILED(error)) {
 		current_error = error;
 	}
 }
 
+void _e_errno(void) {
+	current_errno = errno;
+}
+
 Scene* get_new_error_scene(void) {
-	if (current_error) {
+	if (current_error || current_errno) {
 		int e = current_error;
+		int eno = current_errno;
 		current_error = 0;
+		current_errno = 0;
+		if (!R_FAILED(e) || e == ERROR_ERRNO) {
+			e = eno;
+		}
 		return getErrorScene(e, false);
 	}
 	return NULL;
+}
+
+const char* error_desc_str_map[] = {
+	"NoTitleId",
+	"MissingSlotMeta",
+	"UnkTitleId",
+	"DupMsg",
+	"InvMsg",
+	"BoxFull",
+	"CurlNoHandle",
+	"BadIntegrationList",
+	"NoToken",
+	"NoPassUrl",
+	"BadReportList",
+	"InvalidMii",
+	"Errno",
+	"BadCecdState",
+	"NoStreetpassGames",
+	"SameLocationTwice",
+};
+
+const char* error_desc_desc_map[] = {
+	"The specified title id is 0, making it invalid.",
+	"No metadata for the slot to be processed was provided.",
+	"The provided title id is not known to this system.",
+	"There is a duplicate message. This likely means that you tried to add a message that already exists.",
+	"The message did not pass validation, making it invalid.",
+	"The box where a message should be added is already full.",
+	"There is no free cURL handle currently, making it impossible to do this network call.",
+	"The integration list provided from the server is malformed.",
+	"The verification QR code lacks a token.",
+	"The download pass QR code lacks an http url.",
+	"The report list stored on the SD card is malformed.",
+	"The mii data is invalid.",
+	"See errno",
+	"The internal state of the CECD service is incorrect. Try closing NetPass and opening it again.",
+	"There are no games with StreetPass enabled. Please enable StreetPass in at least one title and open NetPass again.",
+	"You can't enter the same location twice in a row.",
+};
+
+void miscInit(void) {
+	set_application_desc_map(sizeof(error_desc_str_map) / sizeof(error_desc_str_map[0]), error_desc_str_map, error_desc_desc_map);
 }
