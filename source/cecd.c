@@ -22,11 +22,9 @@
 #include <3ds/synchronization.h>
 #include "cecd.h"
 #include "utils.h"
-#include "ctr_results.h"
 #include <3ds/ipc.h>
 
 #include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 

@@ -18,7 +18,8 @@
 
 #include "error.h"
 #include "../ctr_results.h"
-#include <errno.h>
+#include <curl/curl.h>
+
 #define N(x) scenes_error_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 

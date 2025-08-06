@@ -17,7 +17,6 @@
  */
 
 #include "qr.h"
-#include <stdlib.h>
 #include <string.h>
 #include "api.h"
 #include "cecd.h"

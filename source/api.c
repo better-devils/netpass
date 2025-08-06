@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "config.h"
 #include "report.h"
+#include "curl-handler.h"
 #include <stdlib.h>
 #include <string.h>
 

@@ -18,7 +18,7 @@
 
 #include "report_entry.h"
 #include "../report.h"
-#include "../hmac_sha256/sha256.h"
+#include "../curl-handler.h"
 #include <stdlib.h>
 #include <malloc.h>
 #define N(x) scenes_report_entry_namespace_##x

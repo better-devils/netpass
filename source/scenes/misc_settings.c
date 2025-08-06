@@ -18,6 +18,7 @@
 
 #include "misc_settings.h"
 #include "about.h"
+#include "../curl-handler.h"
 #define N(x) scenes_misc_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_BACK_LEN)

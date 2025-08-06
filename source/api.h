@@ -19,7 +19,7 @@
 #pragma once
 
 #include <3ds.h>
-#include "curl-handler.h"
+#include "cecd.h"
 
 #define BASE_URL "https://api.netpass.cafe"
 //#define BASE_URL "https://devapi.netpass.cafe"
@@ -27,11 +27,16 @@
 #define RULES_URL "http://netpass.cafe/rules.html"
 #define PRIVACY_URL "http://netpass.cafe/privacy.html"
 
+#ifndef __fn__
+// workaround only for non-gnuc diagnostics
+#define lambda(return_type, function_body) ((void*) 0)
+#else
 #define lambda(return_type, function_body) \
 ({ \
 	return_type __fn__ function_body \
 		__fn__; \
 })
+#endif
 
 typedef struct {
 	u32 title_id;

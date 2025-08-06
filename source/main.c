@@ -25,7 +25,6 @@
 #include "cecd.h"
 #include "curl-handler.h"
 #include "config.h"
-#include "report.h"
 #include "music.h"
 #include "integration.h"
 
@@ -129,6 +128,10 @@ int main() {
 					res = httpRequest("GET", url, 0, 0, 0, 0, 0);
 					if (R_SUCCEEDED(res)) break;
 					check_count++;
+					if (ERROR_IS_HTTP(res)) {
+						location = res;
+						return;
+					}
 					if (check_count > max_count) {
 						if (res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 							max_count += 100;

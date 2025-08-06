@@ -19,6 +19,7 @@
 #include "back_alley.h"
 #include "../utils.h"
 #include "../api.h"
+#include "../curl-handler.h"
 #include <stdlib.h>
 #include <time.h>
 #define N(x) scenes_back_alley_namespace_##x
