@@ -104,13 +104,14 @@ int main() {
 			// as it does not even compile if we were to cast the returns to ints, this is clearly a cppcheck bug
 			// cppcheck-suppress CastAddressToIntegerAtReturn
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
-				if (R_FAILED(location) && location != -1) {
+				if (location == -403) {
+					// you are banned
+				} else if (R_FAILED(location) && location != -1) {
 					// something not working
 					return getErrorScene(location, true);
 				}
-		
-				bgLoopInit();
-				if (location == -1) {
+				if (location != 403) bgLoopInit();
+				if (R_FAILED(location) || location == -1) {
 					return getHomeScene(); // load home
 				}
 				return getLocationScene(location);

@@ -41,7 +41,7 @@
 #define MAX8(a, b, c, d, e, f, g, h) MAX2(a, MAX7(b, c, d, e, f, g, h))
 
 #define ERROR_IS_CURL(e) (e < 0 && e > -100)
-#define ERROR_IS_HTTP(e) (e <= -100 && e > 599)
+#define ERROR_IS_HTTP(e) (e <= -100 && e > -599)
 
 void* cecGetExtHeader(CecMessageHeader* msg, u32 type);
 u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type);
