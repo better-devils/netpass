@@ -85,6 +85,7 @@ SceneResult N(process)(Scene* sc) {
 Scene* getLoadingScene(Scene* next_scene, void(*func)(void)) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
+	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
 	scene->render = N(render);
 	scene->exit = N(exit);
