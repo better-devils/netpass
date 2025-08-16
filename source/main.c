@@ -106,11 +106,12 @@ int main() {
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 				if (location == -403) {
 					// you are banned
+					return getSettingsScene();
 				} else if (R_FAILED(location) && location != -1) {
 					// something not working
 					return getErrorScene(location, true);
 				}
-				if (location != 403) bgLoopInit();
+				bgLoopInit();
 				if (R_FAILED(location) || location == -1) {
 					return getHomeScene(); // load home
 				}
