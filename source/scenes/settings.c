@@ -42,6 +42,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
+	memset(_data, 0, sizeof(N(DataStruct)));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
@@ -124,8 +125,14 @@ SceneResult N(process)(Scene* sc) {
 			if (old_lang != _data->selected_language) {
 				config.language = _data->selected_language == -1 ? -1 : all_languages[_data->selected_language];
 				configWrite();
-				TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf,
-					str_language, all_languages[_data->selected_language]);
+				// this if-condition checks if we already parsed the language
+				// as we always parse the system language one, if the index is -1 this
+				// if-statement will always be false, causing our all_languages index to
+				// never get out-of-bounds without explicitly checking it
+				if (!*(int*)&_data->g_languages[_data->selected_language + 1]) {
+					TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf,
+						str_language, all_languages[_data->selected_language]);
+				}
 			}
 		}
 		if (kDown & KEY_A) {
