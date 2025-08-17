@@ -102,3 +102,7 @@ str_install: Installieren
 str_remove: Entfernen
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_new_version: "Neue NetPass Version erhältlich:\nv%d.%d.%d!\n\nUm NetPass zu aktualisieren,
+  installiere es einfach wieder über Universal Updater oder mit dem QR-Code."
+str_banned: "Du bist von der Nutzung von NetPass ausgeschlossen. Grund:\n%s\n\nAusgeschlossen
+  seit: %s\nAusgeschlossen bis: %s"
