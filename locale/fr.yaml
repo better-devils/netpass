@@ -106,7 +106,7 @@ str_remove: Déinstaller
 str_new_version: "Nouvelle version de NetPass disponible:\nv%d.%d.%d!\n\nPour mettre
   NetPass à jour, simplement le réinstaller à partir de Universal Updater ou par code
   QR."
-str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison:\n%s\nDébut du ban:
-  %s\nFin du ban: %s"
+str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
+  ban : %s\nFin du ban : %s"
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
