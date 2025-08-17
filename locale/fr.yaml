@@ -88,8 +88,8 @@ str_about_production_cat: Chat de la production
 str_welcome: Bienvenue sur NetPass
 str_view_privacy: Voir la pol. de confidentialité
 str_view_rules: Voir les règles
-str_welcome_message: Avant l'utilisation du service, veuillez lire et accepter les
-  règles et la politique de confidentialité.
+str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les règles
+  et la politique de confidentialité.
 str_continue: Continuer
 str_bad_os_version: "Votre 3DS doit être en 11.15 ou plus pour pouvoir utiliser NetPass.
   Malhereusement, vous semblez avoir une version plus ancienne. Veuillez mettre à
