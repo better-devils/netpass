@@ -97,3 +97,8 @@ str_report_integration: Aquest missatge és provist per una integració. Per den
 str_skip: Ometre
 str_install: Instal·lar
 str_remove: Eliminar
+str_banned: "Tens prohibit l'ús del NetPass. Raó:\n%s\n\nDes de: %s\nFins: %s"
+str_new_version: "Nova Versió del NetPass disponible:\nv%d.%d.%d!\n\nPer actualitzar
+  el NetPass, torna a instal·lar-ho amb Universal Updater o amb el codi QR."
+str_date_time: '%d/%m/%Y %H:%M:%S'
+str_date: '%d/%m/%Y'
