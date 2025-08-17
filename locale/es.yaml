@@ -99,3 +99,9 @@ str_report_integration: Este mensaje proviene de una integración. Para denuncia
 str_install: Instalar
 str_remove: Eliminar
 str_skip: Omitir
+str_banned: "Se te ha expulsado de NetPass. Razón:\n%s\n\nDesde: %s\nHasta: %s"
+str_new_version: "Nueva Versión de NetPass disponible:\n¡v%d.%d.%d!\n\nPara actualizar
+  NetPass, simplemente vuelve a instalarlo a través de Universal Updater o con el
+  código QR."
+str_date_time: '%d/%m/%Y %H:%M:%S'
+str_date: '%d/%m/%Y'
