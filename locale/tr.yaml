@@ -86,3 +86,22 @@ str_welcome_message: NetPass'i başlatmadan önce lütfen kurallarımızı ve gi
 str_view_rules: Kuralları Görüntüle
 str_view_privacy: Gizlilik Politikasını Görüntüle
 str_continue: Devam et
+str_skip: Atla
+str_install: Yükle
+str_date: '%Y %b %d'
+str_date_time: '%Y %b %d %I:%M:%S%p'
+str_bg_music: AP Müziği
+str_prompt_dl_pass: Bu pass'i indirmek istediğinizden emin misiniz?
+str_report_integration: Bu mesaj bir entegrasyondan kaynaklanmaktadır. Bildirmek için
+  lütfen söz konusu entegrasyonun moderasyon ekibine mesaj gönderin.
+str_bad_os_version: "NetPass'ın düzgün çalışması için 3DS OS 11.15.0 veya daha yeni
+  bir sürüm gereklidir. Maalesef, daha eski bir sürüm kullanıyor gibi görünüyorsunuz.
+  Lütfen güncelleme yapın ve NetPass'ı yeniden başlatın.\n\nÇıkmak için herhangi bir
+  tuşa basın"
+str_update_patches_poweroff_clear_desc: Yamalar başarıyla kaldırıldı! Konsolunuz şimdi
+  yeniden başlatılacak.
+str_banned: "NetPass'ı kullanmanız yasaklanmıştır. Sebebi:\n%s\n\nYasak başlangıcı:
+  %s\nYasak bitişi: %s"
+str_remove: Kaldır
+str_new_version: "Yeni NetPass sürümü mevcut:\nv%d.%d.%d!\n\nNetPass'ı güncellemek
+  için Universal Updater veya QR kodu aracılığıyla yeniden yükleyin."
