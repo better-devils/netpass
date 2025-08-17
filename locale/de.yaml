@@ -100,3 +100,5 @@ str_report_integration: Diese Nachricht stammt aus einer Integration. Bitte wend
 str_skip: Überspringen
 str_install: Installieren
 str_remove: Entfernen
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
