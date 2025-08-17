@@ -507,6 +507,7 @@ const char* error_desc_str_map[] = {
 	"BadCecdState",
 	"NoStreetpassGames",
 	"SameLocationTwice",
+	"InvalidServerResp",
 };
 
 const char* error_desc_desc_map[] = {
@@ -526,8 +527,20 @@ const char* error_desc_desc_map[] = {
 	"The internal state of the CECD service is incorrect. Try closing NetPass and opening it again.",
 	"There are no games with StreetPass enabled. Please enable StreetPass in at least one title and open NetPass again.",
 	"You can't enter the same location twice in a row.",
+	"The server responded with an invalid response. Try closing NetPass and opening it again.",
 };
 
 void miscInit(void) {
 	set_application_desc_map(sizeof(error_desc_str_map) / sizeof(error_desc_str_map[0]), error_desc_str_map, error_desc_desc_map);
+}
+
+void cecTimeToTm(CecTimestamp* cec, struct tm* tm) {
+	tm->tm_year = cec->year - 1900;
+	tm->tm_mon = cec->month - 1;
+	tm->tm_mday = cec->day;
+	tm->tm_wday = cec->weekday;
+	tm->tm_hour = cec->hour;
+	tm->tm_min = cec->minute;
+	tm->tm_sec = cec->second;
+	tm->tm_isdst = false;
 }

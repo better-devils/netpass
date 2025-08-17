@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "config.h"
 #include "report.h"
+#include "qr.h"
 #include "curl-handler.h"
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +29,52 @@
 int location = -1;
 FS_Archive sharedextdata_b = 0;
 NetpassTitleData title_data;
+
+Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
+	QrBuffer buffer;
+	qr_buffer_new(&buffer, buf, len);
+	// check version
+	if (qr_read_u32(&buffer) != 1) return ERROR_INVALID_SERVER_RESPONSE;
+	// read newest version
+	resp->version.new_version_available = qr_read_bool(&buffer);
+	resp->version.major = qr_read_u8(&buffer);
+	resp->version.minor = qr_read_u8(&buffer);
+	resp->version.patch = qr_read_u8(&buffer);
+	// read banned stuffs
+	resp->ban.is_banned = qr_read_bool(&buffer);
+	qr_read_align(&buffer, 4);
+	qr_read_object(&buffer, &resp->ban.time_start, sizeof(CecTimestamp));
+	qr_read_object(&buffer, &resp->ban.time_end, sizeof(CecTimestamp));
+	u32 banmsg_len = qr_peek_u32(&buffer);
+	if (banmsg_len) {
+		char* banmsg = malloc(banmsg_len);
+		if (!banmsg) return ERROR_OUT_OF_MEMORY;
+		u32 read = qr_read_string(&buffer, banmsg, banmsg_len);
+		if (read < banmsg_len) {
+			banmsg[read] = 0;
+		} else {
+			banmsg[banmsg_len - 1] = 0;
+		}
+		resp->ban.reason = banmsg;
+		qr_read_align(&buffer, 4);
+	} else {
+		resp->ban.reason = 0;
+	}
+	u32 message_len = qr_peek_u32(&buffer);
+	if (message_len) {
+		char* msg = malloc(message_len);
+		if (!msg) {
+			if (resp->ban.reason) free(resp->ban.reason);
+			return ERROR_OUT_OF_MEMORY;
+		}
+		qr_read_string(&buffer, msg, message_len);
+		resp->message.message = msg;
+		qr_read_align(&buffer, 4);
+	} else {
+		resp->message.message = 0;
+	}
+	return 0;
+}
 
 Result initTitleData(void) {
 	Result res = 0;

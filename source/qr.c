@@ -29,11 +29,15 @@ bool qr_buffer_consume(QrBuffer* buffer, u32 length) {
 	return true;
 }
 
-void qr_buffer_from_quirc_data(QrBuffer* buffer, struct quirc_data* data) {
-	buffer->start = data->payload;
-	buffer->size = data->payload_len;
+void qr_buffer_new(QrBuffer* buffer, u8* bytes, u32 size) {
+	buffer->start = bytes;
+	buffer->size = size;
 	buffer->cur = buffer->start;
 	buffer->end = buffer->start + buffer->size;
+}
+
+void qr_buffer_from_quirc_data(QrBuffer* buffer, struct quirc_data* data) {
+	qr_buffer_new(buffer, data->payload, data->payload_len);
 }
 
 u32 qr_read_u32(QrBuffer* buffer) {
@@ -42,14 +46,41 @@ u32 qr_read_u32(QrBuffer* buffer) {
 	return ret;
 }
 
+u32 qr_peek_u32(QrBuffer* buffer) {
+	return *(u32*)buffer->cur;
+}
+
+u8 qr_read_u8(QrBuffer* buffer) {
+	u8 ret = *(u8*)buffer->cur;
+	if (!qr_buffer_consume(buffer, sizeof(u8))) return 0;
+	return ret;
+}
+
+bool qr_read_bool(QrBuffer* buffer) {
+	return qr_read_u8(buffer) != 0;
+}
+
+u32 qr_read_object(QrBuffer* buffer, void* buf, u32 length) {
+	u8* cur = buffer->cur;
+	if (!length || !qr_buffer_consume(buffer, length)) return 0;
+	memcpy(buf, cur, length);
+	return length;
+}
+
 u32 qr_read_string(QrBuffer* buffer, char* string, u32 length) {
 	u32 string_length = qr_read_u32(buffer);
 	u8* cur = buffer->cur;
-	if (!qr_buffer_consume(buffer, string_length)) return 0;
+	if (!string_length || !qr_buffer_consume(buffer, string_length)) return 0;
 	u32 copy_length = string_length < length ? string_length : length;
 	strncpy(string, (char*)cur, copy_length);
 	string[copy_length - 1] = 0;
 	return copy_length;
+}
+
+u32 qr_read_align(QrBuffer* buffer, u32 align) {
+	u8 num = align - ((buffer->cur - buffer->start) % align);
+	if (num != align && !qr_buffer_consume(buffer, num)) return 0;
+	return num;
 }
 
 bool qr_buf_equal(QrBuffer* buffer, u8* buf, u32 len) {

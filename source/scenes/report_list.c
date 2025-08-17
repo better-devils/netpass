@@ -62,10 +62,12 @@ void N(init)(Scene* sc) {
 		ReportListEntry* entry = &_data->list->entries[i];
 		u8 mii_name[MII_UTF8_NAME_LEN];
 		get_mii_name(mii_name, &entry->mii);
-		char render_entry[30 + MII_UTF8_NAME_LEN];
-		snprintf(render_entry, 30 + MII_UTF8_NAME_LEN, "%s  %04lu-%02d-%02d %02d:%02d:%02d", mii_name,
-			entry->received.year, entry->received.month, entry->received.day,
-			entry->received.hour, entry->received.minute, entry->received.second);
+		char timestr[30];
+		struct tm tm;
+		cecTimeToTm(&entry->received, &tm);
+		strftime(timestr, sizeof(timestr), _s(str_date_time), &tm);
+		char render_entry[sizeof(timestr) + 2 + MII_UTF8_NAME_LEN];
+		snprintf(render_entry, sizeof(timestr) + 2 + MII_UTF8_NAME_LEN, "%s  %s", mii_name, timestr);
 		C2D_TextFontParse(&_data->g_entries[i], getFontIndex(entry->mii.mii_options.char_set), _data->g_staticBuf, render_entry);
 	}
 }

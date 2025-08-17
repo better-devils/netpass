@@ -28,6 +28,10 @@
 #include "music.h"
 #include "integration.h"
 
+CurlReply* ping_reply = 0;
+Result ping_res = 0;
+PingResponse ping_response = {0};
+
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
 
@@ -104,49 +108,98 @@ int main() {
 			// as it does not even compile if we were to cast the returns to ints, this is clearly a cppcheck bug
 			// cppcheck-suppress CastAddressToIntegerAtReturn
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
-				if (location == -403) {
-					// you are banned
-					return getSettingsScene();
-				} else if (R_FAILED(location) && location != -1) {
+				if (ping_response.ban.is_banned) {
+					// we are banned
+					
+					char ban_start[20];
+					char ban_end[20];
+					struct tm tm = {0};
+					if (ping_response.ban.time_start.year) {
+						cecTimeToTm(&ping_response.ban.time_start, &tm);
+						strftime(ban_start, sizeof(ban_start), _s(str_date), &tm);
+					} else {
+						strncpy(ban_start, "N/A", sizeof(ban_start));
+					}
+					if (ping_response.ban.time_end.year) {
+						cecTimeToTm(&ping_response.ban.time_end, &tm);
+						strftime(ban_end, sizeof(ban_end), _s(str_date), &tm);
+					} else {
+						strncpy(ban_end, "N/A", sizeof(ban_end));
+					}
+					
+					Scene* scene = getSettingsScene();
+					char* message = malloc(1000);
+					if (message) {
+						snprintf(message, 1000, _s(str_banned), ping_response.ban.reason, ban_start, ban_end);
+						C2D_Font font = _font(str_banned);
+						Scene* ban_scene = getInfoSceneStr(message, font);
+						scene->init(scene);
+						ban_scene->pop_scene = scene;
+						scene = ban_scene;
+					}
+					return scene;
+				}
+				 if (R_FAILED(ping_res)) {
 					// something not working
 					return getErrorScene(location, true);
 				}
 				bgLoopInit();
-				if (R_FAILED(location) || location == -1) {
-					return getHomeScene(); // load home
+				Scene* scene;
+				if (location == -1) {
+					scene = getHomeScene(); // load home
+				} else {
+					scene = getLocationScene(location);
 				}
-				return getLocationScene(location);
+	
+				if (ping_response.version.new_version_available) {
+					char* message = malloc(1000);
+					if (message) {
+						snprintf(message, 1000, _s(str_new_version), ping_response.version.major, ping_response.version.minor, ping_response.version.patch);
+						C2D_Font font = _font(str_new_version);
+						Scene* version_scene = getInfoSceneStr(message, font);
+						scene->init(scene);
+						version_scene->pop_scene = scene;
+						scene = version_scene;
+					}
+				} else if (ping_response.message.message) {
+					Scene* message_scene = getInfoSceneStr(ping_response.message.message, 0);
+					scene->init(scene);
+					message_scene->pop_scene = scene;
+					scene = message_scene;
+				}
+				return scene;
 			})), lambda(void, (void) {
-				Result res;
 				// first, we import the locally stored passes for reports to work
 				reportInit();
 				// next, we gotta wait for having internet
                 DEBUG_PRINTF("Waiting internet\n");
 				char url[50];
-				snprintf(url, 50, "%s/ping", BASE_URL);
+				snprintf(url, 50, "%s/ping2", BASE_URL);
 				int check_count = 0;
 				int max_count = 100;
 				while (true) {
-					res = httpRequest("GET", url, 0, 0, 0, 0, 0);
-					if (R_SUCCEEDED(res)) break;
+					ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0, 0);
+					if (R_SUCCEEDED(ping_res)) break;
 					check_count++;
-					if (ERROR_IS_HTTP(res)) {
-						location = res;
+					if (ERROR_IS_HTTP(ping_res)) {
+						curlFreeHandler(ping_reply->offset);
 						return;
 					}
 					if (check_count > max_count) {
-						if (res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
+						if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 							max_count += 100;
 							continue;
 						}
-						location = res;
 						return;
 					}
 				}
+				readPingResponse(&ping_response, ping_reply->ptr, ping_reply->len);
+				curlFreeHandler(ping_reply->offset);
+				if (ping_response.ban.is_banned) return;
 				waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 				initTitleData();
 				doSlotExchangeRetry();
-				res = getLocation();
+				Result res = getLocation();
 				if (R_FAILED(res) && res != -1) {
 					_e(res);
 					printf("ERROR failed to get location: %ld\n", res);

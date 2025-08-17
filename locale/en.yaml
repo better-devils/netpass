@@ -95,3 +95,7 @@ str_report_integration: "This message is originating from an integration. To rep
 str_skip: "Skip"
 str_install: "Install"
 str_remove: "Remove"
+str_banned: "You are banned from using NetPass. Reason:\n%s\n\nBan start: %s\nBan end: %s"
+str_date: "%d %b %Y"
+str_date_time: "%d %b %Y %I:%M:%S%p"
+str_new_version: "New NetPass Version available:\nv%d.%d.%d!\n\nTo update NetPass simply install it again via Universal Updater or via QR-Code."

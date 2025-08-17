@@ -48,6 +48,31 @@ typedef struct {
 	TitleDataEntry titles[12];
 } NetpassTitleData;
 
+typedef struct {
+	bool new_version_available;
+	u8 major;
+	u8 minor;
+	u8 patch;
+} PingResponseVersion;
+
+typedef struct {
+	bool is_banned;
+	CecTimestamp time_start;
+	CecTimestamp time_end;
+	char* reason;
+} PingResponseBan;
+
+typedef struct {
+	char* message;
+} PingResponseMessage;
+
+typedef struct {
+	PingResponseVersion version;
+	PingResponseBan ban;
+	PingResponseMessage message;
+} PingResponse;
+
+Result readPingResponse(PingResponse* response, u8* buf, u32 len);
 Result initTitleData(void);
 NetpassTitleData* getTitleData(void);
 int numUsedTitles(void);

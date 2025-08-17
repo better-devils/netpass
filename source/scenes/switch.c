@@ -27,7 +27,6 @@ void N(exit)(Scene* sc) { }
 SceneResult N(process)(Scene* sc) {
 	Scene* next_scene = ((Scene*(*)(void))sc->data)();
 	sc->next_scene = next_scene;
-	if (next_scene->is_popup) return scene_push;
 	return scene_switch;
 }
 
