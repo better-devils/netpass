@@ -99,3 +99,5 @@ str_skip: Pomiń
 str_install: Instaluj
 str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić, proszę
   napisać do zespołu moderacji danej integracji.
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
