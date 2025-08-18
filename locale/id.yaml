@@ -31,3 +31,5 @@ str_report_user: Lapor pengguna
 str_report_user_hint: Pelaku "%s"
 str_back_alley: Gang Kramat
 str_back_alley_message: Mari terima lebih pas!
+str_date: '%d/%m/%Y'
+str_date_time: '%d/%m/%Y %H:%M:%S'
