@@ -88,8 +88,8 @@ str_view_privacy: Gizlilik Politikasını Görüntüle
 str_continue: Devam et
 str_skip: Atla
 str_install: Yükle
-str_date: '%Y %b %d'
-str_date_time: '%Y %b %d %I:%M:%S%p'
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
 str_bg_music: AP Müziği
 str_prompt_dl_pass: Bu pass'i indirmek istediğinizden emin misiniz?
 str_report_integration: Bu mesaj bir entegrasyondan kaynaklanmaktadır. Bildirmek için
