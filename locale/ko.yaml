@@ -88,4 +88,4 @@ str_prompt_dl_pass: 이 통신을 다운로드하시겠습니까?
 str_back_alley_message: 더 많이 엇갈려보자!
 str_report_user: 사용자 신고
 str_date: '%Y년%m월%d일'
-str_date_time: '%Y년%m월%d일 %H:%M:%S'
+str_date_time: '%Y년%m월%d일 %p%I:%M:%S'
