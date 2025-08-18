@@ -96,3 +96,5 @@ str_report_integration: Dëse Message staamt aus enger Integratioun. Fir et ze m
 str_skip: Iwwersprangen
 str_install: Installéieren
 str_remove: Suppriméieren
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
