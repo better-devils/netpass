@@ -97,3 +97,5 @@ str_report_integration: "Denne meldingen stammer fra en integrering. Vennligst k
 str_skip: "Hopp over"
 str_install: "Installer"
 str_remove: "Fjern"
+str_date_time: '%d.%m.%Y %H:%M:%S'
+str_date: '%d.%m.%Y'
