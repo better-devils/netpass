@@ -76,7 +76,7 @@ str_integrations_message: Ang mga third-party na integrasyon ay wala sa saklaw n
 str_report_source_unknown: Lingid na pinanggalingan
 str_settings_misc: Iba pang settings
 str_settings_about: Ukol
-str_about_lead_dev: Nangungunang Developer
+str_about_lead_dev: Pangunahing Developer
 str_about_special_thanks_txt: Ang komunidad ng 3DS homebrew para sa mga reverse-engineering
   at dokumentasyon
 str_x_switch_camera: '{x_button} Palitan ang Kamera'
@@ -100,3 +100,10 @@ str_report_integration: Ang mensahe na ito ay nagmumula sa isang integrasyon. Pa
   isumbong ito, i-message ang moderation team ng nasabing integrasyon.
 str_date: '%d-%m-%Y'
 str_date_time: '%d-%m-%Y %H:%M:%S'
+str_remove: Tanggalin
+str_banned: "Pinagbabawal ikaw gamitin ang Netpass. Rason:\n%s\n\nUmpisa ng ban: %s\n
+  Pagtatapos ng ban: %s"
+str_new_version: "May bagong bersyon ang Netpass na available:\nv%d.%d.%d!\n\nPara
+  ma-update ang Netpass, i-install lang ulit gamit ang Universal Updater o QR Code."
+str_install: I-install
+str_skip: Ilaktaw
