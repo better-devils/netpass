@@ -97,3 +97,5 @@ str_report_integration: Šis pranešimas kilo iš integracijos. Norint pranešti
 str_skip: Praleisti
 str_install: Įdiegti
 str_remove: Pašalinti
+str_date: '%Y-%m-%d'
+str_date_time: '%Y-%m-%d %H:%M:%S'
