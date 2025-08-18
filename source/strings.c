@@ -111,6 +111,10 @@ u8 get_nintendo_language(void) {
 	return _language > NUM_NINTENDO_LANGUAGES ? CFG_LANGUAGE_EN : _language;
 }
 
+u8 get_language(void) {
+	return _language;
+}
+
 void TextLangParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s) {
 	TextLangSpecificParse(staticText, staticBuf, s, _language);
 }

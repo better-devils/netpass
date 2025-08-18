@@ -1,4 +1,6 @@
-import os, yaml, json, struct
+import os, yaml, json, struct, requests
+from io import BytesIO
+from zipfile import ZipFile
 
 SRCDIR = "locale"
 DESTDIR = "codegen"
@@ -38,6 +40,11 @@ def _s(s):
 	for r, p in replace_map.items():
 		s = s.replace(f"{{{r}}}", p)
 	return s
+
+print("Fetching locales...")
+resp = requests.get("https://github.com/unicode-org/cldr-json/releases/download/47.0.0/cldr-47.0.0-json-full.zip").content
+localezip = ZipFile(BytesIO(resp))
+print("Done")
 
 translations = {}
 
@@ -81,9 +88,89 @@ typedef const struct {
 	const char* text;
 } LanguageString[NUM_LANGUAGES];
 
+typedef const struct {
+	const char* months_abbr[NUM_LANGUAGES][12];
+	const char* months[NUM_LANGUAGES][12];
+	const char* weekdays_abbr[NUM_LANGUAGES][7];
+	const char* weekdays[NUM_LANGUAGES][7];
+	const char* ampm[NUM_LANGUAGES][2];
+} LCTime;
+extern const LCTime lc_time_all;
+
 extern const int all_languages[];
 extern const char* all_languages_str[];
+
 """
+
+lc_time = {}
+
+outfile += "LCTime lc_time_all = {\n"
+
+for lang in lang_keys:
+	lc_time[lang] = {
+		"months_abbr": None,
+		"months": None,
+		"weekdays_abbr": None,
+		"weekdays": None,
+		"ampm": None,
+	}
+	formatstr = ""
+	for key in ("str_date", "str_date_time"):
+		if key in translations[lang]:
+			formatstr += translations[lang][key]
+	langfile = lang
+	if lang == "nb_NO":
+		langfile = "nb"
+	if lang == "tl":
+		langfile = "fil"
+	langfile = langfile.replace("_", "-")
+	with localezip.open(f"cldr-dates-full/main/{langfile}/ca-generic.json") as file:
+		d = json.loads(file.read())
+		d = d["main"][langfile]["dates"]["calendars"]["iso8601"]
+		
+		# month abbr
+		if "%b" in formatstr:
+			lc_time[lang]["months_abbr"] = []
+			for i in range(12):
+				lc_time[lang]["months_abbr"].append(d["months"]["format"]["abbreviated"][str(i + 1)])
+		
+		# month
+		if "%B" in formatstr:
+			lc_time[lang]["months"] = []
+			for i in range(12):
+				lc_time[lang]["months"].append(d["months"]["format"]["wide"][str(i + 1)])
+		
+		# weekday abbr
+		if "%a" in formatstr:
+			lc_time[lang]["weekdays_abbr"] = []
+			for i in ("sun", "mon", "tue", "wed", "thu", "fri", "sat"):
+				lc_time[lang]["weekdays_abbr"].append(d["days"]["format"]["abbreviated"][i])
+		
+		# weekday abbr
+		if "%A" in formatstr:
+			lc_time[lang]["weekdays"] = []
+			for i in ("sun", "mon", "tue", "wed", "thu", "fri", "sat"):
+				lc_time[lang]["weekdays"].append(d["days"]["format"]["wide"][i])
+		
+		# am/pm
+		if "%p" in formatstr:
+			lc_time[lang]["ampm"] = []
+			for i in ("am", "pm"):
+				lc_time[lang]["ampm"].append(d["dayPeriods"]["format"]["abbreviated"][i])
+
+for type in ("months_abbr", "months", "weekdays_abbr", "weekdays", "ampm"):
+	outfile += "\t{\n";
+	for lang in lang_keys:
+		if lc_time[lang][type] is not None:
+			outfile += "\t\t{"
+			for item in lc_time[lang][type]:
+				outfile += json.dumps(item, ensure_ascii=False) + ", "
+			outfile += "},\n"
+		else:
+			outfile += "\t\t{0},\n"
+	outfile += "},\n";
+
+outfile += "};\n\n"
 
 outfile += f"const int all_languages[{len(lang_keys)}] = {{"
 for lang in lang_keys:

@@ -116,13 +116,13 @@ int main() {
 					struct tm tm = {0};
 					if (ping_response.ban.time_start.year) {
 						cecTimeToTm(&ping_response.ban.time_start, &tm);
-						strftime(ban_start, sizeof(ban_start), _s(str_date), &tm);
+						n_strftime(ban_start, sizeof(ban_start), _s(str_date), &tm);
 					} else {
 						strncpy(ban_start, "N/A", sizeof(ban_start));
 					}
 					if (ping_response.ban.time_end.year) {
 						cecTimeToTm(&ping_response.ban.time_end, &tm);
-						strftime(ban_end, sizeof(ban_end), _s(str_date), &tm);
+						n_strftime(ban_end, sizeof(ban_end), _s(str_date), &tm);
 					} else {
 						strncpy(ban_end, "N/A", sizeof(ban_end));
 					}

@@ -66,6 +66,7 @@ void _e_errno(void);
 Scene* get_new_error_scene(void);
 void miscInit(void);
 void cecTimeToTm(CecTimestamp* cec, struct tm* tm);
+size_t n_strftime(char* str, size_t count, const char* format, const struct tm* tp);
 
 #define ERROR_NO_TITLE_ID CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_OUT_OF_RESOURCE, CTR_RESULT_MODULE_APPLICATION, 0)
 #define ERROR_MISSING_SLOT_META CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_NOT_FOUND, CTR_RESULT_MODULE_APPLICATION, 1)

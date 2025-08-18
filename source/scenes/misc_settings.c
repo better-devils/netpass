@@ -199,7 +199,7 @@ static void downloadDataThread(void) {
 		printf("\nPANIC: gmtime failed\n");
 		return;
 	}
-	strftime(filename, 200, "sdmc:/netpass_export_%Y%m%dT%H%M%S.zip", &now_tm);
+	n_strftime(filename, 200, "sdmc:/netpass_export_%Y%m%dT%H%M%S.zip", &now_tm);
 	printf("Downloading...");
 	res = httpRequest("GET", url, 0, 0, (void*)1, filename, 0);
 	printf("\n");

@@ -54,6 +54,59 @@ u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type) {
 	return 0;
 }
 
+size_t n_strftime(char* str, size_t count, const char* format, const struct tm* tp) {
+	char* tmpstr = malloc(count);
+	if (!tmpstr) return 0;
+	strncpy(tmpstr, format, count);
+	char* pos;
+	
+	u8 lang = get_language();
+	
+	// months abbreviation
+	if (lc_time_all.months_abbr[lang][0] && 0 != (pos = strstr(tmpstr, "%b"))) {
+		*pos = 0;
+		pos += 2;
+		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.months_abbr[lang][tp->tm_mon], pos);
+		strncpy(tmpstr, str, count);
+	}
+	
+	// months
+	if (lc_time_all.months[lang][0] && 0 != (pos = strstr(tmpstr, "%B"))) {
+		*pos = 0;
+		pos += 2;
+		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.months[lang][tp->tm_mon], pos);
+		strncpy(tmpstr, str, count);
+	}
+	
+	// weekdays abbreviation
+	if (lc_time_all.weekdays_abbr[lang][0] && 0 != (pos = strstr(tmpstr, "%a"))) {
+		*pos = 0;
+		pos += 2;
+		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.weekdays_abbr[lang][tp->tm_wday], pos);
+		strncpy(tmpstr, str, count);
+	}
+	
+	// weekdays
+	if (lc_time_all.weekdays[lang][0] && 0 != (pos = strstr(tmpstr, "%A"))) {
+		*pos = 0;
+		pos += 2;
+		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.weekdays[lang][tp->tm_wday], pos);
+		strncpy(tmpstr, str, count);
+	}
+	
+	// am/pm
+	if (lc_time_all.ampm[lang][0] && 0 != (pos = strstr(tmpstr, "%p"))) {
+		*pos = 0;
+		pos += 2;
+		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.ampm[lang][tp->tm_hour >= 1 && tp->tm_hour <= 12], pos);
+		strncpy(tmpstr, str, count);
+	}
+	
+	size_t ret = strftime(str, count, tmpstr, tp);
+	free(tmpstr);
+	return ret;
+}
+
 // from https://nachtimwald.com/2017/11/18/base64-encode-and-decode-in-c/
 size_t b64_encoded_size(size_t inlen) {
 	size_t ret;
@@ -536,11 +589,11 @@ void miscInit(void) {
 
 void cecTimeToTm(CecTimestamp* cec, struct tm* tm) {
 	tm->tm_year = cec->year - 1900;
-	tm->tm_mon = cec->month - 1;
-	tm->tm_mday = cec->day;
-	tm->tm_wday = cec->weekday;
-	tm->tm_hour = cec->hour;
-	tm->tm_min = cec->minute;
-	tm->tm_sec = cec->second;
+	tm->tm_mon = cec->month == 0 || cec->month > 12 ? 0 : cec->month - 1;
+	tm->tm_mday = cec->day == 0 || cec->day > 31 ? 0 : cec->day;
+	tm->tm_wday = cec->weekday > 6 ? 0 : cec->weekday;
+	tm->tm_hour = cec->hour > 23 ? 0 : cec->hour;
+	tm->tm_min = cec->minute > 59 ? 0 : cec->minute;
+	tm->tm_sec = cec->second > 59 ? 0 : cec->second;
 	tm->tm_isdst = false;
 }

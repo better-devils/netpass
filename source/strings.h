@@ -29,5 +29,6 @@ void get_text_dimensions(C2D_Text* text, float scale_x, float scale_y, float* wi
 C2D_Font _font(LanguageString s);
 C2D_Font getFontIndex(int i);
 u8 get_nintendo_language(void);
+u8 get_language(void);
 void TextLangParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s);
 void TextLangSpecificParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s, int l);

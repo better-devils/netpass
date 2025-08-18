@@ -65,7 +65,7 @@ void N(init)(Scene* sc) {
 		char timestr[30];
 		struct tm tm;
 		cecTimeToTm(&entry->received, &tm);
-		strftime(timestr, sizeof(timestr), _s(str_date_time), &tm);
+		n_strftime(timestr, sizeof(timestr), _s(str_date_time), &tm);
 		char render_entry[sizeof(timestr) + 2 + MII_UTF8_NAME_LEN];
 		snprintf(render_entry, sizeof(timestr) + 2 + MII_UTF8_NAME_LEN, "%s  %s", mii_name, timestr);
 		C2D_TextFontParse(&_data->g_entries[i], getFontIndex(entry->mii.mii_options.char_set), _data->g_staticBuf, render_entry);
