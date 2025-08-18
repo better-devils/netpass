@@ -108,5 +108,5 @@ str_new_version: "Nouvelle version de NetPass disponible:\nv%d.%d.%d!\n\nPour me
   QR."
 str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison:\n%s\nDébut du ban:
   %s\nFin du ban: %s"
-str_date: '%d/%b/%Y'
-str_date_time: '%d/%b%Y %I:%M:%S%p'
+str_date: '%d/%m/%Y'
+str_date_time: '%d/%m/%Y %H:%M:%S'
