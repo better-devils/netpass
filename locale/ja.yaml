@@ -91,5 +91,5 @@ str_report_integration: このメッセージは統合機能を通じて送信�
 str_remove: 削除する
 str_skip: スキップする
 str_install: インストールする
-str_date: '%Y年%m月%d日'
-str_date_time: '%Y年%m月%d日 %H:%M:%S'
+str_date: '%Y年%m月%d日(%a曜日)'
+str_date_time: '%Y年%m月%d日(%a曜日) %p%I時%M分%S秒'
