@@ -98,3 +98,5 @@ str_prompt_dl_pass: Är du säker på att du vill ladda ner detta pass?
 str_bad_os_version: "NetPass kräver 3DS OS 11.15.0 eller senare för att fungera ordentligt.
   Det verkar tyvärr som att du använder en äldre version. Vänligen uppdatera ditt
   operativsystem och starta sedan NetPass igen.\n\nTryck på valfri knapp för att avsluta"
+str_date_time: '%Y-%m-%d %H.%M.%S'
+str_date: '%Y-%m-%d'
