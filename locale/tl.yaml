@@ -99,7 +99,7 @@ str_prompt_dl_pass: Sigurado ka ba na gusto mo i-download ang pass na ito?
 str_report_integration: Ang mensahe na ito ay nagmumula sa isang integrasyon. Para
   isumbong ito, i-message ang moderation team ng nasabing integrasyon.
 str_date: '%d-%m-%Y'
-str_date_time: '%d-%m-%Y %H:%M:%S'
+str_date_time: '%d-%m-%Y %I:%M:%S%p'
 str_remove: Tanggalin
 str_banned: "Pinagbabawal ikaw gamitin ang Netpass. Rason:\n%s\n\nUmpisa ng ban: %s\n
   Pagtatapos ng ban: %s"
