@@ -99,3 +99,5 @@ str_skip: Пропустить
 str_install: Установить
 str_remove: Удалить
 str_prompt_dl_pass: Вы уверены, что хотите скачать этот "пасс"?
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
