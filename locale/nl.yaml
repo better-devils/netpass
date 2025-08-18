@@ -100,3 +100,5 @@ str_skip: Overslaan
 str_install: Installeer
 str_remove: Verwijder
 str_prompt_dl_pass: Weet je zeker dat je deze pas wilt downloaden?
+str_date_time: '%d-%m-%Y %H:%M:%S'
+str_date: '%d-%m-%Y'
