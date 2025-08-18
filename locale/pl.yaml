@@ -101,3 +101,8 @@ str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić,
   napisać do zespołu moderacji danej integracji.
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_banned: "Zostałeś zbanowany w NetPass'ie. Powód:\n%s\n\nPoczątek bana: %s\nKoniec
+  bana: %s"
+str_new_version: "Nowa wersja NetPass dostępna:\nv%d.%d.%d!\n\nBy zaktualizować NetPass'a
+  po prostu zainstaluj ją ponownie używając aplikacji Universal Updater lub za pomocą
+  QR-Code."
