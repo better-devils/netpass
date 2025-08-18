@@ -100,3 +100,5 @@ str_prompt_dl_pass: Você tem certeza de que quer instalar este passe?
 str_skip: Pular
 str_install: Instalar
 str_remove: Remover
+str_date: '%d/%m/%Y'
+str_date_time: '%d/%m/%Y %H:%M:%S'
