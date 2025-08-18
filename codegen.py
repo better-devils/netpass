@@ -156,7 +156,7 @@ for lang in lang_keys:
 		if "%p" in formatstr:
 			lc_time[lang]["ampm"] = []
 			for i in ("am", "pm"):
-				lc_time[lang]["ampm"].append(d["dayPeriods"]["format"]["abbreviated"][i])
+				lc_time[lang]["ampm"].append(d["dayPeriods"]["format"]["wide"][i])
 
 for type in ("months_abbr", "months", "weekdays_abbr", "weekdays", "ampm"):
 	outfile += "\t{\n";
