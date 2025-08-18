@@ -33,3 +33,5 @@ str_cancel: Ceal
 str_submit: Cuir isteach
 str_back_alley: Caolsráid ar ais
 str_back_alley_pay: Ceannaigh pas {playcoin}%d
+str_date: '%d-%m-%Y'
+str_date_time: '%d-%m-%Y %H:%M:%S'
