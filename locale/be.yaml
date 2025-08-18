@@ -97,3 +97,5 @@ str_report_integration: "Гэта паведамленне паходзiць а�
 str_skip: "Прапусцiць"
 str_install: "Усталяваць"
 str_remove: "Выдалiць"
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
