@@ -75,3 +75,5 @@ str_integrations_message: Tredjepartsintegrationer er uden for NetPass kontrol. 
 str_integrations: Integrationer
 str_report_source: 'Kilde: %s'
 str_report_source_unknown: Ukendt kilde
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
