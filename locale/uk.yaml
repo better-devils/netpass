@@ -98,3 +98,5 @@ str_report_integration: Джерелом цього повiдомлення є i
 str_skip: Пропустити
 str_install: Установити
 str_prompt_dl_pass: Ви впевненi, що хочете скачати цей "пас"?
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
