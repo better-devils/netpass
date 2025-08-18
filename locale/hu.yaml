@@ -99,5 +99,5 @@ str_report_integration: Ez az üzenet egy integrációtól származik. A bejelen
 str_skip: Átugrik
 str_install: Telepítés
 str_remove: Eltávolítás
-str_date: '%Y.%m.%d'
-str_date_time: '%Y.%m.%d %H:%M:%S'
+str_date: '%Y.%b.%d'
+str_date_time: '%Y.%b.%d %H:%M:%S'
