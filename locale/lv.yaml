@@ -42,3 +42,5 @@ str_toggle_titles_on: "(JĀ)"
 str_toggle_titles_off: "(NĒ)"
 str_write_patches: ""
 str_clear_spr_cache: ""
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
