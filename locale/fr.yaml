@@ -67,8 +67,8 @@ str_integrations_message: Les intégrations tierces ne sont pas gérées par Net
   Utilisez-les à vos risques et périls !
 str_update_patches_poweroff_desc: Mise à jour des fichiers réussie ! Votre console
   va maintenant redémarrer.
-str_update_patches_error_desc: Un problème est survenu pendant l'installation des
-  fichiers modificateurs. Veuillez reporter le problème sur GitLab, GBAtemp ou Discord.
+str_update_patches_error_desc: Un problème est survenu pendant l'installation de la
+  mise à jour. S'il vous plaît, reporter le problème sur GitLab, GBAtemp ou Discord.
   https://netpass.cafe/discord
 str_settings_about: À propos
 str_about_lead_dev: Développeur principal
