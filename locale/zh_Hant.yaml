@@ -42,3 +42,5 @@ str_report_mii_plaza_last_game: '上一場遊戲: %s'
 str_report_mii_plaza_country: 國家：%s - %s
 str_report_mii_plaza_greeting: 賀詞：%s
 str_report_mii_plaza_custom_message: 您的自訂訊息： %s
+str_date: '%Y年%m月%d日'
+str_date_time: '%Y年%m月%d日 %H:%M:%S'
