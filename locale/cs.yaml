@@ -101,3 +101,5 @@ str_report_integration: Tato zpráva pochází z integrace. Pro nahlášení té
 str_skip: Přeskočit
 str_install: Instalovat
 str_remove: Odstranit
+str_date: '%d.%m.%Y'
+str_date_time: '%d.%m.%Y %H:%M:%S'
