@@ -100,3 +100,5 @@ str_bad_os_version: "NetPass richiede il sistema operativo 3DS 11.15.0 o superio
   per funzionare correttamente. Sfortunatamente, sembra che tu stia usando una versione
   più vecchia. Aggiorna il sistema e avvia nuovamente NetPass.\n\nPremi un tasto qualsiasi
   per uscire"
+str_date: '%d/%m/%Y'
+str_date_time: '%d/%m/%Y %H:%M:%S'
