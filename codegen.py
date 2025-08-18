@@ -168,7 +168,7 @@ for type in ("months_abbr", "months", "weekdays_abbr", "weekdays", "ampm"):
 			outfile += "},\n"
 		else:
 			outfile += "\t\t{0},\n"
-	outfile += "},\n";
+	outfile += "\t},\n";
 
 outfile += "};\n\n"
 
