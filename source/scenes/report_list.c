@@ -62,7 +62,7 @@ void N(init)(Scene* sc) {
 		ReportListEntry* entry = &_data->list->entries[i];
 		u8 mii_name[MII_UTF8_NAME_LEN];
 		get_mii_name(mii_name, &entry->mii);
-		char timestr[30];
+		char timestr[60];
 		struct tm tm;
 		cecTimeToTm(&entry->received, &tm);
 		n_strftime(timestr, sizeof(timestr), _s(str_date_time), &tm);

@@ -111,8 +111,8 @@ int main() {
 				if (ping_response.ban.is_banned) {
 					// we are banned
 					
-					char ban_start[20];
-					char ban_end[20];
+					char ban_start[40];
+					char ban_end[40];
 					struct tm tm = {0};
 					if (ping_response.ban.time_start.year) {
 						cecTimeToTm(&ping_response.ban.time_start, &tm);
