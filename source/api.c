@@ -49,12 +49,7 @@ Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 	if (banmsg_len) {
 		char* banmsg = malloc(banmsg_len);
 		if (!banmsg) return ERROR_OUT_OF_MEMORY;
-		u32 read = qr_read_string(&buffer, banmsg, banmsg_len);
-		if (read < banmsg_len) {
-			banmsg[read] = 0;
-		} else {
-			banmsg[banmsg_len - 1] = 0;
-		}
+		qr_read_string(&buffer, banmsg, banmsg_len);
 		resp->ban.reason = banmsg;
 		qr_read_align(&buffer, 4);
 	} else {

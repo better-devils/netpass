@@ -72,6 +72,7 @@ u32 qr_read_string(QrBuffer* buffer, char* string, u32 length) {
 	u8* cur = buffer->cur;
 	if (!string_length || !qr_buffer_consume(buffer, string_length)) return 0;
 	u32 copy_length = string_length < length ? string_length : length;
+	if (!copy_length) return 0;
 	strncpy(string, (char*)cur, copy_length);
 	string[copy_length - 1] = 0;
 	return copy_length;

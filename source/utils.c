@@ -68,6 +68,8 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 	for (lang = 0; lang < NUM_LANGUAGES; lang++) {
 		if (all_languages[lang] == sys_lang) break;
 	}
+	// if not found, default to zero
+	if (lang >= NUM_LANGUAGES) lang = 0;
 	
 	// months abbreviation
 	if (lc_time_all.months_abbr[lang][0] && 0 != (pos = strstr(tmpstr, "%b"))) {

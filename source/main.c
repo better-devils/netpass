@@ -108,6 +108,10 @@ int main() {
 			// as it does not even compile if we were to cast the returns to ints, this is clearly a cppcheck bug
 			// cppcheck-suppress CastAddressToIntegerAtReturn
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+				if (R_FAILED(ping_res)) {
+					// something not working
+					return getErrorScene(ping_res, true);
+				}
 				if (ping_response.ban.is_banned) {
 					// we are banned
 					
@@ -138,10 +142,6 @@ int main() {
 						scene = ban_scene;
 					}
 					return scene;
-				}
-				 if (R_FAILED(ping_res)) {
-					// something not working
-					return getErrorScene(location, true);
 				}
 				bgLoopInit();
 				Scene* scene;
@@ -181,10 +181,8 @@ int main() {
 					ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0, 0);
 					if (R_SUCCEEDED(ping_res)) break;
 					check_count++;
-					if (ERROR_IS_HTTP(ping_res)) {
-						curlFreeHandler(ping_reply->offset);
-						return;
-					}
+					curlFreeHandler(ping_reply->offset);
+					if (ERROR_IS_HTTP(ping_res)) return;
 					if (check_count > max_count) {
 						if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 							max_count += 100;
@@ -244,7 +242,7 @@ int main() {
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(top, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
 		C2D_SceneBegin(top);
-		if (scene->is_popup) {
+		if (scene->is_popup && scene->pop_scene) {
 			scene->pop_scene->render(scene->pop_scene);
 			C2D_Flush();
 		}
