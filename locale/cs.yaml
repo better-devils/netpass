@@ -103,3 +103,7 @@ str_install: Instalovat
 str_remove: Odstranit
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_banned: "Byl jsi zabanován z prostředí NetPass. Důvod:\n%s\n\nZačátek banu: %s\n
+  Konec banu: %s"
+str_new_version: "Nová verze NetPass je k dispozici:\nv%d.%d.%d!\n\nPro aktualizování
+  nainstalujte NetPass znovu přes Universal Updater nebo pomocí QR-kódu."
