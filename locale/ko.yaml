@@ -89,3 +89,6 @@ str_back_alley_message: 더 많이 엇갈려보자!
 str_report_user: 사용자 신고
 str_date: '%Y년%m월%d일'
 str_date_time: '%Y년%m월%d일 %p%I:%M:%S'
+str_banned: "귀하는 NetPass에서 차단되었습니다. 사유:\n%s\n\n차단 시작일: %s\n차단 종료일: %s"
+str_new_version: "새 NetPass 버전이 출시되었습니다:\nv%d.%d.%d!\n\n업데이트하려면 Universal Updater나
+  QR 코드를 통해 다시 설치하세요."
