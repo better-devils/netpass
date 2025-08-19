@@ -17,6 +17,7 @@
  */
 
 #include "utils.h"
+#include "strings.h"
 #include <string.h>
 #include <sys/stat.h>
 #include <ctype.h>
@@ -60,7 +61,13 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 	strncpy(tmpstr, format, count);
 	char* pos;
 	
-	u8 lang = get_language();
+	u8 lang = 0;
+	u8 sys_lang = get_language();
+	// no need to handle language not found, as on program startup that is already ensured
+	// so during normal runtime we don't have to check this
+	for (lang = 0; lang < NUM_LANGUAGES; lang++) {
+		if (all_languages[lang] == sys_lang) break;
+	}
 	
 	// months abbreviation
 	if (lc_time_all.months_abbr[lang][0] && 0 != (pos = strstr(tmpstr, "%b"))) {
