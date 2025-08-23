@@ -101,3 +101,7 @@ str_install: Telepítés
 str_remove: Eltávolítás
 str_date: '%Y.%b.%d'
 str_date_time: '%Y.%b.%d %H:%M:%S'
+str_banned: "A NetPass használat számodra tiltva lett. Ok:\n%s\n\nTiltás kezdete:
+  %s\nTiltás vége: %s"
+str_new_version: "Új NetPass verzió elérhető:\nv%d.%d.%d!\n\nA NetPass frissítéséhez
+  csak telepítsd újra Universal Updater-rel vagy QR kóddal."
