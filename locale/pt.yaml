@@ -1,43 +1,43 @@
-str_loading: "Carregando    "
+str_loading: "A carregar    "
 str_libcurl_error: "Erro libCURL (%d): %s"
 str_libcurl_date_and_time: 'Certifique-se de que a data e o horário do seu sistema
   estejam corretos!'
-str_httpstatus_error: 'Código de status HTTP %d'
+str_httpstatus_error: 'Código de estado HTTP %d'
 str_3ds_error: 'Código de erro 3DS %08lx'
-str_at_home: 'Você está em Casa.'
-str_goto_train_station: 'Ir para a Estação de Trem'
-str_at_train_station: 'Você está na Estação de Trem.'
+str_at_home: 'Está em Casa.'
+str_goto_train_station: 'Ir para a Estação de Comboios'
+str_at_train_station: 'Está na Estação de Comboios.'
 str_goto_plaza: 'Ir para a Praça'
-str_at_plaza: 'Você está na Praça.'
+str_at_plaza: 'Está na Praça.'
 str_goto_mall: 'Ir para o Shopping'
-str_at_mall: 'Você está no Shopping.'
+str_at_mall: 'Está no Shopping.'
 str_exit: 'Sair'
-str_settings: 'Configurações'
-str_download_data: 'Baixar dados pessoais'
-str_delete_data: 'Deletar dados pessoais'
+str_settings: 'Definições'
+str_download_data: 'Descarregar dados pessoais'
+str_delete_data: 'Remover dados pessoais'
 str_back: 'Voltar'
 str_goto_beach: Ir para a Praia
-str_at_beach: Você está na Praia.
-str_goto_arcade: Ir para o Fliperama
-str_at_arcade: Você está no Fliperama.
+str_at_beach: Está na Praia.
+str_goto_arcade: Ir para a Sala de Jogos
+str_at_arcade: Está na Sala de Jogos.
 str_goto_catcafe: Ir para o Cat Café
 str_language: Português
-str_at_catcafe: Você está no Cat Café.
-str_system_language: Idioma do Console
+str_at_catcafe: Está no Cat Café.
+str_system_language: Idioma do sistema
 str_language_pick: 'Idioma:'
-str_no_location_twice: Você não pode entrar na mesma localização duas vezes seguidas!
-str_report_user: Denunciar um usuário
+str_no_location_twice: Não pode entrar na mesma localização duas vezes seguidas!
+str_report_user: Denunciar um utilizador
 str_report_user_hint: Denunciar "%s"
 str_cancel: Cancelar
 str_submit: Enviar
 str_back_alley: Beco
-str_back_alley_message: Vamos pegar mais alguns passes!
-str_back_alley_pay: Compre um passe {playcoin}%d
+str_back_alley_message: Vamos arranjar mais alguns passes!
+str_back_alley_pay: Comprar um passe {playcoin}%d
 str_toggle_titles: Ativar/Desativar Jogos
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_check_inboxes: Verificar Inboxes
-str_toggle_titles_message: Aperte {a_button} para ativar ou desativar a troca de passes.
+str_toggle_titles_message: Prima {a_button} para ativar ou desativar a troca de passes.
 str_write_patches: Gravar patches
 str_clear_spr_cache: Limpar o cache SPR
 str_report_mii_name: 'Nome do Mii: %s'
@@ -45,60 +45,64 @@ str_report_mario_kart_7_greeting: 'Saudação: %s'
 str_report_mii_plaza_last_game: 'Último Jogo: %s'
 str_report_mii_plaza_country: 'País: %s - %s'
 str_report_mii_plaza_greeting: 'Saudação: %s'
-str_report_mii_plaza_custom_message: 'Sua mensagem: %s'
-str_report_mii_plaza_custom_reply: 'Mensagem dele(a): %s'
+str_report_mii_plaza_custom_message: 'A sua mensagem: %s'
+str_report_mii_plaza_custom_reply: 'A resposta deles: %s'
 str_report_tomodachi_life_island_name: 'Nome da ilha: %s'
 str_b_go_back: '{b_button} Voltar'
 str_b_cancel: '{b_button} Cancelar'
 str_a_ok: '{a_button} Ok'
-str_update_patches_error_desc: Algo de errado aconteceu ao atualizar os patches. Por
+str_update_patches_error_desc: Aconteceu algo de errado ao atualizar os patches. Por
   favor, reporte o problema no Gitlab, GBAtemp ou no Discord. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: A atualização de patches foi bem-sucedida! Seu console
-  irá reiniciar.
+str_update_patches_poweroff_desc: A atualização de patches foi bem-sucedida! A consola
+  será reiniciada agora.
 str_update_patches_desc: Para instalar corretamente o NetPass, alguns patches para
-  o sysmodule serão criados agora. Para que eles funcionem, você precisa ativar “Enable
-  loading external FIRMs and modules” na configuração do Luma3DS. Para ver as configurações,
-  desligue o console e pressione {select_button} enquanto liga {power_button} o console.
-  Você pode fazer isso depois que os patches forem gravados.
+  o sysmodule têm de ser criados. Para que estes funcionem, tem que ativar "Enable
+  loading external FIRMs and modules" nas definições do Luma3DS. Para aceder às definições,
+  desligue a consola e mantenha premido {select_button} enquanto liga {power_button}
+  a mesma. Pode fazer isto depois dos patches serem criados.
 str_update_patches: Atualizar patches
 str_integrations: Integrações
 str_integrations_message: As integrações de terceiros estão fora da moderação do NetPass.
-  Use-os por sua conta e risco!
+  Use por sua conta e risco!
 str_report_source: 'Fonte: %s'
 str_report_source_unknown: Fonte desconhecida
 str_settings_misc: Outros
-str_settings_about: Sobre
-str_about_lead_dev: Desenvolvedor Líder
+str_settings_about: Acerca de
+str_about_lead_dev: Desenvolvedor Principal
 str_about_reports: Sistema de denúncias
-str_about_graphics: Arte & Gráficos
+str_about_graphics: Arte e Gráficos
 str_about_music: Música
 str_about_localisation: Traduções
 str_about_netpass_community: A comunidade do NetPass
 str_about_special_thanks: Agradecimentos Especiais
 str_about_production_cat: Gato de produção
-str_about_special_thanks_txt: A comunidade homebrew do 3DS por toda a engenharia-reversa
+str_about_special_thanks_txt: A comunidade homebrew do 3DS por toda a engenharia reversa
   e documentação
-str_scan_qr: Escanear Código QR
-str_prompt_verify: Tem certeza de que deseja verificar esse 3DS?
-str_x_switch_camera: '{x_button} Mudar de Câmera'
+str_scan_qr: Digitalizar Código QR
+str_prompt_verify: Tem a certeza de que deseja verificar este 3DS?
+str_x_switch_camera: '{x_button} Trocar de Câmara'
 str_welcome: Bem-vindo(a) ao NetPass
-str_welcome_message: Antes de iniciar o NetPass, por favor leia e aceite nossas regras
-  & política de privacidade.
+str_welcome_message: Antes de iniciar o NetPass, por favor leia e aceite as nossas
+  regras e política de privacidade.
 str_view_rules: Ver Regras
 str_view_privacy: Ver Política de Privacidade
 str_continue: Continuar
-str_bad_os_version: "O NetPass necessita de um 3DS na versão do sistema 11.15.0 ou
-  maior para funcionar corretamente. Infelizmente, você está usando uma versão do
-  sistema antigo. Por favor, atualize e inicie o NetPass de novo.\n\nAperte qualquer
-  botão para sair"
-str_update_patches_poweroff_clear_desc: Patches removidos com sucesso! Seu console
-  irá agora reiniciar.
+str_bad_os_version: "O NetPass precisa de uma 3DS na versão 11.15.0 ou maior para
+  funcionar corretamente. Infelizmente, está a usar uma versão antiga. Por favor,
+  atualize o sistema e inicie o NetPass de novo.\n\nPrima qualquer botão para sair"
+str_update_patches_poweroff_clear_desc: Patches removidos com sucesso! A consola será
+  reiniciada agora.
 str_bg_music: Música de fundo
-str_report_integration: Esta mensagem origina de uma integração. Para denunciá-lo,
-  por favor, contate o time de moderação responsável da integração.
-str_prompt_dl_pass: Você tem certeza de que quer instalar este passe?
-str_skip: Pular
+str_report_integration: Esta mensagem é proveniente de uma integração. Para denunciá-la,
+  por favor contacte a equipa de moderação da tal integração.
+str_prompt_dl_pass: Tem a certeza de que quer instalar este passe?
+str_skip: Ignorar
 str_install: Instalar
 str_remove: Remover
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
+str_banned: "Está proibido de utilizar o NetPass. Motivo:\n%s\n\nInício da proibição:
+  %s\nFim da proibição: %s"
+str_new_version: "Nova versão do NetPass disponível:\nv%d.%d.%d!\n\nPara atualizar
+  o NetPass, basta instalá-lo novamente através do Universal Updater ou do código
+  QR."
