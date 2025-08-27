@@ -121,11 +121,8 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 			if (entry->mii) {
 				Result r = decryptMii(&cfpb->nonce, entry->mii);
 				if (R_FAILED(r) || entry->mii->version != 3) {
-					if (R_FAILED(r)) {
-						_e(r);
-					} else {
-						_e(ERROR_INVALID_MII);
-					}
+					// since we are just scanning payloads for a mii
+					// we do not trigger an error if a mii fails to decrypt here
 					free(entry->mii);
 					entry->mii = 0;
 				}
@@ -349,9 +346,9 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		CFPB* cfpb = (CFPB*)memsearch(((u8*)msg) + msg->total_header_size, msg->message_size, (u8*)"CFPB", 4);
 		if (cfpb) {
 			Result r = decryptMii(&cfpb->nonce, &e->mii);
-			if (R_FAILED(r)) {
-				_e(r);
-			} else {
+			// since we are just scanning payloads for a mii
+			// we do not trigger an error if a mii fails to decrypt here
+			if (!R_FAILED(r)) {
 				edited = true;
 			}
 		}

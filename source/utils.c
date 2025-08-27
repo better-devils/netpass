@@ -301,7 +301,7 @@ Result decryptMii(void* data, MiiData* mii) {
 		res = _e(ERROR_OUT_OF_MEMORY);
 		goto error;
 	}
-	res = _e(APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out));
+	res = APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out);
 	if (R_FAILED(res)) goto error;
 	if (out->version != 0x03) {
 		res = ERROR_INVALID_MII;
