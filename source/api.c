@@ -26,6 +26,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define R_IS_CEC_RESTART(res) (CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC)
+
+#define _e_cec(x) ({ \
+	Result r = x; \
+	R_FAILED(r) && R_IS_CEC_RESTART(r) ? r : _e(r); \
+})
+
 int location = -1;
 FS_Archive sharedextdata_b = 0;
 NetpassTitleData title_data;
@@ -227,7 +234,7 @@ Result doSlotExchange(void) {
 	// first we fetch the mboxlist, extend it and upload it
 	{
 		CecMboxListHeaderWithCapacities mbox_list;
-		res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
+		res = _e_cec(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
 		error_origin = "reading mbox list";
 		if (R_FAILED(res)) goto fail;
 		clearIgnoredTitles(&mbox_list.header);
@@ -235,7 +242,7 @@ Result doSlotExchange(void) {
 		for (size_t i = 0; i < mbox_list.header.num_boxes; i++) {
 			u32 title_id = strtol((const char*)mbox_list.header.box_names[i], NULL, 16);
 			CecBoxInfoHeader boxinfo;
-			res = _e(cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo));
+			res = _e_cec(cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo));
 			if (R_FAILED(res)) goto fail;
 			mbox_list.capacities[i] = boxinfo.max_num_messages - boxinfo.num_messages;
 		}
@@ -250,7 +257,7 @@ Result doSlotExchange(void) {
 	// now we populate the extra data to upload, before we go into cecd state
 	{
 		CecMboxListHeaderWithCapacities mbox_list;
-		res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
+		res = _e_cec(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
 		if (R_FAILED(res)) goto fail;
 		clearIgnoredTitles(&mbox_list.header);
 		u8* buf = malloc(MAX(200, sizeof(CecMBoxInfoHeader)));
@@ -266,7 +273,7 @@ Result doSlotExchange(void) {
 			memset(buf, 0, 200);
 
 			// first title name
-			res = _e(cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, buf));
+			res = _e_cec(cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, buf));
 			if (R_FAILED(res)) {
 				error_origin = "Reading mbox title";
 				free(buf);
@@ -275,7 +282,7 @@ Result doSlotExchange(void) {
 			title_extra_info[i].title_name = b64encode(buf, 200);
 
 			//second hmac key
-			res = _e(cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), buf));
+			res = _e_cec(cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), buf));
 			if (R_FAILED(res)) {
 				free(buf);
 				error_origin = "Reading mboxlist";
@@ -288,14 +295,14 @@ Result doSlotExchange(void) {
 
 	// get cecd into the spr state
 	error_origin = "Getting cecd into spr state";
-	res = _e(waitForCecdState(false, CEC_COMMAND_OVER_BOSS, CEC_STATE_ABBREV_INACTIVE));
+	res = _e_cec(waitForCecdState(false, CEC_COMMAND_OVER_BOSS, CEC_STATE_ABBREV_INACTIVE));
 	if (R_FAILED(res)) goto fail;
 
 	// now we init spr stuffs
-	res = _e(cecdSprCreate());
+	res = _e_cec(cecdSprCreate());
 	error_origin = "cecd spr create";
 	if (R_FAILED(res)) goto fail;
-	res = _e(cecdSprInitialise());
+	res = _e_cec(cecdSprInitialise());
 	error_origin = "cecd spr init";
 	if (R_FAILED(res)) goto fail;
 
@@ -303,7 +310,7 @@ Result doSlotExchange(void) {
 
 	u32 slots_total;
 	error_origin = "cecd spr get slots metadata";
-	res = _e(cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total));
+	res = _e_cec(cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total));
 	if (R_FAILED(res)) goto fail;
 	printf("Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
 
@@ -326,20 +333,20 @@ Result doSlotExchange(void) {
 			printf("=");
 		}
 		error_origin = "upload slot";
-		res = _e(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2)));
+		res = _e_cec(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2)));
 		if (res2 == -400) { // we still want to continue if it was http 400
 			res2 = 0;
 		}
 		if (R_FAILED(res) || R_FAILED(res = res2)) goto fail;
 	}
 	// we are done sending things
-	res = _e(cecdSprFinaliseSend());
+	res = _e_cec(cecdSprFinaliseSend());
 	error_origin = "finalise send";
 	if (R_FAILED(res)) goto fail;
 	printf(" Done\nDownloading inboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// time to start download!
-	res = _e(cecdSprStartRecv());
+	res = _e_cec(cecdSprStartRecv());
 	error_origin = "start recv";
 	if (R_FAILED(res)) goto fail;
 
@@ -362,7 +369,7 @@ Result doSlotExchange(void) {
 	}
 
 	// notify cecd of the slots
-	res = _e(cecdSprAddSlotsMetadata(sizeof(SlotMetadata)*slots_total, (u8*)slotinfo.metadata));
+	res = _e_cec(cecdSprAddSlotsMetadata(sizeof(SlotMetadata)*slots_total, (u8*)slotinfo.metadata));
 	error_origin = "add slots metadata";
 	if (R_FAILED(res)) goto fail;
 
@@ -386,7 +393,7 @@ Result doSlotExchange(void) {
 			continue;
 		}
 		slot_new_data_num++;
-		res = _e(cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]));
+		res = _e_cec(cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]));
 		saveSlotInLog(slotinfo.slots[i]);
 		if (R_FAILED(res)) {
 			printf("-");
@@ -396,10 +403,10 @@ Result doSlotExchange(void) {
 		}
 	}
 
-	res = _e(cecdSprFinaliseRecv());
+	res = _e_cec(cecdSprFinaliseRecv());
 	error_origin = "cecd spr finalise recv";
 	if (R_FAILED(res)) goto fail;
-	res = _e(cecdSprDone(true));
+	res = _e_cec(cecdSprDone(true));
 	error_origin = "cecd spr done";
 	if (R_FAILED(res)) goto fail;
 
@@ -499,7 +506,7 @@ Result doSlotExchangeRetry(void) {
 	while(true) {
 		Result res = doSlotExchange();
 		if (R_FAILED(res)) {
-			if (CTR_RESULT_GET_SUMMARY(res) == CTR_RESULT_SUMMARY_INVALID_STATE && CTR_RESULT_GET_MODULE(res) == CTR_RESULT_MODULE_CEC) {
+			if (R_IS_CEC_RESTART(res)) {
 				count++;
 				if (count < 20) {
 					printf("Retrying slot exchange...\n");
