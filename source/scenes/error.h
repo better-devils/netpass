@@ -20,4 +20,4 @@
 
 #include "../scene.h"
 
-Scene* getErrorScene(int err, bool fatal);
+Scene* getErrorScene(ErrorData* error);

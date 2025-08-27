@@ -136,7 +136,10 @@ char* b64encode(u8* in, size_t len) {
 
 	size_t elen = b64_encoded_size(len);
 	char* out = malloc(elen + 1);
-	if (!out) return NULL;
+	if (!out) {
+		_e_errno();
+		return NULL;
+	}
 	out[elen] = '\0';
 
 	for (size_t i = 0, j = 0; i < len; i += 3, j += 4) {
@@ -203,8 +206,9 @@ int rmdir_r(char *path) {
 		closedir(d);
 	}
 
-	if (!r)
+	if (!r) {
 		r = rmdir(path);
+	}
 
 	return r;
 }
@@ -274,7 +278,7 @@ u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val) {
 		return -1;
 
 	u8 const *cbuf = buf;
-	u32 crc        = starting_val;
+	u32 crc = starting_val;
 
 	static const u16 POLY = 0x1021;
 
@@ -291,8 +295,13 @@ u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val) {
 }
 
 Result decryptMii(void* data, MiiData* mii) {
+	Result res = 0;
 	MiiData* out = malloc(sizeof(MiiData) + 4);
-	Result res = APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out);
+	if (!out) {
+		res = _e(ERROR_OUT_OF_MEMORY);
+		goto error;
+	}
+	res = _e(APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out));
 	if (R_FAILED(res)) goto error;
 	if (out->version != 0x03) {
 		res = ERROR_INVALID_MII;
@@ -339,7 +348,10 @@ bool rgbToImage(C2D_Image* img, u32 width, u32 height, u8* buf) {
 	if (width >= 1024 || height >= 1024) return false;
 
 	C3D_Tex* tex = malloc(sizeof(C3D_Tex));
-	if (!tex) return false;
+	if (!tex) {
+		_e(ERROR_OUT_OF_MEMORY);
+		return false;
+	}
 	memset(tex, 0, sizeof(C3D_Tex));
 	Tex3DS_SubTexture* subtex = malloc(sizeof(Tex3DS_SubTexture));
 	if (!subtex) {
@@ -526,28 +538,45 @@ Result get_os_version(OS_VersionBin* ver) {
 	return res;
 }
 
-int current_error = 0;
-int current_errno = 0;
-void _e(int error) {
-	if (R_FAILED(error)) {
-		current_error = error;
+ErrorData current_errdata = {0};
+
+Result __e(Result error, const char* func, const char* file, const int line) {
+	if (R_FAILED(current_errdata.error)) {
+		// do nothing if already set
+		return error;
 	}
+	if (R_FAILED(error)) {
+		current_errdata.error = error;
+		current_errdata.func = func;
+		current_errdata.file = file;
+		current_errdata.line = line;
+	}
+	return error;
 }
 
-void _e_errno(void) {
-	current_errno = errno;
+Result __e_errno(const char* func, const char* file, const int line) {
+	int eno = errno;
+	if (!eno) {
+		return 0;
+	}
+	if (current_errdata.std_errno) {
+		// do nothing if already set
+		return ERROR_ERRNO;
+	}
+	current_errdata.std_errno = eno;
+	current_errdata.error = ERROR_ERRNO;
+	current_errdata.func = func;
+	current_errdata.file = file;
+	current_errdata.line = line;
+	return ERROR_ERRNO;
 }
 
 Scene* get_new_error_scene(void) {
-	if (current_error || current_errno) {
-		int e = current_error;
-		int eno = current_errno;
-		current_error = 0;
-		current_errno = 0;
-		if (!R_FAILED(e) || e == ERROR_ERRNO) {
-			e = eno;
-		}
-		return getErrorScene(e, false);
+	if (current_errdata.error || current_errdata.std_errno) {
+		Scene* scene = getErrorScene(&current_errdata);
+		current_errdata.error = 0;
+		current_errdata.std_errno = 0;
+		return scene;
 	}
 	return NULL;
 }

@@ -112,7 +112,7 @@ Result qr_dl_pass(QrBuffer* buffer) {
 		return ERROR_MISSING_PASS_URL;
 	}
 	CurlReply* reply;
-	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
+	res = _e(httpRequest("GET", url, 0, 0, &reply, 0, 0));
 	if (R_FAILED(res)) goto fail;
 	int http_code = res;
 	if (!IS_HTTP_SUCCESS(http_code)) {
@@ -120,10 +120,10 @@ Result qr_dl_pass(QrBuffer* buffer) {
 		goto fail;
 	}
 	if (reply->len < sizeof(CecMessageHeader)) {
-		res = ERROR_INVALID_MESSAGE;
+		res = _e(ERROR_INVALID_MESSAGE);
 		goto fail;
 	}
-	res = addStreetpassMessage(reply->ptr);
+	res = _e(addStreetpassMessage(reply->ptr));
 fail:
 	curlFreeHandler(reply->offset);
 	return res;

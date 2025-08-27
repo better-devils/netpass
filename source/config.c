@@ -254,11 +254,13 @@ bool writePatches(void) {
 	printf("Copying sysmodules...\n");
 	DIR* d = opendir(PATCHES_COPY_SRCDIR);
 	if (!d) {
+		_e_errno();
 		printf("ERROR: src dir not found\n");
 		return false;
 	}
 	void* buffer = malloc(0x4000);
 	if (!buffer) {
+		_e(ERROR_OUT_OF_MEMORY);
 		printf("ERROR: malloc\n");
 		return false;
 	}

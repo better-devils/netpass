@@ -74,14 +74,14 @@ Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 Result initTitleData(void) {
 	Result res = 0;
 	CecMboxListHeader mbox_list;
-	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
+	res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list));
 	if (R_FAILED(res)) return res;
 	u16 title_name_utf16[65];
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
 
 		memset(title_name_utf16, 0, sizeof(title_name_utf16));
-		res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, sizeof(title_name_utf16)-2, (u8*)title_name_utf16);
+		res = _e(cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, sizeof(title_name_utf16)-2, (u8*)title_name_utf16));
 		if (R_FAILED(res)) return res;
 
 		memset(title_data.titles[i].name, 0, sizeof(title_data.titles[i].name));
@@ -145,7 +145,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	if (metadata->size == 0 || metadata->send_method == 1) {
 		// recv only, delete outbox
 		snprintf(url, 50, "%s/outbox/%08lx", BASE_URL, metadata->title_id);
-		res = httpRequest("DELETE", url, 0, 0, 0, 0, 0);
+		res = _e(httpRequest("DELETE", url, 0, 0, 0, 0, 0));
 		return res;
 	}
 
@@ -156,7 +156,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	}
 
 	// now it is time to *actually* fetch the slot
-	res = cecdSprGetSlot(metadata->title_id, metadata->size, slot);
+	res = _e(cecdSprGetSlot(metadata->title_id, metadata->size, slot));
 	if (R_FAILED(res)) {
 		free(slot);
 		return res;
@@ -164,7 +164,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 
 	// now upload the slot
 	snprintf(url, 50, "%s/outbox/slot", BASE_URL);
-	res = httpRequest("POST", url, metadata->size, slot, 0, extra->title_name, extra->hmac_key);
+	res = _e(httpRequest("POST", url, metadata->size, slot, 0, extra->title_name, extra->hmac_key));
 	free(slot);
 	return res;
 }
@@ -180,7 +180,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 	char url[100];
 	snprintf(url, 100, "%s/inbox/%lx/slot", BASE_URL, metadata->title_id);
 	CurlReply* reply;
-	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
+	res = _e(httpRequest("GET", url, 0, 0, &reply, 0, 0));
 	if (R_FAILED(res)) goto fail;
 	u32 http_code = res;
 	if (http_code == 204) {
@@ -227,7 +227,7 @@ Result doSlotExchange(void) {
 	// first we fetch the mboxlist, extend it and upload it
 	{
 		CecMboxListHeaderWithCapacities mbox_list;
-		res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header);
+		res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
 		error_origin = "reading mbox list";
 		if (R_FAILED(res)) goto fail;
 		clearIgnoredTitles(&mbox_list.header);
@@ -235,14 +235,14 @@ Result doSlotExchange(void) {
 		for (size_t i = 0; i < mbox_list.header.num_boxes; i++) {
 			u32 title_id = strtol((const char*)mbox_list.header.box_names[i], NULL, 16);
 			CecBoxInfoHeader boxinfo;
-			res = cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo);
+			res = _e(cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo));
 			if (R_FAILED(res)) goto fail;
 			mbox_list.capacities[i] = boxinfo.max_num_messages - boxinfo.num_messages;
 		}
 		
 		char url[50];
 		snprintf(url, 50, "%s/outbox/mboxlist_ext", BASE_URL);
-		res = httpRequest("POST", url, sizeof(mbox_list), (u8*)&mbox_list, 0, 0, 0);
+		res = _e(httpRequest("POST", url, sizeof(mbox_list), (u8*)&mbox_list, 0, 0, 0));
 		error_origin = "sending mboxlist ext";
 		if (R_FAILED(res)) goto fail;
 	}
@@ -250,12 +250,12 @@ Result doSlotExchange(void) {
 	// now we populate the extra data to upload, before we go into cecd state
 	{
 		CecMboxListHeaderWithCapacities mbox_list;
-		res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header);
+		res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
 		if (R_FAILED(res)) goto fail;
 		clearIgnoredTitles(&mbox_list.header);
 		u8* buf = malloc(MAX(200, sizeof(CecMBoxInfoHeader)));
 		if (!buf) {
-			res = ERROR_OUT_OF_MEMORY;
+			res = _e_errno();
 			error_origin = "malloc for mboxinfo";
 			goto fail;
 		}
@@ -266,7 +266,7 @@ Result doSlotExchange(void) {
 			memset(buf, 0, 200);
 
 			// first title name
-			res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, buf);
+			res = _e(cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, buf));
 			if (R_FAILED(res)) {
 				error_origin = "Reading mbox title";
 				free(buf);
@@ -275,7 +275,7 @@ Result doSlotExchange(void) {
 			title_extra_info[i].title_name = b64encode(buf, 200);
 
 			//second hmac key
-			res = cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), buf);
+			res = _e(cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), buf));
 			if (R_FAILED(res)) {
 				free(buf);
 				error_origin = "Reading mboxlist";
@@ -288,14 +288,14 @@ Result doSlotExchange(void) {
 
 	// get cecd into the spr state
 	error_origin = "Getting cecd into spr state";
-	res = waitForCecdState(false, CEC_COMMAND_OVER_BOSS, CEC_STATE_ABBREV_INACTIVE);
+	res = _e(waitForCecdState(false, CEC_COMMAND_OVER_BOSS, CEC_STATE_ABBREV_INACTIVE));
 	if (R_FAILED(res)) goto fail;
 
 	// now we init spr stuffs
-	res = cecdSprCreate();
+	res = _e(cecdSprCreate());
 	error_origin = "cecd spr create";
 	if (R_FAILED(res)) goto fail;
-	res = cecdSprInitialise();
+	res = _e(cecdSprInitialise());
 	error_origin = "cecd spr init";
 	if (R_FAILED(res)) goto fail;
 
@@ -303,7 +303,7 @@ Result doSlotExchange(void) {
 
 	u32 slots_total;
 	error_origin = "cecd spr get slots metadata";
-	res = cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total);
+	res = _e(cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total));
 	if (R_FAILED(res)) goto fail;
 	printf("Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
 
@@ -326,20 +326,20 @@ Result doSlotExchange(void) {
 			printf("=");
 		}
 		error_origin = "upload slot";
-		res = cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2));
+		res = _e(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2)));
 		if (res2 == -400) { // we still want to continue if it was http 400
 			res2 = 0;
 		}
 		if (R_FAILED(res) || R_FAILED(res = res2)) goto fail;
 	}
 	// we are done sending things
-	res = cecdSprFinaliseSend();
+	res = _e(cecdSprFinaliseSend());
 	error_origin = "finalise send";
 	if (R_FAILED(res)) goto fail;
 	printf(" Done\nDownloading inboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// time to start download!
-	res = cecdSprStartRecv();
+	res = _e(cecdSprStartRecv());
 	error_origin = "start recv";
 	if (R_FAILED(res)) goto fail;
 
@@ -362,7 +362,7 @@ Result doSlotExchange(void) {
 	}
 
 	// notify cecd of the slots
-	res = cecdSprAddSlotsMetadata(sizeof(SlotMetadata)*slots_total, (u8*)slotinfo.metadata);
+	res = _e(cecdSprAddSlotsMetadata(sizeof(SlotMetadata)*slots_total, (u8*)slotinfo.metadata));
 	error_origin = "add slots metadata";
 	if (R_FAILED(res)) goto fail;
 
@@ -386,7 +386,7 @@ Result doSlotExchange(void) {
 			continue;
 		}
 		slot_new_data_num++;
-		res = cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]);
+		res = _e(cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]));
 		saveSlotInLog(slotinfo.slots[i]);
 		if (R_FAILED(res)) {
 			printf("-");
@@ -396,10 +396,10 @@ Result doSlotExchange(void) {
 		}
 	}
 
-	res = cecdSprFinaliseRecv();
+	res = _e(cecdSprFinaliseRecv());
 	error_origin = "cecd spr finalise recv";
 	if (R_FAILED(res)) goto fail;
-	res = cecdSprDone(true);
+	res = _e(cecdSprDone(true));
 	error_origin = "cecd spr done";
 	if (R_FAILED(res)) goto fail;
 
@@ -459,7 +459,7 @@ Result setLocation(int location) {
 	
 	// first check if we have any streetpass games enabled
 	CecMboxListHeaderWithCapacities mbox_list;
-	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header);
+	res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
 	if (R_FAILED(res)) return res;
 	clearIgnoredTitles(&mbox_list.header);
 	if (mbox_list.header.num_boxes == 0) return ERROR_NO_STREETPASS_GAMES;
@@ -516,8 +516,7 @@ Result doSlotExchangeRetry(void) {
 void bgLoop(void* p) {
 	do {
 		dl_inbox_status = 2;
-		Result res = doSlotExchangeRetry();
-		if (R_FAILED(res)) _e(res);
+		_e(doSlotExchangeRetry());
 		dl_inbox_status = 0;
 		for(int i = 0; i < 10*60*5; i++) {
 			svcSleepThread((u64)1000000 * 100);

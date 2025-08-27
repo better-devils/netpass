@@ -61,7 +61,10 @@ ReportList* loadReportList(void) {
 	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 	
 	ReportList* list = memalign(4, list_file_size);
-	if (!list) return NULL;
+	if (!list) {
+		_e(ERROR_OUT_OF_MEMORY);
+		return NULL;
+	}
 	fread_blk(list, list_file_size, 1, f);
 	fclose(f);
 	return list;

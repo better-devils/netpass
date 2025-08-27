@@ -94,16 +94,18 @@ SceneResult N(report)(Scene* sc) {
 		printf("Got report: \"%s\", sending...\n", N(send_msg));
 		Scene* scene = getLoadingScene(0, lambda(void, (void) {
 			CecMessageHeader msg;
-			Result res = reportGetSomeMsgHeader(&msg, N(send_transfer_id));
+			Result res = _e(reportGetSomeMsgHeader(&msg, N(send_transfer_id)));
 			if (R_FAILED(res)) {
-				_e(res);
 				printf("ERROR: %lx\n", res);
 				goto exit;
 			}
 			SHA256_HASH hash;
 			Sha256Calculate(&msg, 0x28, &hash);
 			ReportSendPayload* data = malloc(sizeof(ReportSendPayload));
-			if (!data) goto exit;
+			if (!data) {
+				_e(ERROR_OUT_OF_MEMORY);
+				goto exit;
+			}
 			
 			data->magic = 0x5053524e;
 			data->version = 1;
@@ -113,7 +115,7 @@ SceneResult N(report)(Scene* sc) {
 
 			char url[50];
 			snprintf(url, 50, "%s/report/new", BASE_URL);
-			res = httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0, 0);
+			res = _e(httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0, 0));
 			free(data);
 			if (R_FAILED(res)) {
 				printf("Error sending report: %ld\n", res);
@@ -146,7 +148,6 @@ void N(init)(Scene* sc) {
 	}
 
 	if (!loadReportMessages(_data->msgs, _data->entry->transfer_id)) {
-		_e(-1);
 		freeReportMessages(_data->msgs);
 		free(_data->msgs);
 		free(_data);

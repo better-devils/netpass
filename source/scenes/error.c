@@ -25,11 +25,11 @@
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
+	C2D_Text g_origin;
 	C2D_Text g_title;
 	C2D_Text g_subtext;
 	C2D_Text g_a_ok;
-	bool fatal;
-	int err;
+	ErrorData* err;
 } N(DataStruct);
 
 #define WIDTH_SCR 400
@@ -42,24 +42,25 @@ void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	_data->g_staticBuf = C2D_TextBufNew(1500);
-	int* args = (int*)sc->data;
-	int err = _data->err = args[0];
-	_data->fatal = args[1];
+	_data->err = (ErrorData*)sc->data;
 	char str[200] = {0};
 	char subtext[1000] = {0};
+	char origintext[200] = {0};
 	C2D_Font str_font;
 	C2D_Font subtext_font = 0;
+	
+	snprintf(origintext, sizeof(origintext), "Origin: %s(%s:%d)", _data->err->func, _data->err->file, _data->err->line);
 	do {
-		if (err > -600 && err <= -200) {
+		if (ERROR_IS_HTTP(_data->err->error)) {
 			// http status code
-			int status_code = -err;
+			int status_code = -_data->err->error;
 			snprintf(str, sizeof(str), _s(str_httpstatus_error), status_code);
 			str_font = _font(str_httpstatus_error);
 			break;
 		}
-		if (err > -100 && err < 0) {
+		if (ERROR_IS_CURL(_data->err->error)) {
 			// libcurl error code
-			int errcode = -err;
+			int errcode = -_data->err->error;
 			const char* errmsg = curl_easy_strerror(errcode);
 			snprintf(str, sizeof(str), _s(str_libcurl_error), errcode, errmsg);
 			str_font = _font(str_libcurl_error);
@@ -69,29 +70,31 @@ void N(init)(Scene* sc) {
 			}
 			break;
 		}
-		if (err <= -600) {
-			// 3ds error code
-			snprintf(str, sizeof(str), _s(str_3ds_error), (u32)err);
-			str_font = _font(str_3ds_error);
-			char level[100] = {0};
-			char summary[200] = {0};
-			char module[200] = {0};
-			char description[200] = {0};
-			get_level_formatted(level, sizeof(level), err);
-			get_summary_formatted(summary, sizeof(summary), err);
-			get_module_formatted(module, sizeof(module), err);
-			get_description_formatted(description, sizeof(description), err);
-			snprintf(
-				subtext, sizeof(subtext), "Level: %s\nModule: %s\nSummary: %s\nDescription: %s",
-				level, module, summary, description
-			);
+		if (_data->err->error == ERROR_ERRNO || _data->err->std_errno) {
+			// errno error
+			strerror_r(_data->err->std_errno, str, sizeof(str));
+			str_font = 0;
 			break;
 		}
-		// errno error
-		strerror_r(err, str, sizeof(str));
-		str_font = 0;
+		
+		// 3ds error code
+		snprintf(str, sizeof(str), _s(str_3ds_error), (u32)_data->err->error);
+		str_font = _font(str_3ds_error);
+		char level[100] = {0};
+		char summary[200] = {0};
+		char module[200] = {0};
+		char description[200] = {0};
+		get_level_formatted(level, sizeof(level), _data->err->error);
+		get_summary_formatted(summary, sizeof(summary), _data->err->error);
+		get_module_formatted(module, sizeof(module), _data->err->error);
+		get_description_formatted(description, sizeof(description), _data->err->error);
+		snprintf(
+			subtext, sizeof(subtext), "Level: %s\nModule: %s\nSummary: %s\nDescription: %s",
+			level, module, summary, description
+		);
 		break;
 	} while(1);
+	C2D_TextParse(&_data->g_origin, _data->g_staticBuf, origintext);
 	C2D_TextFontParse(&_data->g_title, str_font, _data->g_staticBuf, str);
 	C2D_TextFontParse(&_data->g_subtext, subtext_font, _data->g_staticBuf, subtext);
 	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
@@ -100,8 +103,9 @@ void N(init)(Scene* sc) {
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
-	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5 + 25, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
+	C2D_DrawText(&_data->g_origin, C2D_AlignLeft, MARGIN + 5, MARGIN + 5, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
+	C2D_DrawText(&_data->g_title, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5 + 25, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
+	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5 + 50, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
 	C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 }
 
@@ -117,14 +121,13 @@ SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (kDown & (KEY_A | KEY_B)) {
-		if (_data->fatal) return scene_stop;
 		return scene_pop;
 	}
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
 }
 
-Scene* getErrorScene(int err, bool fatal) {
+Scene* getErrorScene(ErrorData* error) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
@@ -132,14 +135,13 @@ Scene* getErrorScene(int err, bool fatal) {
 	scene->render = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	u32* buf = malloc(8);
-	if (!buf) {
+	ErrorData* err = malloc(sizeof(ErrorData));
+	if (!err) {
 		free(scene);
 		return NULL;
 	}
-	buf[0] = err;
-	buf[1] = fatal;
-	scene->data = (u32)buf;
+	memcpy(err, error, sizeof(ErrorData));
+	scene->data = (u32)err;
 	scene->is_popup = true;
 	scene->need_free = true;
 	return scene;

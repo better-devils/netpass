@@ -69,10 +69,10 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 		configWrite();
 		if (config.price > 2) {
 			Handle handle = 0;
-			res = FSUSER_OpenFile(&handle, sharedextdata_b, fsMakePath(PATH_ASCII, "/gamecoin.dat"), FS_OPEN_WRITE, 0);
+			res = _e(FSUSER_OpenFile(&handle, sharedextdata_b, fsMakePath(PATH_ASCII, "/gamecoin.dat"), FS_OPEN_WRITE, 0));
 			if (R_FAILED(res)) goto error;
 			u32 tmpval=0;
-			res = FSFILE_Write(handle, &tmpval, 0, N(play_coins), sizeof(PlayCoins), FS_WRITE_FLUSH);
+			res = _e(FSFILE_Write(handle, &tmpval, 0, N(play_coins), sizeof(PlayCoins), FS_WRITE_FLUSH));
 			FSFILE_Close(handle);
 			if (R_FAILED(res)) goto error;
 			free(N(play_coins));
@@ -100,18 +100,21 @@ void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amoun
 bool N(init_playcoins)(Scene* sc) {
 	_data->play_coins = malloc(sizeof(PlayCoins));
 	if (!_data->play_coins) {
+		_e(ERROR_OUT_OF_MEMORY);
 		free(_data);
 		sc->d = 0;
 		return false;
 	}
 	FILE* f = fopen("sharedextdata_b:/gamecoin.dat", "rb");
 	if (!f) {
+		_e_errno();
 		free(_data->play_coins);
 		free(_data);
 		sc->d = 0;
 		return false;
 	}
 	if (fread(_data->play_coins, sizeof(PlayCoins), 1, f) != 1) {
+		_e_errno();
 		fclose(f);
 		free(_data->play_coins);
 		free(_data);

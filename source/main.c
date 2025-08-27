@@ -37,12 +37,12 @@ int main() {
 
 	gfxInitDefault();
 	miscInit();
-	cfguInit();
-	amInit();
-	nsInit();
-	aptInit();
-	frdInit(false);
-	fsInit();
+	_e(cfguInit());
+	_e(amInit());
+	_e(nsInit());
+	_e(aptInit());
+	_e(frdInit(false));
+	_e(fsInit());
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
@@ -53,16 +53,13 @@ int main() {
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
-	romfsInit();
+	_e(romfsInit());
 	init_main_thread_prio();
 
 	DEBUG_PRINTF("DEBUG ON\n");
 
-	cecdInit();
-	Result res = curlInit();
-	if (R_FAILED(res)) {
-		DEBUG_PRINTF("Curl initialization failed\n");
-	}
+	_e(cecdInit());
+	_e(curlInit());
 	srand(time(NULL));
 
 	configInit(); // must be after cecdInit()
@@ -79,18 +76,18 @@ int main() {
 			size: 0xC,
 			data: (u8*)extdata_lowpathdata,
 		};
-		archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b");
-		FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
+		_e(archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b"));
+		_e(FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path));
 	}
 	
-	playMusic("home"); // start the default music
+	_e(playMusic("home")); // start the default music
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
 	Scene* scene;
 	{
 		OS_VersionBin ver;
-		Result res = get_os_version(&ver);
+		Result res = _e(get_os_version(&ver));
 		if (R_FAILED(res)) {
 			printf("osGetSystemVersionData res: %08lX\n", res);
 			
@@ -110,7 +107,8 @@ int main() {
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 				if (R_FAILED(ping_res)) {
 					// something not working
-					return getErrorScene(ping_res, true);
+					_e(ping_res);
+					return getSettingsScene();
 				}
 				if (ping_response.ban.is_banned) {
 					// we are banned
@@ -183,6 +181,7 @@ int main() {
 					check_count++;
 					curlFreeHandler(ping_reply->offset);
 					if (ERROR_IS_HTTP(ping_res)) return;
+					if (ERROR_IS_CURL(ping_res) && ping_res == -CURLE_COULDNT_RESOLVE_HOST) return;
 					if (check_count > max_count) {
 						if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 							max_count += 100;
@@ -194,7 +193,7 @@ int main() {
 				readPingResponse(&ping_response, ping_reply->ptr, ping_reply->len);
 				curlFreeHandler(ping_reply->offset);
 				if (ping_response.ban.is_banned) return;
-				waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
+				_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
 				initTitleData();
 				doSlotExchangeRetry();
 				Result res = getLocation();

@@ -19,6 +19,7 @@
 #include "music.h"
 #include "api.h"
 #include "config.h"
+#include "utils.h"
 
 #include <opus/opusfile.h>
 #include <stdlib.h>
@@ -145,7 +146,9 @@ Result playMusic(const char* filename) {
 	char f[50];
 	snprintf(f, 50, "romfs:/music/%s.opus", filename);
 	OggOpusFile* opus_file = op_open_file(f, (int*)&res);
-	if (!opus_file) return res;
+	if (!opus_file) {
+		return _e_errno();
+	}
 	music_thread = threadCreate(play_thread, opus_file, 26*1024, main_thread_prio()-10, -2, false);
 	return res;
 }
@@ -154,7 +157,7 @@ void stopMusic(void) {
 	stop_playing = true;
 	wait_for_state(false);
 	if (music_thread) {
-		threadJoin(music_thread, U64_MAX);
+		_e(threadJoin(music_thread, U64_MAX));
 		threadFree(music_thread);
 		music_thread = 0;
 	}
@@ -175,7 +178,7 @@ void toggleBgMusic(void) {
 }
 
 void musicInit(void) {
-	ndspInit();
+	_e(ndspInit());
 }
 
 void musicExit(void) {

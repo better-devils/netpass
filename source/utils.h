@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "cecd.h"
-#include "scene.h"
 #include <3ds.h>
 #include <3ds/types.h>
 #include <citro2d.h>
@@ -27,6 +25,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+
+typedef struct {
+	Result error;
+	int std_errno;
+	const char* func;
+	const char* file;
+	int line;
+} ErrorData;
+
+#include "cecd.h"
+#include "scene.h"
 #include "ctr_results.h"
 
 #define _GET_MACRO_MAX_(_1, _2, _3, _4, _5, _6, _7, _8, NAME, ...) NAME
@@ -42,6 +51,9 @@
 
 #define ERROR_IS_CURL(e) (e < 0 && e > -100)
 #define ERROR_IS_HTTP(e) (e <= -100 && e > -599)
+
+#define _e(x) __e(x, __func__, __FILE_NAME__, __LINE__)
+#define _e_errno(x) __e_errno(__func__, __FILE_NAME__, __LINE__)
 
 void* cecGetExtHeader(CecMessageHeader* msg, u32 type);
 u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type);
@@ -61,8 +73,8 @@ char* fgets_blk(char* str, int num, FILE* stream);
 int fputs_blk(const char* str, FILE* stream);
 void open_url(char* url);
 Result get_os_version(OS_VersionBin* ver);
-void _e(int error);
-void _e_errno(void);
+Result __e(Result error, const char* func, const char* file, const int line);
+Result __e_errno(const char* func, const char* file, const int line);
 Scene* get_new_error_scene(void);
 void miscInit(void);
 void cecTimeToTm(CecTimestamp* cec, struct tm* tm);
