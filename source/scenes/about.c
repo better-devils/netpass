@@ -33,7 +33,7 @@ const N(RawCategory) N(raw_credits)[NUM_CREDIT_CATAGORIES] = {
 	{&str_about_lead_dev, 1, "Sorunome", 0},
 	{&str_about_reports, 1, "gart, checkraisefold, Sorunome", 0},
 	{&str_about_graphics, 2, "Iveurne, DaGrand39, 24blueroses, KingMayro, MilesTheCreator", 0},
-	{&str_about_music, 1, "Meowbops, Evilev", 0},
+	{&str_about_music, 1, "Meowbops, Evilev, Batteries (Naomi)", 0},
 	{&str_about_localisation, 1, 0, &str_about_netpass_community},
 	{&str_about_production_cat, 1, "Laura", 0},
 	{&str_about_special_thanks, 2, 0, &str_about_special_thanks_txt},
