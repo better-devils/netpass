@@ -81,10 +81,8 @@ bool isTitleIgnored(u32 title_id) {
 
 void load(void) {
 	FILE* f = fopen(config_path, "r");
-	if (!f) {
-		_e_errno();
-		return;
-	}
+	// no need to catch the load error as that means we just keep having defaults
+	if (!f) return;
 	char line[200];
 	while (fgets_blk(line, sizeof(line), f)) {
 		char* separator = strchr(line, '=');
