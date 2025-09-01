@@ -1,3 +1,4 @@
+**AI Generated code is not allowed in any form in this repo**
 # NetPass: a new way to experience StreetPass!
 
 [![Translation status](https://weblate.sorunome.de/widget/netpass/app/svg-badge.svg)](https://weblate.sorunome.de/engage/netpass/)
@@ -13,7 +14,7 @@ Discord guild: https://netpass.cafe/discord
 Introducing NetPass:
 
 In the current state of the world, the 3DS is, sadly, on decline. That makes getting StreetPasses harder and harder, due to fewer and fewer people taking their 3DS with them on a walk. This is where NetPass comes in!  
-Unlike StreetPass, NetPass works over the internet. Upon opening NetPass, you can pick various locations to go to, i.e. the train station, or a town plaza. Upon entering a location, you get passes of others who are in the same location! And, while you are at the location, others who enter it can get passes with you. But beware! You can only switch locations once every 10 hours!
+Unlike StreetPass, NetPass works over the internet. Upon opening NetPass, you can pick various locations to go to, i.e. the train station, or a town plaza. Upon entering a location, you get passes from others who are in the same location! And, while you are at the location, others who enter it can get passes with you. But beware! You can only switch locations once every 10 hours!
 
 ## Licenses
 The source code of this project is licensed under GPLv3 or later. See the included `LICENSE`.
@@ -38,8 +39,16 @@ In other words, you'll need to run the following command in a Terminal/command p
 ```bash
 dkp-pacman -S 3ds-dev 3ds-curl 3ds-opusfile
 ```
+Or if you are using a customized Pacman install:
+```bash
+pacman -S 3ds-dev 3ds-curl 3ds-opusfile
+```
 
-Furthermore, you need to have `ffmpeg` and `python` and `python-pyyaml` and `python-requests` installed.
+Furthermore, you need to have `FFmpeg` and `Python3` and `python-pyyaml` and `python-requests` installed.
+Links to FFmpeg, Python, PythonPyyAML:
+[FFMpeg](https://ffmpeg.org/)
+[Python](https://www.python.org)
+[Python-PyYAML](https://pypi.org/project/PyYAML/)
 
 Be sure to run `make codegen` first.
 ```bash

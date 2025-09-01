@@ -192,10 +192,10 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 #export _3DSXDEPS	:=	$(if $(NO_SMDH),,$(OUTPUT).smdh)
 
 export APP_ICON := $(TOPDIR)/$(BUILD)/icon.png
-
+# I replaced python with python3
 BANNERTOOL	?=	bannertool
 FFMPEG		?=	ffmpeg
-PYTHON		?=	python
+PYTHON		?=	python3
 
 ifeq ($(strip $(NO_SMDH)),)
 	export _3DSXFLAGS += --smdh=$(OUTPUT).smdh
