@@ -181,7 +181,7 @@ int main() {
 					check_count++;
 					curlFreeHandler(ping_reply->offset);
 					if (ERROR_IS_HTTP(ping_res)) return;
-					if (ERROR_IS_CURL(ping_res) && ping_res == -CURLE_COULDNT_RESOLVE_HOST) return;
+					if (ERROR_IS_CURL(ping_res) && ping_res == -CURLE_PEER_FAILED_VERIFICATION) return;
 					if (check_count > max_count) {
 						if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 							max_count += 100;
