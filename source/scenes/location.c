@@ -80,7 +80,7 @@ void N(init)(Scene* sc) {
 		}
 	}
 	if (_data->event_location) {
-		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
+		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/event_location.t3x");
 		playMusic("home");
 	} else {
 		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");

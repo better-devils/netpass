@@ -32,7 +32,7 @@ typedef struct {
 const N(RawCategory) N(raw_credits)[NUM_CREDIT_CATAGORIES] = {
 	{&str_about_lead_dev, 1, "Sorunome", 0},
 	{&str_about_reports, 1, "gart, checkraisefold, Sorunome", 0},
-	{&str_about_graphics, 2, "Iveurne, DaGrand39, 24blueroses, KingMayro, MilesTheCreator", 0},
+	{&str_about_graphics, 2, "Iveurne, DaGrand39, 24blueroses, KingMayro, MilesTheCreator, Lyril", 0},
 	{&str_about_music, 1, "Meowbops, Lev, Batteries (Naomi)", 0},
 	{&str_about_localisation, 1, 0, &str_about_netpass_community},
 	{&str_about_production_cat, 1, "Laura", 0},
@@ -52,6 +52,7 @@ typedef struct {
 	C2D_Text netpass_website;
 	C2D_Text go_back;
 	float website_x;
+	C2D_SpriteSheet laura;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
@@ -73,6 +74,7 @@ void N(init)(Scene* sc) {
 	float width;
 	get_text_dimensions(&_data->netpass_website, 0.7, 0.7, &width, 0);
 	_data->website_x = (SCREEN_TOP_WIDTH - width) / 2;
+	_data->laura = C2D_SpriteSheetLoad("romfs:/gfx/laura.t3x");
 }
 
 void N(render)(Scene* sc) {
@@ -88,11 +90,15 @@ void N(render)(Scene* sc) {
 	}
 	ycursor += 20;
 	C2D_DrawText(&_data->netpass_website, C2D_AlignLeft, _data->website_x, ycursor, 0, 0.7, 0.7);
+	ycursor += 300;
+	C2D_Image img = C2D_SpriteSheetGetImage(_data->laura, 0);
+	C2D_DrawImageAt(img, 0, ycursor, 0, NULL, 1, 1);
 }
 
 void N(exit)(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
+		C2D_SpriteSheetFree(_data->laura);
 		free(_data);
 	}
 }
