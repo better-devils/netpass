@@ -46,6 +46,7 @@ typedef struct {
 } N(DataStruct);
 
 QrBuffer* N(qr_buffer) = 0;
+void* N(qr_payload) = 0;
 
 void N(captureCamThread)(void* arg) {
 	N(DataStruct)* data = (N(DataStruct)*)arg;
@@ -226,6 +227,7 @@ void N(exit)(Scene* sc) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}
+	if (N(qr_payload)) free(N(qr_payload));
 }
 
 SceneResult N(process)(Scene* sc) {
@@ -268,6 +270,35 @@ SceneResult N(process)(Scene* sc) {
 								printf("Verification failed: %lx\n", res);
 							} else {
 								printf("Verification successful!\n");
+							}
+						})));
+						return scene_push;
+					};
+					case QR_METHOD_JOIN_EVENT_ROOM: {
+						N(qr_payload) = malloc(sizeof(QrJoinEventRoomPayload));
+						if (!N(qr_payload)) {
+							_e(ERROR_OUT_OF_MEMORY);
+							break;
+						}
+						qr_parse_join_event_room(N(qr_buffer), N(qr_payload));
+						char* message = malloc(1000);
+						if (!message) {
+							free(N(qr_payload));
+							N(qr_payload) = 0;
+							_e(ERROR_OUT_OF_MEMORY);
+							break;
+						}
+						snprintf(message, 1000, _s(str_enter_event_location), ((QrJoinEventRoomPayload*)N(qr_payload))->name);
+						C2D_Font font = _font(str_enter_event_location);
+						sc->next_scene = getPromptSceneStr(message, font, getLoadingScene(NULL, lambda(void, (void) {
+							Result res = setEventLocation(((QrJoinEventRoomPayload*)N(qr_payload))->uuid);
+							if (R_FAILED(res)) {
+								_e(res);
+								printf("Failed to join event location: %lx\n", res);
+							} else {
+								getLocation();
+								printf("Successfully joined event location!\n");
+								// TODO: figure out how to switch root sce
 							}
 						})));
 						return scene_push;

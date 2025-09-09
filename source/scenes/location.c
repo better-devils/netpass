@@ -22,15 +22,17 @@
 #include <stdlib.h>
 #define N(x) scenes_location_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (MAX(STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
+#define TEXT_BUF_LEN (MAX(STR_AT_EVENT_LOCATION_LEN, STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_location;
+	C2D_Text g_subtitle;
 	C2D_Text g_entries[4];
 	C2D_SpriteSheet spr;
 	int cursor;
 	float width;
+	bool event_location;
 } N(DataStruct);
 
 LanguageString* N(locations)[NUM_LOCATIONS] = {
@@ -54,9 +56,16 @@ const char* N(music)[NUM_LOCATIONS] = {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
+	memset(sc->d, 0, sizeof(N(DataStruct)));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
-	TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[sc->data]);
+	_data->event_location = location.id == -2;
+	if (_data->event_location) {
+		TextLangParse(&_data->g_location, _data->g_staticBuf, str_at_event_location);
+		C2D_TextParse(&_data->g_subtitle, _data->g_staticBuf, location.name);
+	} else {
+		TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[location.id]);
+	}
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_check_inboxes);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_back_alley);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_settings);
@@ -70,25 +79,36 @@ void N(init)(Scene* sc) {
 			_data->width = width;
 		}
 	}
-	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
-	playMusic(N(music)[sc->data]);
+	if (_data->event_location) {
+		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
+		playMusic("home");
+	} else {
+		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
+		playMusic(N(music)[location.id]);
+	}
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
-	if (C2D_SpriteSheetCount(_data->spr) > sc->data) {
-		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, sc->data);
+	if (_data->event_location) {
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
+		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	} else if (C2D_SpriteSheetCount(_data->spr) > location.id) {
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
 		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	}
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + 5*25, bgclr);
+	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + (_data->event_location ? 6 : 5)*25, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
 	C2D_DrawText(&_data->g_location, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
+	if (_data->event_location) {
+		C2D_DrawText(&_data->g_subtitle, C2D_AlignLeft | C2D_WithColor, 10, 10 + 25, 0, 1, 1, clr);
+	}
 	for (int i = 0; i < 4; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 10 + (i+1)*25, 0, 1, 1, clr);
+		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 10 + (i+(_data->event_location ? 2 : 1))*25, 0, 1, 1, clr);
 	}
 	int x = 10;
-	int y = 10 + (_data->cursor + 1)*25 + 5;
+	int y = 10 + (_data->cursor + (_data->event_location ? 2 : 1))*25 + 5;
 	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
 }
 
@@ -129,7 +149,7 @@ SceneResult N(process)(Scene* sc) {
 	return scene_continue;
 }
 
-Scene* getLocationScene(int location) {
+Scene* getLocationScene(void) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
@@ -137,7 +157,6 @@ Scene* getLocationScene(int location) {
 	scene->render = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	scene->data = location;
 	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;

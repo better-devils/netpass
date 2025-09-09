@@ -20,4 +20,4 @@
 
 #include "../scene.h"
 
-Scene* getLocationScene(int location);
+Scene* getLocationScene(void);

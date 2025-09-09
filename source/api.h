@@ -21,8 +21,8 @@
 #include <3ds.h>
 #include "cecd.h"
 
-#define BASE_URL "https://api.netpass.cafe"
-//#define BASE_URL "https://devapi.netpass.cafe"
+//#define BASE_URL "https://api.netpass.cafe"
+#define BASE_URL "https://devapi.netpass.cafe"
 
 #define RULES_URL "http://netpass.cafe/rules.html"
 #define PRIVACY_URL "http://netpass.cafe/privacy.html"
@@ -72,6 +72,17 @@ typedef struct {
 	PingResponseMessage message;
 } PingResponse;
 
+typedef struct {
+	s32 id;
+	u8 uuid[16];
+	bool have_image;
+	u8 image_hash[0x20];
+	CecTimestamp time_start;
+	CecTimestamp time_end;
+	u32 time_remaining;
+	char name[100];
+} LocationResponse;
+
 Result readPingResponse(PingResponse* response, u8* buf, u32 len);
 Result initTitleData(void);
 NetpassTitleData* getTitleData(void);
@@ -81,6 +92,7 @@ void clearIgnoredTitles(CecMboxListHeader* mbox_list);
 Result doSlotExchangeRetry(void);
 Result getLocation(void);
 Result setLocation(int location);
+Result setEventLocation(u8 uuid[16]);
 
 void bgLoopInit(void);
 void bgLoopExit(void);
@@ -89,5 +101,5 @@ void triggerDownloadInboxes(void);
 s32 main_thread_prio(void);
 void init_main_thread_prio(void);
 
-extern int location;
+extern LocationResponse location;
 extern FS_Archive sharedextdata_b;

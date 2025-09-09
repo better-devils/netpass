@@ -599,6 +599,8 @@ const char* error_desc_str_map[] = {
 	"NoStreetpassGames",
 	"SameLocationTwice",
 	"InvalidServerResp",
+	"InvalidLocation",
+	"InvalidQrPayload",
 };
 
 const char* error_desc_desc_map[] = {
@@ -619,6 +621,8 @@ const char* error_desc_desc_map[] = {
 	"There are no games with StreetPass enabled. Please enable StreetPass in at least one title and open NetPass again.",
 	"You can't enter the same location twice in a row.",
 	"The server responded with an invalid response. Try closing NetPass and opening it again.",
+	"The location is invalid.",
+	"The QR code you tried to scan is invalid / malformed.",
 };
 
 void miscInit(void) {
@@ -634,4 +638,14 @@ void cecTimeToTm(CecTimestamp* cec, struct tm* tm) {
 	tm->tm_min = cec->minute > 59 ? 0 : cec->minute;
 	tm->tm_sec = cec->second > 59 ? 0 : cec->second;
 	tm->tm_isdst = false;
+}
+
+int format_uuid(char str[37], u8 uuid[16]) {
+	return snprintf(str, 37, "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+		uuid[0], uuid[1], uuid[2], uuid[3],
+		uuid[4], uuid[5],
+		uuid[6], uuid[7],
+		uuid[8], uuid[9],
+		uuid[10], uuid[11], uuid[12], uuid[13], uuid[14], uuid[15]
+	);
 }

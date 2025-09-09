@@ -21,3 +21,4 @@
 #include "../scene.h"
 
 Scene* getPromptScene(LanguageString s, Scene* success);
+Scene* getPromptSceneStr(char* s, C2D_Font font, Scene* success);

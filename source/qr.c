@@ -46,6 +46,12 @@ u32 qr_read_u32(QrBuffer* buffer) {
 	return ret;
 }
 
+s32 qr_read_s32(QrBuffer* buffer) {
+	s32 ret = *(u32*)buffer->cur;
+	if (!qr_buffer_consume(buffer, sizeof(s32))) return 0;
+	return ret;
+}
+
 u32 qr_peek_u32(QrBuffer* buffer) {
 	return *(u32*)buffer->cur;
 }
@@ -102,6 +108,17 @@ Result qr_verify(QrBuffer* buffer) {
 	if (R_FAILED(res)) return res;
 	int http_code = res;
 	if (!IS_HTTP_SUCCESS(http_code)) return -res;
+	return res;
+}
+
+Result qr_parse_join_event_room(QrBuffer* buffer, QrJoinEventRoomPayload* payload) {
+	Result res = 0;
+	if (qr_read_string(buffer, payload->name, 100) == 0) {
+		return ERROR_INVALID_QR_PAYLOAD;
+	}
+	if (qr_read_object(buffer, payload->uuid, 16) == 0) {
+		return ERROR_INVALID_QR_PAYLOAD;
+	}
 	return res;
 }
 

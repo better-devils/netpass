@@ -31,26 +31,36 @@ typedef struct {
 	C2D_Text g_prompt;
 	C2D_Text g_a_ok;
 	C2D_Text g_b_back;
+	char* message;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
+	C2D_Font font = sc->d;
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	_data->g_staticBuf = C2D_TextBufNew(2000);
-	TextLangParse(&_data->g_prompt, _data->g_staticBuf, (void*)sc->data);
+	if (font) {
+		font = (void*)((u32)font & 0xFFFFFFFE);
+		_data->message = (void*)sc->data;
+		C2D_TextFontParse(&_data->g_prompt, font, _data->g_staticBuf, (void*)sc->data);
+	} else {
+		_data->message = 0;
+		TextLangParse(&_data->g_prompt, _data->g_staticBuf, (void*)sc->data);
+	}
 	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
 	TextLangParse(&_data->g_b_back, _data->g_staticBuf, str_b_go_back);
 }
 
 void N(render)(Scene* sc) {
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
-	C2D_DrawText(&_data->g_prompt, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 1, 1, (WIDTH - 2*MARGIN - 10) * 1.f);
+	C2D_DrawText(&_data->g_prompt, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 0.7f, 0.7f, (WIDTH - MARGIN - 5) * 1.f);
 	C2D_DrawText(&_data->g_b_back, C2D_AlignLeft, MARGIN + 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 	C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 }
 
 void N(exit)(Scene* sc) {
 	if (_data) {
+		if (_data->message) free(_data->message);
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}
@@ -79,6 +89,22 @@ Scene* getPromptScene(LanguageString s, Scene* success) {
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = (u32)s;
+	scene->next_scene = success;
+	scene->is_popup = true;
+	scene->need_free = true;
+	return scene;
+}
+
+Scene* getPromptSceneStr(char* s, C2D_Font font, Scene* success) {
+	Scene* scene = malloc(sizeof(Scene));
+	if (!scene) return NULL;
+	memset(scene, 0, sizeof(Scene));
+	scene->init = N(init);
+	scene->render = N(render);
+	scene->exit = N(exit);
+	scene->process = N(process);
+	scene->data = (u32)s;
+	scene->d = (void*)((u32)font | 1);
 	scene->next_scene = success;
 	scene->is_popup = true;
 	scene->need_free = true;

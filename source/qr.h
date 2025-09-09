@@ -21,7 +21,7 @@
 
 typedef enum : u32 {
 	QR_METHOD_VERIFY = 1,
-	QR_METHOD_JOIN,
+	QR_METHOD_JOIN_EVENT_ROOM,
 	QR_METHOD_DL_PASS,
 } QrMethods;
 
@@ -32,9 +32,15 @@ typedef struct {
 	u32 size;
 } QrBuffer;
 
+typedef struct {
+	char name[100];
+	u8 uuid[16];
+} QrJoinEventRoomPayload;
+
 void qr_buffer_from_quirc_data(QrBuffer* buffer, struct quirc_data* data);
 void qr_buffer_new(QrBuffer* buffer, u8* bytes, u32 size);
 u32 qr_read_u32(QrBuffer* buffer);
+s32 qr_read_s32(QrBuffer* buffer);
 u32 qr_peek_u32(QrBuffer* buffer);
 u8 qr_read_u8(QrBuffer* buffer);
 bool qr_read_bool(QrBuffer* buffer);
@@ -43,4 +49,5 @@ u32 qr_read_string(QrBuffer* buffer, char* string, u32 length);
 u32 qr_read_align(QrBuffer* buffer, u32 align);
 bool qr_buf_equal(QrBuffer* buffer, u8* buf, u32 len);
 Result qr_verify(QrBuffer* buffer);
+Result qr_parse_join_event_room(QrBuffer* buffer, QrJoinEventRoomPayload* payload);
 Result qr_dl_pass(QrBuffer* buffer);

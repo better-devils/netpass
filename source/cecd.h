@@ -236,6 +236,8 @@ typedef struct CecMboxListHeader {
 typedef struct CecMboxListHeaderWithCapacities {
 	CecMboxListHeader header;
 	u32 capacities[24];
+	char title_names[24][200];
+	u8 hmac_keys[24][32];
 } CecMboxListHeaderWithCapacities;
 
 typedef struct CecMessageBodyMarioKart7 {

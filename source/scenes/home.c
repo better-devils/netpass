@@ -87,6 +87,8 @@ void N(exit)(Scene* sc) {
 
 Result N(location_res);
 
+s32 new_location;
+
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
@@ -105,12 +107,15 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getInfoScene(str_no_location_twice);
 				return scene_push;
 			}
-			location = _data->cursor;
+			new_location = _data->cursor;
 			sc->next_scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 				if (R_FAILED(N(location_res))) return getHomeScene();
-				return getLocationScene(location);
+				return getLocationScene();
 			})), lambda(void, (void) {
-				N(location_res) = setLocation(location);
+				N(location_res) = _e(setLocation(new_location));
+				if (!R_FAILED(N(location_res))) {
+					N(location_res) = _e(getLocation());
+				}
 				triggerDownloadInboxes();
 			}));
 			return scene_switch;

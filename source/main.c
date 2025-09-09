@@ -143,10 +143,10 @@ int main() {
 				}
 				bgLoopInit();
 				Scene* scene;
-				if (location == -1) {
+				if (location.id == -1) {
 					scene = getHomeScene(); // load home
 				} else {
-					scene = getLocationScene(location);
+					scene = getLocationScene();
 				}
 	
 				if (ping_response.version.new_version_available) {
@@ -196,18 +196,13 @@ int main() {
 				_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
 				initTitleData();
 				doSlotExchangeRetry();
-				Result res = getLocation();
-				if (R_FAILED(res) && res != -1) {
-					_e(res);
-					printf("ERROR failed to get location: %ld\n", res);
-					location = -1;
+				Result ping_res = getLocation();
+				if (R_FAILED(ping_res)) {
+					printf("ERROR failed to get location: %ld\n", ping_res);
 				} else {
-					location = res;
-					if (location == -1) {
-						printf("Got location home\n");
-					} else {
-						printf("Got location: %d\n", location);
-					}
+					char uuidstr[37];
+					format_uuid(uuidstr, location.uuid);
+					printf("Got location: %ld %s\n", location.id, uuidstr);
 				}
 			}));
 		

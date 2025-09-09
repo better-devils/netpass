@@ -33,7 +33,7 @@
 	R_FAILED(r) && R_IS_CEC_RESTART(r) ? r : _e(r); \
 })
 
-int location = -1;
+LocationResponse location = {0};
 FS_Archive sharedextdata_b = 0;
 NetpassTitleData title_data;
 
@@ -139,11 +139,9 @@ typedef struct SlotInfo {
 
 typedef struct TitleExtraInfo {
 	u32 title_id;
-	char* title_name;
-	char* hmac_key;
 } TitleExtraInfo;
 
-Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
+Result uploadSlot(SlotMetadata* metadata) {
 	Result res = 0;
 	char url[50];
 	if (!metadata->title_id) {
@@ -171,7 +169,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 
 	// now upload the slot
 	snprintf(url, 50, "%s/outbox/slot", BASE_URL);
-	res = _e(httpRequest("POST", url, metadata->size, slot, 0, extra->title_name, extra->hmac_key));
+	res = _e(httpRequest("POST", url, metadata->size, slot, 0, 0, 0));
 	free(slot);
 	return res;
 }
@@ -233,64 +231,54 @@ Result doSlotExchange(void) {
 	char* error_origin = "none";
 	// first we fetch the mboxlist, extend it and upload it
 	{
-		CecMboxListHeaderWithCapacities mbox_list;
-		res = _e_cec(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
-		error_origin = "reading mbox list";
-		if (R_FAILED(res)) goto fail;
-		clearIgnoredTitles(&mbox_list.header);
-		// now fill in the capacities
-		for (size_t i = 0; i < mbox_list.header.num_boxes; i++) {
-			u32 title_id = strtol((const char*)mbox_list.header.box_names[i], NULL, 16);
-			CecBoxInfoHeader boxinfo;
-			res = _e_cec(cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo));
-			if (R_FAILED(res)) goto fail;
-			mbox_list.capacities[i] = boxinfo.max_num_messages - boxinfo.num_messages;
-		}
-		
-		char url[50];
-		snprintf(url, 50, "%s/outbox/mboxlist_ext", BASE_URL);
-		res = _e(httpRequest("POST", url, sizeof(mbox_list), (u8*)&mbox_list, 0, 0, 0));
-		error_origin = "sending mboxlist ext";
-		if (R_FAILED(res)) goto fail;
-	}
-
-	// now we populate the extra data to upload, before we go into cecd state
-	{
-		CecMboxListHeaderWithCapacities mbox_list;
-		res = _e_cec(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
-		if (R_FAILED(res)) goto fail;
-		clearIgnoredTitles(&mbox_list.header);
-		u8* buf = malloc(MAX(200, sizeof(CecMBoxInfoHeader)));
-		if (!buf) {
-			res = _e_errno();
-			error_origin = "malloc for mboxinfo";
+		CecMboxListHeaderWithCapacities* mbox_list = malloc(sizeof(CecMboxListHeaderWithCapacities));
+		if (!mbox_list) {
+			res = _e(ERROR_OUT_OF_MEMORY);
 			goto fail;
 		}
-		// now fetch the data
-		for (size_t i = 0; i < mbox_list.header.num_boxes; i++) {
-			u32 title_id = strtol((const char*)mbox_list.header.box_names[i], NULL, 16);
-			title_extra_info[i].title_id = title_id;
-			memset(buf, 0, 200);
-
-			// first title name
-			res = _e_cec(cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, buf));
-			if (R_FAILED(res)) {
-				error_origin = "Reading mbox title";
-				free(buf);
-				goto fail;
-			}
-			title_extra_info[i].title_name = b64encode(buf, 200);
-
-			//second hmac key
-			res = _e_cec(cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), buf));
-			if (R_FAILED(res)) {
-				free(buf);
-				error_origin = "Reading mboxlist";
-				goto fail;
-			}
-			title_extra_info[i].hmac_key = b64encode(((CecMBoxInfoHeader*)buf)->hmac_key, 32);
+		memset(mbox_list, 0, sizeof(CecMboxListHeaderWithCapacities));
+		res = _e_cec(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list->header), (u8*)&mbox_list->header));
+		error_origin = "reading mbox list";
+		if (R_FAILED(res)) {
+			free(mbox_list);
+			goto fail;
 		}
-		free(buf);
+		clearIgnoredTitles(&mbox_list->header);
+		// now fill in the capacities
+		for (size_t i = 0; i < mbox_list->header.num_boxes; i++) {
+			u32 title_id = strtol((const char*)mbox_list->header.box_names[i], NULL, 16);
+			CecBoxInfoHeader boxinfo;
+			res = _e_cec(cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo));
+			if (R_FAILED(res)) {
+				free(mbox_list);
+				goto fail;
+			}
+			mbox_list->capacities[i] = boxinfo.max_num_messages - boxinfo.num_messages;
+			
+			// now we fetch the title name
+			res = _e_cec(cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, (u8*)mbox_list->title_names[i]));
+			if (R_FAILED(res)) {
+				free(mbox_list);
+				goto fail;
+			}
+			
+			// and now the hmac key
+			CecMBoxInfoHeader info_header;
+			res = _e_cec(cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(info_header), (u8*)&info_header));
+			if (R_FAILED(res)) {
+				free(mbox_list);
+				goto fail;
+			}
+			memcpy(mbox_list->hmac_keys[i], info_header.hmac_key, 32);
+			
+			title_extra_info[i].title_id = title_id;
+		}
+		char url[50];
+		snprintf(url, 50, "%s/outbox/mboxlist_ext2", BASE_URL);
+		res = _e(httpRequest("POST", url, sizeof(CecMboxListHeaderWithCapacities), (u8*)mbox_list, 0, 0, 0));
+		free(mbox_list);
+		error_origin = "sending mboxlist ext";
+		if (R_FAILED(res)) goto fail;
 	}
 
 	// get cecd into the spr state
@@ -326,7 +314,7 @@ Result doSlotExchange(void) {
 		if (!extra) {
 			continue; // the slot was disabled
 		}
-		Result res2 = uploadSlot(extra, &slotinfo.metadata[i]);
+		Result res2 = uploadSlot(&slotinfo.metadata[i]);
 		if (R_FAILED(res2)) {
 			printf("-");
 		} else {
@@ -422,14 +410,6 @@ cleanup:
 			free(slotinfo.slots[i]);
 			slotinfo.slots[i] = 0;
 		}
-		if (title_extra_info[i].title_name) {
-			free(title_extra_info[i].title_name);
-			title_extra_info[i].title_name = 0;
-		}
-		if (title_extra_info[i].hmac_key) {
-			free(title_extra_info[i].hmac_key);
-			title_extra_info[i].hmac_key = 0;
-		}
 	}
 	Result res_bak = res;
 	// get cecd into the normal state
@@ -444,14 +424,27 @@ Result getLocation(void) {
 	Result res;
 	CurlReply* reply;
 	char url[80];
-	snprintf(url, 80, "%s/location/current", BASE_URL);
+	snprintf(url, 80, "%s/location/current/info", BASE_URL);
 	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	if (http_code == 200) {
-		res = *(u32*)(reply->ptr);
-	} else if (IS_HTTP_SUCCESS(http_code)) {
-		res = -1;
+		QrBuffer buffer;
+		qr_buffer_new(&buffer, reply->ptr, reply->len);
+		// check version
+		if (qr_read_u32(&buffer) != 1) {
+			res = ERROR_INVALID_SERVER_RESPONSE;
+			goto cleanup;
+		}
+		location.id = qr_read_s32(&buffer);
+		qr_read_object(&buffer, location.uuid, 16);
+		location.have_image = qr_read_u8(&buffer);
+		qr_read_align(&buffer, 4);
+		qr_read_object(&buffer, location.image_hash, 0x20);
+		qr_read_object(&buffer, &location.time_start, sizeof(location.time_start));
+		qr_read_object(&buffer, &location.time_end, sizeof(location.time_end));
+		location.time_remaining = qr_read_u32(&buffer);
+		qr_read_string(&buffer, location.name, 100);
 	} else {
 		res = -http_code;
 	}
@@ -482,6 +475,27 @@ Result setLocation(int location) {
 	config.last_location = location;
 	configWrite();
 	printf("Entered location %d!\n", location);
+	return res;
+}
+
+Result setEventLocation(u8 uuid[16]) {
+	Result res;
+	// first check if we have any streetpass games enabled
+	CecMboxListHeaderWithCapacities mbox_list;
+	res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header));
+	if (R_FAILED(res)) return res;
+	clearIgnoredTitles(&mbox_list.header);
+	if (mbox_list.header.num_boxes == 0) return ERROR_NO_STREETPASS_GAMES;
+
+	// now actually ask the server to enter the location
+	char uuidstr[37];
+	format_uuid(uuidstr, uuid);
+	char url[80];
+	snprintf(url, 80, "%s/location/%s/enter", BASE_URL, uuidstr);
+	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
+	if (R_FAILED(res)) {
+		printf("ERROR: Failed to event enter location %s: %ld\n", uuidstr, res);
+	}
 	return res;
 }
 
