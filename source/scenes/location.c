@@ -19,6 +19,7 @@
 #include "switch.h"
 #include "../api.h"
 #include "../music.h"
+#include "../image_cache.h"
 #include <stdlib.h>
 #define N(x) scenes_location_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
@@ -29,6 +30,7 @@ typedef struct {
 	C2D_Text g_location;
 	C2D_Text g_subtitle;
 	C2D_Text g_entries[4];
+	C2D_Image background;
 	C2D_SpriteSheet spr;
 	int cursor;
 	float width;
@@ -79,23 +81,29 @@ void N(init)(Scene* sc) {
 			_data->width = width;
 		}
 	}
-	if (_data->event_location) {
-		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/event_location.t3x");
-		playMusic("home");
-	} else {
-		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
-		playMusic(N(music)[location.id]);
+	if (!get_current_location_image(&_data->background)) {
+		if (_data->event_location) {
+			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/event_location.t3x");
+			playMusic("home");
+		} else {
+			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
+			playMusic(N(music)[location.id]);
+		}
 	}
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
-	if (_data->event_location) {
-		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
-		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-	} else if (C2D_SpriteSheetCount(_data->spr) > location.id) {
-		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
-		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	if (_data->spr) {
+		if (_data->event_location) {
+			C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
+			C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+		} else if (C2D_SpriteSheetCount(_data->spr) > location.id) {
+			C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
+			C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+		}
+	} else {
+		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
 	}
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
 	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + (_data->event_location ? 6 : 5)*25, bgclr);
@@ -115,7 +123,11 @@ void N(render)(Scene* sc) {
 void N(exit)(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
-		C2D_SpriteSheetFree(_data->spr);
+		if (_data->spr) {
+			C2D_SpriteSheetFree(_data->spr);
+		} else {
+			C2D_ImageDelete(&_data->background);
+		}
 		free(_data);
 	}
 }

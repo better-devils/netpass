@@ -1,4 +1,5 @@
 *:source/hmac_sha256/*
+*:source/lodepng/*
 *:source/quirc/*
 *:source/nanojpeg.c
 missingIncludeSystem:*

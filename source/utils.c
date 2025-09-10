@@ -26,6 +26,7 @@
 #include <errno.h>
 #define _NJ_INCLUDE_HEADER_ONLY
 #include "nanojpeg.c"
+#include "lodepng/lodepng.h"
 
 // cppcheck-suppress unusedFunction
 void* cecGetExtHeader(CecMessageHeader* msg, u32 type) {
@@ -413,6 +414,18 @@ bool loadJpeg(C2D_Image* img, u8* data, u32 size) {
 	int height = njGetHeight();
 	bool success = rgbToImage(img, width, height, njGetImage());
 	njDone();
+	return success;
+}
+
+bool loadFilePng(C2D_Image* img, const char* filename) {
+	u32 width;
+	u32 height;
+	u8* buf;
+	if (lodepng_decode24_file(&buf, &width, &height, filename)) {
+		return false;
+	}
+	bool success = rgbToImage(img, width, height, buf);
+	free(buf);
 	return success;
 }
 

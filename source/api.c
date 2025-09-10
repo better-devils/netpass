@@ -23,6 +23,7 @@
 #include "report.h"
 #include "qr.h"
 #include "curl-handler.h"
+#include "image_cache.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -436,6 +437,7 @@ Result getLocation(void) {
 			res = ERROR_INVALID_SERVER_RESPONSE;
 			goto cleanup;
 		}
+		memset(&location, 0, sizeof(location));
 		location.id = qr_read_s32(&buffer);
 		qr_read_object(&buffer, location.uuid, 16);
 		location.have_image = qr_read_u8(&buffer);
@@ -445,6 +447,9 @@ Result getLocation(void) {
 		qr_read_object(&buffer, &location.time_end, sizeof(location.time_end));
 		location.time_remaining = qr_read_u32(&buffer);
 		qr_read_string(&buffer, location.name, 100);
+		qr_read_string(&buffer, location.artist_name, 100);
+		
+		cache_current_location_image();
 	} else {
 		res = -http_code;
 	}
@@ -475,6 +480,7 @@ Result setLocation(int location) {
 	config.last_location = location;
 	configWrite();
 	printf("Entered location %d!\n", location);
+	cache_current_location_image();
 	return res;
 }
 
@@ -496,6 +502,7 @@ Result setEventLocation(u8 uuid[16]) {
 	if (R_FAILED(res)) {
 		printf("ERROR: Failed to event enter location %s: %ld\n", uuidstr, res);
 	}
+	cache_current_location_image();
 	return res;
 }
 

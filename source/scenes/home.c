@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include "../api.h"
 #include "../config.h"
+#include "../image_cache.h"
 #define N(x) scenes_home_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
@@ -30,6 +31,7 @@ typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_home;
 	C2D_Text g_entries[NUM_ENTRIES];
+	C2D_Image background;
 	C2D_SpriteSheet spr;
 	int cursor;
 	float width;
@@ -38,6 +40,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
+	memset(sc->d, 0, sizeof(N(DataStruct)));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_home, _data->g_staticBuf, str_at_home);
@@ -58,13 +61,19 @@ void N(init)(Scene* sc) {
 			_data->width = width;
 		}
 	}
-	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/home.t3x");
+	if (!get_current_location_image(&_data->background)) {
+		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/home.t3x");
+	}
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
-	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
-	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	if (_data->spr) {
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
+		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	} else {
+		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
+	}
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
 	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + NUM_ENTRIES*14, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
@@ -81,6 +90,11 @@ void N(render)(Scene* sc) {
 void N(exit)(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
+		if (_data->spr) {
+			C2D_SpriteSheetFree(_data->spr);
+		} else {
+			C2D_ImageDelete(&_data->background);
+		}
 		free(_data);
 	}
 }

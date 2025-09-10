@@ -81,6 +81,7 @@ typedef struct {
 	CecTimestamp time_end;
 	u32 time_remaining;
 	char name[100];
+	char artist_name[100];
 } LocationResponse;
 
 Result readPingResponse(PingResponse* response, u8* buf, u32 len);
