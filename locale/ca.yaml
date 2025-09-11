@@ -4,7 +4,7 @@ str_libcurl_date_and_time: 'Asseguri que l''hora i la data del sistema estan aju
   correctament!'
 str_httpstatus_error: 'Codi d''estat HTTP %d'
 str_3ds_error: 'Codi d''error 3DS %08lx'
-str_at_home: 'Ets a casa.'
+str_at_home: 'Ets a Casa.'
 str_goto_train_station: 'Vés a l''Estació de Tren'
 str_at_train_station: 'Ets a l''Estació de Tren.'
 str_goto_plaza: 'Vés a la Plaça'
@@ -85,13 +85,13 @@ str_update_patches_desc: Per instal·ar NetPass correctament, es crearan alguns 
 str_x_switch_camera: '{x_button} Canviar de càmera'
 str_welcome_message: Abans d'iniciar NetPass, si us plau, llegeix i accepta les nostres
   regles i política de privadesa.
-str_update_patches_poweroff_clear_desc: ¡Pedaços eliminats amb èxit! La teua consola
+str_update_patches_poweroff_clear_desc: Patches eliminats amb èxit! La seva consola
   es reiniciarà.
 str_bg_music: Música de fons
 str_bad_os_version: "NetPass requereix de 3DS OS 11.15.0 o major per funcionar correctament.
   Desafortunadament, pareix que estàs utilitzant una versió més antiga. Si us plau,
   actualitza i després inicia NetPass de nou\n\nOprimeix qualsevol tecla per eixir"
-str_prompt_dl_pass: Segur que vols descarregar aquest passi?
+str_prompt_dl_pass: Ets segur que vols descarregar aquest passi?
 str_report_integration: Aquest missatge és provist per una integració. Per denunciar-lo,
   si us plau, envieu-li un missatge a l'equip de moderació d'aquesta integració.
 str_skip: Ometre
@@ -102,3 +102,6 @@ str_new_version: "Nova Versió del NetPass disponible:\nv%d.%d.%d!\n\nPer actual
   el NetPass, torna a instal·lar-ho amb Universal Updater o amb el codi QR."
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_date: '%d/%m/%Y'
+str_enter_event_location: Ets segur que vols entrar a l'esdeveniment "%s"?
+str_at_event_location: Ets a un esdeveniment especial.
+str_artist_copyright: Il·lustració © %s
