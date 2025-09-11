@@ -106,3 +106,7 @@ str_new_version: "Neue NetPass Version erhältlich:\nv%d.%d.%d!\n\nUm NetPass zu
   installiere es einfach wieder über Universal Updater oder mit dem QR-Code."
 str_banned: "Du bist von der Nutzung von NetPass ausgeschlossen. Grund:\n%s\n\nAusgeschlossen
   seit: %s\nAusgeschlossen bis: %s"
+str_enter_event_location: Bist du sicher, dass du die Veranstaltung "%s" betreten
+  möchtest?
+str_at_event_location: Du bist bei einer besonderen Veranstaltung.
+str_artist_copyright: Grafik © %s
