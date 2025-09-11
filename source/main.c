@@ -146,7 +146,7 @@ int main() {
 				if (location.id == -1) {
 					scene = getHomeScene(); // load home
 				} else {
-					scene = getLocationScene();
+					scene = getLocationScene(location.id);
 				}
 	
 				if (ping_response.version.new_version_available) {

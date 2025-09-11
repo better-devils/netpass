@@ -447,6 +447,7 @@ Result getLocation(void) {
 		qr_read_object(&buffer, &location.time_end, sizeof(location.time_end));
 		location.time_remaining = qr_read_u32(&buffer);
 		qr_read_string(&buffer, location.name, 100);
+		qr_read_align(&buffer, 4);
 		qr_read_string(&buffer, location.artist_name, 100);
 		
 		cache_current_location_image();

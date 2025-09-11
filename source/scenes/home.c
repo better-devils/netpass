@@ -31,17 +31,19 @@ typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_home;
 	C2D_Text g_entries[NUM_ENTRIES];
+	C2D_Text artist;
 	C2D_Image background;
 	C2D_SpriteSheet spr;
 	int cursor;
 	float width;
+	float artist_width;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	memset(sc->d, 0, sizeof(N(DataStruct)));
-	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_home, _data->g_staticBuf, str_at_home);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_goto_train_station);
@@ -52,6 +54,17 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_goto_catcafe);
 	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_exit);
+	
+	if (*location.artist_name) {
+		char string[150];
+		snprintf(string, 150, _s(str_artist_copyright), location.artist_name);
+		C2D_TextFontParse(&_data->artist, _font(str_artist_copyright), _data->g_staticBuf, string);
+		get_text_dimensions(&_data->artist, 0.4, 0.4, &_data->artist_width, 0);
+		_data->artist_width += 4.0;
+	} else {
+		_data->artist_width = 0;
+	}
+	
 	get_text_dimensions(&_data->g_home, 1, 1, &_data->width, 0);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
 		float width;
@@ -71,12 +84,18 @@ void N(render)(Scene* sc) {
 	if (_data->spr) {
 		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
 		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-	} else {
+	} else if (_data->background.tex) {
 		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
 	}
-	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + NUM_ENTRIES*14, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
+	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
+	
+	if (_data->artist_width != 0) {
+		C2D_DrawRectSolid(SCREEN_TOP_WIDTH - _data->artist_width, SCREEN_TOP_HEIGHT - 12, 0, _data->artist_width, 12, bgclr);
+		C2D_DrawText(&_data->artist, C2D_AlignRight | C2D_WithColor, SCREEN_TOP_WIDTH - 2, SCREEN_TOP_HEIGHT - 12, 0, 0.4, 0.4, clr);
+	}
+	
+	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + NUM_ENTRIES*14, bgclr);
 	u32 clr_inactive = C2D_Color32(0, 0, 0, 0x80);
 	C2D_DrawText(&_data->g_home, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
@@ -92,7 +111,8 @@ void N(exit)(Scene* sc) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		if (_data->spr) {
 			C2D_SpriteSheetFree(_data->spr);
-		} else {
+		}
+		if (_data->background.tex) {
 			C2D_ImageDelete(&_data->background);
 		}
 		free(_data);
@@ -124,7 +144,7 @@ SceneResult N(process)(Scene* sc) {
 			new_location = _data->cursor;
 			sc->next_scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 				if (R_FAILED(N(location_res))) return getHomeScene();
-				return getLocationScene();
+				return getLocationScene(location.id);
 			})), lambda(void, (void) {
 				N(location_res) = _e(setLocation(new_location));
 				if (!R_FAILED(N(location_res))) {
@@ -132,6 +152,10 @@ SceneResult N(process)(Scene* sc) {
 				}
 				triggerDownloadInboxes();
 			}));
+			return scene_switch;
+		}
+		if (location.id != -1) {
+			sc->next_scene = getLocationScene(location.id);
 			return scene_switch;
 		}
 	}

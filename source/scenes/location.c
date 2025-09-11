@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "home.h"
 #include "switch.h"
 #include "../api.h"
 #include "../music.h"
@@ -30,11 +31,14 @@ typedef struct {
 	C2D_Text g_location;
 	C2D_Text g_subtitle;
 	C2D_Text g_entries[4];
+	C2D_Text artist;
 	C2D_Image background;
 	C2D_SpriteSheet spr;
 	int cursor;
 	float width;
+	float artist_width;
 	bool event_location;
+	int location_id;
 } N(DataStruct);
 
 LanguageString* N(locations)[NUM_LOCATIONS] = {
@@ -59,19 +63,31 @@ void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	memset(sc->d, 0, sizeof(N(DataStruct)));
-	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
 	_data->event_location = location.id == -2;
+	_data->location_id = (int)sc->data;
 	if (_data->event_location) {
 		TextLangParse(&_data->g_location, _data->g_staticBuf, str_at_event_location);
 		C2D_TextParse(&_data->g_subtitle, _data->g_staticBuf, location.name);
 	} else {
-		TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[location.id]);
+		TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[location.id >= 0 && location.id < NUM_LOCATIONS ? location.id : 0]);
 	}
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_check_inboxes);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_back_alley);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_exit);
+	
+	if (*location.artist_name) {
+		char string[150];
+		snprintf(string, 150, _s(str_artist_copyright), location.artist_name);
+		C2D_TextFontParse(&_data->artist, _font(str_artist_copyright), _data->g_staticBuf, string);
+		get_text_dimensions(&_data->artist, 0.4, 0.4, &_data->artist_width, 0);
+		_data->artist_width += 4.0;
+	} else {
+		_data->artist_width = 0;
+	}
+	
 	get_text_dimensions(&_data->g_location, 1, 1, &_data->width, 0);
 	for (int i = 0; i < 4; i++) {
 		float width;
@@ -85,7 +101,7 @@ void N(init)(Scene* sc) {
 		if (_data->event_location) {
 			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/event_location.t3x");
 			playMusic("home");
-		} else {
+		} else if (location.id >= 0 && location.id < NUM_LOCATIONS) {
 			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
 			playMusic(N(music)[location.id]);
 		}
@@ -102,12 +118,18 @@ void N(render)(Scene* sc) {
 			C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
 			C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 		}
-	} else {
+	} else if (_data->background.tex) {
 		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
 	}
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + (_data->event_location ? 6 : 5)*25, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
+	
+	if (_data->artist_width != 0) {
+		C2D_DrawRectSolid(SCREEN_TOP_WIDTH - _data->artist_width, SCREEN_TOP_HEIGHT - 12, 0, _data->artist_width, 12, bgclr);
+		C2D_DrawText(&_data->artist, C2D_AlignRight | C2D_WithColor, SCREEN_TOP_WIDTH - 2, SCREEN_TOP_HEIGHT - 12, 0, 0.4, 0.4, clr);
+	}
+	
+	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + (_data->event_location ? 6 : 5)*25, bgclr);
 	C2D_DrawText(&_data->g_location, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	if (_data->event_location) {
 		C2D_DrawText(&_data->g_subtitle, C2D_AlignLeft | C2D_WithColor, 10, 10 + 25, 0, 1, 1, clr);
@@ -125,7 +147,8 @@ void N(exit)(Scene* sc) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		if (_data->spr) {
 			C2D_SpriteSheetFree(_data->spr);
-		} else {
+		}
+		if (_data->background.tex) {
 			C2D_ImageDelete(&_data->background);
 		}
 		free(_data);
@@ -156,12 +179,20 @@ SceneResult N(process)(Scene* sc) {
 			}
 			if (_data->cursor == 3) return scene_stop;
 		}
+		if (location.id == -1) {
+			sc->next_scene = getHomeScene();
+			return scene_switch;
+		}
+		if (location.id != _data->location_id) {
+			sc->next_scene = getLocationScene(location.id);
+			return scene_switch;
+		}
 	}
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
 }
 
-Scene* getLocationScene(void) {
+Scene* getLocationScene(int location_id) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
@@ -171,5 +202,6 @@ Scene* getLocationScene(void) {
 	scene->process = N(process);
 	scene->is_popup = false;
 	scene->need_free = true;
+	scene->data = (u32)location_id;
 	return scene;
 }

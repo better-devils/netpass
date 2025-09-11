@@ -297,8 +297,8 @@ SceneResult N(process)(Scene* sc) {
 								printf("Failed to join event location: %lx\n", res);
 							} else {
 								getLocation();
+								triggerDownloadInboxes();
 								printf("Successfully joined event location!\n");
-								// TODO: figure out how to switch root sce
 							}
 						})));
 						return scene_push;
