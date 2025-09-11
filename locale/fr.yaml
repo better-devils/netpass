@@ -110,3 +110,6 @@ str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nD�
   ban : %s\nFin du ban : %s"
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
+str_at_event_location: Vous êtes à un événement spécial.
+str_artist_copyright: Illustration par %s ©
+str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
