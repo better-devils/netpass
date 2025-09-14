@@ -37,6 +37,7 @@
 #define LOG_SPR_DIR "sdmc:/config/netpass/log_spr/"
 
 #define MAX_REPORT_ENTRIES_LEN 128
+#define REPORT_LIST_MAGIC 0x454C524e
 
 #define SETUP_ENTRY(a, x) a* body = (a*)(((u8*)buf) + buf->total_header_size); \
 	entry->data = malloc(sizeof(x)); \
@@ -53,7 +54,7 @@ ReportList* loadReportList(void) {
 
 	ReportListHeader header;
 	fread_blk(&header, sizeof(ReportListHeader), 1, f);
-	if (header.magic != 0x454C524e || header.version != 1) {
+	if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
 		_e(ERROR_BAD_REPORT_LIST);
 		return NULL;
 	}
@@ -246,6 +247,20 @@ void saveSlotInLog(CecSlotHeader* slot) {
 void saveMsgInLog(CecMessageHeader* msg) {
 	ReportList* list;
 	FILE* f = fopen(LOG_INDEX, "rb");
+	if (f) {
+		fseek(f, 0, SEEK_END);
+		size_t is_size = ftell(f);
+		fseek(f, 0, SEEK_SET);
+		if (is_size < sizeof(ReportListHeader)) {
+			// file is really corrupt, let's just yeet everything and start over
+			// TODO: maybe it is a better idea to manually try to re-create the index from the folders on the card?
+			// though that would be very hard and not sure if worth it
+			fclose(f);
+			f = NULL;
+			rmdir_r(LOG_DIR);
+			mkdir_p(LOG_DIR);
+		}
+	}
 	if (!f) {
 		// ok, file is empty, we have to create it
 		f = fopen(LOG_INDEX, "wb");
@@ -257,10 +272,11 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		if (!list) {
 			_e(ERROR_OUT_OF_MEMORY);
 			fclose(f);
+			unlink(LOG_INDEX);
 			return;
 		}
 		memset(list, 0, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
-		list->header.magic = 0x454C524e;
+		list->header.magic = REPORT_LIST_MAGIC;
 		list->header.version = 1;
 		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
 		list->header.cur_size = 0;
@@ -270,22 +286,32 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		f = fopen(LOG_INDEX, "rb");
 		if (!f) {
 			_e_errno();
+			unlink(LOG_INDEX);
 			return;
 		}
 	}
 	size_t list_file_size;
 	{
-		ReportListHeader header;
+		ReportListHeader header = {0};
 		fread_blk(&header, sizeof(ReportListHeader), 1, f);
-		if (header.magic != 0x454C524E || header.version != 1) {
+		if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
 			_e(ERROR_BAD_REPORT_LIST);
+			fclose(f);
 			return;
 		}
+		fseek(f, 0, SEEK_END);
+		size_t is_size = ftell(f);
 		fseek(f, 0, SEEK_SET);
 		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
+		if (is_size != list_file_size) {
+			_e(ERROR_BAD_REPORT_LIST);
+			fclose(f);
+			return;
+		}
 		list = memalign(4, list_file_size);
 		if (!list) {
 			_e(ERROR_OUT_OF_MEMORY);
+			fclose(f);
 			return;
 		}
 		fread_blk(list, list_file_size, 1, f);
@@ -309,7 +335,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		if (list->header.max_size == list->header.cur_size) {
 			// uho, all is full, gotta the first half of the list
 			int i = 0;
-			for (; i < MAX_REPORT_ENTRIES_LEN / 2; i++) {
+			for (; i < list->header.max_size / 2; i++) {
 				u32 rm_batch = list->entries[i].transfer_id;
 				char rm_dirname[100];
 				snprintf(rm_dirname, 100, "%s%lx", LOG_DIR, rm_batch);
