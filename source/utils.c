@@ -662,3 +662,58 @@ int format_uuid(char str[37], u8 uuid[16]) {
 		uuid[10], uuid[11], uuid[12], uuid[13], uuid[14], uuid[15]
 	);
 }
+
+// decompression code stolen from ctrtool
+u32 blz_decompress_size(u8* compressed, u32 compressedsize) {
+	return compressedsize + *(u32*)(compressed + compressedsize - 4);
+}
+bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 decompressedsize) {
+	u8* footer = compressed + compressedsize - 8;
+	u32 buffertopandbottom = (footer[0]<<0) | (footer[1]<<8) | (footer[2]<<16) | (footer[3]<<24);
+	u32 i, j;
+	u32 out = decompressedsize;
+	u32 index = compressedsize - ((buffertopandbottom>>24)&0xFF);
+	u32 segmentoffset;
+	u32 segmentsize;
+	u8 control;
+	u32 stopindex = compressedsize - (buffertopandbottom&0xFFFFFF);
+
+	memset(decompressed, 0, decompressedsize);
+	memcpy(decompressed, compressed, compressedsize);
+
+	while(index > stopindex) {
+		control = compressed[--index];
+		for(i=0; i<8; i++) {
+			if (index <= stopindex) break;
+			if (index <= 0) break;
+			if (out <= 0) break;
+			if (control & 0x80) {
+				// compression out of bounds
+				if (index < 2) goto clean;
+				index -= 2;
+				segmentoffset = compressed[index] | (compressed[index+1]<<8);
+				segmentsize = ((segmentoffset >> 12)&15)+3;
+				segmentoffset &= 0x0FFF;
+				segmentoffset += 2;
+				// compression out of bounds
+				if (out < segmentsize) goto clean;
+				for(j=0; j<segmentsize; j++) {
+					u8 data;
+					// compression out of bounds
+					if (out+segmentoffset >= decompressedsize) goto clean;
+					data  = decompressed[out+segmentoffset];
+					decompressed[--out] = data;
+				}
+			} else {
+				// compression out of bounds
+				if (out < 1) goto clean;
+				decompressed[--out] = compressed[--index];
+			}
+			control <<= 1;
+		}
+	}
+	return true;
+	
+	clean:
+	return false;
+}

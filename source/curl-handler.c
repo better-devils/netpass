@@ -381,7 +381,7 @@ Result curlInit(void) {
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	u32 device_id;
-	res = AM_GetDeviceId(&device_id);
+	res = AM_GetDeviceId(0, &device_id);
 	if (R_FAILED(res)) return res;
 	res = getMac(mac);
 	if (R_FAILED(res)) return res;

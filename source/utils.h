@@ -81,6 +81,8 @@ void miscInit(void);
 void cecTimeToTm(CecTimestamp* cec, struct tm* tm);
 size_t n_strftime(char* str, size_t count, const char* format, const struct tm* tp);
 int format_uuid(char str[37], u8 uuid[16]);
+u32 blz_decompress_size(u8* compressed, u32 compressedsize);
+bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 decompressedsize);
 
 #define ERROR_NO_TITLE_ID CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_OUT_OF_RESOURCE, CTR_RESULT_MODULE_APPLICATION, 0)
 #define ERROR_MISSING_SLOT_META CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_NOT_FOUND, CTR_RESULT_MODULE_APPLICATION, 1)

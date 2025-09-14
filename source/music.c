@@ -177,11 +177,90 @@ void toggleBgMusic(void) {
 	configWrite();
 }
 
+u8* dsp_buf = 0;
+
 void musicInit(void) {
+	Result res = ndspInit();
+	if (!R_FAILED(res)) return;
+	
+	// stuffs failed, mew
+	// let's try if this works if we manually extract the ndsp firm
+	
+	static const u64 tidhigh = 0x0004003000000000;
+	static const u32 tidlow_home[6] = {
+		0x0000f202, // usa
+		0x00008202, // jpn
+		0x00009802, // eur
+		0x0000A102, // chn
+		0x0000A902, // kor
+		0x0000B102, // twn
+	};
+	Handle file;
+	for (int i = 0; i < 6; i++) {
+		u64 tid = tidhigh | tidlow_home[i];
+		u32 archPathRaw[] = {tid & 0xFFFFFFFF, (tid >> 32) & 0xFFFFFFFF, 0, 0x00000000};
+		FS_Path archPath = {PATH_BINARY, 0x10, (u8*)archPathRaw};
+		static const u32 filePathRaw[] = {0x00000000, 0x00000000, 0x00000002, 0x646F632E, 0x00000065};
+		FS_Path filePath = {PATH_BINARY, 0x14, (u8*)filePathRaw};
+		res = FSUSER_OpenFileDirectly(&file, (FS_ArchiveID)0x2345678a, archPath, filePath, FS_OPEN_READ, 0);
+		if (R_FAILED(res)) continue;
+		break;
+	}
+	u64 fileSize = 0;
+	u32 compressed_size = 0;
+	res = FSFILE_GetSize(file, &fileSize);
+	if (R_FAILED(res)) {
+		FSFILE_Close(file);
+		return;
+	}
+	u8* compressed = malloc(fileSize);
+	if (!compressed) {
+		FSFILE_Close(file);
+		return;
+	}
+	res = FSFILE_Read(file, &compressed_size, 0x0, compressed, fileSize);
+	FSFILE_Close(file);
+	if (R_FAILED(res) || compressed_size != fileSize) {
+		free(compressed);
+		return;
+	}
+	u32 decompressed_size = blz_decompress_size(compressed, compressed_size);
+	u8* decompressed = malloc(decompressed_size);
+	if (!decompressed) {
+		free(compressed);
+		return;
+	}
+	bool success = blz_decompress(compressed, compressed_size, decompressed, decompressed_size);
+	free(compressed);
+	if (!success) {
+		free(decompressed);
+		return;
+	}
+	
+	const char* magic = "DSP1";
+	u8* dsp_loc = memsearch(decompressed, decompressed_size, (u8*)magic, 4);
+	if (!dsp_loc) {
+		free(decompressed);
+		return;
+	}
+	u32 dsp_size = *(u32*)(dsp_loc + 4);
+	dsp_loc -= 0x100;
+	
+	dsp_buf = malloc(dsp_size);
+	if (!dsp_buf) {
+		free(decompressed);
+		return;
+	}
+	memcpy(dsp_buf, dsp_loc, dsp_size);
+	free(decompressed);
+	
+	// ok, we finally got the firmware in dsp_buf
+	ndspUseComponent(dsp_buf, dsp_size, 0xFF, 0xFF);
 	_e(ndspInit());
 }
 
 void musicExit(void) {
 	stopMusic();
 	ndspExit();
+	if (dsp_buf) free(dsp_buf);
 }
