@@ -105,3 +105,6 @@ str_banned: "NetPass'ı kullanmanız yasaklanmıştır. Sebebi:\n%s\n\nYasak ba�
 str_remove: Kaldır
 str_new_version: "Yeni NetPass sürümü mevcut:\nv%d.%d.%d!\n\nNetPass'ı güncellemek
   için Universal Updater veya QR kodu aracılığıyla yeniden yükleyin."
+str_at_event_location: Özel bir etkinliktesiniz.
+str_artist_copyright: Resim © %s
+str_enter_event_location: “%s” etkinliğine girmek istediğinizden emin misiniz?
