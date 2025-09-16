@@ -28,8 +28,8 @@
 #define MUSIC_CHANNEL 8
 #define OPUS_RATE (48000.f)
 #define OPUS_CHANNELS ((size_t)2)
-#define NUM_BUFFERS 2
-#define OPUS_BUFFERSIZE ((size_t)(32 * 1024))
+#define NUM_BUFFERS 4
+#define OPUS_BUFFERSIZE ((size_t)(16 * 1024))
 
 bool stop_playing = false;
 Thread music_thread = 0;
