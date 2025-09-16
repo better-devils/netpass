@@ -2,7 +2,7 @@ str_loading: "Carregando    "
 str_libcurl_error: "Erro libCURL (%d): %s"
 str_libcurl_date_and_time: 'Certifique-se de que a data e o horário do seu sistema
   estejam corretos!'
-str_httpstatus_error: 'Código de estado HTTP %d'
+str_httpstatus_error: 'Código de status HTTP %d'
 str_3ds_error: 'Código de erro 3DS %08lx'
 str_at_home: 'Você está em Casa.'
 str_goto_train_station: 'Ir para a Estação de Trem'
@@ -12,79 +12,94 @@ str_at_plaza: 'Você está na Praça.'
 str_goto_mall: 'Ir para o Shopping'
 str_at_mall: 'Você está no Shopping.'
 str_exit: 'Sair'
-str_settings: 'Configuração'
+str_settings: 'Configurações'
 str_download_data: 'Baixar dados pessoais'
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
-str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
-str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
+str_delete_data: 'Deletar dados pessoais'
+str_back: 'Voltar'
+str_language: 'Português'
+str_goto_beach: 'Ir para a Praia'
+str_at_beach: 'Você está na Praia.'
+str_goto_arcade: 'Ir para o Fliperama'
+str_at_arcade: 'Você está no Fliperama.'
+str_goto_catcafe: 'Ir para o Cat Café'
+str_at_catcafe: 'Você está no Cat Café.'
+str_system_language: 'Idioma do Console'
+str_language_pick: 'Idioma:'
+str_no_location_twice: 'Você não pode entrar na mesma localização duas vezes seguidas!'
+str_report_user: 'Denunciar um usuário'
+str_report_user_hint: 'Denunciar "%s"'
+str_cancel: 'Cancelar'
+str_submit: 'Enviar'
+str_back_alley: 'Beco'
+str_back_alley_message: 'Vamos pegar mais alguns passes!'
+str_back_alley_pay: "Compre um passe {playcoin}%d"
+str_check_inboxes: 'Verificar Inboxes'
+str_toggle_titles: 'Ativar/Desativar Jogos'
+str_toggle_titles_message: "Aperte {a_button} para ativar ou desativar a troca de
+  passes."
+str_toggle_titles_on: "(ON)"
+str_toggle_titles_off: "(OFF)"
+str_report_mii_name: "Nome do Mii: %s"
+str_report_mario_kart_7_greeting: "Saudação: %s"
+str_report_mii_plaza_last_game: "Último Jogo: %s"
+str_report_mii_plaza_country: "País: %s - %s"
+str_report_mii_plaza_greeting: "Saudação: %s"
+str_report_mii_plaza_custom_message: "Sua mensagem: %s"
+str_report_mii_plaza_custom_reply: "Mensagem dele(a): %s"
+str_report_tomodachi_life_island_name: "Nome da ilha: %s"
+str_b_go_back: "{b_button} Voltar"
+str_b_cancel: "{b_button} Cancelar"
+str_a_ok: "{a_button} Ok"
+str_update_patches: "Atualizar patches"
+str_update_patches_desc: "Para instalar corretamente o NetPass, alguns patches para
+  o sysmodule serão criados agora. Para que eles funcionem, você precisa ativar “Enable
+  loading external FIRMs and modules” na configuração do Luma3DS. Para ver as configurações,
+  desligue o console e pressione {select_button} enquanto liga {power_button} o console.
+  Você pode fazer isso depois que os patches forem gravados."
+str_update_patches_error_desc: "Algo de errado aconteceu ao atualizar os patches.
+  Por favor, reporte o problema no Gitlab, GBAtemp ou no Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "A atualização de patches foi bem-sucedida! Seu
+  console irá reiniciar."
+str_integrations: "Integrações"
+str_integrations_message: "As integrações de terceiros estão fora da moderação do
+  NetPass. Use-os por sua conta e risco!"
+str_report_source: "Fonte: %s"
+str_report_source_unknown: "Fonte desconhecida"
+str_settings_misc: "Outros"
+str_settings_about: "Sobre"
+str_about_lead_dev: "Desenvolvedor Líder"
+str_about_reports: "Sistema de denúncias"
+str_about_graphics: "Arte & Gráficos"
+str_about_music: "Música"
+str_about_localisation: "Traduções"
+str_about_netpass_community: "A comunidade do NetPass"
+str_about_special_thanks: "Agradecimentos Especiais"
+str_about_special_thanks_txt: "A comunidade homebrew do 3DS por toda a engenharia-reversa
+  e documentação"
+str_about_production_cat: "Gato de produção"
+str_scan_qr: "Escanear Código QR"
+str_x_switch_camera: "{x_button} Mudar de Câmera"
+str_prompt_verify: "Tem certeza de que deseja verificar esse 3DS?"
+str_welcome: "Bem-vindo(a) ao NetPass"
+str_welcome_message: "Antes de iniciar o NetPass, por favor leia e aceite nossas regras
+  & política de privacidade."
+str_view_rules: "Ver Regras"
+str_view_privacy: "Ver Política de Privacidade"
+str_continue: "Continuar"
+str_bad_os_version: "O NetPass necessita de um 3DS na versão do sistema 11.15.0 ou
+  maior para funcionar corretamente. Infelizmente, você está usando uma versão do
+  sistema antigo. Por favor, atualize e inicie o NetPass de novo.\n\nAperte qualquer
+  botão para sair"
+str_update_patches_poweroff_clear_desc: "Patches removidos com sucesso! Seu console
+  irá agora reiniciar."
+str_bg_music: "Música de fundo"
+str_prompt_dl_pass: "Você tem certeza de que quer instalar este passe?"
+str_report_integration: "Esta mensagem origina de uma integração. Para denunciá-lo,
+  por favor, contate o time de moderação responsável da integração."
+str_skip: "Pular"
+str_install: "Instalar"
+str_remove: "Remover"
 str_banned: ""
-str_date: ""
-str_date_time: ""
+str_date: "%d/%m/%Y"
+str_date_time: "%d/%m/%Y %H:%M:%S"
 str_new_version: ""
