@@ -20,6 +20,7 @@
 #include "../utils.h"
 #include "../api.h"
 #include "../curl-handler.h"
+#include "../music.h"
 #include <stdlib.h>
 #include <time.h>
 #define N(x) scenes_back_alley_namespace_##x
@@ -39,6 +40,7 @@ typedef struct {
 	int cursor;
 	int number_games;
 	bool show_games;
+	char prev_music[20];
 } N(DataStruct);
 
 PlayCoins* N(play_coins);
@@ -161,6 +163,9 @@ void N(init)(Scene* sc) {
 		sc->d = 0;
 		return;
 	}
+	
+	getCurMusic(_data->prev_music);
+	playMusic("back_alley");
 
 	_data->cursor = 0;
 	_data->show_games = false;
@@ -198,6 +203,7 @@ void N(render)(Scene* sc) {
 
 void N(exit)(Scene* sc) {
 	if (_data) {
+		playMusic(_data->prev_music);
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}

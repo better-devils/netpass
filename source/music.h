@@ -23,3 +23,4 @@ void musicExit(void);
 void stopMusic(void);
 Result playMusic(const char* filename);
 void toggleBgMusic(void);
+void getCurMusic(char filename[20]);

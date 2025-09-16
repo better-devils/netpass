@@ -153,6 +153,11 @@ Result playMusic(const char* filename) {
 	return res;
 }
 
+void getCurMusic(char filename[20]) {
+	strncpy(filename, curfilename, sizeof(curfilename) - 1);
+	filename[sizeof(curfilename) - 1] = '\0';
+}
+
 void stopMusic(void) {
 	stop_playing = true;
 	wait_for_state(false);
