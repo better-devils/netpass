@@ -100,11 +100,12 @@ str_install: Instalar
 str_remove: Eliminar
 str_skip: Omitir
 str_banned: "Se te ha expulsado de NetPass. Razón:\n%s\n\nDesde: %s\nHasta: %s"
-str_new_version: "Nueva Versión de NetPass disponible:\n¡v%d.%d.%d!\n\nPara actualizar
-  NetPass, simplemente vuelve a instalarlo a través de Universal Updater o con el
-  código QR."
+str_new_version: "Nueva Versión de NetPass disponible:\n¡v%d.%d.%d!\n\n¿Quieres actualizar
+  ahora NetPass?"
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_date: '%d/%m/%Y'
 str_artist_copyright: Ilustración © %s
 str_enter_event_location: ¿Confirmas que quieres entrar al evento "%s"?
 str_at_event_location: Estas en un evento especial.
+str_new_version_failed: La instalación de la actualización ha fallado. Puedes volver
+  a instalarla mediante Universal Updater o el código QR.
