@@ -27,12 +27,156 @@
 #include "config.h"
 #include "music.h"
 #include "integration.h"
+#include "scenes/switch.h"
 
 CurlReply* ping_reply = 0;
 Result ping_res = 0;
 PingResponse ping_response = {0};
+char* filename_3dsx = 0;
 
-int main() {
+Scene* load_is_banned(void) {
+	char ban_start[40];
+	char ban_end[40];
+	struct tm tm = {0};
+	if (ping_response.ban.time_start.year) {
+		cecTimeToTm(&ping_response.ban.time_start, &tm);
+		n_strftime(ban_start, sizeof(ban_start), _s(str_date), &tm);
+	} else {
+		strncpy(ban_start, "N/A", sizeof(ban_start));
+	}
+	if (ping_response.ban.time_end.year) {
+		cecTimeToTm(&ping_response.ban.time_end, &tm);
+		n_strftime(ban_end, sizeof(ban_end), _s(str_date), &tm);
+	} else {
+		strncpy(ban_end, "N/A", sizeof(ban_end));
+	}
+	
+	Scene* scene = getSettingsScene();
+	char* message = malloc(1000);
+	if (message) {
+		snprintf(message, 1000, _s(str_banned), ping_response.ban.reason, ban_start, ban_end);
+		C2D_Font font = _font(str_banned);
+		Scene* ban_scene = getInfoSceneStr(message, font);
+		ban_scene->pop_scene = scene;
+		scene = ban_scene;
+	}
+	return scene;
+}
+
+Scene* load_new_version(Scene* scene) {
+	char* message = malloc(1000);
+	if (message) {
+		snprintf(message, 1000, _s(str_new_version), ping_response.version.major, ping_response.version.minor, ping_response.version.patch);
+		C2D_Font font = _font(str_new_version);
+		static const char* cia_filename = "sdmc:/config/netpass/netpass.cia";
+		Scene* version_scene = getPromptSceneStr(message, font, getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+			if (R_FAILED(ping_res)) {
+				return getInfoScene(str_new_version_failed);
+			}
+			// things were successful, let's restart!
+			return getLoadingScene(getStopScene(), lambda(void, (void) {
+				if (filename_3dsx) return;
+				AM_TitleEntry info;
+				get_cia_info((char*)cia_filename, &info);
+				Result res = 0;
+				res = _e(APT_PrepareToDoApplicationJump(0, info.titleID, get_title_destination(info.titleID)));
+				if (R_FAILED(res)) goto fail;
+				u8 param[0x300];
+				u8 hmac[0x20];
+				res = _e(APT_DoApplicationJump(param, sizeof(param), hmac));
+				if (R_FAILED(res)) goto fail;
+			fail:
+				while(true) {
+					svcSleepThread(100000000);
+				}
+			}));
+		})), lambda(void, (void) {
+			if (filename_3dsx) {
+				// this is easy, just download and overwrite the file
+				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, (void*)1, filename_3dsx, 0));
+				return;
+			}
+			// ok, we have a cia file. this will be a tad harder.
+			mkdir_p((char*)cia_filename);
+			ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, (void*)1, (char*)cia_filename, 0));
+			if (R_FAILED(ping_res)) return;
+			ping_res = install_cia((char*)cia_filename);
+		})));
+		version_scene->pop_scene = scene;
+		scene = version_scene;
+	}
+	return scene;
+}
+
+Scene* initial_scene(void) {
+	if (R_FAILED(ping_res)) {
+		// something not working
+		_e(ping_res);
+		return getSettingsScene();
+	}
+	if (ping_response.ban.is_banned) {
+		// we are banned
+		return load_is_banned();
+	}
+	bgLoopInit();
+	Scene* scene;
+	if (location.id == -1) {
+		scene = getHomeScene(); // load home
+	} else {
+		scene = getLocationScene(location.id);
+	}
+
+	if (ping_response.version.new_version_available) {
+		scene = load_new_version(scene);
+	} else if (ping_response.message.message) {
+		Scene* message_scene = getInfoSceneStr(ping_response.message.message, 0);
+		message_scene->pop_scene = scene;
+		scene = message_scene;
+	}
+	return scene;
+}
+
+void initial_load(void) {
+	// first, we import the locally stored passes for reports to work
+	reportInit();
+	// next, we gotta wait for having internet
+	DEBUG_PRINTF("Waiting internet\n");
+	char url[50];
+	snprintf(url, 50, "%s/ping2", BASE_URL);
+	int check_count = 0;
+	int max_count = 100;
+	while (true) {
+		ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0, 0);
+		if (R_SUCCEEDED(ping_res)) break;
+		check_count++;
+		curlFreeHandler(ping_reply->offset);
+		if (ERROR_IS_HTTP(ping_res)) return;
+		if (ERROR_IS_CURL(ping_res) && ping_res == -CURLE_PEER_FAILED_VERIFICATION) return;
+		if (check_count > max_count) {
+			if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
+				max_count += 100;
+				continue;
+			}
+			return;
+		}
+	}
+	readPingResponse(&ping_response, ping_reply->ptr, ping_reply->len);
+	curlFreeHandler(ping_reply->offset);
+	if (ping_response.ban.is_banned) return;
+	_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
+	initTitleData();
+	doSlotExchangeRetry();
+	Result ping_res = getLocation();
+	if (R_FAILED(ping_res)) {
+		printf("ERROR failed to get location: %ld\n", ping_res);
+	} else {
+		char uuidstr[37];
+		format_uuid(uuidstr, location.uuid);
+		printf("Got location: %ld %s\n", location.id, uuidstr);
+	}
+}
+
+int main(int nargs, char** argv) {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
 
 	gfxInitDefault();
@@ -44,6 +188,11 @@ int main() {
 	_e(frdInit(false));
 	_e(fsInit());
 	consoleInit(GFX_BOTTOM, NULL);
+	
+	if (nargs >= 1) {
+		filename_3dsx = argv[0];
+	}
+	
 	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
 	// cppcheck-suppress invalidPrintfArgType_s
@@ -104,107 +253,7 @@ int main() {
 			// somehow cpp check fails with this lambda for the ptr->int return type check
 			// as it does not even compile if we were to cast the returns to ints, this is clearly a cppcheck bug
 			// cppcheck-suppress CastAddressToIntegerAtReturn
-			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
-				if (R_FAILED(ping_res)) {
-					// something not working
-					_e(ping_res);
-					return getSettingsScene();
-				}
-				if (ping_response.ban.is_banned) {
-					// we are banned
-					
-					char ban_start[40];
-					char ban_end[40];
-					struct tm tm = {0};
-					if (ping_response.ban.time_start.year) {
-						cecTimeToTm(&ping_response.ban.time_start, &tm);
-						n_strftime(ban_start, sizeof(ban_start), _s(str_date), &tm);
-					} else {
-						strncpy(ban_start, "N/A", sizeof(ban_start));
-					}
-					if (ping_response.ban.time_end.year) {
-						cecTimeToTm(&ping_response.ban.time_end, &tm);
-						n_strftime(ban_end, sizeof(ban_end), _s(str_date), &tm);
-					} else {
-						strncpy(ban_end, "N/A", sizeof(ban_end));
-					}
-					
-					Scene* scene = getSettingsScene();
-					char* message = malloc(1000);
-					if (message) {
-						snprintf(message, 1000, _s(str_banned), ping_response.ban.reason, ban_start, ban_end);
-						C2D_Font font = _font(str_banned);
-						Scene* ban_scene = getInfoSceneStr(message, font);
-						scene->init(scene);
-						ban_scene->pop_scene = scene;
-						scene = ban_scene;
-					}
-					return scene;
-				}
-				bgLoopInit();
-				Scene* scene;
-				if (location.id == -1) {
-					scene = getHomeScene(); // load home
-				} else {
-					scene = getLocationScene(location.id);
-				}
-	
-				if (ping_response.version.new_version_available) {
-					char* message = malloc(1000);
-					if (message) {
-						snprintf(message, 1000, _s(str_new_version), ping_response.version.major, ping_response.version.minor, ping_response.version.patch);
-						C2D_Font font = _font(str_new_version);
-						Scene* version_scene = getInfoSceneStr(message, font);
-						scene->init(scene);
-						version_scene->pop_scene = scene;
-						scene = version_scene;
-					}
-				} else if (ping_response.message.message) {
-					Scene* message_scene = getInfoSceneStr(ping_response.message.message, 0);
-					scene->init(scene);
-					message_scene->pop_scene = scene;
-					scene = message_scene;
-				}
-				return scene;
-			})), lambda(void, (void) {
-				// first, we import the locally stored passes for reports to work
-				reportInit();
-				// next, we gotta wait for having internet
-                DEBUG_PRINTF("Waiting internet\n");
-				char url[50];
-				snprintf(url, 50, "%s/ping2", BASE_URL);
-				int check_count = 0;
-				int max_count = 100;
-				while (true) {
-					ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0, 0);
-					if (R_SUCCEEDED(ping_res)) break;
-					check_count++;
-					curlFreeHandler(ping_reply->offset);
-					if (ERROR_IS_HTTP(ping_res)) return;
-					if (ERROR_IS_CURL(ping_res) && ping_res == -CURLE_PEER_FAILED_VERIFICATION) return;
-					if (check_count > max_count) {
-						if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
-							max_count += 100;
-							continue;
-						}
-						return;
-					}
-				}
-				readPingResponse(&ping_response, ping_reply->ptr, ping_reply->len);
-				curlFreeHandler(ping_reply->offset);
-				if (ping_response.ban.is_banned) return;
-				_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
-				initTitleData();
-				doSlotExchangeRetry();
-				Result ping_res = getLocation();
-				if (R_FAILED(ping_res)) {
-					printf("ERROR failed to get location: %ld\n", ping_res);
-				} else {
-					char uuidstr[37];
-					format_uuid(uuidstr, location.uuid);
-					printf("Got location: %ld %s\n", location.id, uuidstr);
-				}
-			}));
+			scene = getLoadingScene(getSwitchScene(initial_scene), initial_load);
 		
 			if (_PATCHES_VERSION_ > config.patches_version) {
 				printf("New patches version to apply!\n");

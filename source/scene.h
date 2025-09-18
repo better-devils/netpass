@@ -64,6 +64,7 @@ Scene* processScene(Scene* scene);
 #include "scenes/report_list.h"
 #include "scenes/scan_qr.h"
 #include "scenes/settings.h"
+#include "scenes/stop.h"
 #include "scenes/switch.h"
 #include "scenes/toggle_titles.h"
 #include "scenes/update_patches.h"

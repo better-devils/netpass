@@ -83,6 +83,9 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 int format_uuid(char str[37], u8 uuid[16]);
 u32 blz_decompress_size(u8* compressed, u32 compressedsize);
 bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 decompressedsize);
+Result get_cia_info(char* cia_filename, AM_TitleEntry* info);
+FS_MediaType get_title_destination(u64 title_id);
+Result install_cia(char* cia_filename);
 
 #define ERROR_NO_TITLE_ID CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_OUT_OF_RESOURCE, CTR_RESULT_MODULE_APPLICATION, 0)
 #define ERROR_MISSING_SLOT_META CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_NOT_FOUND, CTR_RESULT_MODULE_APPLICATION, 1)

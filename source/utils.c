@@ -719,3 +719,119 @@ bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 de
 	clean:
 	return false;
 }
+
+/* Code borrowed from GodMode9i:
+	https://github.com/DS-Homebrew/GodMode9i/blob/d68ac105e68b4a1fc2c706a08c7a394255c325c2/arm9/source/driveOperations.cpp#L166-L170
+*/
+u64 getAvailableSpace(void) {
+	struct statvfs st;
+	statvfs("sdmc:/", &st);
+	return (u64)st.f_bsize * (u64)st.f_bavail;
+}
+
+Result get_cia_info(char* cia_filename, AM_TitleEntry* info) {
+	Result res = 0;
+	
+	char* real_filename = strchr(cia_filename, ':');
+	if (real_filename) {
+		real_filename++;
+	} else {
+		real_filename = (char*)cia_filename;
+	}
+	
+	Handle file_handle;
+	
+	res = FSUSER_OpenFileDirectly(&file_handle, ARCHIVE_SDMC, fsMakePath(PATH_EMPTY, ""), fsMakePath(PATH_ASCII, real_filename), FS_OPEN_READ, 0);
+	if (R_FAILED(res)) return res;
+	res = AM_GetCiaFileInfo(MEDIATYPE_SD, info, file_handle);
+	FSFILE_Close(file_handle);
+	return res;
+}
+
+// strongly inspired from universal updater code
+FS_MediaType get_title_destination(u64 title_id) {
+	u16 platform = (u16) ((title_id >> 48) & 0xFFFF);
+	u16 category = (u16) ((title_id >> 32) & 0xFFFF);
+	u8 variation = (u8) (title_id & 0xFF);
+
+	//     DSiWare                3DS                    DSiWare, System, DLP         Application           System Title
+	return platform == 0x0003 || (platform == 0x0004 && ((category & 0x8011) != 0 || (category == 0x0000 && variation == 0x02))) ? MEDIATYPE_NAND : MEDIATYPE_SD;
+}
+Result install_cia(char* cia_filename) {
+	Result res = 0;
+	Handle cia_handle, file_handle;
+	AM_TitleEntry info;
+	FS_MediaType media = MEDIATYPE_SD;
+	u64 file_size;
+	
+	char* real_filename = strchr(cia_filename, ':');
+	if (real_filename) {
+		real_filename++;
+	} else {
+		real_filename = (char*)cia_filename;
+	}
+	
+	res = _e(FSUSER_OpenFileDirectly(&file_handle, ARCHIVE_SDMC, fsMakePath(PATH_EMPTY, ""), fsMakePath(PATH_ASCII, real_filename), FS_OPEN_READ, 0));
+	if (R_FAILED(res)) return res;
+	
+	res = _e(AM_GetCiaFileInfo(media, &info, file_handle));
+	if (R_FAILED(res)) {
+		FSFILE_Close(file_handle);
+		return res;
+	}
+	
+	media = get_title_destination(info.titleID);
+	
+	res = _e(FSFILE_GetSize(file_handle, &file_size));
+	if (R_FAILED(res)) {
+		FSFILE_Close(file_handle);
+		return res;
+	}
+	if (file_size > getAvailableSpace()) {
+		printf("wtf?!\n");
+		printf("%lld, %lld\n", file_size, getAvailableSpace());
+		res = -1; // TODO: proper error
+		FSFILE_Close(file_handle);
+		return res;
+	}
+	
+	res = _e(AM_StartCiaInstall(media, &cia_handle));
+	if (R_FAILED(res)) {
+		FSFILE_Close(file_handle);
+		return res;
+	}
+	
+	u32 to_read = 0x200000;
+	u8 *buf = malloc(to_read);
+	if (!buf) {
+		res = _e(ERROR_OUT_OF_MEMORY);
+		FSFILE_Close(file_handle);
+		return res;
+	}
+	
+	u32 install_size = file_size;
+	u32 install_offset = 0;
+	u32 bytes_read, bytes_written;
+	do {
+		res = _e(FSFILE_Read(file_handle, &bytes_read, install_offset, buf, to_read));
+		if (R_FAILED(res)) {
+			free(buf);
+			FSFILE_Close(file_handle);
+			return res;
+		}
+		res = _e(FSFILE_Write(cia_handle, &bytes_written, install_offset, buf, to_read, FS_WRITE_FLUSH));
+		if (R_FAILED(res)) {
+			free(buf);
+			FSFILE_Close(file_handle);
+			return res;
+		}
+		install_offset += bytes_read;
+	} while(install_offset < install_size);
+	free(buf);
+	FSFILE_Close(file_handle);
+	
+	res = _e(AM_FinishCiaInstall(cia_handle));
+	if (R_FAILED(res)) return res;
+
+	return res;
+}

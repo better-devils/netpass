@@ -19,6 +19,19 @@
 #include "scene.h"
 #include <malloc.h>
 
+void initScene(Scene* scene) {
+	if (scene->d && !((u32)scene->d & 1)) return;
+	scene->init(scene);
+}
+
+void exitScene(Scene* scene) {
+	scene->exit(scene);
+	scene->d = 0;
+	if (scene->need_free) {
+		free(scene);
+	}
+}
+
 Scene* processScene(Scene* scene) {
 	SceneResult res = scene->process(scene);
 	switch (res) {
@@ -28,10 +41,7 @@ Scene* processScene(Scene* scene) {
 	}
 	case scene_stop:
 	{
-		scene->exit(scene);
-		if (scene->need_free) {
-			free(scene);
-		}
+		exitScene(scene);
 		return 0;
 	}
 	case scene_switch:
@@ -44,27 +54,25 @@ Scene* processScene(Scene* scene) {
 		if (!new_scene->pop_scene) {
 			new_scene->pop_scene = scene->pop_scene;
 		}
-		scene->exit(scene);
-		if (scene->need_free) {
-			free(scene);
+		exitScene(scene);
+		initScene(new_scene);
+		if (new_scene->pop_scene) {
+			initScene(new_scene->pop_scene);
 		}
-		new_scene->init(new_scene);
 		return new_scene;
 	}
 	case scene_push:
 	{
 		Scene* new_scene = scene->next_scene;
 		new_scene->pop_scene = scene;
-		new_scene->init(new_scene);
+		initScene(new_scene);
 		return new_scene;
 	}
 	case scene_pop:
 	{
 		Scene* new_scene = scene->pop_scene;
-		scene->exit(scene);
-		if (scene->need_free) {
-			free(scene);
-		}
+		exitScene(scene);
+		initScene(new_scene);
 		return new_scene;
 	}
 	}

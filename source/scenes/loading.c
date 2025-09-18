@@ -67,7 +67,7 @@ void N(render)(Scene* sc) {
 void N(exit)(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
-		C2D_SpriteSheetFree(_data->spr);
+		if (_data->spr) C2D_SpriteSheetFree(_data->spr);
 		threadJoin(_data->thread, U64_MAX);
 		threadFree(_data->thread);
 		free(_data);
