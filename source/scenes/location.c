@@ -54,7 +54,7 @@ const char* N(music)[NUM_LOCATIONS] = {
 	"train_station",
 	"plaza",
 	"mall",
-	"home",
+	"beach",
 	"arcade",
 	"home",
 };

@@ -41,6 +41,9 @@ typedef struct {
 	int number_games;
 	bool show_games;
 	char prev_music[20];
+	C2D_SpriteSheet spr;
+	float width;
+	float width_games;
 } N(DataStruct);
 
 PlayCoins* N(play_coins);
@@ -140,10 +143,17 @@ bool N(init_playcoins)(Scene* sc) {
 bool N(init_gamelist)(Scene* sc) {
 	_data->number_games = 0;
 	NetpassTitleData* title_data = getTitleData();
+	_data->width_games = 0;
 	for (int i = 0; i < title_data->num_titles; i++) {
 		if (isTitleIgnored(title_data->titles[i].title_id)) continue;
 		_data->title_ids[_data->number_games] = title_data->titles[i].title_id;
 		C2D_TextParse(&_data->g_game_titles[_data->number_games], _data->g_staticBuf, title_data->titles[i].name);
+		float width;
+		get_text_dimensions(&_data->g_game_titles[_data->number_games], 0.5, 0.5, &width, 0);
+		width += 20.;
+		if (width > _data->width_games) {
+			_data->width_games = width;
+		}
 		_data->number_games++;
 	}
 	return true;
@@ -168,15 +178,42 @@ void N(init)(Scene* sc) {
 
 	_data->cursor = 0;
 	_data->show_games = false;
+	float width;
 	TextLangParse(&_data->g_header, _data->g_staticBuf, str_back_alley);
+	get_text_dimensions(&_data->g_header, 1.0, 1.0, &_data->width, 0);
 	TextLangParse(&_data->g_subtext, _data->g_staticBuf, str_back_alley_message);
+	get_text_dimensions(&_data->g_subtext, 0.5, 0.5, &width, 0);
+	if (width > _data->width) _data->width = width;
+	// games have the same header
+	if (_data->width > _data->width_games) {
+		_data->width_games = _data->width;
+	}
 	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
+	get_text_dimensions(&_data->g_paytext, 1.0, 1.0, &width, 0);
+	width += 20.;
+	if (width > _data->width) _data->width = width;
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
+	get_text_dimensions(&_data->g_back, 1.0, 1.0, &width, 0);
+	width += 20.;
+	if (width > _data->width) _data->width = width;
+	
+	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/back_alley.t3x");
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
-	u32 clr = C2D_Color32(0, 0, 0, 0xff);
+	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
+	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	
+	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
+	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
+	
+	if (_data->show_games) {
+		C2D_DrawRectSolid(8, 8, 0, _data->width_games + 4, 35 + 28 + _data->number_games*14, bgclr);
+	} else {
+		C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + 20 + 2*25, bgclr);
+	}
+	
 	C2D_DrawText(&_data->g_header, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WithColor, 11, 35, 0, 0.5, 0.5, clr);
 	if (_data->show_games) {
@@ -202,6 +239,7 @@ void N(render)(Scene* sc) {
 
 void N(exit)(Scene* sc) {
 	if (_data) {
+		C2D_SpriteSheetFree(_data->spr);
 		playMusic(_data->prev_music);
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
