@@ -103,10 +103,10 @@ str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_banned: "Está proibido de utilizar o NetPass. Motivo:\n%s\n\nInício da proibição:
   %s\nFim da proibição: %s"
-str_new_version: "Nova versão do NetPass disponível:\nv%d.%d.%d!\n\nVocê quer atualizar
-  o NetPass?"
-str_enter_event_location: Tem certeza de que deseja participar do evento “%s”?
+str_new_version: "Nova versão do NetPass disponível:\nv%d.%d.%d!\n\nGostaria de atualizar
+  o NetPass agora?"
+str_enter_event_location: Tem a certeza de que deseja entrar no evento "%s"?
 str_artist_copyright: Arte © %s
-str_new_version_failed: A atualização falhou. Você ainda pode instalar pelo Universal
-  Updater ou via QR-Code.
-str_at_event_location: Está em um evento especial.
+str_new_version_failed: A atualização falhou. Ainda pode instalá-la novamente através
+  do Universal Updater ou por código QR.
+str_at_event_location: Está num evento especial.
