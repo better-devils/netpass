@@ -57,7 +57,7 @@ const char* N(music)[NUM_LOCATIONS] = {
 	"mall",
 	"beach",
 	"arcade",
-	"home",
+	"cat_cafe",
 };
 
 void N(init)(Scene* sc) {
