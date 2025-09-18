@@ -86,9 +86,8 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 		printf("ERROR: failed processing pass: %lx\n", res);
 		free(N(play_coins));
 	}));
-	scene->pop_scene = sc->pop_scene;
 	sc->next_scene = scene;
-	return scene_switch;
+	return scene_push;
 }
 
 void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amount) {
@@ -225,7 +224,12 @@ SceneResult N(process)(Scene* sc) {
 					return scene_continue;
 				} else {
 					// picked a game
-					return N(buy_pass)(sc, _data->cursor);
+					SceneResult result = N(buy_pass)(sc, _data->cursor);
+					if (result == scene_push) {
+						_data->cursor = 0;
+						_data->show_games = false;
+					}
+					return result;
 				}
 			}
 			if (kDown & KEY_B) {
