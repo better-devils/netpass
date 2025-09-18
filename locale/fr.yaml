@@ -103,9 +103,8 @@ str_report_integration: Ce message provient d'une intégration. Pour le signaler
 str_skip: Passer
 str_install: Installer
 str_remove: Déinstaller
-str_new_version: "Nouvelle version de NetPass disponible:\nv%d.%d.%d!\n\nPour mettre
-  NetPass à jour, simplement le réinstaller à partir de Universal Updater ou par code
-  QR."
+str_new_version: "Nouvelle version de NetPass disponible :\nv%d.%d.%d !\n\nVoulez-vous
+  mettre NetPass à jour maintenant ?"
 str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
   ban : %s\nFin du ban : %s"
 str_date: '%d/%m/%Y'
@@ -113,3 +112,5 @@ str_date_time: '%d/%m/%Y %H:%M:%S'
 str_at_event_location: Vous êtes à un événement spécial.
 str_artist_copyright: Illustration par %s ©
 str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
+str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez toujours
+  mettre à jour via Universal Updater ou par code QR.
