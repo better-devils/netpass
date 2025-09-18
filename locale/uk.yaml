@@ -100,3 +100,12 @@ str_install: Установити
 str_prompt_dl_pass: Ви впевненi, що хочете скачати цей "пас"?
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_enter_event_location: Упевненi, що бажаєте прийняти участь у подiï "%s"?
+str_artist_copyright: Витвiр © %s
+str_new_version: "Доступна нова версiя NetPass:\nv%d.%d.%d!\n\nБажаєте оновити NetPass
+  зараз?"
+str_new_version_failed: Не вдалося установити нову версiю. Ви можете все одно установити
+  ïï через Universal Updater, або через QR-код.
+str_banned: "Ви забаненi у NetPass. Причина:\n%s\n\nПочаток бану: %s\nКiнець бану:
+  %s"
+str_at_event_location: Ви на спецiальнiй подiï.
