@@ -46,8 +46,22 @@ typedef struct {
 	float width_games;
 } N(DataStruct);
 
+Scene* N(current_scene);
 PlayCoins* N(play_coins);
 u32 N(buy_title_id);
+
+bool N(init_playcoins)(Scene* sc);
+void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amount);
+
+void N(refresh)(Scene* sc) {
+	if (_data->play_coins) free(_data->play_coins);
+	if (!N(init_playcoins)(sc)) return;
+	float width;
+	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
+	get_text_dimensions(&_data->g_paytext, 1.0, 1.0, &width, 0);
+	width += 20.;
+	if (width > _data->width) _data->width = width;
+}
 
 SceneResult N(buy_pass)(Scene* sc, int i) {
 	N(buy_title_id) = _data->title_ids[i];
@@ -55,6 +69,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 	if (!N(play_coins)) {
 		return scene_continue;
 	}
+	N(current_scene) = sc;
 	memcpy(N(play_coins), _data->play_coins, sizeof(PlayCoins));
 
 	Scene* scene = getLoadingScene(0, lambda(void, (void) {
@@ -83,6 +98,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 			free(N(play_coins));
 		}
 		triggerDownloadInboxes();
+		N(refresh)(N(current_scene));
 		return;
 	error:
 		_e(res);
@@ -242,6 +258,7 @@ void N(exit)(Scene* sc) {
 		if (_data->spr) C2D_SpriteSheetFree(_data->spr);
 		playMusic(_data->prev_music);
 		C2D_TextBufDelete(_data->g_staticBuf);
+		free(_data->play_coins);
 		free(_data);
 	}
 }
