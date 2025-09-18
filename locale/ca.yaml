@@ -98,10 +98,12 @@ str_skip: Ometre
 str_install: Instal·lar
 str_remove: Eliminar
 str_banned: "Tens prohibit l'ús del NetPass. Raó:\n%s\n\nDes de: %s\nFins: %s"
-str_new_version: "Nova Versió del NetPass disponible:\nv%d.%d.%d!\n\nPer actualitzar
-  el NetPass, torna a instal·lar-ho amb Universal Updater o amb el codi QR."
+str_new_version: "Nova Versió del NetPass disponible:\nv%d.%d.%d!\n\nVols actualitzar
+  NetPass ara?"
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_date: '%d/%m/%Y'
 str_enter_event_location: Ets segur que vols entrar a l'esdeveniment "%s"?
 str_at_event_location: Ets a un esdeveniment especial.
 str_artist_copyright: Il·lustració © %s
+str_new_version_failed: L'instal·lació de la nova versió ha fallat. Pots tornar a
+  provar d'instal·lar-la mitjançant Universal Updater o el codi QR.
