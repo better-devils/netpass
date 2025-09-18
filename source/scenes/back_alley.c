@@ -222,6 +222,7 @@ SceneResult N(process)(Scene* sc) {
 					// go back
 					_data->cursor = 0;
 					_data->show_games = false;
+					return scene_continue;
 				} else {
 					// picked a game
 					return N(buy_pass)(sc, _data->cursor);
@@ -230,6 +231,7 @@ SceneResult N(process)(Scene* sc) {
 			if (kDown & KEY_B) {
 				_data->cursor = 0;
 				_data->show_games = false;
+				return scene_continue;
 			}
 		} else {
 			if (_data->cursor < 0) _data->cursor = 1;
@@ -238,6 +240,7 @@ SceneResult N(process)(Scene* sc) {
 				if (_data->cursor == 0 && config.price <= MAX_PRICE && config.price <= _data->play_coins->total_coins) {
 					_data->cursor = 0;
 					_data->show_games = true;
+					return scene_continue;
 				}
 				if (_data->cursor == 1) return scene_pop;
 			}

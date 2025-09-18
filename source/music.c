@@ -95,7 +95,6 @@ void play_thread(void* p) {
 		DSP_FlushDataCache(buffers[i], OPUS_BUFFERSIZE * sizeof(s16));
 	}
 	// now start the loop
-	stop_playing = false;
 	wait_for_state(true);
 	while (!stop_playing) {
 		svcSleepThread((u64)1000 * 10);
@@ -131,8 +130,10 @@ fail:
 	threadExit(0);
 }
 
+bool music_inited = false;
 
 Result playMusic(const char* filename) {
+	if (!music_inited) return ERROR_MUSIC_NOT_INITED;
 	Result res = 0;
 	// if we are already playing this file
 	if (strcmp(filename, curfilename) == 0) return res;
@@ -149,11 +150,16 @@ Result playMusic(const char* filename) {
 	if (!opus_file) {
 		return _e_errno();
 	}
+	stop_playing = false;
 	music_thread = threadCreate(play_thread, opus_file, 26*1024, main_thread_prio()-10, -2, false);
 	return res;
 }
 
 void getCurMusic(char filename[20]) {
+	if (!music_inited) {
+		filename[0] = '\0';
+		return;
+	}
 	strncpy(filename, curfilename, sizeof(curfilename) - 1);
 	filename[sizeof(curfilename) - 1] = '\0';
 }
@@ -169,6 +175,7 @@ void stopMusic(void) {
 }
 
 void toggleBgMusic(void) {
+	if (!music_inited) return;
 	config.bg_music = !config.bg_music;
 	if (!config.bg_music) {
 		stopMusic();
@@ -185,8 +192,12 @@ void toggleBgMusic(void) {
 u8* dsp_buf = 0;
 
 void musicInit(void) {
+	if (music_inited) return;
 	Result res = ndspInit();
-	if (!R_FAILED(res)) return;
+	if (!R_FAILED(res)) {
+		music_inited = true;
+		return;
+	}
 	
 	// stuffs failed, mew
 	// let's try if this works if we manually extract the ndsp firm
@@ -261,11 +272,19 @@ void musicInit(void) {
 	
 	// ok, we finally got the firmware in dsp_buf
 	ndspUseComponent(dsp_buf, dsp_size, 0xFF, 0xFF);
-	_e(ndspInit());
+	res = _e(ndspInit());
+	if (!R_FAILED(res)) {
+		music_inited = true;
+	}
 }
 
 void musicExit(void) {
 	stopMusic();
 	ndspExit();
-	if (dsp_buf) free(dsp_buf);
+	if (dsp_buf) {
+		free(dsp_buf);
+		dsp_buf = 0;
+	}
+	printf("4");
+	music_inited = false;
 }

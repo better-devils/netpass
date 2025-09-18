@@ -614,6 +614,7 @@ const char* error_desc_str_map[] = {
 	"InvalidServerResp",
 	"InvalidLocation",
 	"InvalidQrPayload",
+	"MusicNotInited",
 };
 
 const char* error_desc_desc_map[] = {
@@ -636,6 +637,7 @@ const char* error_desc_desc_map[] = {
 	"The server responded with an invalid response. Try closing NetPass and opening it again.",
 	"The location is invalid.",
 	"The QR code you tried to scan is invalid / malformed.",
+	"The music module has not been initialised yet.",
 };
 
 void miscInit(void) {
