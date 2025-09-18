@@ -101,3 +101,11 @@ str_remove: Удалить
 str_prompt_dl_pass: Вы уверены, что хотите скачать этот "пасс"?
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_artist_copyright: Произведение © %s
+str_new_version: "Доступна новая версия NetPass:\nv%d.%d.%d!\n\nХотите обновить NetPass
+  сейчас?"
+str_banned: "Вы забанены в NetPass. Причина:\n%s\n\nНачало бана: %s\nКонец бана: %s"
+str_enter_event_location: Уверены, что хотите принять участие в событии "%s"?
+str_at_event_location: Вы на специальном событии.
+str_new_version_failed: Не удалось установить новую версию. Вы всё равно можете установить
+  её через Universal Updater или QR-код.
