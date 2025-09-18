@@ -65,9 +65,9 @@ void N(init)(Scene* sc) {
 				break;
 			}
 		}
+		TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf, str_language,
+			all_languages[_data->selected_language]);
 	}
-	TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf, str_language,
-		all_languages[_data->selected_language]);
 	get_text_dimensions(&_data->g_entries[2], 1, 1, &_data->lang_width, 0);
 	get_text_dimensions(&_data->g_entries[3], 1, 1, &_data->bg_music_width, 0);
 }
