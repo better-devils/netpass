@@ -44,6 +44,7 @@ typedef struct {
 	C2D_SpriteSheet spr;
 	float width;
 	float width_games;
+	bool view_bg_only;
 } N(DataStruct);
 
 Scene* N(current_scene);
@@ -193,6 +194,7 @@ void N(init)(Scene* sc) {
 	playMusic("back_alley");
 
 	_data->cursor = 0;
+	_data->view_bg_only = false;
 	_data->show_games = false;
 	float width;
 	TextLangParse(&_data->g_header, _data->g_staticBuf, str_back_alley);
@@ -220,6 +222,8 @@ void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
 	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	
+	if (_data->view_bg_only) return;
 	
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
@@ -266,7 +270,9 @@ void N(exit)(Scene* sc) {
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
+	u32 kHeld = hidKeysHeld();
 	if (_data) {
+		_data->view_bg_only = (kHeld & KEY_L) || (kHeld & KEY_R);
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->show_games) {
 			if (_data->cursor < 0) _data->cursor = _data->number_games;

@@ -37,6 +37,7 @@ typedef struct {
 	int cursor;
 	float width;
 	float artist_width;
+	bool view_bg_only;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
@@ -45,6 +46,7 @@ void N(init)(Scene* sc) {
 	memset(sc->d, 0, sizeof(N(DataStruct)));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
+	_data->view_bg_only = false;
 	TextLangParse(&_data->g_home, _data->g_staticBuf, str_at_home);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_goto_train_station);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_goto_plaza);
@@ -87,6 +89,9 @@ void N(render)(Scene* sc) {
 	} else if (_data->background.tex) {
 		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
 	}
+	
+	if (_data->view_bg_only) return;
+	
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
 	
@@ -126,7 +131,9 @@ s32 new_location;
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
+	u32 kHeld = hidKeysHeld();
 	if (_data) {
+		_data->view_bg_only = (kHeld & KEY_L) || (kHeld & KEY_R);
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->cursor < 0) _data->cursor = (NUM_ENTRIES-1);
 		if (_data->cursor > (NUM_ENTRIES-1)) _data->cursor = 0;
