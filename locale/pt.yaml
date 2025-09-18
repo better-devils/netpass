@@ -21,7 +21,7 @@ str_at_beach: Está na Praia.
 str_goto_arcade: Ir para a Sala de Jogos
 str_at_arcade: Está na Sala de Jogos.
 str_goto_catcafe: Ir para o Cat Café
-str_language: Português
+str_language: Português (Portugal)
 str_at_catcafe: Está no Cat Café.
 str_system_language: Idioma do sistema
 str_language_pick: 'Idioma:'
@@ -103,6 +103,10 @@ str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_banned: "Está proibido de utilizar o NetPass. Motivo:\n%s\n\nInício da proibição:
   %s\nFim da proibição: %s"
-str_new_version: "Nova versão do NetPass disponível:\nv%d.%d.%d!\n\nPara atualizar
-  o NetPass, basta instalá-lo novamente através do Universal Updater ou do código
-  QR."
+str_new_version: "Nova versão do NetPass disponível:\nv%d.%d.%d!\n\nVocê quer atualizar
+  o NetPass?"
+str_enter_event_location: Tem certeza de que deseja participar do evento “%s”?
+str_artist_copyright: Arte © %s
+str_new_version_failed: A atualização falhou. Você ainda pode instalar pelo Universal
+  Updater ou via QR-Code.
+str_at_event_location: Está em um evento especial.
