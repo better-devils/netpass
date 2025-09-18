@@ -55,6 +55,7 @@ Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
 		if (R_SUCCEEDED(res) && is_state == state) break;
 	}
 	svcCloseHandle(state_change_handle);
+	in_spr_mode = command == CEC_COMMAND_OVER_BOSS || command == CEC_COMMAND_OVER_BOSS_FORCE || command == CEC_COMMAND_OVER_BOSS_FORCE_WAIT;
 	return res;
 }
 
@@ -187,7 +188,6 @@ Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* bu
 }
 
 Result cecdStart(CecCommand command) {
-	in_spr_mode = command == CEC_COMMAND_OVER_BOSS || command == CEC_COMMAND_OVER_BOSS_FORCE || command == CEC_COMMAND_OVER_BOSS_FORCE_WAIT;
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x0B, 1, 0);
@@ -200,7 +200,6 @@ Result cecdStart(CecCommand command) {
 }
 
 Result cecdStop(CecCommand command) {
-	in_spr_mode = command == CEC_COMMAND_OVER_BOSS || command == CEC_COMMAND_OVER_BOSS_FORCE || command == CEC_COMMAND_OVER_BOSS_FORCE_WAIT;
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x0C, 1, 0);
