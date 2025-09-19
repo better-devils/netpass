@@ -12,7 +12,7 @@ str_at_plaza: 'Ikaw ay nasa Liwasan.'
 str_goto_mall: 'Pumunta sa Pamilihan'
 str_at_mall: 'Ikaw ay nasa Pamilihan.'
 str_exit: 'Umalis'
-str_settings: 'Mga Settings'
+str_settings: 'Settings'
 str_download_data: 'Mag-download ng personal na data'
 str_delete_data: 'Tanggalin ang personal na data'
 str_back: 'Bumalik'
@@ -29,8 +29,8 @@ str_no_location_twice: 'Hindi ikaw maaaring pumasok ulit sa lokasyon na ito nang
   beses!'
 str_back_alley: Eskinita
 str_cancel: Ikansela
-str_report_user: Magsumbong ng isang user
-str_report_user_hint: Isumbong si "%s"
+str_report_user: Iulat ang isang user
+str_report_user_hint: Iulat si "%s"
 str_toggle_titles_message: Pindutin ang {a_button} para isimula o itigil ang pagpalit
   ng passes.
 str_check_inboxes: Tignan ang mga Inbox
@@ -64,8 +64,8 @@ str_update_patches_poweroff_desc: Matagumpay na pag-update ng mga patches! Mag-r
   na ang iyong console.
 str_integrations: Mga integrasyon
 str_update_patches: I-update ang patches
-str_about_reports: Sistema ng pagsumbong
-str_about_graphics: Sining at Grapiko
+str_about_reports: Sistema ng pagulat
+str_about_graphics: Sining at Grapika
 str_about_music: Musika
 str_about_localisation: Lokalisasyon
 str_about_netpass_community: Ang komunidad ng NetPass
@@ -74,7 +74,7 @@ str_about_production_cat: Pusang produksiyon
 str_integrations_message: Ang mga third-party na integrasyon ay wala sa saklaw ng
   moderasyon ng NetPass. Gamitin ito sa iyong sariling panganib!
 str_report_source_unknown: Lingid na pinanggalingan
-str_settings_misc: Iba pang settings
+str_settings_misc: Miscellaneous
 str_settings_about: Ukol
 str_about_lead_dev: Pangunahing Developer
 str_about_special_thanks_txt: Ang komunidad ng 3DS homebrew para sa mga reverse-engineering
@@ -103,7 +103,12 @@ str_date_time: '%d-%m-%Y %I:%M:%S%p'
 str_remove: Tanggalin
 str_banned: "Pinagbabawal ikaw gamitin ang Netpass. Rason:\n%s\n\nUmpisa ng ban: %s\n
   Pagtatapos ng ban: %s"
-str_new_version: "May bagong bersyon ang Netpass na available:\nv%d.%d.%d!\n\nPara
-  ma-update ang Netpass, i-install lang ulit gamit ang Universal Updater o QR Code."
+str_new_version: "May bagong bersyon ang Netpass na available:\nv%d.%d.%d!\n\nGusto
+  mo ba iupdate ang Netpass ngayon?"
 str_install: I-install
 str_skip: Ilaktaw
+str_artist_copyright: Illustrasyon © %s
+str_at_event_location: Ikaw ay nasa epesyal na kaganapan.
+str_new_version_failed: Nabigo ang pag-install ng bagong bersyon. Maaari mo pa ring
+  i-install ito muli gamit ng Universal Updater o QR-Code.
+str_enter_event_location: Sigurado ka ba na gusto mong sumali sa kaganapan "%s"?
