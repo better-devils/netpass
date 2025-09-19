@@ -58,10 +58,10 @@ str_report_tomodachi_life_island_name: 'Název ostrova: %s'
 str_b_go_back: '{b_button} Zpět'
 str_b_cancel: '{b_button} Zrušit'
 str_a_ok: '{b_button} OK'
-str_update_patches: Aktualizace patchů
-str_update_patches_error_desc: Při aktualizaci patchů se něco pokazilo. Nahlaste to
+str_update_patches: Aktualizace záplat
+str_update_patches_error_desc: Při aktualizaci záplat se něco pokazilo. Nahlaste to
   prosím na GitLabu, GBAtempu nebo Discordu. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: Patch byl úspěšně zaktualizován! Konzole se nyní
+str_update_patches_poweroff_desc: Záplata byl úspěšně zaktualizován! Konzole se nyní
   restartuje.
 str_integrations: Integrace
 str_integrations_message: Integrace třetích stran jsou mimo rozsah moderace NetPass
@@ -88,7 +88,7 @@ str_welcome_message: Před spuštěním NetPass si nejdříve přečtěte a akce
 str_view_rules: Zobrazit pravidla
 str_view_privacy: Zobrazit zásady ochrany osobních údajů
 str_continue: Pokračovat
-str_update_patches_poweroff_clear_desc: Patche byly úspěšně odebrány! Vaše konzole
+str_update_patches_poweroff_clear_desc: Záplaty byly úspěšně odebrány! Vaše konzole
   se nyní restartuje.
 str_bg_music: Hudba na pozadí
 str_bad_os_version: "NetPass vyžaduje pro správnou funkci verzi operačního systému
