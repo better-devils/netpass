@@ -106,6 +106,5 @@ str_at_event_location: Sei in un evento speciale.
 str_artist_copyright: Disegni © %s
 str_banned: "Sei stato bannato da\nNetPass. Motivo:\n%s\n\nInizio ban: %s\nFine ban:
   %s"
-str_new_version: "Nuova versione di NetPass disponibile:\nv%d.%d.%d!\n\nPer aggiornare
-  NetPass reinstallalo da Universal Updater o usando il QR-Code."
+str_new_version: ""
 str_enter_event_location: Sei sicuro di voler entrare nell'evento "%s"?
