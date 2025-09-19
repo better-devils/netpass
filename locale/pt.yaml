@@ -36,7 +36,7 @@ str_back_alley_pay: Comprar um passe {playcoin}%d
 str_toggle_titles: Ativar/Desativar Jogos
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
-str_check_inboxes: Verificar Inboxes
+str_check_inboxes: Verificar o correio
 str_toggle_titles_message: Prima {a_button} para ativar ou desativar a troca de passes.
 str_write_patches: Gravar patches
 str_clear_spr_cache: Limpar o cache SPR
