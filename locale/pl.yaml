@@ -103,9 +103,7 @@ str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
 str_banned: "Zostałeś zbanowany w NetPass'ie. Powód:\n%s\n\nPoczątek bana: %s\nKoniec
   bana: %s"
-str_new_version: "Nowa wersja NetPass dostępna:\nv%d.%d.%d!\n\nBy zaktualizować NetPass'a
-  po prostu zainstaluj ją ponownie używając aplikacji Universal Updater lub za pomocą
-  QR-Code."
+str_new_version: ""
 str_at_event_location: Jesteś na specjalnym wydarzeniu.
 str_artist_copyright: Dzieło © %s
 str_enter_event_location: Czy jesteś pewien, że chcesz dołączyć do wydarzenia "%s"?
