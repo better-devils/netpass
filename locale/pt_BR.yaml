@@ -33,7 +33,7 @@ str_submit: 'Enviar'
 str_back_alley: 'Beco'
 str_back_alley_message: 'Vamos pegar mais alguns passes!'
 str_back_alley_pay: "Compre um passe {playcoin}%d"
-str_check_inboxes: 'Verificar Inboxes'
+str_check_inboxes: 'Verificar o correio'
 str_toggle_titles: 'Ativar/Desativar Jogos'
 str_toggle_titles_message: "Aperte {a_button} para ativar ou desativar a troca de
   passes."
