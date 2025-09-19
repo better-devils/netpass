@@ -96,6 +96,5 @@ str_date_time: '%Y年%m月%d日(%a曜日) %p%I時%M分%S秒'
 str_at_event_location: 特別なイベントにいます。
 str_artist_copyright: アート作品© %s
 str_banned: "あなたは NetPass の使用を禁止されています。\n理由：%s\n禁止開始日：%s\n禁止終了日：%s"
-str_new_version: "新しい NetPass のバージョンが利用可能です：\nv%d.%d.%d!\nNetPass を更新するには、Universal
-  Updater から再インストールするか、QRコード経由でインストールしてください。"
+str_new_version: ""
 str_enter_event_location: イベント"%s"に参加しますか？
