@@ -85,7 +85,7 @@ str_update_patches_desc: Per instal·ar NetPass correctament, es crearan alguns 
 str_x_switch_camera: '{x_button} Canviar de càmera'
 str_welcome_message: Abans d'iniciar NetPass, si us plau, llegeix i accepta les nostres
   regles i política de privadesa.
-str_update_patches_poweroff_clear_desc: Patches eliminats amb èxit! La seva consola
+str_update_patches_poweroff_clear_desc: Pedaços eliminats amb èxit! La seva consola
   es reiniciarà.
 str_bg_music: Música de fons
 str_bad_os_version: "NetPass requereix de 3DS OS 11.15.0 o major per funcionar correctament.
