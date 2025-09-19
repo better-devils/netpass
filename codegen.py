@@ -123,6 +123,8 @@ for lang in lang_keys:
 		langfile = "nb"
 	if lang == "tl":
 		langfile = "fil"
+	if lang == "pt_BR":
+		langfile = "pt"
 	langfile = langfile.replace("_", "-")
 	with localezip.open(f"cldr-dates-full/main/{langfile}/ca-generic.json") as file:
 		d = json.loads(file.read())
