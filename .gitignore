@@ -3,6 +3,7 @@ __pycache__
 .vscode/
 .clangd
 .zed/
+.dir-locals.el
 build/
 CmakeLists.txt
 codegen/
