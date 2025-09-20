@@ -192,13 +192,14 @@ int main(int nargs, char** argv) {
 	if (nargs >= 1) {
 		filename_3dsx = argv[0];
 	}
-	
-	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+
+	LogMessage* log = log_start();
+	log_multi(log, "Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
-	// cppcheck-suppress invalidPrintfArgType_s
-	printf("+%s", _VERSION_GIT_SHA_);
+	log_multi(log, "+%s", _VERSION_GIT_SHA_);
 #endif
-	printf("\n");
+	log_end(log);
+
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();

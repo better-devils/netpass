@@ -48,6 +48,7 @@ Config config = {
 	.welcome_version = 0,
 	.patches_version = 0,
 	.bg_music = 1,
+	.log_output = BottomScreen
 };
 
 void addIgnoredTitle(u32 title_id) {
@@ -134,6 +135,9 @@ void load(void) {
 		}
 		if (strcmp(key, "BG_MUSIC") == 0) {
 			config.bg_music = strcmp(value, "TRUE") == 0;
+		}
+		if (strcmp(key, "LOG_OUTPUT") == 0) {
+			config.log_output = atoi(value);
 		}
 		if (strcmp(key, "TITLE_IDS_IGNORED") == 0) {
 			// Open mbox_list now to avoid repeatedly doing it later

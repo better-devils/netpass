@@ -8,7 +8,7 @@
  * (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRAu32NTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -18,32 +18,18 @@
 
 #pragma once
 
-#include <3ds.h>
-#include "log.h"
+enum LogOutput {
+	BottomScreen = 0,
+	File,
+	Disabled,
+};
 
-typedef struct {
-	int last_location;
-	int language;
-	u16 year;
-	u8 month;
-	u8 day;
-	u32 price;
-	int patches_version;
-	int welcome_version;
-	u32 title_ids_ignored[24];
-	bool bg_music;
-	enum LogOutput log_output;
-} Config;
+typedef struct LogMessage {
+        int length;
+	char *message;
+} LogMessage;
 
-void addIgnoredTitle(u32 title_id);
-void removeIgnoredTitle(u32 title_id);
-bool isTitleIgnored(u32 title_id);
-
-void configInit(void);
-void configWrite(void);
-
-bool clearPatches(void);
-bool writePatches(void);
-void clearBossCacheAndReboot(void);
-
-extern Config config;
+void logln(const char *restrict string);
+LogMessage* log_start(void);
+void log_multi(LogMessage* foo, const char *restrict format, ...);
+void log_end(LogMessage* foo);
