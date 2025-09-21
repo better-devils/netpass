@@ -28,12 +28,12 @@ Result cache_current_location_image(void) {
 	Result res = 0;
 	if (!location.have_image) return res;
 	
-	char filename[100];
+	char filename[150];
 	char hash[0x20*2 + 1];
 	for (int i = 0; i < 0x20; i++) {
 		snprintf(hash + (i*2), 3, "%02X", location.image_hash[i]);
 	}
-	snprintf(filename, 100, "%s%s.png", IMAGE_CACHE_DIR, hash);
+	snprintf(filename, 150, "%s%s.png", IMAGE_CACHE_DIR, hash);
 	if (access(filename, F_OK) == 0) return res;
 	
 	// ok, time to download the image
