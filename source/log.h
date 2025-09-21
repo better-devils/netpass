@@ -29,7 +29,7 @@ typedef struct LogMessage {
 	char *message;
 } LogMessage;
 
-void logln(const char *restrict string);
+void logln(const char *restrict format, ...);
 LogMessage* log_start(void);
 void log_multi(LogMessage* foo, const char *restrict format, ...);
 void log_end(LogMessage* foo);

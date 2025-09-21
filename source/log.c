@@ -23,15 +23,20 @@
 #include <stdio.h>
 #include <string.h>
 
-void logln(const char *restrict string) {
+void logln(const char *restrict format, ...) {
+	va_list args;
+	va_start(args, format);
 	switch (config.log_output) {
 	case BottomScreen:
-		printf("[LOG]: %s\n", string);
+		printf("[LOG] ");
+		vprintf(format, args);
+		putchar('\n');
 		break;
 	default:
 		printf("[TODO]: Logging method %d\n", config.log_output);
 		break;
 	}
+	va_end(args);
 }
 
 LogMessage* log_start(void) {
