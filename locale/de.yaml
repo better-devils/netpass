@@ -24,7 +24,8 @@ str_at_beach: Du bist am Strand.
 str_goto_arcade: Gehe zur Spielhalle
 str_at_arcade: Du bist in der Spielhalle.
 str_at_catcafe: Du bist im Katzencafé.
-str_no_location_twice: Du kannst nicht zweimal hintereinander zum selben Ort gehen!
+str_no_location_twice: Du kannst nicht zweimal hintereinander zum selben Ort 
+  gehen!
 str_goto_catcafe: Gehe zum Katzencafé
 str_report_user_hint: Melde "%s"
 str_cancel: Abbrechen
@@ -34,7 +35,8 @@ str_back_alley: Seitengasse
 str_back_alley_message: Lass uns ein paar Begegnungen holen!
 str_back_alley_pay: Kaufe eine Begegnung {playcoin}%d
 str_toggle_titles: Spiele Ein-/Ausschalten
-str_toggle_titles_message: Drücke {a_button}, um den Austausch von Begegnungen ein-/auszuschalten.
+str_toggle_titles_message: Drücke {a_button}, um den Austausch von Begegnungen 
+  ein-/auszuschalten.
 str_toggle_titles_on: (AN)
 str_toggle_titles_off: (AUS)
 str_check_inboxes: Eingänge prüfen
@@ -52,18 +54,19 @@ str_write_patches: Schreib SPR-Patches
 str_b_cancel: '{b_button} Abbrechen'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Patches aktualisieren
-str_update_patches_error_desc: Ein Fehler ist während der Patch-Aktualisierung aufgetreten.
-  Bitte melde dieses Problem auf GitLab, GBAtemp oder auf Discord. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: Patches erfolgreich aktualisiert! Deine Konsole
-  wird nun neu gestartet.
-str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein paar
-  sysmodule patches erstellt. Damit diese funktionieren, muss "Enable loading external
-  FIRMs and modules" in den Luma3DS-Einstellungen aktiviert sein. Um dies zu aktivieren,
-  halte {select_button} gedrückt, während du deine Konsole startest. Du kannst dies
-  auch nach der Installation erledigen.
+str_update_patches_error_desc: Ein Fehler ist während der Patch-Aktualisierung 
+  aufgetreten. Bitte melde dieses Problem auf GitLab, GBAtemp oder auf Discord. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Patches erfolgreich aktualisiert! Deine 
+  Konsole wird nun neu gestartet.
+str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein 
+  paar sysmodule patches erstellt. Damit diese funktionieren, muss "Enable 
+  loading external FIRMs and modules" in den Luma3DS-Einstellungen aktiviert 
+  sein. Um dies zu aktivieren, halte {select_button} gedrückt, während du deine 
+  Konsole startest. Du kannst dies auch nach der Installation erledigen.
 str_integrations: Integrationen
-str_integrations_message: Drittanbieter-Integrationen werden nicht von NetPass moderiert.
-  Benutzung auf eigene Gefahr!
+str_integrations_message: Drittanbieter-Integrationen werden nicht von NetPass 
+  moderiert. Benutzung auf eigene Gefahr!
 str_report_source: 'Quelle: %s'
 str_report_source_unknown: Unbekannte Quelle
 str_settings_misc: Verschiedenes
@@ -75,8 +78,8 @@ str_about_music: Musik
 str_about_localisation: Lokalisierung
 str_about_netpass_community: Die NetPass-Community
 str_about_special_thanks: Besonderen Dank
-str_about_special_thanks_txt: Die 3DS-Homebrew-Community für all das Reverse-Engineering
-  und die Dokumentation
+str_about_special_thanks_txt: Die 3DS-Homebrew-Community für all das 
+  Reverse-Engineering und die Dokumentation
 str_about_production_cat: Produktions-Katze
 str_scan_qr: QR-Code scannen
 str_prompt_verify: Bist du sicher, dass du diesen 3DS verifizieren willst?
@@ -85,18 +88,19 @@ str_welcome: Willkommen bei NetPass
 str_view_rules: Regeln ansehen
 str_view_privacy: Datenschutzrichtlinien ansehen
 str_continue: Fortfahren
-str_welcome_message: Bevor du mit NetPass starten kannst, lese und akzeptiere bitte
-  unsere Regeln und Datenschutzrichtlinien.
-str_update_patches_poweroff_clear_desc: Patches erfolgreich entfernt! Deine Konsole
-  wird nun neu gestartet.
+str_welcome_message: Bevor du mit NetPass starten kannst, lese und akzeptiere 
+  bitte unsere Regeln und Datenschutzrichtlinien.
+str_update_patches_poweroff_clear_desc: Patches erfolgreich entfernt! Deine 
+  Konsole wird nun neu gestartet.
 str_bg_music: Hintergrundmusik
 str_bad_os_version: "NetPass benötigt 3DS OS 11.15.0 oder höher, um ordnungsgemäß
   zu funktionieren. Leider scheinst du eine ältere Version zu verwenden. Bitte aktualisieren
   dein System und starte anschließend NetPass erneut.\n\nZum Beenden eine beliebige
   Taste drücken"
-str_prompt_dl_pass: Bist du sicher, dass du diese Begegnung herunterladen möchtest?
-str_report_integration: Diese Nachricht stammt aus einer Integration. Bitte wende
-  dich an das Moderationsteam dieser Integration, um sie zu melden.
+str_prompt_dl_pass: Bist du sicher, dass du diese Begegnung herunterladen 
+  möchtest?
+str_report_integration: Diese Nachricht stammt aus einer Integration. Bitte 
+  wende dich an das Moderationsteam dieser Integration, um sie zu melden.
 str_skip: Überspringen
 str_install: Installieren
 str_remove: Entfernen
@@ -106,9 +110,10 @@ str_new_version: "Neue NetPass Version erhältlich:\nv%d.%d.%d!\n\nWillst du Net
   jetzt aktualisieren?"
 str_banned: "Du bist von der Nutzung von NetPass ausgeschlossen. Grund:\n%s\n\nAusgeschlossen
   seit: %s\nAusgeschlossen bis: %s"
-str_enter_event_location: Bist du sicher, dass du die Veranstaltung "%s" betreten
-  möchtest?
+str_enter_event_location: Bist du sicher, dass du die Veranstaltung "%s" 
+  betreten möchtest?
 str_at_event_location: Du bist bei einer besonderen Veranstaltung.
 str_artist_copyright: Grafik © %s
-str_new_version_failed: Die Installation der neuen Version ist fehlgeschlagen. Du
-  kannst sie immer noch über Universal Updater oder mit dem QR-Code installieren.
+str_new_version_failed: Die Installation der neuen Version ist fehlgeschlagen. 
+  Du kannst sie immer noch über Universal Updater oder mit dem QR-Code 
+  installieren.
