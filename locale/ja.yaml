@@ -51,12 +51,13 @@ str_report_mii_plaza_custom_reply: 'カスタム返信：%s'
 str_report_tomodachi_life_island_name: '島の名前：'
 str_b_go_back: '{b_button} 戻る'
 str_update_patches: パッチをアップデートする
-str_update_patches_error_desc: パッチの更新時にエラーが発生しました。この問題は NetPassのGitlab、GBAtemp または
-  Discord で報告してください。https://netpass.cafe/discord
+str_update_patches_error_desc: パッチの更新時にエラーが発生しました。この問題は NetPassのGitlab、GBAtemp 
+  または Discord で報告してください。https://netpass.cafe/discord
 str_update_patches_poweroff_desc: パッチのアップデートが成功しました！コンソールが再起動します。
 str_b_cancel: '{b_button}キャンセル'
 str_a_ok: '{a_button}はい'
-str_update_patches_desc: NetPassを正しくインストールするために、sysmoduleパッチが作成されます。これらを動作させるには、lumasのコンフィギュレーションで
+str_update_patches_desc: 
+  NetPassを正しくインストールするために、sysmoduleパッチが作成されます。これらを動作させるには、lumasのコンフィギュレーションで 
   「Enable loading external FIRMs and modules 
   」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押してください。パッチを書き込んだ後でもできます。
 str_integrations_message: "第三者のインテグレーションはNetPassのモデレーション以外です。\n自己責任で使ってください！"
@@ -87,7 +88,8 @@ str_bad_os_version: "NetPassが正しく働くために、3DSの ファームウ
   ファームウェアを使っている。 アップデートした後に、NetPassを開けてください\n\nボタンを押すと、NetPassが閉まる"
 str_update_patches_poweroff_clear_desc: パッチは無事に外されました! 3DS本体を再起動 します。
 str_prompt_dl_pass: このすれちがい通信をダウンロードするのは本当によろしいですか?
-str_report_integration: このメッセージは統合機能を通じて送信されたものです。このエラーを報告する場合は、統合先のモデレーションチームにご連絡ください。
+str_report_integration: 
+  このメッセージは統合機能を通じて送信されたものです。このエラーを報告する場合は、統合先のモデレーションチームにご連絡ください。
 str_remove: 削除する
 str_skip: スキップする
 str_install: インストールする
@@ -98,4 +100,5 @@ str_artist_copyright: アート作品© %s
 str_banned: "あなたは NetPass の使用を禁止されています。\n理由：%s\n禁止開始日：%s\n禁止終了日：%s"
 str_new_version: "新しいNetPassの更新があります\nv%d.%d.%d!\n\n今からNetPassを更新しますか？"
 str_enter_event_location: イベント"%s"に参加しますか？
-str_new_version_failed: 新しいバージョンをインストールするのが失敗しました。またUniversal UpdaterかQRコードでインストールしてみてください。
+str_new_version_failed: 新しいバージョンをインストールするのが失敗しました。またUniversal 
+  UpdaterかQRコードでインストールしてみてください。
