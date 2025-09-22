@@ -188,11 +188,15 @@ int main(int nargs, char** argv) {
 	_e(aptInit());
 	_e(frdInit(false));
 	_e(fsInit());
+	_e(cecdInit());
 	consoleInit(GFX_BOTTOM, NULL);
 	
 	if (nargs >= 1) {
 		filename_3dsx = argv[0];
 	}
+
+	configInit(); // must be after cecdInit()
+	logInit(); // must be after configInit();
 
 	LogMessage* log = log_start();
 	log_multi(log, "Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
@@ -209,11 +213,9 @@ int main(int nargs, char** argv) {
 
 	DEBUG_PRINTF("DEBUG ON\n");
 
-	_e(cecdInit());
 	_e(curlInit());
 	srand(time(NULL));
 
-	configInit(); // must be after cecdInit()
 	stringsInit(); // must be after configInit()
 	musicInit(); // must be after romfsInit()
 
@@ -310,5 +312,6 @@ int main(int nargs, char** argv) {
 	amExit();
 	cfguExit();
 	gfxExit();
+	logExit();
 	return 0;
 }

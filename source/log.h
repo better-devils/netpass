@@ -25,9 +25,12 @@ enum LogOutput {
 };
 
 typedef struct LogMessage {
-        int length;
+	int length;
 	char *message;
 } LogMessage;
+
+void logInit();
+void logExit();
 
 void logln(const char *restrict format, ...);
 LogMessage* log_start(void);

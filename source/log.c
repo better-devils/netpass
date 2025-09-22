@@ -24,19 +24,37 @@
 #include <string.h>
 #include "utils.h"
 
+#define LOG_FILE_NAME "sdmc:/config/netpass/log.txt"
+
+__FILE* log_file = NULL;
+
+void logInit() {
+	if (config.log_output == File) {
+		log_file = fopen(LOG_FILE_NAME, "w");
+		if (!log_file) {
+			config.log_output = Disabled;
+			_e_errno();
+			return;
+		}
+	} else {
+		log_file = stdout;
+	}
+}
+
+void logExit() {
+	if (config.log_output == File)
+		fclose(log_file);
+}
+
 void logln(const char *restrict format, ...) {
+	if (config.log_output == Disabled)
+		return;
 	va_list args;
 	va_start(args, format);
-	switch (config.log_output) {
-	case BottomScreen:
-		printf("[LOG] ");
-		vprintf(format, args);
-		putchar('\n');
-		break;
-	default:
-		printf("[TODO]: Logging method %d\n", config.log_output);
-		break;
-	}
+	fprintf(log_file, "[LOG] ");
+	vfprintf(log_file, format, args);
+	fputc('\n', log_file);
+	fflush(log_file);
 	va_end(args);
 }
 
@@ -47,7 +65,11 @@ LogMessage* log_start(void) {
 		return NULL;
 	}
 	log->length = 0;
-	log->message = NULL;
+	log->message = calloc(1, sizeof(char));
+	if (!log->message) {
+		_e(ERROR_OUT_OF_MEMORY);
+		return NULL;
+	}
 	return log;
 }
 
@@ -73,6 +95,7 @@ try_write:
 		buf = tmp;
 		goto try_write;
 	}
+	va_end(args);
 	log->length += buf_length;
 	char *tmp = realloc(log->message, log->length);
 	if (!tmp) {
@@ -81,8 +104,7 @@ try_write:
 		return;
 	}
 	log->message = tmp;
-	va_end(args);
-	strcat(log->message, buf);
+	strncat(log->message, buf, log->length);
 	free(buf);
 }
 
