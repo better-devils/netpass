@@ -74,23 +74,23 @@ str_about_music: Musik
 str_about_localisation: Språkanpassning
 str_about_netpass_community: NetPass-gemenskapen
 str_about_special_thanks: Särskilt Tack
-str_about_special_thanks_txt: 3DS homebrew-gemenskapen för all reverse-engineering
-  och dokumentation
+str_about_special_thanks_txt: 3DS homebrew-gemenskapen för all 
+  reverse-engineering och dokumentation
 str_about_production_cat: Produktionskatt
 str_scan_qr: Skanna QR-kod
 str_x_switch_camera: '{x_button} Växla Kamera'
 str_prompt_verify: Är du säker på att du vill verifiera detta 3DS?
 str_welcome: Välkommen till NetPass
-str_welcome_message: Innan du kan använda NetPass måste du läsa och godkänna våra
-  regler och integritetspolicy.
+str_welcome_message: Innan du kan använda NetPass måste du läsa och godkänna 
+  våra regler och integritetspolicy.
 str_view_rules: Se Regler
 str_view_privacy: Se Integritetspolicy
 str_continue: Fortsätt
 str_bg_music: Bakgrundsmusik
-str_update_patches_poweroff_clear_desc: Borttagning av patcher lyckades! Din spelkonsol
-  kommer nu att starta om.
-str_report_integration: Detta meddelande härstammar från en integration. För att rapportera,
-  vänligen kontakta moderationsteamet bakom integrationen.
+str_update_patches_poweroff_clear_desc: Borttagning av patcher lyckades! Din 
+  spelkonsol kommer nu att starta om.
+str_report_integration: Detta meddelande härstammar från en integration. För att
+  rapportera, vänligen kontakta moderationsteamet bakom integrationen.
 str_skip: Hoppa över
 str_install: Installera
 str_remove: Ta bort
@@ -100,3 +100,13 @@ str_bad_os_version: "NetPass kräver 3DS OS 11.15.0 eller senare för att funger
   operativsystem och starta sedan NetPass igen.\n\nTryck på valfri knapp för att avsluta"
 str_date_time: '%Y-%m-%d %H.%M.%S'
 str_date: '%Y-%m-%d'
+str_banned: "Du har blivit bannlyst från att använda NetPass. Anledning:\n%s\n\nStartdatum:
+  %s\nSlutdatum: %s"
+str_new_version: "En ny version av NetPass finns tillgänglig:\nv%d.%d.%d!\n\nVill
+  du uppdatera NetPass nu?"
+str_enter_event_location: Är du säker på att du vill gå med evenemanget "%s"?
+str_at_event_location: Du är vid ett speciellt evenemang.
+str_artist_copyright: Konstverk © %s
+str_new_version_failed: Installation av den nya versionen misslyckades. Du kan 
+  fortfarande installera den via Universal Updater eller QR-koden.
+str_report_list_empty: Anmälningslistan är tom.
