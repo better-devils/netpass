@@ -24,15 +24,23 @@ enum LogOutput {
 	Disabled,
 };
 
+enum LogLevel {
+	ERROR = 0,
+	WARN,
+	INFO,
+	DEBUG,
+};
+
 typedef struct LogMessage {
 	int length;
+	enum LogLevel level;
 	char *message;
 } LogMessage;
 
 void logInit();
 void logExit();
 
-void logln(const char *restrict format, ...);
-LogMessage* log_start(void);
+void logln(enum LogLevel level, const char *restrict format, ...);
+LogMessage* log_start(enum LogLevel level);
 void log_multi(LogMessage* foo, const char *restrict format, ...);
 void log_end(LogMessage* foo);

@@ -26,6 +26,8 @@
 
 #define LOG_FILE_NAME "sdmc:/config/netpass/log.txt"
 
+const char* LOG_LEVEL_NAMES[] = { "ERROR", "WARN", "INFO", "DEBUG" };
+
 __FILE* log_file = NULL;
 
 void logInit() {
@@ -46,25 +48,26 @@ void logExit() {
 		fclose(log_file);
 }
 
-void logln(const char *restrict format, ...) {
+void logln(enum LogLevel level, const char *restrict format, ...) {
 	if (config.log_output == Disabled)
 		return;
 	va_list args;
 	va_start(args, format);
-	fprintf(log_file, "[LOG] ");
+	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
 	vfprintf(log_file, format, args);
 	fputc('\n', log_file);
 	fflush(log_file);
 	va_end(args);
 }
 
-LogMessage* log_start(void) {
+LogMessage* log_start(enum LogLevel level) {
 	LogMessage* log = malloc(sizeof(LogMessage));
 	if (!log) {
 		_e(ERROR_OUT_OF_MEMORY);
 		return NULL;
 	}
 	log->length = 0;
+	log->level = level;
 	log->message = calloc(1, sizeof(char));
 	if (!log->message) {
 		_e(ERROR_OUT_OF_MEMORY);
@@ -109,7 +112,7 @@ try_write:
 }
 
 void log_end(LogMessage* log) {
-	logln(log->message);
+	logln(log->level, log->message);
 	free(log->message);
 	free(log);
 }

@@ -198,7 +198,7 @@ int main(int nargs, char** argv) {
 	configInit(); // must be after cecdInit()
 	logInit(); // must be after configInit();
 
-	LogMessage* log = log_start();
+	LogMessage* log = log_start(INFO);
 	log_multi(log, "Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
 	log_multi(log, "+%s", _VERSION_GIT_SHA_);
