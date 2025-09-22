@@ -18,6 +18,7 @@
 
 #include "report_list.h"
 #include "../report.h"
+#include "info.h"
 #include <stdlib.h>
 #include <malloc.h>
 #define N(x) scenes_report_list_namespace_##x
@@ -101,6 +102,13 @@ SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (!_data) return scene_pop;
+	
+	if (!_data->list->header.cur_size) {
+		Scene* info = getInfoScene(str_report_list_empty);
+		info->pop_scene = sc->pop_scene;
+		sc->pop_scene = info;
+		return scene_pop;
+	}
 	
 	_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 	_data->cursor += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1)*10 - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1)*10;
