@@ -36,8 +36,8 @@ str_check_inboxes: Comprobar pases
 str_toggle_titles: Activar o desactivar juegos
 str_toggle_titles_on: (SI)
 str_toggle_titles_off: (NO)
-str_toggle_titles_message: Pulsa {a_button} para activar o desactivar la búsqueda
-  de pases.
+str_toggle_titles_message: Pulsa {a_button} para activar o desactivar la 
+  búsqueda de pases.
 str_clear_spr_cache: Limpiar cache (SPRelay)
 str_write_patches: Escribir parches
 str_report_mii_name: 'Apodo: %s'
@@ -51,19 +51,21 @@ str_report_mii_plaza_last_game: 'Último Programa: %s'
 str_report_mii_plaza_country: 'Región: %s - %s'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Actualizar parches
-str_update_patches_error_desc: Algo salió mal al actualizar los parches. Por favor,
-  informe este problema en GitLab, GBAtemp o Discord. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: ¡La actualización de los parches se realizó correctamente!
-  Ahora tu consola se reiniciará.
-str_update_patches_desc: Para instalar NetPass correctamente, se crearán algunos parches
-  de sysmodule. Para que funcionen, debe habilitar "Enable loading external FIRMs
-  and modules" en la configuración de Luma3DS. Para ver la configuración, apague la
-  consola y luego presione {select_button} mientras enciende {power_button} la consola.
-  Puede hacer esto después de que se escriban los parches.
+str_update_patches_error_desc: Algo salió mal al actualizar los parches. Por 
+  favor, informe este problema en GitLab, GBAtemp o Discord. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: ¡La actualización de los parches se realizó 
+  correctamente! Ahora tu consola se reiniciará.
+str_update_patches_desc: Para instalar NetPass correctamente, se crearán algunos
+  parches de sysmodule. Para que funcionen, debe habilitar "Enable loading 
+  external FIRMs and modules" en la configuración de Luma3DS. Para ver la 
+  configuración, apague la consola y luego presione {select_button} mientras 
+  enciende {power_button} la consola. Puede hacer esto después de que se 
+  escriban los parches.
 str_b_cancel: '{b_button} Cancelar'
 str_integrations: Integraciones
-str_integrations_message: Las integraciones de terceros quedan fuera de la moderación
-  de NetPass. ¡Úsala bajo tu propio riesgo!
+str_integrations_message: Las integraciones de terceros quedan fuera de la 
+  moderación de NetPass. ¡Úsala bajo tu propio riesgo!
 str_report_source_unknown: Fuente desconocida
 str_report_source: 'Fuente: %s'
 str_settings_misc: Misceláneo
@@ -75,8 +77,8 @@ str_about_music: Música
 str_about_localisation: Localización
 str_about_netpass_community: La comunidad de NetPass
 str_about_special_thanks: Agradecimientos Especiales
-str_about_special_thanks_txt: La comunidad homebrew de 3DS por toda la ingeniería
-  inversa y la documentación
+str_about_special_thanks_txt: La comunidad homebrew de 3DS por toda la 
+  ingeniería inversa y la documentación
 str_about_production_cat: Gato de producción
 str_scan_qr: Escanear Código QR
 str_prompt_verify: ¿Estás seguro de que quieres verificar esta 3DS?
@@ -85,17 +87,18 @@ str_continue: Continuar
 str_welcome: Bienvenido a NetPass
 str_view_rules: Ver Reglas
 str_view_privacy: Ver Política de Privacidad
-str_welcome_message: Antes de iniciar NetPass, por favor lee y acepta nuestras reglas
-  y política de privacidad.
+str_welcome_message: Antes de iniciar NetPass, por favor lee y acepta nuestras 
+  reglas y política de privacidad.
 str_bad_os_version: "NetPass requiere 3DS OS 11.15.0 o mayor para funcionar correctamente.
   Desafortunadamente, parece que estás usando una versión mas antigua. Por favor,
   actualice y luego inicie NetPass nuevamente.\n\nPresione cualquier botón para salir"
 str_bg_music: Música BG
-str_update_patches_poweroff_clear_desc: ¡Parches eliminados con éxito! Su consola
-  se reiniciará.
+str_update_patches_poweroff_clear_desc: ¡Parches eliminados con éxito! Su 
+  consola se reiniciará.
 str_prompt_dl_pass: ¿Estas seguro que quieres descargar este pase?
-str_report_integration: Este mensaje proviene de una integración. Para denunciarlo,
-  por favor, envía un mensaje al equipo de moderación de dicha integración.
+str_report_integration: Este mensaje proviene de una integración. Para 
+  denunciarlo, por favor, envía un mensaje al equipo de moderación de dicha 
+  integración.
 str_install: Instalar
 str_remove: Eliminar
 str_skip: Omitir
@@ -107,5 +110,5 @@ str_date: '%d/%m/%Y'
 str_artist_copyright: Ilustración © %s
 str_enter_event_location: ¿Confirmas que quieres entrar al evento "%s"?
 str_at_event_location: Estas en un evento especial.
-str_new_version_failed: La instalación de la actualización ha fallado. Puedes volver
-  a instalarla mediante Universal Updater o el código QR.
+str_new_version_failed: La instalación de la actualización ha fallado. Puedes 
+  volver a instalarla mediante Universal Updater o el código QR.
