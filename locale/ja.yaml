@@ -35,7 +35,7 @@ str_back_alley_message: 今すぐすれちがいを購入する!
 str_back_alley_pay: パスを購入する {playcoin}%d
 str_back_alley: 路地裏
 str_toggle_titles: ゲームを切り替える
-str_check_inboxes: 受信トレイをチェックする
+str_check_inboxes: インボックスを開く
 str_toggle_titles_message: '{a_button}を押して、パスの交換を開始または停止する。'
 str_toggle_titles_on: (オン)
 str_toggle_titles_off: (オフ)
@@ -96,5 +96,6 @@ str_date_time: '%Y年%m月%d日(%a曜日) %p%I時%M分%S秒'
 str_at_event_location: 特別なイベントにいます。
 str_artist_copyright: アート作品© %s
 str_banned: "あなたは NetPass の使用を禁止されています。\n理由：%s\n禁止開始日：%s\n禁止終了日：%s"
-str_new_version: ""
+str_new_version: "新しいNetPassの更新があります\nv%d.%d.%d!\n\n今からNetPassを更新しますか？"
 str_enter_event_location: イベント"%s"に参加しますか？
+str_new_version_failed: 新しいバージョンをインストールするのが失敗しました。またUniversal UpdaterかQRコードでインストールしてみてください。
