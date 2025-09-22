@@ -117,3 +117,4 @@ str_artist_copyright: Grafik © %s
 str_new_version_failed: Die Installation der neuen Version ist fehlgeschlagen. 
   Du kannst sie immer noch über Universal Updater oder mit dem QR-Code 
   installieren.
+str_report_list_empty: Die Meldeliste ist leer.
