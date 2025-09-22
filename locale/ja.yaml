@@ -102,3 +102,4 @@ str_new_version: "新しいNetPassの更新があります\nv%d.%d.%d!\n\n今か
 str_enter_event_location: イベント"%s"に参加しますか？
 str_new_version_failed: 新しいバージョンをインストールするのが失敗しました。またUniversal 
   UpdaterかQRコードでインストールしてみてください。
+str_report_list_empty: 報告リストは今空です。
