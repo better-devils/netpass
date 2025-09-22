@@ -44,13 +44,11 @@ void logInit() {
 }
 
 void logExit() {
-	if (config.log_output == File)
-		fclose(log_file);
+	if (config.log_output == File && log_file) fclose(log_file);
 }
 
 void logln(enum LogLevel level, const char *restrict format, ...) {
-	if (config.log_output == Disabled)
-		return;
+	if (config.log_output == Disabled || !log_file) return;
 	va_list args;
 	va_start(args, format);
 	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
@@ -71,12 +69,14 @@ LogMessage* log_start(enum LogLevel level) {
 	log->message = calloc(1, sizeof(char));
 	if (!log->message) {
 		_e(ERROR_OUT_OF_MEMORY);
+		free(log);
 		return NULL;
 	}
 	return log;
 }
 
 void log_multi(LogMessage* log, const char *restrict format, ...) {
+	if (!log) return;
 	va_list args;
 	va_start(args, format);
 	int buf_length = 10;
@@ -102,7 +102,7 @@ try_write:
 	log->length += buf_length;
 	char *tmp = realloc(log->message, log->length);
 	if (!tmp) {
-		free(log->message);
+		free(buf);
 		_e(ERROR_OUT_OF_MEMORY);
 		return;
 	}
@@ -112,6 +112,7 @@ try_write:
 }
 
 void log_end(LogMessage* log) {
+	if (!log) return;
 	logln(log->level, log->message);
 	free(log->message);
 	free(log);
