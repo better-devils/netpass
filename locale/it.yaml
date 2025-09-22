@@ -33,7 +33,8 @@ str_submit: Invia
 str_back_alley: Vicolo
 str_back_alley_pay: Compra un pass {playcoin}%d
 str_back_alley_message: Cerca altri pass!
-str_toggle_titles_message: Premi {a_button} per iniziare o smettere di scambiare pass.
+str_toggle_titles_message: Premi {a_button} per iniziare o smettere di scambiare
+  pass.
 str_check_inboxes: Controlla la posta in arrivo
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
@@ -52,18 +53,20 @@ str_b_go_back: '{b_button} Torna indietro'
 str_b_cancel: '{b_button} Indietro'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Aggiorna patch
-str_update_patches_desc: Per installare correttamente NetPass verranno create delle
-  patch. Per farle funzionare, assicurati di aver abilitato "Enable loading external
-  FIRMs and modules" nelle impostazioni di Luma3DS. Per aprire le impostazioni, spegni
-  la console e tieni premuto {select_button} mentre accendi {power_button} la console.
-  Puoi farlo anche dopo aver installato le patch.
-str_update_patches_error_desc: Si è verificato un errore nell'aggiornamento delle
-  patch. Segnale questo errore su GitLab, GBATemp o Discord. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: Patch aggiornate con successo! La console ora si
-  riavvierà.
+str_update_patches_desc: Per installare correttamente NetPass verranno create 
+  delle patch. Per farle funzionare, assicurati di aver abilitato "Enable 
+  loading external FIRMs and modules" nelle impostazioni di Luma3DS. Per aprire 
+  le impostazioni, spegni la console e tieni premuto {select_button} mentre 
+  accendi {power_button} la console. Puoi farlo anche dopo aver installato le 
+  patch.
+str_update_patches_error_desc: Si è verificato un errore nell'aggiornamento 
+  delle patch. Segnale questo errore su GitLab, GBATemp o Discord. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Patch aggiornate con successo! La console ora 
+  si riavvierà.
 str_integrations: Integrazioni
-str_integrations_message: Le integrazioni di terze parti non vengono moderate da NetPass.
-  Usale a tuo rischio e pericolo!
+str_integrations_message: Le integrazioni di terze parti non vengono moderate da
+  NetPass. Usale a tuo rischio e pericolo!
 str_report_source: 'Fonte: %s'
 str_report_source_unknown: Fonte sconosciuta
 str_settings_misc: Varie
@@ -76,26 +79,27 @@ str_about_localisation: Traduzioni
 str_about_netpass_community: La comunità di NetPass
 str_about_special_thanks: Ringraziamenti speciali
 str_about_production_cat: Gatto di produzione
-str_about_special_thanks_txt: La comunità homebrew 3DS per la documentazione e il
-  reverse-engineering
+str_about_special_thanks_txt: La comunità homebrew 3DS per la documentazione e 
+  il reverse-engineering
 str_scan_qr: Scansiona QR Code
 str_x_switch_camera: '{x_button} Cambia fotocamera'
 str_prompt_verify: Sei sicuro di voler verificare questa 3DS?
 str_welcome: Benvenuto su NetPass
-str_welcome_message: Prima di avviare NetPass, ti preghiamo di leggere e accettare
-  sia le nostre regole che la Politica sulla Privacy.
+str_welcome_message: Prima di avviare NetPass, ti preghiamo di leggere e 
+  accettare sia le nostre regole che la Politica sulla Privacy.
 str_view_rules: Vedi regole
 str_view_privacy: Vedi Politica sulla Privacy
 str_continue: Continua
 str_bg_music: Musica di sottofondo
-str_update_patches_poweroff_clear_desc: Patch rimosse con successo! La console verrà
-  riavviata.
+str_update_patches_poweroff_clear_desc: Patch rimosse con successo! La console 
+  verrà riavviata.
 str_skip: Salta
 str_install: Installa
 str_remove: Rimuovi
 str_prompt_dl_pass: Sei sicuro di voler scaricare questo pass?
-str_report_integration: Questo messaggio proviene da un'integrazione. Per segnalarlo,
-  invia un messaggio al team di moderazione dell'integrazione in questione.
+str_report_integration: Questo messaggio proviene da un'integrazione. Per 
+  segnalarlo, invia un messaggio al team di moderazione dell'integrazione in 
+  questione.
 str_bad_os_version: "NetPass richiede il sistema operativo 3DS 11.15.0 o superiore
   per funzionare correttamente. Sfortunatamente, sembra che tu stia usando una versione
   più vecchia. Aggiorna il sistema e avvia nuovamente NetPass.\n\nPremi un tasto qualsiasi
@@ -106,5 +110,9 @@ str_at_event_location: Sei in un evento speciale.
 str_artist_copyright: Disegni © %s
 str_banned: "Sei stato bannato da\nNetPass. Motivo:\n%s\n\nInizio ban: %s\nFine ban:
   %s"
-str_new_version: ""
+str_new_version: "Nuova versione di NetPass disponibile:\n\nv%d.%d.%d!\n\nVuoi aggiornare
+  NetPass adesso?"
 str_enter_event_location: Sei sicuro di voler entrare nell'evento "%s"?
+str_new_version_failed: Installazione fallita. È possibile reinstallare NetPass 
+  tramite Universal Updater o tramite codice QR.
+str_report_list_empty: La lista dei report è vuota.
