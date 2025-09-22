@@ -51,7 +51,7 @@ LanguageString* N(locations)[NUM_LOCATIONS] = {
 	&str_at_catcafe,
 };
 
-const char* N(music)[NUM_LOCATIONS] = {
+const char* N(filenames)[NUM_LOCATIONS] = {
 	"train_station",
 	"plaza",
 	"mall",
@@ -88,27 +88,22 @@ void N(init)(Scene* sc) {
 		_data->has_artist = true;
 	}
 	
-	if (!get_current_location_image(&_data->background)) {
-		if (_data->event_location) {
-			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/event_location.t3x");
-			playMusic("home");
-		} else if (location.id >= 0 && location.id < NUM_LOCATIONS) {
-			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
-			playMusic(N(music)[location.id]);
-		}
+	if (_data->event_location) {
+		get_background_image("event_location", &_data->spr, &_data->background, true);
+		playMusic("home");
+		return;
 	}
+	if (location.id < 0 || location.id >= NUM_LOCATIONS) return;
+	
+	get_background_image(N(filenames)[location.id], &_data->spr, &_data->background, true);
+	playMusic(N(filenames)[location.id]);
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	if (_data->spr) {
-		if (_data->event_location) {
-			C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
-			C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-		} else if (C2D_SpriteSheetCount(_data->spr) > location.id) {
-			C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
-			C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-		}
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
+		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	} else if (_data->background.tex) {
 		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
 	}

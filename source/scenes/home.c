@@ -22,6 +22,7 @@
 #include "../config.h"
 #include "../image_cache.h"
 #include "../render.h"
+#include "../music.h"
 #define N(x) scenes_home_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
@@ -65,9 +66,7 @@ void N(init)(Scene* sc) {
 		_data->have_artist = true;
 	}
 	
-	if (!get_current_location_image(&_data->background)) {
-		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/home.t3x");
-	}
+	get_background_image("home", &_data->spr, &_data->background, true);
 }
 
 void N(render)(Scene* sc) {

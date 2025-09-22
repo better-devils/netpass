@@ -23,3 +23,4 @@
 
 Result cache_current_location_image(void);
 bool get_current_location_image(C2D_Image* img);
+void get_background_image(const char* name, C2D_SpriteSheet* spr, C2D_Image* img, bool network);

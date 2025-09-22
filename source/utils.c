@@ -417,6 +417,25 @@ bool loadJpeg(C2D_Image* img, u8* data, u32 size) {
 	return success;
 }
 
+bool loadFileJpeg(C2D_Image* img, const char* filename) {
+	FILE* f = fopen(filename, "rb");
+	if (!f) return false;
+	fseek(f, 0, SEEK_END);
+	size_t size = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	u8* buf = malloc(size);
+	if (!buf) {
+		fclose(f);
+		_e(ERROR_OUT_OF_MEMORY);
+		return false;
+	}
+	fread_blk(buf, size, 1, f);
+	bool success = loadJpeg(img, buf, size);
+	free(buf);
+	fclose(f);
+	return success;
+}
+
 bool loadFilePng(C2D_Image* img, const char* filename) {
 	u32 width;
 	u32 height;

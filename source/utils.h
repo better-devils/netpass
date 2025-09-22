@@ -67,6 +67,7 @@ Result decryptMii(void* data, MiiData* mii);
 u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len);
 void C2D_ImageDelete(C2D_Image* img);
 bool loadJpeg(C2D_Image* img, u8* data, u32 size);
+bool loadFileJpeg(C2D_Image* img, const char* filename);
 bool loadFilePng(C2D_Image* img, const char* filename);
 size_t fread_blk(void* buffer, size_t size, size_t count, FILE* stream);
 size_t fwrite_blk(void* buffer, size_t size, size_t nmemb, FILE* stream);

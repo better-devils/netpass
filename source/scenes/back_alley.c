@@ -22,6 +22,7 @@
 #include "../curl-handler.h"
 #include "../music.h"
 #include "../render.h"
+#include "../image_cache.h"
 #include <stdlib.h>
 #include <time.h>
 #define N(x) scenes_back_alley_namespace_##x
@@ -42,6 +43,7 @@ typedef struct {
 	int number_games;
 	bool show_games;
 	char prev_music[20];
+	C2D_Image background;
 	C2D_SpriteSheet spr;
 	bool view_bg_only;
 } N(DataStruct);
@@ -167,6 +169,7 @@ bool N(init_gamelist)(Scene* sc) {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
+	memset(sc->d, 0, sizeof(N(DataStruct)));
 	
 	if (!N(init_playcoins)(sc)) return;
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 12*24);
@@ -189,14 +192,17 @@ void N(init)(Scene* sc) {
 	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
 	
-	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/back_alley.t3x");
+	get_background_image("back_alley", &_data->spr, &_data->background, false);
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
-	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
-	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-	
+	if (_data->spr) {
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
+		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	} else if (_data->background.tex) {
+		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
+	}
 	if (_data->view_bg_only) return;
 	
 	renderText(&_data->g_header, 10, 10, 1, 0);
