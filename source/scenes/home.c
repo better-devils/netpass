@@ -21,6 +21,7 @@
 #include "../api.h"
 #include "../config.h"
 #include "../image_cache.h"
+#include "../render.h"
 #define N(x) scenes_home_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
@@ -35,8 +36,7 @@ typedef struct {
 	C2D_Image background;
 	C2D_SpriteSheet spr;
 	int cursor;
-	float width;
-	float artist_width;
+	bool have_artist;
 	bool view_bg_only;
 } N(DataStruct);
 
@@ -47,6 +47,7 @@ void N(init)(Scene* sc) {
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
 	_data->view_bg_only = false;
+	_data->have_artist = false;
 	TextLangParse(&_data->g_home, _data->g_staticBuf, str_at_home);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_goto_train_station);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_goto_plaza);
@@ -61,21 +62,9 @@ void N(init)(Scene* sc) {
 		char string[150];
 		snprintf(string, 150, _s(str_artist_copyright), location.artist_name);
 		C2D_TextFontParse(&_data->artist, _font(str_artist_copyright), _data->g_staticBuf, string);
-		get_text_dimensions(&_data->artist, 0.4, 0.4, &_data->artist_width, 0);
-		_data->artist_width += 4.0;
-	} else {
-		_data->artist_width = 0;
+		_data->have_artist = true;
 	}
 	
-	get_text_dimensions(&_data->g_home, 1, 1, &_data->width, 0);
-	for (int i = 0; i < NUM_ENTRIES; i++) {
-		float width;
-		get_text_dimensions(&_data->g_entries[i], 0.5, 0.5, &width, 0);
-		width += 20.;
-		if (width > _data->width) {
-			_data->width = width;
-		}
-	}
 	if (!get_current_location_image(&_data->background)) {
 		_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/home.t3x");
 	}
@@ -89,26 +78,24 @@ void N(render)(Scene* sc) {
 	} else if (_data->background.tex) {
 		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
 	}
-	
 	if (_data->view_bg_only) return;
 	
-	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
-	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	
-	if (_data->artist_width != 0) {
-		C2D_DrawRectSolid(SCREEN_TOP_WIDTH - _data->artist_width, SCREEN_TOP_HEIGHT - 12, 0, _data->artist_width, 12, bgclr);
-		C2D_DrawText(&_data->artist, C2D_AlignRight | C2D_WithColor, SCREEN_TOP_WIDTH - 2, SCREEN_TOP_HEIGHT - 12, 0, 0.4, 0.4, clr);
+	if (_data->have_artist) {
+		renderTextFlags(&_data->artist, C2D_AlignRight, SCREEN_TOP_WIDTH - 2, SCREEN_TOP_HEIGHT - 12, 0.4, 0);
 	}
 	
-	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + NUM_ENTRIES*14, bgclr);
-	u32 clr_inactive = C2D_Color32(0, 0, 0, 0x80);
-	C2D_DrawText(&_data->g_home, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
+	renderText(&_data->g_home, 10, 10, 1, 0);
+	
 	for (int i = 0; i < NUM_ENTRIES; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 35 + i*14, 0, 0.5, 0.5, config.last_location == i ? clr_inactive : clr);
+		renderText(&_data->g_entries[i], 30, 35 + 5 + i*14, 0.5, config.last_location == i ? clr_gray : 0);
+		if (config.last_location == i) {
+			float width;
+			get_text_dimensions(&_data->g_entries[i], 0.5, 0.5, &width, 0);
+			int y = 35 + 5 + i*14 + 8;
+			C2D_DrawLine(30, y, clr_gray, 30 + width, y, clr_gray, 2, 0);
+		}
 	}
-	int x = 22;
-	int y = 35 + _data->cursor*14 + 3;
-	C2D_DrawTriangle(x, y, clr, x, y +10, clr, x + 8, y + 5, clr, 0);
+	renderCursor(13, 35 + 5 + _data->cursor*14 + 1, 0.5);
 }
 
 void N(exit)(Scene* sc) {

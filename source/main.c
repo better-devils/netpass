@@ -28,6 +28,7 @@
 #include "music.h"
 #include "integration.h"
 #include "scenes/switch.h"
+#include "render.h"
 
 CurlReply* ping_reply = 0;
 Result ping_res = 0;
@@ -214,6 +215,7 @@ int main(int nargs, char** argv) {
 	configInit(); // must be after cecdInit()
 	stringsInit(); // must be after configInit()
 	musicInit(); // must be after romfsInit()
+	renderInit(); // must be after romfsInit()
 
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
@@ -294,6 +296,7 @@ int main(int nargs, char** argv) {
 		svcSleepThread(1);
 	}
 	printf("\nExiting...\n");
+	renderExit();
 	integrationExit();
 	bgLoopExit();
 	musicExit();

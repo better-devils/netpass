@@ -21,6 +21,7 @@
 #include "../api.h"
 #include "../music.h"
 #include "../image_cache.h"
+#include "../render.h"
 #include <stdlib.h>
 #define N(x) scenes_location_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
@@ -35,8 +36,7 @@ typedef struct {
 	C2D_Image background;
 	C2D_SpriteSheet spr;
 	int cursor;
-	float width;
-	float artist_width;
+	bool has_artist;
 	bool event_location;
 	bool view_bg_only;
 	int location_id;
@@ -66,6 +66,7 @@ void N(init)(Scene* sc) {
 	memset(sc->d, 0, sizeof(N(DataStruct)));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
+	_data->has_artist = false;
 	_data->event_location = location.id == -2;
 	_data->view_bg_only = false;
 	_data->location_id = (int)sc->data;
@@ -84,21 +85,9 @@ void N(init)(Scene* sc) {
 		char string[150];
 		snprintf(string, 150, _s(str_artist_copyright), location.artist_name);
 		C2D_TextFontParse(&_data->artist, _font(str_artist_copyright), _data->g_staticBuf, string);
-		get_text_dimensions(&_data->artist, 0.4, 0.4, &_data->artist_width, 0);
-		_data->artist_width += 4.0;
-	} else {
-		_data->artist_width = 0;
+		_data->has_artist = true;
 	}
 	
-	get_text_dimensions(&_data->g_location, 1, 1, &_data->width, 0);
-	for (int i = 0; i < 4; i++) {
-		float width;
-		get_text_dimensions(&_data->g_entries[i], 1, 1, &width, 0);
-		width += 20.;
-		if (width > _data->width) {
-			_data->width = width;
-		}
-	}
 	if (!get_current_location_image(&_data->background)) {
 		if (_data->event_location) {
 			_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/event_location.t3x");
@@ -126,25 +115,20 @@ void N(render)(Scene* sc) {
 	
 	if (_data->view_bg_only) return;
 	
-	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
-	
-	if (_data->artist_width != 0) {
-		C2D_DrawRectSolid(SCREEN_TOP_WIDTH - _data->artist_width, SCREEN_TOP_HEIGHT - 12, 0, _data->artist_width, 12, bgclr);
-		C2D_DrawText(&_data->artist, C2D_AlignRight | C2D_WithColor, SCREEN_TOP_WIDTH - 2, SCREEN_TOP_HEIGHT - 12, 0, 0.4, 0.4, clr);
+	if (_data->has_artist != 0) {
+		renderTextFlags(&_data->artist, C2D_AlignRight, SCREEN_TOP_WIDTH - 2, SCREEN_TOP_HEIGHT - 12, 0.4, 0);
 	}
 	
-	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + (_data->event_location ? 6 : 5)*25, bgclr);
-	C2D_DrawText(&_data->g_location, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
+	renderText(&_data->g_location, 10, 10, 1, 0);
 	if (_data->event_location) {
-		C2D_DrawText(&_data->g_subtitle, C2D_AlignLeft | C2D_WithColor, 10, 10 + 25, 0, 1, 1, clr);
+		renderText(&_data->g_subtitle, 10, 10 + 25, 1, 0);
 	}
 	for (int i = 0; i < 4; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 10 + (i+(_data->event_location ? 2 : 1))*25, 0, 1, 1, clr);
+		renderText(&_data->g_entries[i], 34, 14 + (i+(_data->event_location ? 2 : 1))*25, 1, 0);
 	}
-	int x = 10;
-	int y = 10 + (_data->cursor + (_data->event_location ? 2 : 1))*25 + 5;
-	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
+	int x = 1;
+	int y = 14 + (_data->cursor + (_data->event_location ? 2 : 1))*25 + 2;
+	renderCursor(x, y, 1);
 }
 
 void N(exit)(Scene* sc) {
