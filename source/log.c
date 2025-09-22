@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "utils.h"
 
 void logln(const char *restrict format, ...) {
 	va_list args;
@@ -41,6 +42,10 @@ void logln(const char *restrict format, ...) {
 
 LogMessage* log_start(void) {
 	LogMessage* log = malloc(sizeof(LogMessage));
+	if (!log) {
+		_e(ERROR_OUT_OF_MEMORY);
+		return NULL;
+	}
 	log->length = 0;
 	log->message = NULL;
 	return log;
@@ -49,20 +54,36 @@ LogMessage* log_start(void) {
 void log_multi(LogMessage* log, const char *restrict format, ...) {
 	va_list args;
 	va_start(args, format);
-	int tmp_length = 10;
-	char *tmp = malloc(tmp_length);
+	int buf_length = 10;
+	char *buf = malloc(buf_length);
+	if (!buf) {
+		_e(ERROR_OUT_OF_MEMORY);
+		return;
+	}
 try_write:
-	int written = vsnprintf(tmp, tmp_length, format, args);
-	if (written >= tmp_length) {
-		tmp_length = written + 1;
-		tmp = realloc(tmp, tmp_length);
+	int written = vsnprintf(buf, buf_length, format, args);
+	if (written >= buf_length) {
+		buf_length = written + 1;
+		char *tmp = realloc(buf, buf_length);
+		if (!tmp) {
+			free(buf);
+			_e(ERROR_OUT_OF_MEMORY);
+			return;
+		}
+		buf = tmp;
 		goto try_write;
 	}
-	log->length += tmp_length;
-	log->message = realloc(log->message, log->length);
+	log->length += buf_length;
+	char *tmp = realloc(log->message, log->length);
+	if (!tmp) {
+		free(log->message);
+		_e(ERROR_OUT_OF_MEMORY);
+		return;
+	}
+	log->message = tmp;
 	va_end(args);
-	strcat(log->message, tmp);
-	free(tmp);
+	strcat(log->message, buf);
+	free(buf);
 }
 
 void log_end(LogMessage* log) {
