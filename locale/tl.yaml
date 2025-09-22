@@ -103,7 +103,7 @@ str_date: '%d-%m-%Y'
 str_date_time: '%d-%m-%Y %I:%M:%S%p'
 str_remove: Tanggalin
 str_banned: "Pinagbabawal ikaw gamitin ang Netpass. Rason:\n%s\n\nUmpisa ng ban: %s\n\
-  \ Pagtatapos ng ban: %s"
+  Pagtatapos ng ban: %s"
 str_new_version: "May bagong bersyon ang Netpass na available:\nv%d.%d.%d!\n\nGusto
   mo ba iupdate ang Netpass ngayon?"
 str_install: I-install
@@ -113,3 +113,4 @@ str_at_event_location: Ikaw ay nasa epesyal na kaganapan.
 str_new_version_failed: Nabigo ang pag-install ng bagong bersyon. Maaari mo pa 
   ring i-install ito muli gamit ng Universal Updater o QR-Code.
 str_enter_event_location: Sigurado ka ba na gusto mong sumali sa kaganapan "%s"?
+str_report_list_empty: Ang listahan ng ulat ay walang laman.
