@@ -110,3 +110,4 @@ str_new_version_failed: Falha na atualização. Você ainda pode instalar pelo
 str_enter_event_location: Tem certeza de que deseja participar do evento “%s”?
 str_at_event_location: Você está em um evento especial.
 str_artist_copyright: Arte © %s
+str_report_list_empty: A lista de denúncias está vazia.
