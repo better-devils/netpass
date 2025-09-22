@@ -25,8 +25,8 @@ str_at_catcafe: Vous êtes au Café à chats.
 str_language: Français
 str_system_language: Langue Système
 str_language_pick: 'Langue:'
-str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois d'affilée
-  !
+str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois 
+  d'affilée !
 str_report_user: Signaler un utilisateur
 str_report_user_hint: Signaler "%s"
 str_cancel: Annuler
@@ -37,8 +37,8 @@ str_back_alley_pay: Acheter un StreetPass {playcoin}%d
 str_toggle_titles: Trieur de Trocs
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
-str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les trocs
-  StreetPass.
+str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les 
+  trocs StreetPass.
 str_check_inboxes: Vérifier le courrier
 str_write_patches: Écrire des corrections SPR
 str_clear_spr_cache: Supprimer le cache SPR
@@ -57,18 +57,19 @@ str_update_patches: Mettre les rustines à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
 str_report_source: 'Source: %s'
-str_update_patches_desc: Pour installer correctement NetPass, quelques fichiers mettant
-  à jour le sysmodule vont maintenant être créées. Pour que celles-ci fonctionnent,
-  vous devez activer «Enable loading external FIRMs and modules» dans les réglages
-  de Luma3DS. Pour y accéder, éteignez la console et maintenez {select_button} enfoncé
-  pendant que la console s'allume {power_button}. Vous pouvez faire cela après l’instalation
-  des rustines.
-str_integrations_message: Les intégrations tierces ne sont pas gérées par NetPass.
-  Utilisez-les à vos risques et périls !
-str_update_patches_poweroff_desc: Mise à jour terminée ! Votre console va maintenant
-  redémarrer.
-str_update_patches_error_desc: Un problème est survenu pendant l'installation des
-  rustines. Merci de bien vouloir le signaler sur GitLab, GBAtemp ou Discord. https://netpass.cafe/discord
+str_update_patches_desc: Pour installer correctement NetPass, quelques fichiers 
+  mettant à jour le sysmodule vont maintenant être créées. Pour que celles-ci 
+  fonctionnent, vous devez activer «Enable loading external FIRMs and modules» 
+  dans les réglages de Luma3DS. Pour y accéder, éteignez la console et maintenez
+  {select_button} enfoncé pendant que la console s'allume {power_button}. Vous 
+  pouvez faire cela après l’instalation des rustines.
+str_integrations_message: Les intégrations tierces ne sont pas gérées par 
+  NetPass. Utilisez-les à vos risques et périls !
+str_update_patches_poweroff_desc: Mise à jour terminée ! Votre console va 
+  maintenant redémarrer.
+str_update_patches_error_desc: Un problème est survenu pendant l'installation 
+  des rustines. Merci de bien vouloir le signaler sur GitLab, GBAtemp ou 
+  Discord. https://netpass.cafe/discord
 str_settings_about: À propos
 str_about_lead_dev: Développeur principal
 str_about_reports: Système de signalement
@@ -81,24 +82,24 @@ str_about_netpass_community: La communauté NetPass
 str_scan_qr: Scanner le QR Code
 str_x_switch_camera: '{x_button} Changer de caméra'
 str_prompt_verify: Êtes-vous sûr de vouloir vérifier cette 3DS ?
-str_about_special_thanks_txt: La communauté homebrew de la 3DS pour tout le travail
-  d'ingénierie inversée et de documentation
-str_about_production_cat: Chat de la production
+str_about_special_thanks_txt: La communauté homebrew de la 3DS pour tout le 
+  travail d'ingénierie inversée et de documentation
+str_about_production_cat: Produchat
 str_welcome: Bienvenue sur NetPass
 str_view_privacy: Voir la pol. de confidentialité
 str_view_rules: Voir les règles
-str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les règles
-  et la politique de confidentialité.
+str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les 
+  règles et la politique de confidentialité.
 str_continue: Continuer
 str_bad_os_version: "Votre 3DS nécessite la version 11.15.0 ou plus pour pouvoir utiliser
   NetPass. Malheureusement, vous semblez avoir une version plus ancienne. Veuillez
   mettre à jour et redémarrer NetPass.\n\nAppuyer sur une touche pour quitter"
-str_update_patches_poweroff_clear_desc: Rustines supprimées ! Votre console va maintenant
-  redémarrer.
+str_update_patches_poweroff_clear_desc: Rustines supprimées ! Votre console va 
+  maintenant redémarrer.
 str_bg_music: Musique de fond
 str_prompt_dl_pass: Êtes-vous certain de vouloir télécharger cette rencontre ?
-str_report_integration: Ce message provient d'une intégration. Pour le signaler, demander
-  à l'équipe de modération de l'intégration.
+str_report_integration: Ce message provient d'une intégration. Pour le signaler,
+  demander à l'équipe de modération de l'intégration.
 str_skip: Passer
 str_install: Installer
 str_remove: Déinstaller
@@ -111,5 +112,6 @@ str_date_time: '%d/%m/%Y %H:%M:%S'
 str_at_event_location: Vous êtes à un événement spécial.
 str_artist_copyright: Illustration par %s ©
 str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
-str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez toujours
-  l'actualiser via Universal Updater ou par QR Code.
+str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez 
+  toujours l'actualiser via Universal Updater ou par QR Code.
+str_report_list_empty: La liste des signalements est vide.
