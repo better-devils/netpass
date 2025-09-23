@@ -113,3 +113,4 @@ str_enter_event_location: Opravdu chcete vstoupit do události "%s"?
 str_at_event_location: Jste na speciální události.
 str_new_version_failed: Instalace nové verze se nezdařila. Instalaci můžete však
   vždy znovu provést přes Universal Updater nebo naskenováním QR kódu.
+str_report_list_empty: Seznam hlášení je prázdný.
