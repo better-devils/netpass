@@ -13,9 +13,7 @@ str_at_mall: 'ショッピングモールに滞在中。'
 str_exit: '終了する'
 str_settings: '設定'
 str_download_data: 'サーバーから自分のデータをダウンロードする'
-str_delete_data: 'サーバーから自分のデータを
-
-  消去する'
+str_delete_data: 'サーバーから自分のデータを消去する'
 str_back: '戻る'
 str_language: '日本語'
 str_goto_beach: 'ビーチへ出かける'
@@ -60,7 +58,7 @@ str_update_patches_desc:
   NetPassを正しくインストールするために、sysmoduleパッチが作成されます。これらを動作させるには、lumasのコンフィギュレーションで 
   「Enable loading external FIRMs and modules 
   」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押してください。パッチを書き込んだ後でもできます。
-str_integrations_message: "第三者のインテグレーションはNetPassのモデレーション以外です。\n自己責任で使ってください！"
+str_integrations_message: "第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください！"
 str_integrations: インテグレーション
 str_report_source_unknown: 未知元
 str_report_source: '元：%s'
@@ -97,7 +95,7 @@ str_date: '%Y年%m月%d日(%a曜日)'
 str_date_time: '%Y年%m月%d日(%a曜日) %p%I時%M分%S秒'
 str_at_event_location: 特別なイベントにいます。
 str_artist_copyright: アート作品© %s
-str_banned: "あなたは NetPass の使用を禁止されています。\n理由：%s\n禁止開始日：%s\n禁止終了日：%s"
+str_banned: "あなたは NetPass の使用を禁止されています。理由：\n%s\n禁止開始日：%s\n禁止終了日：%s"
 str_new_version: "新しいNetPassの更新があります\nv%d.%d.%d!\n\n今からNetPassを更新しますか？"
 str_enter_event_location: イベント"%s"に参加しますか？
 str_new_version_failed: 新しいバージョンをインストールするのが失敗しました。またUniversal 
