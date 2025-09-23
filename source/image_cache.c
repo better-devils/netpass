@@ -67,6 +67,6 @@ void get_background_image(const char* name, C2D_SpriteSheet* spr, C2D_Image* img
 	if (access(filename, R_OK) == 0 && loadFileJpeg(img, filename)) return;
 	snprintf(filename, 120, CUSTOM_BACKGROUND_DIR "%s.png", name);
 	if (access(filename, R_OK) == 0 && loadFilePng(img, filename)) return;
-	snprintf(filename, 120, "romfs:/gfx/%s,t3x", name);
+	snprintf(filename, 120, "romfs:/gfx/%s.t3x", name);
 	*spr = C2D_SpriteSheetLoad(filename);
 }
