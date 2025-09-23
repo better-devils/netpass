@@ -25,8 +25,8 @@ str_at_catcafe: 'Du är i Kattkaféet.'
 str_system_language: 'Systemspråk'
 str_language_pick: 'Språk:'
 str_no_location_twice: 'Du kan inte gå till samma plats två gånger i rad!'
-str_report_user: 'Rapportera en användare'
-str_report_user_hint: 'Rapportera "%s"'
+str_report_user: 'Anmäl en användare'
+str_report_user_hint: 'Anmäl "%s"'
 str_cancel: 'Avbryt'
 str_submit: 'Skicka'
 str_back_alley: 'Bakgränd'
@@ -68,7 +68,7 @@ str_report_source_unknown: "Okänd källa"
 str_settings_misc: Övrigt
 str_settings_about: Om
 str_about_lead_dev: Ledande Utvecklare
-str_about_reports: Rapportera System
+str_about_reports: Anmälningssystem
 str_about_graphics: Konst och Grafik
 str_about_music: Musik
 str_about_localisation: Språkanpassning
