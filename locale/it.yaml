@@ -1,4 +1,4 @@
-str_loading: "Caricamento...    "
+str_loading: "Caricamento....    "
 str_libcurl_error: "Errore di libCURL (%d): %s"
 str_libcurl_date_and_time: 'Assicurati che la data e l''ora della tua console siano
   impostate correttamente!'
