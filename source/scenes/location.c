@@ -102,7 +102,7 @@ void N(init)(Scene* sc) {
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	if (_data->spr) {
-		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, location.id);
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
 		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	} else if (_data->background.tex) {
 		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
