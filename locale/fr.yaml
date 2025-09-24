@@ -1,5 +1,5 @@
 str_loading: "Chargement    "
-str_libcurl_error: "Erreur libCURL (%d) : %s"
+str_libcurl_error: "Erreur libCURL (%d) : %s"
 str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien réglées
   !'
 str_httpstatus_error: 'Code de statut HTTP %d'
@@ -24,7 +24,7 @@ str_goto_catcafe: Aller au Café à chats
 str_at_catcafe: Vous êtes au Café à chats.
 str_language: Français
 str_system_language: Langue Système
-str_language_pick: 'Langue :'
+str_language_pick: 'Langue :'
 str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois 
   d'affilée !
 str_report_user: Signaler un utilisateur
@@ -42,21 +42,21 @@ str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les
 str_check_inboxes: Vérifier le courrier
 str_write_patches: Écrire des corrections SPR
 str_clear_spr_cache: Supprimer le cache SPR
-str_report_mario_kart_7_greeting: 'Salutation : %s'
-str_report_mii_plaza_country: 'Pays : %s - %s'
-str_report_mii_plaza_greeting: 'Salutation : %s'
-str_report_mii_plaza_custom_reply: 'Leur réponse personnalisée : %s'
-str_report_tomodachi_life_island_name: "Nom de l'île : %s"
+str_report_mario_kart_7_greeting: 'Salutation : %s'
+str_report_mii_plaza_country: 'Pays : %s - %s'
+str_report_mii_plaza_greeting: 'Salutation : %s'
+str_report_mii_plaza_custom_reply: 'Leur réponse personnalisée : %s'
+str_report_tomodachi_life_island_name: "Nom de l'île : %s"
 str_b_go_back: '{b_button} Retour'
-str_report_mii_name: 'Nom du Mii : %s'
-str_report_mii_plaza_last_game: 'Dernière Partie : %s'
-str_report_mii_plaza_custom_message: 'Votre propre salutation : %s'
+str_report_mii_name: 'Nom du Mii : %s'
+str_report_mii_plaza_last_game: 'Dernière Partie : %s'
+str_report_mii_plaza_custom_message: 'Votre propre salutation : %s'
 str_integrations: Intégrations
 str_b_cancel: '{b_button} Annuler'
 str_update_patches: Mettre les rustines à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
-str_report_source: 'Source : %s'
+str_report_source: 'Source : %s'
 str_update_patches_desc: Pour installer correctement NetPass, quelques fichiers 
   mettant à jour le sysmodule vont maintenant être créées. Pour que celles-ci 
   fonctionnent, vous devez activer «Enable loading external FIRMs and modules» 
@@ -103,10 +103,10 @@ str_report_integration: Ce message provient d'une intégration. Pour le signaler
 str_skip: Passer
 str_install: Installer
 str_remove: Déinstaller
-str_new_version: "Nouvelle version de NetPass disponible:\nv%d.%d.%d !\n\nVoulez-vous
+str_new_version: "Nouvelle version de NetPass disponible :\nv%d.%d.%d !\n\nVoulez-vous
   mettre NetPass à jour maintenant ?"
-str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
-  ban : %s\nFin du ban : %s"
+str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
+  ban : %s\nFin du ban : %s"
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_at_event_location: Vous êtes à un événement spécial.
