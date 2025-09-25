@@ -52,3 +52,65 @@ str_report_tomodachi_life_island_name: 'Sala nosaukums: %s'
 str_b_go_back: '{b_button} Atgriezties atpakaļ'
 str_b_cancel: '{b_button} Atcelt'
 str_a_ok: '{a_button} Labi'
+str_update_patches: Atjaunināt labojumus
+str_update_patches_desc: Lai pareizi instalētu NetPass, tagad tiks izveidoti 
+  daži sysmodule labojumi. Lai tie darbotos, jums ir jāaktivizē "Enable loading 
+  external FIRMs and modules" Luma3DS iestatījumos. Lai atvērtu iestatījumus, 
+  izslēdziet konsoli, pieturat {select_button} ieslēdzot konsoli ar 
+  {power_button} . To var izdarīt pēc tam, kad labojumi ir uzrakstīti.
+str_update_patches_error_desc: Kaut kas notika greizi atjaunojot labojumus. 
+  Lūdzu ziņojiet par šo problēmu GitLab, GBAtemp vai uz Discord. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Atjauninājumu instalēšana veiksmīgi pabeigta! 
+  Jūsu konsole tagad tiks pārstartēta.
+str_integrations: Integrācijas
+str_integrations_message: Trešo personu integrācijas nav NetPass moderācijas 
+  pakļautas. Lietojiet uz savu risku!
+str_report_source: 'Avots: %s'
+str_report_source_unknown: Nezināms avots
+str_settings_misc: Citas
+str_settings_about: Par
+str_about_lead_dev: Vadošais izstrādātājs
+str_about_reports: Ziņošanas sistēma
+str_about_graphics: Māksla un grafika
+str_about_music: Mūzika
+str_about_localisation: Lokalizācija
+str_about_netpass_community: NetPass kopiena
+str_about_special_thanks: Īpašs paldies
+str_about_special_thanks_txt: 3DS homebrew kopiena par visiem reversās 
+  inženierijas un dokumentācijam
+str_scan_qr: Skenējiet QR kodu
+str_x_switch_camera: '{x_button} Mainīt kameru'
+str_prompt_verify: Vai tiešām vēlaties apstiprināt šo 3DS?
+str_welcome: Laipni lūdzam NetPass
+str_welcome_message: Pirms sākat izmantot NetPass, lūdzu, izlasiet un piekrītat 
+  mūsu noteikumiem un privātuma politikai.
+str_view_rules: Skatīt noteikumus
+str_view_privacy: Skatīt privātuma politiku
+str_continue: Turpināt
+str_bad_os_version: "NetPass ir nepieciešams 3DS OS 11.15.0 vai jaunāka versija. Izskatās
+  ka jūs izmantojat vecāku versiju. Lūdzu, atjauniniet un pēc tam atkārtoti palaidiet
+  NetPass.\n\nNospiediet jebkuru taustiņu, lai izietu"
+str_update_patches_poweroff_clear_desc: Labojumi veiksmīgi noņemti! Jūsu konsole
+  tagad tiks pārstartēta.
+str_bg_music: Fona mūzika
+str_prompt_dl_pass: Vai tiešām vēlaties lejupielādēt šo pasi?
+str_report_integration: Šis ziņojums ir saņemts no integrācijas. Lai to ziņotu, 
+  lūdzu sazinieties ar minētās integrācijas moderatoru komandu.
+str_skip: Izlaist
+str_install: Instalēt
+str_remove: Noņemt
+str_banned: "Jums ir aizliegts lietot NetPass. Iemesls:\n%s\n\nAizlieguma sākums:
+  %s\nAizlieguma beigas: %s"
+str_new_version: "Pieejama jauna NetPass versija:\nv%d.%d.%d!\n\nVai vēlaties atjaunot
+  NetPass tagad?"
+str_enter_event_location: Vai tiešām vēlaties piedalīties pasākumā "%s"?
+str_at_event_location: Tu atrodies īpašā pasākumā.
+str_artist_copyright: Mākslas darbs © %s
+str_new_version_failed: Jaunās versijas instalēšana neizdevās. Jūs varat to 
+  instalēt izmantojot Universal Updater vai caur QR kodu.
+str_report_list_empty: Ziņojumu saraksts ir tukšs.
+str_report_mii_name: 'Mii vārds: %s'
+str_report_mario_kart_7_greeting: 'Sveiciens: %s'
+str_report_mii_plaza_last_game: 'Pēdējā spēle: %s'
+str_about_production_cat: Produkcijas kaķis
