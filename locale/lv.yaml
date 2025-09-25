@@ -44,3 +44,11 @@ str_write_patches: ""
 str_clear_spr_cache: ""
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_report_mii_plaza_country: 'Valsts: %s - %s'
+str_report_mii_plaza_greeting: 'Sveiciens: %s'
+str_report_mii_plaza_custom_message: 'Jūsu personalizēts ziņojums: %s'
+str_report_mii_plaza_custom_reply: 'Viņu pielāgota atbilde: %s'
+str_report_tomodachi_life_island_name: 'Sala nosaukums: %s'
+str_b_go_back: '{b_button} Atgriezties atpakaļ'
+str_b_cancel: '{b_button} Atcelt'
+str_a_ok: '{a_button} Labi'
