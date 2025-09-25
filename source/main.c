@@ -20,7 +20,6 @@
 #include <3ds.h>
 #include <citro2d.h>
 #include <stdlib.h>
-#include "debug.h"
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
@@ -141,7 +140,7 @@ void initial_load(void) {
 	// first, we import the locally stored passes for reports to work
 	reportInit();
 	// next, we gotta wait for having internet
-	DEBUG_PRINTF("Waiting internet\n");
+	logln(DEBUG, "Waiting internet\n");
 	char url[50];
 	snprintf(url, 50, "%s/ping2", BASE_URL);
 	int check_count = 0;
@@ -211,7 +210,7 @@ int main(int nargs, char** argv) {
 	_e(romfsInit());
 	init_main_thread_prio();
 
-	DEBUG_PRINTF("DEBUG ON\n");
+	logln(DEBUG, "DEBUG ON");
 
 	_e(curlInit());
 	srand(time(NULL));

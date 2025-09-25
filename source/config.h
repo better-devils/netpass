@@ -34,6 +34,7 @@ typedef struct {
 	u32 title_ids_ignored[24];
 	bool bg_music;
 	enum LogOutput log_output;
+	enum LogLevel log_level;
 } Config;
 
 void addIgnoredTitle(u32 title_id);

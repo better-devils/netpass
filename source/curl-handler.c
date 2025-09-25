@@ -21,7 +21,6 @@
 #include "api.h"
 #include "hmac_sha256/hmac_sha256.h"
 #include "utils.h"
-#include "debug.h"
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
@@ -243,7 +242,7 @@ void curl_multi_loop_request_setup(int i) {
 				 "3ds-netpass-version: v%d.%d.%d",
 				 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #endif
-		DEBUG_PRINTF("header_netpass_version: %s\n", header_netpass_version);
+		logln(DEBUG, "header_netpass_version: %s\n", header_netpass_version);
 		headers = curl_slist_append(headers, header_netpass_version);
 	}
 
