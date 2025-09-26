@@ -1,4 +1,4 @@
-str_loading: "Iekraušana…    "
+str_loading: "Iekraušana    "
 str_libcurl_error: "libCURL kļūda (%d): %s"
 str_libcurl_date_and_time: 'Pārliecinieties, ka jūsu sistēmas datums un laiks ir iestatīti
   pareizi!'
