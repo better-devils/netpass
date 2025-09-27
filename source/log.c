@@ -34,7 +34,6 @@ void logInit() {
 	if (config.log_output == File) {
 		log_file = fopen(LOG_FILE_NAME, "w");
 		if (!log_file) {
-			config.log_output = Disabled;
 			_e_errno();
 			return;
 		}
@@ -48,7 +47,7 @@ void logExit() {
 }
 
 void logln(enum LogLevel level, const char *restrict format, ...) {
-	if (config.log_output == Disabled || !log_file || config.log_level < level) return;
+	if (!log_file || config.log_level < level) return;
 	va_list args;
 	va_start(args, format);
 	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
