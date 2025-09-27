@@ -25,7 +25,8 @@ str_goto_catcafe: 'Пiти до котячоï кав''ярнi'
 str_at_catcafe: 'Ви в котячiй кав''ярнi.'
 str_system_language: Системна мова
 str_language_pick: 'Мова:'
-str_no_location_twice: Не можна вiдвiдувати одну й ту саму локацiю двiчi поспiль!
+str_no_location_twice: Не можна вiдвiдувати одну й ту саму локацiю двiчi 
+  поспiль!
 str_report_user: Поскаржитися на користувача
 str_report_user_hint: Поскаржитися на "%s"
 str_cancel: Скасувати
@@ -35,7 +36,8 @@ str_back_alley_message: Увiрвемо-но ще трохи "пасiв"!
 str_back_alley_pay: Придбати "пас" {playcoin}%d
 str_check_inboxes: Перевiрити вхiднi данi
 str_toggle_titles: Перемкнути iгри
-str_toggle_titles_message: Натиснiть {a_button}, щоб почати або зупинити обмiн "пасами".
+str_toggle_titles_message: Натиснiть {a_button}, щоб почати або зупинити обмiн 
+  "пасами".
 str_toggle_titles_on: (Так)
 str_toggle_titles_off: (Нi)
 str_write_patches: Записати патчi
@@ -50,8 +52,8 @@ str_report_mii_plaza_custom_reply: 'Ïхня спецiальна вiдповiд�
 str_report_tomodachi_life_island_name: 'Назва острову: %s'
 str_b_go_back: '{b_button} Назад'
 str_integrations: Iнтеграцiï
-str_integrations_message: NetPass не модерує iнтеграцiï вiд третiх осiб. Використовуйте
-  ïх на власний ризик!
+str_integrations_message: NetPass не модерує iнтеграцiï вiд третiх осiб. 
+  Використовуйте ïх на власний ризик!
 str_update_patches_error_desc: 'При оновленнi патчiв щось пiшло не так. Будь ласка,
   повiдомте про цю проблему на GitLab, GBAtemp або в Discord: netpass.cafe/discord'
 str_report_source: 'Джерело: %s'
@@ -59,12 +61,14 @@ str_report_source_unknown: Невiдоме джерело
 str_b_cancel: '{b_button} Скасувати'
 str_a_ok: '{a_button} ОК'
 str_update_patches: Оновлення патчiв
-str_update_patches_poweroff_desc: Патчi успiшно оновлено! Зараз ваша консоль перезавантажиться.
-str_update_patches_desc: Щоб установити NetPass належним чином, зараз буде створено
-  деякi патчi системних модулiв. Щоби вони працювали, потрiбно ввiмкнути опцiю "Enable
-  loading external FIRMS and modules" у налаштуваннях Luma3DS. Щоби потрапити до цих
-  налаштувань, вимкнiть консоль, а потiм увiмкнiть {power_button} ïï, утримуючи {select_button}.
-  Це можна зробити пiсля того, як патчi будуть записанi.
+str_update_patches_poweroff_desc: Патчi успiшно оновлено! Зараз ваша консоль 
+  перезавантажиться.
+str_update_patches_desc: Щоб установити NetPass належним чином, зараз буде 
+  створено деякi патчi системних модулiв. Щоби вони працювали, потрiбно 
+  ввiмкнути опцiю "Enable loading external FIRMS and modules" у налаштуваннях 
+  Luma3DS. Щоби потрапити до цих налаштувань, вимкнiть консоль, а потiм 
+  увiмкнiть {power_button} ïï, утримуючи {select_button}. Це можна зробити пiсля
+  того, як патчi будуть записанi.
 str_settings_about: Про застосунок
 str_about_reports: Система скарг
 str_about_music: Музика
@@ -75,26 +79,26 @@ str_about_production_cat: Мила кицька
 str_about_lead_dev: Лiдер розробки
 str_settings_misc: Iнше
 str_about_graphics: Iлюстрацiï та графiка
-str_about_special_thanks_txt: Homebrew-спiльнотi 3DS за весь реверс-iнжинiринг та
-  документацiю
+str_about_special_thanks_txt: Homebrew-спiльнотi 3DS за весь реверс-iнжинiринг 
+  та документацiю
 str_scan_qr: Вiдсканувати QR-код
 str_x_switch_camera: '{x_button} Перемкнути камеру'
 str_prompt_verify: Ви впевненi, що хочете пiдтвердити цю 3DS?
 str_welcome: Вiтаємо у NetPass
-str_welcome_message: Перед запуском NetPass, будь ласка, прочитайте та приймiть нашi
-  правила та полiтику конфiденцiйностi.
+str_welcome_message: Перед запуском NetPass, будь ласка, прочитайте та приймiть 
+  нашi правила та полiтику конфiденцiйностi.
 str_view_rules: Переглянути правила
 str_view_privacy: Переглянути полiтику конфiденцiйностi
 str_continue: Далi
 str_bad_os_version: "Для правильноï працi NetPass потребує операцiйну систему 3DS
   версiï 11.15.0 або новiшу. На жаль, здається, що ви використовуєте старiшу версiю.
   Будь ласка, оновiть ïï та знову запустiть NetPass.\n\nНатиснiть будь-що для виходу"
-str_update_patches_poweroff_clear_desc: Патчi успiшно видалено! Зараз ваша консоль
-  перезавантажиться.
+str_update_patches_poweroff_clear_desc: Патчi успiшно видалено! Зараз ваша 
+  консоль перезавантажиться.
 str_bg_music: Фонова музика
 str_remove: Видалити
-str_report_integration: Джерелом цього повiдомлення є iнтеграцiя. Щоб поскаржитися
-  на нього, звернiться до команди модераторiв цiєï iнтеграцiï.
+str_report_integration: Джерелом цього повiдомлення є iнтеграцiя. Щоб 
+  поскаржитися на нього, звернiться до команди модераторiв цiєï iнтеграцiï.
 str_skip: Пропустити
 str_install: Установити
 str_prompt_dl_pass: Ви впевненi, що хочете скачати цей "пас"?
@@ -104,8 +108,8 @@ str_enter_event_location: Упевненi, що бажаєте прийняти 
 str_artist_copyright: Витвiр © %s
 str_new_version: "Доступна нова версiя NetPass:\nv%d.%d.%d!\n\nБажаєте оновити NetPass
   зараз?"
-str_new_version_failed: Не вдалося установити нову версiю. Ви можете все одно установити
-  ïï через Universal Updater, або через QR-код.
+str_new_version_failed: Не вдалося установити нову версiю. Ви можете все одно 
+  установити ïï через Universal Updater, або через QR-код.
 str_banned: "Ви забаненi у NetPass. Причина:\n%s\n\nПочаток бану: %s\nКiнець бану:
   %s"
 str_at_event_location: Ви на спецiальнiй подiï.

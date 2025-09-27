@@ -116,7 +116,8 @@ CODEGEN_OUTPUTS	= codegen/lang_strings.h codegen/lang_strings.c
 
 # Cppcheck options
 CPPCHECK_FLAGS = --enable=warning,unusedFunction,performance,portability,missingInclude --inline-suppr --std=c11
-CPPCHECK_FLAGS += --language=c --quiet --suppressions-list=.cppcheck.suppress --template=gcc --check-level=exhaustive
+CPPCHECK_FLAGS += --quiet --language=c --suppressions-list=.cppcheck.suppress --template=gcc --check-level=exhaustive
+CPPCHECK_FLAGS += -isource/lodepng -isource/hmac_sha256 -isource/quirc -i source/nanojpeg.c
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

@@ -49,15 +49,15 @@ str_report_tomodachi_life_island_name: "Numm Insel: %s"
 str_b_go_back: "{b_button} Erëm"
 str_b_cancel: "{b_button} Ofsoen"
 str_a_ok: "{a_button} Okee"
-str_update_patches: "Aktualiséiere Patches"
+str_update_patches: "Aktualiséiere Lopinnen"
 str_update_patches_desc: "Fir NetPass richteg z'installéieren, ginn e puer Sysmodule
-  Patches elo erstallt. Fir déi ze schaffen, musst Dir \"Enable loading external FIRMs
-  and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen ze
-  kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
-  d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Patches geschriwwe sinn."
-str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Patches-Aktualiséiere.
+  Lopinnen elo erstallt. Fir déi ze schaffen, musst Dir \"Enable loading external
+  FIRMs and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen
+  ze kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
+  d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Lopinne geschriwwe sinn."
+str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Lopinnen-Aktualiséiere.
   Gewisen wannechgelift dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
-str_update_patches_poweroff_desc: "Aktualiséiere Patches erfollegräich! Är Konsole
+str_update_patches_poweroff_desc: "Aktualiséiere Lopinnen erfollegräich! Är Konsole
   wäert elo nei ufänken."
 str_integrations: "Integratioun"
 str_integrations_message: "Drëttpartei Integratiounen sinn ausserhalb vun der NetPass
@@ -73,7 +73,7 @@ str_about_music: "Musek"
 str_about_localisation: "Iwwersetzungen"
 str_about_netpass_community: "D'NetPass Gemeinschaft"
 str_about_special_thanks: "Mercien"
-str_about_special_thanks_txt: "D'3DS Homebrew-Gemeinschaft fir all Rétro-konstruktion
+str_about_special_thanks_txt: "D'3DS Homebrew-Gemeinschaft fir all Reverse-engineering
   an Dokumentatioun"
 str_about_production_cat: "Produktioun-Muuss"
 str_scan_qr: "QR-Code scannen"
@@ -84,7 +84,7 @@ str_welcome_message: "Ier Dir NetPass ufänkt, liest eis Regelen a Privatsphär 
 str_view_rules: "Gesi Regelen"
 str_view_privacy: "Gesi Privatsphär Politik"
 str_continue: "Weiderfueren"
-str_update_patches_poweroff_clear_desc: Patches erfollegräich geläscht! Är Konsole
+str_update_patches_poweroff_clear_desc: Lopinnen erfollegräich geläscht! Är Konsole
   wäert elo demarréieren.
 str_bg_music: Hannergrondmusek
 str_bad_os_version: "NetPass erfuerdert 3DS OS 11.15.0 oder méi spéit fir richteg
@@ -98,3 +98,5 @@ str_install: Installéieren
 str_remove: Suppriméieren
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
+str_banned: "Dir sidd vum Netpass verbitt. Grond:\n%s\n\nUfank vum Verbuet: %s\nEnn
+  vum Verbuet: %s"

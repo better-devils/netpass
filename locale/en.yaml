@@ -1,6 +1,7 @@
 str_loading: "Loading    "
 str_libcurl_error: "libCURL error (%d): %s"
-str_libcurl_date_and_time: Make sure that your system's date and time are set correctly!
+str_libcurl_date_and_time: Make sure that your system's date and time are set 
+  correctly!
 str_httpstatus_error: HTTP status code %d
 str_3ds_error: 3DS error code %08lx
 str_at_home: You are at Home.
@@ -91,15 +92,20 @@ str_update_patches_poweroff_clear_desc: "Successfully removed patches! Your cons
   will now restart."
 str_bg_music: "BG Music"
 str_prompt_dl_pass: "Are you sure you want to download this pass?"
-str_report_integration: "This message is originating from an integration. To report it, please message the moderation team of said integration."
+str_report_integration: "This message is originating from an integration. To report
+  it, please message the moderation team of said integration."
 str_skip: "Skip"
 str_install: "Install"
 str_remove: "Remove"
-str_banned: "You are banned from using NetPass. Reason:\n%s\n\nBan start: %s\nBan end: %s"
+str_banned: "You are banned from using NetPass. Reason:\n%s\n\nBan start: %s\nBan
+  end: %s"
 str_date: "%d %b %Y"
 str_date_time: "%d %b %Y %I:%M:%S%p"
-str_new_version: "New NetPass Version available:\nv%d.%d.%d!\n\nDo you want to update NetPass now?"
+str_new_version: "New NetPass version available:\nv%d.%d.%d!\n\nDo you want to update
+  NetPass now?"
 str_enter_event_location: "Are you sure you want to enter the event \"%s\"?"
 str_at_event_location: "You are at a special event."
 str_artist_copyright: "Artwork © %s"
-str_new_version_failed: "Installing the new version failed. You can still install it again via Universal Updater or via QR-Code."
+str_new_version_failed: "Installing the new version failed. You can still install
+  it again via Universal Updater or via QR-Code."
+str_report_list_empty: "The report list is empty."

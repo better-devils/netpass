@@ -37,7 +37,8 @@ str_check_inboxes: Проверить входящие данные
 str_toggle_titles: Переключить игры
 str_toggle_titles_on: (Вкл)
 str_toggle_titles_off: (Выкл)
-str_toggle_titles_message: Нажмите {a_button}, чтобы начать или остановить обмен "пассами".
+str_toggle_titles_message: Нажмите {a_button}, чтобы начать или остановить обмен
+  "пассами".
 str_report_mii_name: 'Имя Mii: %s'
 str_report_mii_plaza_greeting: 'Приветствие: %s'
 str_write_patches: Записать патчи
@@ -57,22 +58,23 @@ str_a_ok: '{a_button} ОК'
 str_update_patches: Обновление патчей
 str_update_patches_error_desc: 'При обновлении патчей что-то пошло не так. Пожалуйста,
   сообщите об этой проблеме на GitLab, GBAtemp или в Discord: netpass.cafe/discord'
-str_update_patches_poweroff_desc: Патчи успешно обновлены! Сейчас ваша консоль перезагрузится.
-str_update_patches_desc: Для полноценной установки NetPass сейчас будут созданы некоторые
-  патчи системных модулей. Чтобы они работали, необходимо включить опцию "Enable loading
-  external FIRMs and modules" в настройках Luma3DS. Чтобы попасть в эти настройки,
-  выключите консоль, а затем включите {power_button} её, зажимая {select_button}.
-  Это можно сделать после записи патчей.
-str_integrations_message: NetPass не модерирует интеграции от третьих лиц. Используйте
-  их на свой риск!
+str_update_patches_poweroff_desc: Патчи успешно обновлены! Сейчас ваша консоль 
+  перезагрузится.
+str_update_patches_desc: Для полноценной установки NetPass сейчас будут созданы 
+  некоторые патчи системных модулей. Чтобы они работали, необходимо включить 
+  опцию "Enable loading external FIRMs and modules" в настройках Luma3DS. Чтобы 
+  попасть в эти настройки, выключите консоль, а затем включите {power_button} 
+  её, зажимая {select_button}. Это можно сделать после записи патчей.
+str_integrations_message: NetPass не модерирует интеграции от третьих лиц. 
+  Используйте их на свой риск!
 str_settings_about: О приложении
 str_about_reports: Система жалоб
 str_about_graphics: Иллюстрации и графика
 str_about_music: Музыка
 str_about_localisation: Локализация
 str_about_netpass_community: Сообщество NetPass
-str_about_special_thanks_txt: Homebrew-сообществу 3DS за весь проделанный реверс-инжиниринг
-  и документацию
+str_about_special_thanks_txt: Homebrew-сообществу 3DS за весь проделанный 
+  реверс-инжиниринг и документацию
 str_about_production_cat: Милая кошечка
 str_settings_misc: Прочее
 str_about_special_thanks: Отдельная благодарность
@@ -81,8 +83,8 @@ str_scan_qr: Отсканировать QR-код
 str_prompt_verify: Вы уверены, что хотите подтвердить эту 3DS?
 str_x_switch_camera: '{x_button} Переключить камеру'
 str_welcome: Добро пожаловать в NetPass
-str_welcome_message: Перед запуском NetPass, пожалуйста, прочитайте и примите наши
-  правила и политику конфиденциальности.
+str_welcome_message: Перед запуском NetPass, пожалуйста, прочитайте и примите 
+  наши правила и политику конфиденциальности.
 str_view_rules: Просмотреть правила
 str_view_privacy: Просмотреть политику конфиденциальности
 str_continue: Далее
@@ -90,11 +92,11 @@ str_bad_os_version: "Для правильной работы NetPass требу
   3DS версии 11.15.0 или выше. К сожалению, похоже, что вы используете более старую
   версию. Пожалуйста, обновите её, а затем запустите NetPass снова.\n\nНажмите любую
   кнопку для выхода"
-str_update_patches_poweroff_clear_desc: Патчи успешно удалены! Сейчас ваша консоль
-  перезагрузится.
+str_update_patches_poweroff_clear_desc: Патчи успешно удалены! Сейчас ваша 
+  консоль перезагрузится.
 str_bg_music: Фоновая музыка
-str_report_integration: Источником этого сообщения является интеграция. Чтобы пожаловаться
-  на него, обратитесь к команде модераторов этой интеграции.
+str_report_integration: Источником этого сообщения является интеграция. Чтобы 
+  пожаловаться на него, обратитесь к команде модераторов этой интеграции.
 str_skip: Пропустить
 str_install: Установить
 str_remove: Удалить
@@ -107,5 +109,5 @@ str_new_version: "Доступна новая версия NetPass:\nv%d.%d.%d!\
 str_banned: "Вы забанены в NetPass. Причина:\n%s\n\nНачало бана: %s\nКонец бана: %s"
 str_enter_event_location: Уверены, что хотите принять участие в событии "%s"?
 str_at_event_location: Вы на специальном событии.
-str_new_version_failed: Не удалось установить новую версию. Вы всё равно можете установить
-  её через Universal Updater или QR-код.
+str_new_version_failed: Не удалось установить новую версию. Вы всё равно можете 
+  установить её через Universal Updater или QR-код.

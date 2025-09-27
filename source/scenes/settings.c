@@ -37,6 +37,7 @@ typedef struct {
 	int selected_language;
 	float lang_width;
 	float bg_music_width;
+	char prev_music[20];
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
@@ -45,6 +46,10 @@ void N(init)(Scene* sc) {
 	memset(_data, 0, sizeof(N(DataStruct)));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
+	
+	getCurMusic(_data->prev_music);
+	playMusic("settings");
+	
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_toggle_titles);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_report_user);
@@ -105,6 +110,7 @@ void N(render)(Scene* sc) {
 
 void N(exit)(Scene* sc) {
 	if (_data) {
+		playMusic(_data->prev_music);
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}

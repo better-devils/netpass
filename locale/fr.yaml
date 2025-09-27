@@ -9,37 +9,37 @@ str_goto_train_station: 'Aller à la Gare'
 str_at_train_station: 'Vous êtes à la Gare.'
 str_goto_plaza: 'Aller à la Place'
 str_at_plaza: 'Vous êtes à la Place.'
-str_goto_mall: 'Aller au Centre Commercial'
+str_goto_mall: 'Aller au Centre commercial'
 str_at_mall: 'Vous êtes au Centre commercial.'
 str_exit: 'Quitter'
 str_settings: 'Paramètres'
-str_download_data: 'Télécharger données personnelles'
+str_download_data: 'Télécharger don. personnelles'
 str_delete_data: 'Effacer données personnelles'
 str_back: 'Retour'
 str_goto_beach: Aller à la Plage
 str_at_beach: Vous êtes à la Plage.
 str_goto_arcade: Aller à la Salle d'Arcade
 str_at_arcade: Vous êtes à la Salle d'Arcade.
-str_goto_catcafe: Aller au Café des chats
-str_at_catcafe: Vous êtes au Café des chats.
+str_goto_catcafe: Aller au Café à chats
+str_at_catcafe: Vous êtes au Café à chats.
 str_language: Français
 str_system_language: Langue Système
 str_language_pick: 'Langue :'
-str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois d'affilée
-  !
+str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois 
+  d'affilée !
 str_report_user: Signaler un utilisateur
 str_report_user_hint: Signaler "%s"
 str_cancel: Annuler
 str_submit: Envoyer
-str_back_alley_message: Allons obtenir plus de StreetPass !
+str_back_alley_message: Allons dénicher plus de StreetPass !
 str_back_alley: Ruelle
 str_back_alley_pay: Acheter un StreetPass {playcoin}%d
-str_toggle_titles: Sélectionner les Jeux
+str_toggle_titles: Trieur de Trocs
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
-str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les échanges
-  StreetPass.
-str_check_inboxes: Vérifier les boîtes de réception
+str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les 
+  trocs StreetPass.
+str_check_inboxes: Vérifier le courrier
 str_write_patches: Écrire des corrections SPR
 str_clear_spr_cache: Supprimer le cache SPR
 str_report_mario_kart_7_greeting: 'Salutation : %s'
@@ -50,26 +50,26 @@ str_report_tomodachi_life_island_name: "Nom de l'île : %s"
 str_b_go_back: '{b_button} Retour'
 str_report_mii_name: 'Nom du Mii : %s'
 str_report_mii_plaza_last_game: 'Dernière Partie : %s'
-str_report_mii_plaza_custom_message: 'Votre salutation personnalisée : %s'
+str_report_mii_plaza_custom_message: 'Votre propre salutation : %s'
 str_integrations: Intégrations
 str_b_cancel: '{b_button} Annuler'
-str_update_patches: Mettre les patches à jour
+str_update_patches: Mettre les rustines à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
 str_report_source: 'Source : %s'
-str_update_patches_desc: Pour installer correctement NetPass, des fichiers modifiant
-  le sysmodule vont maintenant être créées. Pour que celles-ci fonctionnent, vous
-  devez activer "Enable loading external FIRMs and modules" dans les réglages de Luma3DS.
-  Pour accéder aux réglages, éteignez la console et tenir {select_button} enfoncé
-  pendant que la console s'allume {power_button} . Vous pouvez faire cela après que
-  les modifications aient été écrites.
-str_integrations_message: Les intégrations tierces ne sont pas gérées par NetPass.
-  Utilisez-les à vos risques et périls !
-str_update_patches_poweroff_desc: Mise à jour des fichiers réussie ! Votre console
-  va maintenant redémarrer.
-str_update_patches_error_desc: Un problème est survenu pendant l'installation de la
-  mise à jour. S'il vous plaît, reporter le problème sur GitLab, GBAtemp ou Discord.
-  https://netpass.cafe/discord
+str_update_patches_desc: Pour installer correctement NetPass, quelques fichiers 
+  mettant à jour le sysmodule vont maintenant être créées. Pour que celles-ci 
+  fonctionnent, vous devez activer «Enable loading external FIRMs and modules» 
+  dans les réglages de Luma3DS. Pour y accéder, éteignez la console et maintenez
+  {select_button} enfoncé pendant que la console s'allume {power_button}. Vous 
+  pouvez faire cela après l’instalation des rustines.
+str_integrations_message: Les intégrations tierces ne sont pas gérées par 
+  NetPass. Utilisez-les à vos risques et périls !
+str_update_patches_poweroff_desc: Mise à jour terminée ! Votre console va 
+  maintenant redémarrer.
+str_update_patches_error_desc: Un problème est survenu pendant l'installation 
+  des rustines. Merci de bien vouloir le signaler sur GitLab, GBAtemp ou 
+  Discord. https://netpass.cafe/discord
 str_settings_about: À propos
 str_about_lead_dev: Développeur principal
 str_about_reports: Système de signalement
@@ -82,35 +82,36 @@ str_about_netpass_community: La communauté NetPass
 str_scan_qr: Scanner le QR Code
 str_x_switch_camera: '{x_button} Changer de caméra'
 str_prompt_verify: Êtes-vous sûr de vouloir vérifier cette 3DS ?
-str_about_special_thanks_txt: La communauté homebrew de la 3DS pour tout le travail
-  d'ingénierie inversée et de documentation
-str_about_production_cat: Chat de la production
+str_about_special_thanks_txt: La communauté homebrew de la 3DS pour tout le 
+  travail d'ingénierie inversée et de documentation
+str_about_production_cat: Produchat
 str_welcome: Bienvenue sur NetPass
 str_view_privacy: Voir la pol. de confidentialité
 str_view_rules: Voir les règles
-str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les règles
-  et la politique de confidentialité.
+str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les 
+  règles et la politique de confidentialité.
 str_continue: Continuer
-str_bad_os_version: "Votre 3DS doit être en 11.15 ou plus pour pouvoir utiliser NetPass.
-  Malhereusement, vous semblez avoir une version plus ancienne. Veuillez mettre à
-  jour et redémarrer NetPass.\n\nAppuyer sur une touche pour quitter"
-str_update_patches_poweroff_clear_desc: Fichiers supprimés ! Votre console va maintenant
-  redémarrer.
+str_bad_os_version: "Votre 3DS nécessite la version 11.15.0 ou plus pour pouvoir utiliser
+  NetPass. Malheureusement, vous semblez avoir une version plus ancienne. Veuillez
+  mettre à jour et redémarrer NetPass.\n\nAppuyer sur une touche pour quitter"
+str_update_patches_poweroff_clear_desc: Rustines supprimées ! Votre console va 
+  maintenant redémarrer.
 str_bg_music: Musique de fond
 str_prompt_dl_pass: Êtes-vous certain de vouloir télécharger cette rencontre ?
-str_report_integration: Ce message provient d'une intégration. Pour le signaler, demander
-  à l'équipe de modération de l'intégration.
+str_report_integration: Ce message provient d'une intégration. Pour le signaler,
+  demander à l'équipe de modération de l'intégration.
 str_skip: Passer
 str_install: Installer
 str_remove: Déinstaller
-str_new_version: "Nouvelle version de NetPass disponible :\nv%d.%d.%d !\n\nVoulez-vous
-  mettre NetPass à jour maintenant ?"
-str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
-  ban : %s\nFin du ban : %s"
+str_new_version: "Nouvelle version de NetPass disponible :\nv%d.%d.%d !\n\nVoulez-vous
+  mettre NetPass à jour maintenant ?"
+str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
+  ban : %s\nFin du ban : %s"
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_at_event_location: Vous êtes à un événement spécial.
 str_artist_copyright: Illustration par %s ©
-str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
-str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez toujours
-  mettre à jour via Universal Updater ou par code QR.
+str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
+str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez 
+  toujours l'actualiser via Universal Updater ou par QR Code.
+str_report_list_empty: La liste des signalements est vide.

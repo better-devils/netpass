@@ -18,6 +18,7 @@
 
 #include "loading.h"
 #include <stdlib.h>
+#include "../render.h"
 #define N(x) scenes_loading_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 
@@ -59,8 +60,8 @@ void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
 	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-	C2D_DrawText(&_data->g_loading, C2D_AlignLeft, _data->text_x, _data->text_y, 0, 1, 1);
-	C2D_DrawText(&_data->g_dots, C2D_AlignLeft, _data->text_x + _data->text_width - 35 + 10*(time(NULL)%2), _data->text_y, 0, 1, 1);
+	renderText(&_data->g_loading, _data->text_x, _data->text_y, 1, 0);
+	renderText(&_data->g_dots, _data->text_x + _data->text_width - 35 + 10*(time(NULL)%2), _data->text_y, 1, 0);
 }
 
 

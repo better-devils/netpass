@@ -133,4 +133,5 @@ void TextLangSpecificParse(C2D_Text* staticText, C2D_TextBuf staticBuf, Language
 		font = font_default;
 	}
 	C2D_TextFontParse(staticText, font, staticBuf, text);
+	C2D_TextOptimize(staticText);
 }

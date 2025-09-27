@@ -44,11 +44,12 @@ str_write_patches: ''
 str_report_mii_name: 'Jméno postavičky Mii: %s'
 str_report_mario_kart_7_greeting: 'Pozdrav: %s'
 str_report_mii_plaza_last_game: 'Naposled spuštěno: %s'
-str_update_patches_desc: Aby se NetPass správně nainstaloval, bude vytvořen upravený
-  sysmodule. K tomu je zapotřebí zapnout funkci "Enable loading external FIRMs and
-  modules" v nastavení Luma3DS. Do něho se dostanete tak, že vypnete konzoli, podržíte
-  {select_button} a při jeho držení konzoli opět zapnete stiskem {power_button}. Můžete
-  to udělat, jakmile se upravený sysmodule uloží.
+str_update_patches_desc: Aby se NetPass správně nainstaloval, bude vytvořen 
+  upravený sysmodule. K tomu je zapotřebí zapnout funkci "Enable loading 
+  external FIRMs and modules" v nastavení Luma3DS. Do něho se dostanete tak, že 
+  vypnete konzoli, podržíte {select_button} a při jeho držení konzoli opět 
+  zapnete stiskem {power_button}. Můžete to udělat, jakmile se upravený 
+  sysmodule uloží.
 str_about_netpass_community: NetPass komunita
 str_report_mii_plaza_country: 'Země: %s - %s'
 str_report_mii_plaza_greeting: 'Pozdrav: %s'
@@ -58,14 +59,14 @@ str_report_tomodachi_life_island_name: 'Název ostrova: %s'
 str_b_go_back: '{b_button} Zpět'
 str_b_cancel: '{b_button} Zrušit'
 str_a_ok: '{b_button} OK'
-str_update_patches: Aktualizace patchů
-str_update_patches_error_desc: Při aktualizaci patchů se něco pokazilo. Nahlaste to
-  prosím na GitLabu, GBAtempu nebo Discordu. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: Patch byl úspěšně zaktualizován! Konzole se nyní
-  restartuje.
+str_update_patches: Aktualizace záplat
+str_update_patches_error_desc: Při aktualizaci záplat se něco pokazilo. Nahlaste
+  to prosím na GitLabu, GBAtempu nebo Discordu. https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Záplata byl úspěšně zaktualizován! Konzole se 
+  nyní restartuje.
 str_integrations: Integrace
-str_integrations_message: Integrace třetích stran jsou mimo rozsah moderace NetPass
-  týmu. Pouze na vlastní riziko!
+str_integrations_message: Integrace třetích stran jsou mimo rozsah moderace 
+  NetPass týmu. Pouze na vlastní riziko!
 str_report_source: 'Zdroj: %s'
 str_report_source_unknown: Neznámý zdroj
 str_settings_misc: Různé
@@ -76,39 +77,40 @@ str_about_graphics: Art a grafika
 str_about_music: Zvuk
 str_about_localisation: Lokalizace
 str_about_special_thanks: Speciální poděkování
-str_about_special_thanks_txt: 3DS homebrew komunita a její reverzní inženýrství a
-  dokumentace
+str_about_special_thanks_txt: 3DS homebrew komunita a její reverzní inženýrství 
+  a dokumentace
 str_about_production_cat: Produkční čiči
 str_scan_qr: Naskenujte QR kód
 str_x_switch_camera: '{x_button} Přepnout kameru'
 str_prompt_verify: Opravdu chcete verifikovat toto 3DS?
 str_welcome: Vítejte v NetPass
-str_welcome_message: Před spuštěním NetPass si nejdříve přečtěte a akceptujte naše
-  pravidla a zásady ochrany osobních údajů.
+str_welcome_message: Před spuštěním NetPass si nejdříve přečtěte a akceptujte 
+  naše pravidla a zásady ochrany osobních údajů.
 str_view_rules: Zobrazit pravidla
 str_view_privacy: Zobrazit zásady ochrany osobních údajů
 str_continue: Pokračovat
-str_update_patches_poweroff_clear_desc: Patche byly úspěšně odebrány! Vaše konzole
-  se nyní restartuje.
+str_update_patches_poweroff_clear_desc: Záplaty byly úspěšně odebrány! Vaše 
+  konzole se nyní restartuje.
 str_bg_music: Hudba na pozadí
 str_bad_os_version: "NetPass vyžaduje pro správnou funkci verzi operačního systému
   3DS alespoň 11.15.0 nebo novější. Bohužel to vypadá, že Vaše verze je starší. Prosím
   aktualizujte Váš operační systém a spusťe NetPass znovu.\n\nStiskněte libovolné
   tlačítko pro opuštění aplikace"
 str_prompt_dl_pass: Jste si opravdu jisti, že chcete stáhnout tento pass?
-str_report_integration: Tato zpráva pochází z integrace. Pro nahlášení této zprávy
-  napiště moderačnímu týmu dané integrace.
+str_report_integration: Tato zpráva pochází z integrace. Pro nahlášení této 
+  zprávy napiště moderačnímu týmu dané integrace.
 str_skip: Přeskočit
 str_install: Instalovat
 str_remove: Odstranit
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
-str_banned: "Byl jsi zabanován z prostředí NetPass. Důvod:\n%s\n\nZačátek banu: %s\n
-  Konec banu: %s"
+str_banned: "Byl jsi zabanován z prostředí NetPass. Důvod:\n%s\n\nZačátek banu: %s\n\
+  \ Konec banu: %s"
 str_new_version: "Nová verze NetPass je k dispozici:\nv%d.%d.%d!\n\nChcete aktualizovat
   Netpass nyní?"
 str_artist_copyright: Kresba © %s
 str_enter_event_location: Opravdu chcete vstoupit do události "%s"?
 str_at_event_location: Jste na speciální události.
-str_new_version_failed: Instalace nové verze se nezdařila. Instalaci můžete však vždy
-  znovu provést přes Universal Updater nebo naskenováním QR kódu.
+str_new_version_failed: Instalace nové verze se nezdařila. Instalaci můžete však
+  vždy znovu provést přes Universal Updater nebo naskenováním QR kódu.
+str_report_list_empty: Seznam hlášení je prázdný.

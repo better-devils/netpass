@@ -285,6 +285,5 @@ void musicExit(void) {
 		free(dsp_buf);
 		dsp_buf = 0;
 	}
-	printf("4");
 	music_inited = false;
 }

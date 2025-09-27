@@ -37,7 +37,8 @@ str_toggle_titles_on: (ENCÈS)
 str_toggle_titles_off: (APAGAT)
 str_toggle_titles: Activa o desactiva jocs
 str_check_inboxes: Comprova bústies d'entrada
-str_toggle_titles_message: Prem {a_button} per començar o parar l'intercanvi de passis.
+str_toggle_titles_message: Prem {a_button} per començar o parar l'intercanvi de 
+  passis.
 str_prompt_verify: N'estàs segur de verificar aquesta 3DS?
 str_report_mario_kart_7_greeting: 'Salutació: %s'
 str_report_mii_plaza_last_game: 'Últim programa: %s'
@@ -49,13 +50,14 @@ str_b_go_back: '{b_button} Enrere'
 str_b_cancel: '{b_button} Cancel·lar'
 str_a_ok: '{a_button} Acceptar'
 str_update_patches: Actualitzar pedaços
-str_update_patches_error_desc: Alguna cosa va sortir malament al actualitzar els pedaços.
-  Si us plau, informa d'aquest error a GitLab, GBAtemp o Discord. https://netpass.cafe/discord
-str_update_patches_poweroff_desc: L'actualització dels pedaços es va realitzar correctament!
-  Ara la teva consola es reiniciarà.
+str_update_patches_error_desc: Alguna cosa va sortir malament al actualitzar els
+  pedaços. Si us plau, informa d'aquest error a GitLab, GBAtemp o Discord. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: L'actualització dels pedaços es va realitzar 
+  correctament! Ara la teva consola es reiniciarà.
 str_integrations: Integracions
-str_integrations_message: Les integracions de tercers queden fora de la moderació
-  de NetPass. Feu-les servir sota el teu propi risc!
+str_integrations_message: Les integracions de tercers queden fora de la 
+  moderació de NetPass. Feu-les servir sota el teu propi risc!
 str_scan_qr: Escanejar codi QR
 str_report_source: 'Font: %s'
 str_report_source_unknown: Font desconeguda
@@ -67,8 +69,8 @@ str_about_music: Música
 str_about_localisation: Localització
 str_about_netpass_community: La comunitat de NetPass
 str_about_special_thanks: Agraïments Especials
-str_about_special_thanks_txt: La comunitat homebrew de 3DS per tota la enginyeria
-  inversa i la documentació
+str_about_special_thanks_txt: La comunitat homebrew de 3DS per tota la 
+  enginyeria inversa i la documentació
 str_about_production_cat: Gat de producció
 str_settings_about: Sobre
 str_welcome: Benvolgut/da a NetPass
@@ -77,23 +79,25 @@ str_view_privacy: Veure Política de Privadesa
 str_continue: Continuar
 str_report_mii_plaza_custom_message: 'Salutació personal: %s'
 str_report_mii_plaza_custom_reply: 'Resposta personal: %s'
-str_update_patches_desc: Per instal·ar NetPass correctament, es crearan alguns pedaços
-  de sysmodule. Perquè funcionen, heu d'habilitar "Enable loading external FIRMs and
-  modules" a la configuració de Luma3DS. Per veure la configuració, apagueu la consola
-  i després premeu {select_button} mentre que encens {power_button} la consola. Pots
-  fer això després que els pedaços siguin escrits.
+str_update_patches_desc: Per instal·ar NetPass correctament, es crearan alguns 
+  pedaços de sysmodule. Perquè funcionen, heu d'habilitar "Enable loading 
+  external FIRMs and modules" a la configuració de Luma3DS. Per veure la 
+  configuració, apagueu la consola i després premeu {select_button} mentre que 
+  encens {power_button} la consola. Pots fer això després que els pedaços siguin
+  escrits.
 str_x_switch_camera: '{x_button} Canviar de càmera'
-str_welcome_message: Abans d'iniciar NetPass, si us plau, llegeix i accepta les nostres
-  regles i política de privadesa.
-str_update_patches_poweroff_clear_desc: Patches eliminats amb èxit! La seva consola
-  es reiniciarà.
+str_welcome_message: Abans d'iniciar NetPass, si us plau, llegeix i accepta les 
+  nostres regles i política de privadesa.
+str_update_patches_poweroff_clear_desc: Pedaços eliminats amb èxit! La seva 
+  consola es reiniciarà.
 str_bg_music: Música de fons
 str_bad_os_version: "NetPass requereix de 3DS OS 11.15.0 o major per funcionar correctament.
   Desafortunadament, pareix que estàs utilitzant una versió més antiga. Si us plau,
   actualitza i després inicia NetPass de nou\n\nOprimeix qualsevol tecla per eixir"
 str_prompt_dl_pass: Ets segur que vols descarregar aquest passi?
-str_report_integration: Aquest missatge és provist per una integració. Per denunciar-lo,
-  si us plau, envieu-li un missatge a l'equip de moderació d'aquesta integració.
+str_report_integration: Aquest missatge és provist per una integració. Per 
+  denunciar-lo, si us plau, envieu-li un missatge a l'equip de moderació 
+  d'aquesta integració.
 str_skip: Ometre
 str_install: Instal·lar
 str_remove: Eliminar
@@ -105,5 +109,5 @@ str_date: '%d/%m/%Y'
 str_enter_event_location: Ets segur que vols entrar a l'esdeveniment "%s"?
 str_at_event_location: Ets a un esdeveniment especial.
 str_artist_copyright: Il·lustració © %s
-str_new_version_failed: L'instal·lació de la nova versió ha fallat. Pots tornar a
-  provar d'instal·lar-la mitjançant Universal Updater o el codi QR.
+str_new_version_failed: L'instal·lació de la nova versió ha fallat. Pots tornar 
+  a provar d'instal·lar-la mitjançant Universal Updater o el codi QR.

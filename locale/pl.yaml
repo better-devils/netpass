@@ -25,7 +25,8 @@ str_goto_catcafe: 'Idź do Kociej Kawiarni'
 str_at_catcafe: 'Jesteś w Kociej Kawiarni.'
 str_system_language: Język Systemu
 str_language_pick: 'Język:'
-str_no_location_twice: Nie możesz wejść do tej samej lokalizacji dwa razy pod rząd!
+str_no_location_twice: Nie możesz wejść do tej samej lokalizacji dwa razy pod 
+  rząd!
 str_back_alley: Tylna Uliczka
 str_back_alley_message: Załatwmy jeszcze kilka spotkań!
 str_back_alley_pay: Kup spotkanie {playcoin}%d
@@ -35,7 +36,8 @@ str_cancel: Anuluj
 str_submit: Wyślij
 str_check_inboxes: Sprawdź Skrzynki
 str_toggle_titles: Wł/Wył Gry
-str_toggle_titles_message: Wciśnij {a_button} by rozpocząć lub zatrzymać proces wymiany.
+str_toggle_titles_message: Wciśnij {a_button} by rozpocząć lub zatrzymać proces 
+  wymiany.
 str_toggle_titles_on: (WŁ.)
 str_toggle_titles_off: (WYŁ.)
 str_write_patches: Wczytaj łatki
@@ -53,23 +55,23 @@ str_report_source_unknown: Nieznane źródło
 str_b_cancel: '{b_button} Anuluj'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Aktualizuj łatki
-str_update_patches_poweroff_desc: Aktualizacja łatek zakończona sukcesem! Twoja konsola
-  zostanie teraz ponownie uruchomiona.
+str_update_patches_poweroff_desc: Aktualizacja łatek zakończona sukcesem! Twoja 
+  konsola zostanie teraz ponownie uruchomiona.
 str_report_mii_plaza_custom_message: 'Twoja spersonalizowana wiadomość: %s'
-str_update_patches_error_desc: Coś poszło nie tak podczas aktualizacji łatek. Zgłoś
-  ten problem na GitLab, GBAtemp lub Discord. https://netpass.cafe/discord
-str_integrations_message: Integracje stron trzecich są poza moderacją NetPass. Używaj
-  na własne ryzyko!
+str_update_patches_error_desc: Coś poszło nie tak podczas aktualizacji łatek. 
+  Zgłoś ten problem na GitLab, GBAtemp lub Discord. https://netpass.cafe/discord
+str_integrations_message: Integracje stron trzecich są poza moderacją NetPass. 
+  Używaj na własne ryzyko!
 str_report_mii_name: 'Imię Mii: %s'
-str_update_patches_desc: Aby poprawnie zainstalować NetPass, zostaną teraz utworzone
-  łatki do sysmodule. Aby działały, musisz włączyć opcję „Enable loading external
-  FIRMs and modules” w ustawieniach Luma3DS. Aby uzyskać dostęp do ustawień, wyłącz
-  konsolę, a następnie naciśnij {select_button} podczas włączania {power_button} konsoli.
-  Możesz to zrobić po zaaplikowaniu łatek.
+str_update_patches_desc: Aby poprawnie zainstalować NetPass, zostaną teraz 
+  utworzone łatki do sysmodule. Aby działały, musisz włączyć opcję „Enable 
+  loading external FIRMs and modules” w ustawieniach Luma3DS. Aby uzyskać dostęp
+  do ustawień, wyłącz konsolę, a następnie naciśnij {select_button} podczas 
+  włączania {power_button} konsoli. Możesz to zrobić po zaaplikowaniu łatek.
 str_settings_misc: Różne
 str_about_localisation: Lokalizacja
-str_about_special_thanks_txt: Społeczności 3ds homebrew za całą inżynierie wsteczną
-  i dokumentacje
+str_about_special_thanks_txt: Społeczności 3ds homebrew za całą inżynierie 
+  wsteczną i dokumentacje
 str_about_lead_dev: Główny Deweloper
 str_about_reports: System Raportowania
 str_about_graphics: Obrazy i Grafika
@@ -85,25 +87,30 @@ str_view_rules: Wyświetl Zasady
 str_view_privacy: Wyświetl Politykę Prywatności
 str_continue: Kontynuuj
 str_welcome: Witaj w NetPass
-str_welcome_message: Przed uruchomieniem NetPass proszę przeczytać i zaakceptować
-  nasze zasady oraz politykę prywatności.
+str_welcome_message: Przed uruchomieniem NetPass proszę przeczytać i 
+  zaakceptować nasze zasady oraz politykę prywatności.
 str_bad_os_version: "NetPass wymaga wersję systemu 3DS 11.15.0 bądź nowszą aby prawidłowo
   funkcjonować. Niestety wygląda na to że używasz starszej wersji. Proszę zaauktalizować
   i otworzyć NetPass ponownie.\n\nWciśnij dowolny przycisk aby wyjść"
-str_update_patches_poweroff_clear_desc: Pomyślnie usunięto łatki! Twoja konsola uruchomi
-  się teraz ponownie.
+str_update_patches_poweroff_clear_desc: Pomyślnie usunięto łatki! Twoja konsola 
+  uruchomi się teraz ponownie.
 str_bg_music: Muzyka w Tle
 str_prompt_dl_pass: Czy jesteś pewien, że chcesz pobrać to spotkanie?
 str_remove: Usuń
 str_skip: Pomiń
 str_install: Instaluj
-str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić, proszę
-  napisać do zespołu moderacji danej integracji.
+str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić, 
+  proszę napisać do zespołu moderacji danej integracji.
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
 str_banned: "Zostałeś zbanowany w NetPass'ie. Powód:\n%s\n\nPoczątek bana: %s\nKoniec
   bana: %s"
-str_new_version: ""
+str_new_version: "Nowa Wersja NetPass dostępna:\nv%d.%d.%d!\n\nCzy chcesz zaktualizować
+  NetPass teraz?"
 str_at_event_location: Jesteś na specjalnym wydarzeniu.
 str_artist_copyright: Dzieło © %s
-str_enter_event_location: Czy jesteś pewien, że chcesz dołączyć do wydarzenia "%s"?
+str_enter_event_location: Czy jesteś pewien, że chcesz dołączyć do wydarzenia 
+  "%s"?
+str_new_version_failed: Instalacja nowej wersji zakończona niepowodzeniem. Wciąż
+  możesz zainstalować ją ponownie przez Universal Updater lub QR-Code.
+str_report_list_empty: Lista zgłoszeń jest pusta.

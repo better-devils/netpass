@@ -34,7 +34,8 @@ str_report_user_hint: '"%s" jelentése'
 str_cancel: Mégsem
 str_submit: Küldés
 str_check_inboxes: Postafiók ellenőrzés
-str_toggle_titles_message: Nyomj {a_button} gombot a pass-ok cseréjének be- vagy kikapcsolásához.
+str_toggle_titles_message: Nyomj {a_button} gombot a pass-ok cseréjének be- vagy
+  kikapcsolásához.
 str_toggle_titles_on: (BE)
 str_toggle_titles_off: (KI)
 str_toggle_titles: Játékok be-kikapcsolása
@@ -52,18 +53,21 @@ str_b_go_back: '{b_button} Vissza'
 str_b_cancel: '{b_button} Mégsem'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Patchek frissítése
-str_update_patches_poweroff_desc: A patchek frissítése sikeres! A konzolod most újraindul.
-str_update_patches_error_desc: Valami hiba történt a patchek frissítésekor. Kérjük
-  jelentsd a problémát a GitLab-on, a GBAtemp-en vagy Discord-on. https://netpass.cafe/discord
-str_update_patches_desc: A NetPass megfelelő telepítéséhez néhány sysmodule patch
-  lesz most létrehozva. Ahhoz, hogy működjenek engedélyezni kell az "Enable loading
-  external FIRMs and modules" opciót a Luma3DS beállításaiban. Ezen beállításokhoz
-  hozzáféréshez kapcsold ki a konzolt, majd nyomj és tartsd nyomva a {select_button}
-  gombot, miközben bekapcsolod a {power_button} gombbal a konzolt. Ezt megteheted
-  azt követően is, hogy a patchek írásra kerültek a konzolodra.
+str_update_patches_poweroff_desc: A patchek frissítése sikeres! A konzolod most 
+  újraindul.
+str_update_patches_error_desc: Valami hiba történt a patchek frissítésekor. 
+  Kérjük jelentsd a problémát a GitLab-on, a GBAtemp-en vagy Discord-on. 
+  https://netpass.cafe/discord
+str_update_patches_desc: A NetPass megfelelő telepítéséhez néhány sysmodule 
+  patch lesz most létrehozva. Ahhoz, hogy működjenek engedélyezni kell az 
+  "Enable loading external FIRMs and modules" opciót a Luma3DS beállításaiban. 
+  Ezen beállításokhoz hozzáféréshez kapcsold ki a konzolt, majd nyomj és tartsd 
+  nyomva a {select_button} gombot, miközben bekapcsolod a {power_button} gombbal
+  a konzolt. Ezt megteheted azt követően is, hogy a patchek írásra kerültek a 
+  konzolodra.
 str_integrations: Integrációk
-str_integrations_message: A harmadik feles integrációk kívül esnek a NetPass moderáción.
-  Használd saját felelőségedre!
+str_integrations_message: A harmadik feles integrációk kívül esnek a NetPass 
+  moderáción. Használd saját felelőségedre!
 str_report_source: 'Forrás: %s'
 str_report_source_unknown: Ismeretlen forrás
 str_settings_misc: Egyéb
@@ -74,28 +78,28 @@ str_about_graphics: Rajz és grafika
 str_about_music: Zene
 str_about_localisation: Fordítás
 str_about_special_thanks: Külön köszönet
-str_about_special_thanks_txt: A 3DS homebrew közösségnek az összes visszafejtésért
-  és dokumentációért
+str_about_special_thanks_txt: A 3DS homebrew közösségnek az összes 
+  visszafejtésért és dokumentációért
 str_about_reports: Bejelentő rendszer
 str_about_production_cat: Gyártómacska
 str_prompt_verify: Biztos, hogy szeretnéd ellenőrizni ezt a 3DS-t?
 str_scan_qr: QR kód leolvasása
 str_x_switch_camera: '{x_button} Kamera váltása'
 str_welcome: Üdvözlünk a NetPass-ban
-str_welcome_message: Mielőtt használod a NetPass-t, kérjük olvasd el és fogadd el
-  a szabályainkat és adatvédelmi szabályzatunkat.
+str_welcome_message: Mielőtt használod a NetPass-t, kérjük olvasd el és fogadd 
+  el a szabályainkat és adatvédelmi szabályzatunkat.
 str_view_rules: Szabályok megtekintése
 str_view_privacy: Adatvédelmi szabályzat megtekintése
 str_continue: Tovább
-str_update_patches_poweroff_clear_desc: A patchek eltávolítása sikeres. A konzolod
-  most újraindul.
+str_update_patches_poweroff_clear_desc: A patchek eltávolítása sikeres. A 
+  konzolod most újraindul.
 str_bg_music: Háttérzene
 str_bad_os_version: "A NetPass-nak 3DS OS 11.15.0 vagy későbbi verzióra van szüksége
   a megfelelő működéshez. Sajnos úgy tűnik, hogy régebbi verziót használsz. Kérjük
   frissíts, majd indítsd el újra a NetPass-t.\n\nPress any key to exit"
 str_prompt_dl_pass: Biztosan szeretnéd letölteni ezt a pass-t?
-str_report_integration: Ez az üzenet egy integrációtól származik. A bejelentéshez
-  kérjük üzenj az adott integráció moderációs csapatának.
+str_report_integration: Ez az üzenet egy integrációtól származik. A 
+  bejelentéshez kérjük üzenj az adott integráció moderációs csapatának.
 str_skip: Átugrik
 str_install: Telepítés
 str_remove: Eltávolítás
@@ -103,4 +107,11 @@ str_date: '%Y.%b.%d'
 str_date_time: '%Y.%b.%d %H:%M:%S'
 str_banned: "A NetPass használat számodra tiltva lett. Ok:\n%s\n\nTiltás kezdete:
   %s\nTiltás vége: %s"
-str_new_version: ""
+str_new_version: "Új NetPass verzó elérhető:\nv%d.%d.%d!\n\nSzeretnéd frissíteni a
+  NetPass-t most?"
+str_at_event_location: Egy különleges eseményen vagy.
+str_new_version_failed: Az új verzió telepítése sikertelen. Még mindig 
+  telepítheted Universal Updater-rel vagy QR-kóddal.
+str_report_list_empty: A bejelentés lista üres.
+str_enter_event_location: Biztosan csatlakozni szeretnél a(z) "%s" eseményhez?
+str_artist_copyright: Grafika © %s

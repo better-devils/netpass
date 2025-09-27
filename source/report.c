@@ -45,19 +45,84 @@
 	x* data = (x*)entry->data; \
 	memset(data, 0, sizeof(x));
 
-ReportList* loadReportList(void) {
-	FILE* f = fopen(LOG_INDEX, "r");
+FILE* openLogIndex(void) {
+	FILE* f = fopen(LOG_INDEX, "rb");
+	if (f) {
+		fseek(f, 0, SEEK_END);
+		size_t is_size = ftell(f);
+		fseek(f, 0, SEEK_SET);
+		if (is_size >= sizeof(ReportListHeader)) {
+			ReportListHeader header = {0};
+			fread_blk(&header, sizeof(ReportListHeader), 1, f);
+			if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
+				goto is_corrupt;
+			}
+			fseek(f, 0, SEEK_END);
+			size_t is_size = ftell(f);
+			fseek(f, 0, SEEK_SET);
+			size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
+			size_t list_file_cur_size = sizeof(ReportListHeader) + header.cur_size * sizeof(ReportSendPayload);
+			printf("is_size: %zu\n", is_size);
+			printf("list_file_size: %zu\n", list_file_size);
+			printf("list_file_cur_size: %zu\n", list_file_cur_size);
+			if (is_size < list_file_cur_size || header.cur_size > header.max_size) {
+				goto is_corrupt;
+			}
+
+		}
+		if (is_size < sizeof(ReportListHeader)) {
+is_corrupt:
+			// file is really corrupt, let's just yeet everything and start over
+			// TODO: maybe it is a better idea to manually try to re-create the index from the folders on the card?
+			// though that would be very hard and not sure if worth it
+			fclose(f);
+			f = NULL;
+			rmdir_r(LOG_DIR);
+			mkdir_p(LOG_DIR);
+		}
+	}
 	if (!f) {
-		_e_errno();
+		// ok, file is empty, we have to create it
+		f = fopen(LOG_INDEX, "wb");
+		if (!f) {
+			_e_errno();
+			return NULL;
+		}
+		ReportList* list = memalign(4, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
+		if (!list) {
+			_e(ERROR_OUT_OF_MEMORY);
+			fclose(f);
+			unlink(LOG_INDEX);
+			return NULL;
+		}
+		memset(list, 0, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
+		list->header.magic = REPORT_LIST_MAGIC;
+		list->header.version = 1;
+		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
+		list->header.cur_size = 0;
+		fwrite_blk(list, sizeof(ReportList), 1, f);
+		free(list);
+		fclose(f);
+		f = fopen(LOG_INDEX, "rb");
+		if (!f) {
+			_e_errno();
+			unlink(LOG_INDEX);
+			return NULL;
+		}
+	}
+	fseek(f, 0, SEEK_SET);
+	return f;
+}
+
+
+ReportList* loadReportList(void) {
+	FILE* f = openLogIndex();
+	if (!f) {
 		return NULL;
 	}
 
 	ReportListHeader header;
 	fread_blk(&header, sizeof(ReportListHeader), 1, f);
-	if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
-		_e(ERROR_BAD_REPORT_LIST);
-		return NULL;
-	}
 	fseek(f, 0, SEEK_SET);
 	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 	
@@ -246,74 +311,20 @@ void saveSlotInLog(CecSlotHeader* slot) {
 
 void saveMsgInLog(CecMessageHeader* msg) {
 	ReportList* list;
-	FILE* f = fopen(LOG_INDEX, "rb");
-	if (f) {
-		fseek(f, 0, SEEK_END);
-		size_t is_size = ftell(f);
-		fseek(f, 0, SEEK_SET);
-		if (is_size < sizeof(ReportListHeader)) {
-			// file is really corrupt, let's just yeet everything and start over
-			// TODO: maybe it is a better idea to manually try to re-create the index from the folders on the card?
-			// though that would be very hard and not sure if worth it
-			fclose(f);
-			f = NULL;
-			rmdir_r(LOG_DIR);
-			mkdir_p(LOG_DIR);
-		}
-	}
-	if (!f) {
-		// ok, file is empty, we have to create it
-		f = fopen(LOG_INDEX, "wb");
-		if (!f) {
-			_e_errno();
-			return;
-		}
-		list = memalign(4, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
-		if (!list) {
-			_e(ERROR_OUT_OF_MEMORY);
-			fclose(f);
-			unlink(LOG_INDEX);
-			return;
-		}
-		memset(list, 0, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
-		list->header.magic = REPORT_LIST_MAGIC;
-		list->header.version = 1;
-		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
-		list->header.cur_size = 0;
-		fwrite_blk(list, sizeof(ReportList), 1, f);
-		free(list);
-		fclose(f);
-		f = fopen(LOG_INDEX, "rb");
-		if (!f) {
-			_e_errno();
-			unlink(LOG_INDEX);
-			return;
-		}
-	}
+	FILE* f = openLogIndex();
+	if (!f) return;
 	size_t list_file_size;
 	{
 		ReportListHeader header = {0};
 		fread_blk(&header, sizeof(ReportListHeader), 1, f);
-		if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
-			_e(ERROR_BAD_REPORT_LIST);
-			fclose(f);
-			return;
-		}
-		fseek(f, 0, SEEK_END);
-		size_t is_size = ftell(f);
-		fseek(f, 0, SEEK_SET);
 		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
-		if (is_size != list_file_size) {
-			_e(ERROR_BAD_REPORT_LIST);
-			fclose(f);
-			return;
-		}
 		list = memalign(4, list_file_size);
 		if (!list) {
 			_e(ERROR_OUT_OF_MEMORY);
 			fclose(f);
 			return;
 		}
+		fseek(f, 0, SEEK_SET);
 		fread_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}

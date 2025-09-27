@@ -21,6 +21,8 @@
 #include "../api.h"
 #include "../curl-handler.h"
 #include "../music.h"
+#include "../render.h"
+#include "../image_cache.h"
 #include <stdlib.h>
 #include <time.h>
 #define N(x) scenes_back_alley_namespace_##x
@@ -41,9 +43,8 @@ typedef struct {
 	int number_games;
 	bool show_games;
 	char prev_music[20];
+	C2D_Image background;
 	C2D_SpriteSheet spr;
-	float width;
-	float width_games;
 	bool view_bg_only;
 } N(DataStruct);
 
@@ -57,11 +58,7 @@ void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amoun
 void N(refresh)(Scene* sc) {
 	if (_data->play_coins) free(_data->play_coins);
 	if (!N(init_playcoins)(sc)) return;
-	float width;
 	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
-	get_text_dimensions(&_data->g_paytext, 1.0, 1.0, &width, 0);
-	width += 20.;
-	if (width > _data->width) _data->width = width;
 }
 
 SceneResult N(buy_pass)(Scene* sc, int i) {
@@ -160,17 +157,10 @@ bool N(init_playcoins)(Scene* sc) {
 bool N(init_gamelist)(Scene* sc) {
 	_data->number_games = 0;
 	NetpassTitleData* title_data = getTitleData();
-	_data->width_games = 0;
 	for (int i = 0; i < title_data->num_titles; i++) {
 		if (isTitleIgnored(title_data->titles[i].title_id)) continue;
 		_data->title_ids[_data->number_games] = title_data->titles[i].title_id;
 		C2D_TextParse(&_data->g_game_titles[_data->number_games], _data->g_staticBuf, title_data->titles[i].name);
-		float width;
-		get_text_dimensions(&_data->g_game_titles[_data->number_games], 0.5, 0.5, &width, 0);
-		width += 20.;
-		if (width > _data->width_games) {
-			_data->width_games = width;
-		}
 		_data->number_games++;
 	}
 	return true;
@@ -179,6 +169,7 @@ bool N(init_gamelist)(Scene* sc) {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
+	memset(sc->d, 0, sizeof(N(DataStruct)));
 	
 	if (!N(init_playcoins)(sc)) return;
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 12*24);
@@ -196,64 +187,40 @@ void N(init)(Scene* sc) {
 	_data->cursor = 0;
 	_data->view_bg_only = false;
 	_data->show_games = false;
-	float width;
 	TextLangParse(&_data->g_header, _data->g_staticBuf, str_back_alley);
-	get_text_dimensions(&_data->g_header, 1.0, 1.0, &_data->width, 0);
 	TextLangParse(&_data->g_subtext, _data->g_staticBuf, str_back_alley_message);
-	get_text_dimensions(&_data->g_subtext, 0.5, 0.5, &width, 0);
-	if (width > _data->width) _data->width = width;
-	// games have the same header
-	if (_data->width > _data->width_games) {
-		_data->width_games = _data->width;
-	}
 	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
-	get_text_dimensions(&_data->g_paytext, 1.0, 1.0, &width, 0);
-	width += 20.;
-	if (width > _data->width) _data->width = width;
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
-	get_text_dimensions(&_data->g_back, 1.0, 1.0, &width, 0);
-	width += 20.;
-	if (width > _data->width) _data->width = width;
 	
-	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/back_alley.t3x");
+	get_background_image("back_alley", &_data->spr, &_data->background, false);
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
-	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
-	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-	
+	if (_data->spr) {
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
+		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	} else if (_data->background.tex) {
+		C2D_DrawImageAt(_data->background, 0, 0, 0, NULL, 1, 1);
+	}
 	if (_data->view_bg_only) return;
 	
-	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
-	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	
-	if (_data->show_games) {
-		C2D_DrawRectSolid(8, 8, 0, _data->width_games + 4, 35 + 28 + _data->number_games*14, bgclr);
-	} else {
-		C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + 20 + 2*25, bgclr);
-	}
-	
-	C2D_DrawText(&_data->g_header, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
-	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WithColor, 11, 35, 0, 0.5, 0.5, clr);
+	renderText(&_data->g_header, 10, 10, 1, 0);
+	renderText(&_data->g_subtext, 11, 35, 0.5, 0);
 	if (_data->show_games) {
 		int i = 0;
 		for (; i < _data->number_games; i++) {
-			C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 30, 55 + (i*14), 0, 0.5, 0.5, clr);
+			renderText(&_data->g_game_titles[i], 30, 55 + (i*14), 0.5, 0);
 		}
-		C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 55 + (i*14), 0, 0.5, 0.5, clr);
+		renderText(&_data->g_back, 30, 55 + (i*14), 0.5, 0);
 
-		int x = 22;
-		int y = _data->cursor*14 + 55 + 3;
-		C2D_DrawTriangle(x, y, clr, x, y +10, clr, x + 8, y + 5, clr, 1);
+		renderCursor(13, _data->cursor*14 + 55 + 1, 0.5);
 	} else {
 		bool grayed_out = config.price > MAX_PRICE || config.price > _data->play_coins->total_coins;
-		C2D_DrawText(&_data->g_paytext, C2D_AlignLeft | C2D_WithColor, 30, 55, 0, 1, 1, grayed_out ? C2D_Color32(0, 0, 0, 0x80) : clr);
-		C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 80, 0, 1, 1, clr);
+		renderText(&_data->g_paytext, 34, 55, 1, grayed_out ? clr_gray : 0);
+		renderText(&_data->g_back, 34, 80, 1, 0);
 
-		int x = 10;
-		int y = _data->cursor*25 + 55 + 5;
-		C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
+		renderCursor(1, _data->cursor*25 + 55 + 2, 1);
 	}
 }
 
