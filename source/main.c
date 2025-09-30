@@ -169,11 +169,11 @@ void initial_load(void) {
 	doSlotExchangeRetry();
 	Result ping_res = getLocation();
 	if (R_FAILED(ping_res)) {
-		printf("ERROR failed to get location: %ld\n", ping_res);
+		logln(ERROR, "failed to get location: %ld", ping_res);
 	} else {
 		char uuidstr[37];
 		format_uuid(uuidstr, location.uuid);
-		printf("Got location: %ld %s\n", location.id, uuidstr);
+		logln(INFO, "Got location: %ld %s", location.id, uuidstr);
 	}
 }
 
@@ -243,12 +243,12 @@ int main(int nargs, char** argv) {
 		OS_VersionBin ver;
 		Result res = _e(get_os_version(&ver));
 		if (R_FAILED(res)) {
-			printf("osGetSystemVersionData res: %08lX\n", res);
+			logln(INFO, "osGetSystemVersionData res: %08lX", res);
 			
-			printf("Detected system version (cver): %d.%d.%d%c\n", ver.mainver, ver.minor, ver.build, ver.region);
+			logln(INFO, "Detected system version (cver): %d.%d.%d%c", ver.mainver, ver.minor, ver.build, ver.region);
 			u8 region;
 			res = CFGU_SecureInfoGetRegion(&region);
-			printf("Get region (%08lX): %d\n", res, region);
+			logln(INFO, "Get region (%08lX): %d", res, region);
 		}
 
 	
@@ -261,12 +261,12 @@ int main(int nargs, char** argv) {
 			scene = getLoadingScene(getSwitchScene(initial_scene), initial_load);
 		
 			if (_PATCHES_VERSION_ > config.patches_version) {
-				printf("New patches version to apply!\n");
+				logln(INFO, "New patches version to apply!");
 				scene = getUpdatePatchesScene(scene);
 			}
 			
 			if (_WELCOME_VERSION_ > config.welcome_version) {
-				printf("New Welcome Screen to show!\n");
+				logln(INFO, "New Welcome Screen to show!");
 				scene = getWelcomeScene(scene);
 			}
 		}
@@ -298,7 +298,7 @@ int main(int nargs, char** argv) {
 		C3D_FrameEnd(0);
 		svcSleepThread(1);
 	}
-	printf("\nExiting...\n");
+	logln(INFO, "Exiting...");
 	renderExit();
 	integrationExit();
 	bgLoopExit();

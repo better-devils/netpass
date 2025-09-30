@@ -105,7 +105,7 @@ size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 	buf[size*nmemb] = '\0';
 	static const char header_name[] = "3ds-netpass-msg: ";
 	if (strncmp(header_name, buf, strlen(header_name)) == 0) {
-		printf("%s\n", buf + strlen(header_name));
+		logln(INFO, "%s", buf + strlen(header_name));
 	}
 	return size*nmemb;
 }
@@ -329,7 +329,7 @@ void curl_multi_loop(void* p) {
 	do {
 		CURLMcode mc = curl_multi_perform(curl_multi_handle, &openHandles);
 		if (mc != CURLM_OK) {
-			printf("ERROR curl multi fail: %u\n", mc);
+			logln(ERROR, "curl multi fail: %u", mc);
 			return;
 		}
 		CURLMsg* msg;

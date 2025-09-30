@@ -807,8 +807,8 @@ Result install_cia(char* cia_filename) {
 		return res;
 	}
 	if (file_size > getAvailableSpace()) {
-		printf("wtf?!\n");
-		printf("%lld, %lld\n", file_size, getAvailableSpace());
+		logln(ERROR, "wtf?!");
+		logln(ERROR, "%lld, %lld", file_size, getAvailableSpace());
 		res = -1; // TODO: proper error
 		FSFILE_Close(file_handle);
 		return res;

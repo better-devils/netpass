@@ -222,7 +222,7 @@ bool clearPatches(void) {
 	DIR* d = opendir(PATCHES_COPY_SRCDIR);
 	if (!d) {
 		_e_errno();
-		printf("ERROR: src dir not found\n");
+		logln(ERROR, "src dir not found");
 		return false;
 	}
 	struct dirent* p;
@@ -239,33 +239,33 @@ bool clearPatches(void) {
 			// we skip files that don't exist
 			if (access(dstpath, F_OK) != 0) continue;
 			// ok we actually have a file, delete it
-			printf("%s...", p->d_name);
+			logln(INFO, "%s...", p->d_name);
 			remove(dstpath);
-			printf("Done\n");
+			logln(INFO, "Done");
 			deleted_file = true;
 		}
 	}
 	closedir(d);
-	printf("Updating patches version in config...");
+	logln(INFO, "Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();
-	printf("Done\nClearing sysmodules done\n");
+	logln(INFO, "Done");
+	logln(INFO, "Clearing sysmodules done");
 	return deleted_file;
 }
 
 bool writePatches(void) {
 	mkdir_p(PATCHES_COPY_DSTDIR);
-	printf("Copying sysmodules...\n");
+	logln(INFO, "Copying sysmodules...");
 	DIR* d = opendir(PATCHES_COPY_SRCDIR);
 	if (!d) {
 		_e_errno();
-		printf("ERROR: src dir not found\n");
+		logln(ERROR, "src dir not found");
 		return false;
 	}
 	void* buffer = malloc(0x4000);
 	if (!buffer) {
 		_e(ERROR_OUT_OF_MEMORY);
-		printf("ERROR: malloc\n");
 		return false;
 	}
 	struct dirent* p;
@@ -277,14 +277,14 @@ bool writePatches(void) {
 		struct stat statbuf;
 		if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
 			// ok we actually have a file, copy it
-			printf("%s...", p->d_name);
+			logln(INFO, "%s...", p->d_name);
 			FILE* src = fopen(srcpath, "rb");
 			FILE* dst = fopen(dstpath, "wb+");
 			if (!src || !dst) {
 				_e_errno();
 				if (src) fclose(src);
 				if (dst) fclose(dst);
-				printf("ERROR: open\n");
+				logln(ERROR, "open");
 				continue;
 			}
 			size_t len = fread(buffer, 1, 0x4000, src);
@@ -292,38 +292,39 @@ bool writePatches(void) {
 				_e_errno();
 				fclose(src);
 				fclose(dst);
-				printf("ERROR: read\n");
+				logln(ERROR, "read");
 				continue;
 			}
 			if (!fwrite(buffer, len, 1, dst)) {
 				_e_errno();
 				fclose(src);
 				fclose(dst);
-				printf("ERROR: write\n");
+				logln(ERROR, "write");
 				continue;
 			}
 			fclose(src);
 			fclose(dst);
 
-			printf("Done\n");
+			logln(INFO, "Done");
 		}
 	}
 	closedir(d);
-	printf("Updating patches version in config...");
+	logln(INFO, "Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();
-	printf("Done\nCopying sysmodules done\n");
+	logln(INFO, "Done");
+	logln(INFO, "Copying sysmodules done");
 	free(buffer);
 	return true;
 }
 
 void clearBossCacheAndReboot(void) {
-	printf("Clearing spr cache...");
+	logln(INFO, "Clearing spr cache...");
 	bossInit(SPRELAY_TITLE_ID, false);
 	bossUnregisterTask(SPRELAY_TASK_ID, 0);
 	bossUnregisterTask(SPRELAY_TASK_ID, 0);
-	printf("Done\n");
+	logln(INFO, "Done");
 	nsInit();
 	NS_RebootSystem();
-	printf("Rebooting system...\n");
+	logln(INFO, "Rebooting system...");
 }

@@ -86,7 +86,7 @@ void play_thread(void* p) {
 	for (int i = 0; i < NUM_BUFFERS; i++) {
 		int read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 		if (read <= 0) {
-			printf("Music Fail: %d\n", read);
+			logln(ERROR, "Music Fail: %d", read);
 			goto fail;
 		}
 		wavebuf[i].nsamples = read;
@@ -107,7 +107,7 @@ void play_thread(void* p) {
 			if (wavebuf[i].status == NDSP_WBUF_DONE) {
 				int read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 				if (read < 0) {
-					printf("Music Fail: %d\n", read);
+					logln(ERROR, "Music Fail: %d", read);
 					goto fail;
 				}
 				if (read == 0) {

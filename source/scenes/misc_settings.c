@@ -108,10 +108,10 @@ SceneResult N(process)(Scene* sc) {
 					snprintf(url, 50, "%s/data", BASE_URL);
 					Result res = httpRequest("DELETE", url, 0, 0, 0, 0, 0);
 					if (R_FAILED(res)) {
-						printf("ERROR deleting all data: %ld\n", res);
+						logln(ERROR, "deleting all data: %ld", res);
 						return;
 					}
-					printf("Successfully sent request to delete all data! This can take up to 15 days.\n");
+					logln(INFO, "Successfully sent request to delete all data! This can take up to 15 days.");
 				}));
 				return scene_push;
 			}
@@ -150,32 +150,31 @@ Scene* getMiscSettingsScene(void) {
 static void downloadDataThread(void) {
 	time_t now = time(NULL);
 
-	printf("Requesting data export: ");
+	logln(INFO, "Requesting data export:");
 	// 42 characters: https://devapi.netpass.cafe/data/download
 #define URL_SIZE 52
 	char url[URL_SIZE];
 	snprintf(url, URL_SIZE, "%s/data/request", BASE_URL);
 	Result res = httpRequest("GET", url, 0, NULL, 0, 0, 0);
 	if (R_FAILED(res)) {
-		printf("FAIL: %ld\n", res);
+		logln(ERROR, "%ld", res);
 		return;
 	}
 	if (res != 202) {
-		printf("FAIL\nExport: bad status code %ld != 202\n", res);
+		logln(ERROR, "Export: bad status code %ld != 202", res);
 		return;
 	}
-	printf("ok.\n");
+	logln(INFO, "ok.");
 	snprintf(url, URL_SIZE, "%s/data/check", BASE_URL);
-	printf("Waiting..");
+	logln(INFO, "Waiting..");
 #define MAX_WAIT_NANOS 15ULL*1000000000ULL // 15s
 	u64 backoff = 500000000ULL; // 0.5s
 	while (true) {
 		res = httpRequest("GET", url, 0, NULL, 0, 0, 0);
 		if (res == 200) {
-			printf(" Ready.\n");
+			logln(INFO, "Ready.");
 			break;
 		} else if (res == 204) {
-			printf(".");
 			svcSleepThread(backoff);
 			backoff += backoff >> 2;
 			if (backoff > MAX_WAIT_NANOS) {
@@ -184,10 +183,10 @@ static void downloadDataThread(void) {
 			continue;
 		}
 		if (R_FAILED(res)) {
-			printf("FAIL: %ld\n", res);
+			logln(ERROR, "%ld", res);
 			return;
 		} else {
-			printf("FAIL\nCheck: bad status code %ld\n", res);
+			logln(ERROR, "Check: bad status code %ld", res);
 			return;
 		}
 	}
@@ -196,20 +195,19 @@ static void downloadDataThread(void) {
 	char filename[200];
 	struct tm now_tm;
 	if (!gmtime_r(&now, &now_tm)) {
-		printf("\nPANIC: gmtime failed\n");
+		logln(ERROR, "PANIC: gmtime failed");
 		return;
 	}
 	n_strftime(filename, 200, "sdmc:/netpass_export_%Y%m%dT%H%M%S.zip", &now_tm);
-	printf("Downloading...");
+	logln(INFO, "Downloading...");
 	res = httpRequest("GET", url, 0, 0, (void*)1, filename, 0);
-	printf("\n");
 	if (res != 200) {
-		printf("FAIL\nDownload: bad status code %ld\n", res);
+		logln(ERROR, "Download: bad status code %ld", res);
 		remove(filename);
 		return;
 	}
 
-	printf("Successfully downloaded data export!\n");
-	printf("File stored at %s\n", filename);
+	logln(INFO, "Successfully downloaded data export!");
+	logln(INFO, "File stored at %s\n", filename);
 #undef URL_SIZE
 }

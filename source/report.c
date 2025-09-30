@@ -62,9 +62,9 @@ FILE* openLogIndex(void) {
 			fseek(f, 0, SEEK_SET);
 			size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 			size_t list_file_cur_size = sizeof(ReportListHeader) + header.cur_size * sizeof(ReportSendPayload);
-			printf("is_size: %zu\n", is_size);
-			printf("list_file_size: %zu\n", list_file_size);
-			printf("list_file_cur_size: %zu\n", list_file_cur_size);
+			logln(INFO, "is_size: %zu", is_size);
+			logln(INFO, "list_file_size: %zu", list_file_size);
+			logln(INFO, "list_file_cur_size: %zu", list_file_cur_size);
 			if (is_size < list_file_cur_size || header.cur_size > header.max_size) {
 				goto is_corrupt;
 			}

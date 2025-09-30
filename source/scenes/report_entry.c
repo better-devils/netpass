@@ -91,12 +91,12 @@ SceneResult N(report)(Scene* sc) {
 	if (button == SWKBD_D1_CLICK1) {
 		// successfully submitted the input
 		N(send_transfer_id) = _data->entry->transfer_id;
-		printf("Got report: \"%s\", sending...\n", N(send_msg));
+		logln(INFO, "Got report: \"%s\", sending...", N(send_msg));
 		Scene* scene = getLoadingScene(0, lambda(void, (void) {
 			CecMessageHeader msg;
 			Result res = _e(reportGetSomeMsgHeader(&msg, N(send_transfer_id)));
 			if (R_FAILED(res)) {
-				printf("ERROR: %lx\n", res);
+				logln(ERROR, "%lx", res);
 				goto exit;
 			}
 			SHA256_HASH hash;
@@ -118,11 +118,11 @@ SceneResult N(report)(Scene* sc) {
 			res = _e(httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0, 0));
 			free(data);
 			if (R_FAILED(res)) {
-				printf("Error sending report: %ld\n", res);
+				logln(ERROR, "Error sending report: %ld", res);
 				goto exit;
 			}
 
-			printf("report sent\n");
+			logln(INFO, "report sent\n");
 		exit:
 			free(N(send_msg));
 		}));

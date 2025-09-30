@@ -41,7 +41,7 @@ Result cache_current_location_image(void) {
 	mkdir_p(IMAGE_CACHE_DIR);
 	
 	char url[100];
-	printf("Downloading new location image %s.png...", hash);
+	logln(INFO, "Downloading new location image %s.png...", hash);
 	snprintf(url, 100, "%s/location/current/image", BASE_URL);
 	res = httpRequest("GET", url, 0, 0, (void*)1, filename, 0);
 	

@@ -301,7 +301,7 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr get slots metadata";
 	res = _e_cec(cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total));
 	if (R_FAILED(res)) goto fail;
-	printf("Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
+	logln(INFO, "Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// Upload all slots
 	for (int i = 0; i < slots_total; i++) {
@@ -332,7 +332,8 @@ Result doSlotExchange(void) {
 	res = _e_cec(cecdSprFinaliseSend());
 	error_origin = "finalise send";
 	if (R_FAILED(res)) goto fail;
-	printf(" Done\nDownloading inboxes (%ld/%d)", slots_total, numUsedTitles());
+	logln(INFO, "Done");
+	logln(INFO, "Downloading inboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// time to start download!
 	res = _e_cec(cecdSprStartRecv());
@@ -399,12 +400,12 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr done";
 	if (R_FAILED(res)) goto fail;
 
-	printf(" Done (%d)\n", slot_new_data_num);
+	logln(INFO, "Done (%d)", slot_new_data_num);
 
 	goto cleanup;
 fail:
 	cecdSprDone(false);
-	printf("\nERROR (%s): %08lx\n", error_origin, res);
+	logln(ERROR, "(%s): %08lx", error_origin, res);
 cleanup:
 	for (int i = 0; i < 12; i++) {
 		if (slotinfo.slots[i]) {
@@ -475,12 +476,12 @@ Result setLocation(int location) {
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
-		printf("ERROR: Failed to enter location %d: %ld\n", location, res);
+		logln(ERROR, "Failed to enter location %d: %ld", location, res);
 		return res;
 	}
 	config.last_location = location;
 	configWrite();
-	printf("Entered location %d!\n", location);
+	logln(INFO, "Entered location %d!", location);
 	cache_current_location_image();
 	return res;
 }
@@ -501,7 +502,7 @@ Result setEventLocation(u8 uuid[16]) {
 	snprintf(url, 80, "%s/location/%s/enter", BASE_URL, uuidstr);
 	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
-		printf("ERROR: Failed to event enter location %s: %ld\n", uuidstr, res);
+		logln(ERROR, "Failed to event enter location %s: %ld", uuidstr, res);
 	}
 	cache_current_location_image();
 	return res;
@@ -531,7 +532,7 @@ Result doSlotExchangeRetry(void) {
 			if (R_IS_CEC_RESTART(res)) {
 				count++;
 				if (count < 20) {
-					printf("Retrying slot exchange...\n");
+					logln(INFO, "Retrying slot exchange...");
 					svcSleepThread(10e3);
 					continue;
 				}

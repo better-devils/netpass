@@ -256,20 +256,20 @@ SceneResult N(process)(Scene* sc) {
 			if (quirc_decode(&code, &qr_data) == 0) {
 				qr_buffer_from_quirc_data(N(qr_buffer), &qr_data);
 				if (!qr_buf_equal(N(qr_buffer), (u8*)"NPQR", 4)) {
-					printf("Invalid netpass qr code!\n");
+					logln(ERROR, "Invalid netpass qr code!");
 					continue;
 				}
 				u32 method = qr_read_u32(N(qr_buffer));
-				printf("Method: %ld\n", method);
+				logln(INFO, "Method: %ld", method);
 				switch (method) {
 					case QR_METHOD_VERIFY: {
 						sc->next_scene = getPromptScene(str_prompt_verify, getLoadingScene(NULL, lambda(void, (void) {
 							Result res = qr_verify(N(qr_buffer));
 							if (R_FAILED(res)) {
 								_e(res);
-								printf("Verification failed: %lx\n", res);
+								logln(ERROR, "Verification failed: %lx", res);
 							} else {
-								printf("Verification successful!\n");
+								logln(INFO, "Verification successful!");
 							}
 						})));
 						return scene_push;
@@ -294,11 +294,11 @@ SceneResult N(process)(Scene* sc) {
 							Result res = setEventLocation(((QrJoinEventRoomPayload*)N(qr_payload))->uuid);
 							if (R_FAILED(res)) {
 								_e(res);
-								printf("Failed to join event location: %lx\n", res);
+								logln(ERROR, "Failed to join event location: %lx", res);
 							} else {
 								getLocation();
 								triggerDownloadInboxes();
-								printf("Successfully joined event location!\n");
+							        logln(INFO, "Successfully joined event location!");
 							}
 						})));
 						return scene_push;
@@ -308,15 +308,15 @@ SceneResult N(process)(Scene* sc) {
 							Result res = qr_dl_pass(N(qr_buffer));
 							if (R_FAILED(res)) {
 								_e(res);
-								printf("Pass DL failed: %lx\n", res);
+							        logln(INFO, "Pass DL failed: %lx", res);
 							} else {
-								printf("Pass DL successful!\n");
+								logln(INFO, "Pass DL successful!");
 							}
 						})));
 						return scene_push;
 					}
 					default:
-						printf("Unknown method %ld\n", method);
+						logln(ERROR, "Unknown method %ld", method);
 				}
 			}
 		}

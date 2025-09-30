@@ -48,7 +48,7 @@ Scene* processScene(Scene* scene) {
 	{
 		Scene* new_scene = scene->next_scene;
 		if (!new_scene) {
-			printf("ERROR: Could not create scene!!");
+			logln(ERROR, "Could not create scene!!");
 			return NULL;
 		}
 		if (!new_scene->pop_scene) {

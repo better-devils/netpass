@@ -76,7 +76,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 		Result res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
 		if (R_FAILED(res)) {
 			if (res == -404) {
-				printf("ERROR: No fitting pass found!");
+				logln(ERROR, "No fitting pass found!");
 				free(N(play_coins));
 				return;
 			}
@@ -100,7 +100,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 		return;
 	error:
 		_e(res);
-		printf("ERROR: failed processing pass: %lx\n", res);
+		logln(ERROR, "failed processing pass: %lx", res);
 		free(N(play_coins));
 	}));
 	sc->next_scene = scene;
