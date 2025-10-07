@@ -239,17 +239,17 @@ bool clearPatches(void) {
 			// we skip files that don't exist
 			if (access(dstpath, F_OK) != 0) continue;
 			// ok we actually have a file, delete it
-			logln(INFO, "%s...", p->d_name);
+			log_line_start(INFO, "%s...", p->d_name);
 			remove(dstpath);
-			logln(INFO, "Done");
+			log_line_finish("Done");
 			deleted_file = true;
 		}
 	}
 	closedir(d);
-	logln(INFO, "Updating patches version in config...");
+	log_line_start(INFO, "Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();
-	logln(INFO, "Done");
+	log_line_finish("Done");
 	logln(INFO, "Clearing sysmodules done");
 	return deleted_file;
 }
@@ -277,7 +277,7 @@ bool writePatches(void) {
 		struct stat statbuf;
 		if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
 			// ok we actually have a file, copy it
-			logln(INFO, "%s...", p->d_name);
+			log_line_start(INFO, "%s...", p->d_name);
 			FILE* src = fopen(srcpath, "rb");
 			FILE* dst = fopen(dstpath, "wb+");
 			if (!src || !dst) {
@@ -305,25 +305,25 @@ bool writePatches(void) {
 			fclose(src);
 			fclose(dst);
 
-			logln(INFO, "Done");
+			log_line_finish("Done");
 		}
 	}
 	closedir(d);
-	logln(INFO, "Updating patches version in config...");
+	log_line_start(INFO, "Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();
-	logln(INFO, "Done");
+	log_line_finish("Done");
 	logln(INFO, "Copying sysmodules done");
 	free(buffer);
 	return true;
 }
 
 void clearBossCacheAndReboot(void) {
-	logln(INFO, "Clearing spr cache...");
+	log_line_start(INFO, "Clearing spr cache...");
 	bossInit(SPRELAY_TITLE_ID, false);
 	bossUnregisterTask(SPRELAY_TASK_ID, 0);
 	bossUnregisterTask(SPRELAY_TASK_ID, 0);
-	logln(INFO, "Done");
+	log_line_finish("Done");
 	nsInit();
 	NS_RebootSystem();
 	logln(INFO, "Rebooting system...");

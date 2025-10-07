@@ -50,7 +50,7 @@ void logln(enum LogLevel level, const char *restrict format, ...) {
 	if (!log_file || config.log_level < level) return;
 	va_list args;
 	va_start(args, format);
-	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
+	log_line_start(level, "");
 	vfprintf(log_file, format, args);
 	fputc('\n', log_file);
 	fflush(log_file);
@@ -115,4 +115,31 @@ void log_end(LogMessage* log) {
 	logln(log->level, log->message);
 	free(log->message);
 	free(log);
+}
+
+void log_line_start(enum LogLevel level, const char *restrict format, ...) {
+	va_list args;
+	va_start(args, format);
+	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
+	vfprintf(log_file, format, args);
+	fflush(log_file);
+	va_end(args);
+}
+
+void log_line_continue(const char *restrict format, ...) {
+	va_list args;
+	va_start(args, format);
+	vfprintf(log_file, format, args);
+	fflush(log_file);
+	va_end(args);
+}
+
+void log_line_finish(const char *restrict format, ...) {
+	va_list args;
+	va_start(args, format);
+	fputc(' ', log_file);
+	vfprintf(log_file, format, args);
+	fputc('\n', log_file);
+	fflush(log_file);
+	va_end(args);
 }

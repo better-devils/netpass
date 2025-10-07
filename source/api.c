@@ -301,7 +301,7 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr get slots metadata";
 	res = _e_cec(cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total));
 	if (R_FAILED(res)) goto fail;
-	logln(INFO, "Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
+	log_line_start(INFO, "Uploading outboxes (%ld/%d)... ", slots_total, numUsedTitles());
 
 	// Upload all slots
 	for (int i = 0; i < slots_total; i++) {
@@ -332,8 +332,8 @@ Result doSlotExchange(void) {
 	res = _e_cec(cecdSprFinaliseSend());
 	error_origin = "finalise send";
 	if (R_FAILED(res)) goto fail;
-	logln(INFO, "Done");
-	logln(INFO, "Downloading inboxes (%ld/%d)", slots_total, numUsedTitles());
+	log_line_finish("Done");
+	log_line_start(INFO, "Downloading inboxes (%ld/%d)... ", slots_total, numUsedTitles());
 
 	// time to start download!
 	res = _e_cec(cecdSprStartRecv());
@@ -379,17 +379,17 @@ Result doSlotExchange(void) {
 			continue; // the slot was disabled
 		}
 		if (slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
-			printf("=");
+			log_line_continue("=");
 			continue;
 		}
 		slot_new_data_num++;
 		res = _e_cec(cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]));
 		saveSlotInLog(slotinfo.slots[i]);
 		if (R_FAILED(res)) {
-			printf("-");
+			log_line_continue("-");
 			goto fail;
 		} else {
-			printf("=");
+			log_line_continue("=");
 		}
 	}
 
@@ -400,7 +400,7 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr done";
 	if (R_FAILED(res)) goto fail;
 
-	logln(INFO, "Done (%d)", slot_new_data_num);
+	log_line_finish("Done (%d)", slot_new_data_num);
 
 	goto cleanup;
 fail:

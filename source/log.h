@@ -41,6 +41,11 @@ void logInit();
 void logExit();
 
 void logln(enum LogLevel level, const char *restrict format, ...);
+
 LogMessage* log_start(enum LogLevel level);
 void log_multi(LogMessage* foo, const char *restrict format, ...);
 void log_end(LogMessage* foo);
+
+void log_line_start(enum LogLevel level, const char *restrict format, ...);
+void log_line_continue(const char *restrict format, ...);
+void log_line_finish(const char *restrict format, ...);

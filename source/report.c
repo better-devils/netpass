@@ -473,7 +473,7 @@ void reportInit(void) {
 		if (stat(filename, &statbuf) && !S_ISDIR(statbuf.st_mode)) continue;
 		if (!has_spr_passes) {
 			has_spr_passes = true;
-			printf("Add SPR passes ");
+			log_line_start(INFO, "Add SPR passes ");
 		}
 		FILE* f = fopen(filename, "rb");
 		if (!f) continue;
@@ -482,7 +482,7 @@ void reportInit(void) {
 		rewind(f);
 		if (filesize < sizeof(CecSlotHeader)) {
 			fclose(f);
-			printf("/");
+			log_line_continue("/");
 			unlink(filename);
 			continue;
 		}
@@ -490,13 +490,13 @@ void reportInit(void) {
 		fread_blk(&slot, sizeof(CecSlotHeader), 1, f);
 		if (slot.size > MAX_SLOT_SIZE) {
 			fclose(f);
-			printf("S");
+			log_line_continue("S");
 			unlink(filename);
 			continue;
 		}
 		CecSlotHeader* buf_slot = malloc(slot.size);
 		if (!buf_slot) {
-			printf("B");
+			log_line_continue("B");
 			fclose(f);
 			unlink(filename);
 			continue;
@@ -504,11 +504,11 @@ void reportInit(void) {
 		rewind(f);
 		fread_blk(buf_slot, slot.size, 1, f);
 		fclose(f);
-		printf("=");
+		log_line_continue("=");
 		saveSlotInLog(buf_slot);
 		free(buf_slot);
 		unlink(filename);
 	}
 	closedir(d);
-	if (has_spr_passes) printf(" Done\n");
+	if (has_spr_passes) log_line_finish("Done");
 }
