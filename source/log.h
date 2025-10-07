@@ -40,12 +40,15 @@ typedef struct LogMessage {
 void logInit();
 void logExit();
 
+// print a line on the log with printf syntax
 void logln(enum LogLevel level, const char *restrict format, ...);
 
+// compose a message over multiple function calls, and *then* print it
 LogMessage* log_start(enum LogLevel level);
 void log_multi(LogMessage* foo, const char *restrict format, ...);
 void log_end(LogMessage* foo);
 
+// *print* a message bit-by-bit over multiple function calls
 void log_line_start(enum LogLevel level, const char *restrict format, ...);
 void log_line_continue(const char *restrict format, ...);
 void log_line_finish(const char *restrict format, ...);
