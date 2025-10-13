@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <math.h>
 #include "render.h"
 #include "utils.h"
 
@@ -64,10 +65,34 @@ void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z,
 	// Outline
 	int steps = 3 + outlineWidth;
 	float stepSize = outlineWidth * 2. / steps;
-	for (float i = xNeg; i <= xPos; i += stepSize) {
-		for (float j = yNeg; j <= yPos; j += stepSize) {
+	// We want to do as few C2D_DrawText calls as possible, so we deduplicate with
+	// the rounded (x, y) coordinates.
+	u32 had_x[steps];
+	u32 had_y[steps];
+	int ii = 0;
+	for (float i = xNeg; i <= xPos; i += stepSize, ii++) {
+		bool found = false;
+		for (int k = 0; k < ii; k++) {
+			if (had_x[k] == ii) {
+				found = true;
+				break;
+			}
+		}
+		had_x[ii] = round(i);
+		if (found) continue;
+		int jj = 0;
+		for (float j = yNeg; j <= yPos; j += stepSize, jj++) {
 			if (i != xNeg && i != xPos && j != yNeg && j != yPos) continue;
-			if (i == x && j == y) continue;
+			if (round(i) == round(x) && round(j) == round(y)) continue;
+			bool found = false;
+			for (int k = 0; k < jj; k++) {
+				if (had_y[k] == jj) {
+					found = true;
+					break;
+				}
+			}
+			had_y[jj] = round(j);
+			if (found) continue;
 			C2D_DrawText(text, C2D_WithColor | flags, i, j, z, scaleX, scaleY, outlineClr, args);
 		}
 	}
