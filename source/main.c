@@ -139,7 +139,7 @@ Scene* initial_scene(void) {
 		scene = getLocationScene(location.id);
 	}
 
-	if (ping_response.version.new_version_available || true) {
+	if (ping_response.version.new_version_available) {
 		scene = load_new_version(scene);
 	} else if (ping_response.message.message) {
 		Scene* message_scene = getInfoSceneStr(ping_response.message.message, 0);
