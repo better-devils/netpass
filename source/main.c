@@ -203,7 +203,7 @@ int main(int nargs, char** argv) {
 	// sadly the pretty outline text uses a *lot* of cmdbuf size,
 	// so we need to increase our cmdbuf size
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE * 2);
-	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
+	C2D_Init(C2D_DEFAULT_MAX_OBJECTS * 2);
 	C2D_Prepare();
 	_e(romfsInit());
 	init_main_thread_prio();

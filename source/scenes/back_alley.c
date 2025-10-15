@@ -113,6 +113,7 @@ void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amoun
 	char text[50];
 	snprintf(text, 50, s, cost_amount);
 	C2D_TextFontParse(staticText, font, staticBuf, text);
+	C2D_TextOptimize(staticText);
 }
 
 bool N(init_playcoins)(Scene* sc) {
@@ -161,6 +162,7 @@ bool N(init_gamelist)(Scene* sc) {
 		if (isTitleIgnored(title_data->titles[i].title_id)) continue;
 		_data->title_ids[_data->number_games] = title_data->titles[i].title_id;
 		C2D_TextParse(&_data->g_game_titles[_data->number_games], _data->g_staticBuf, title_data->titles[i].name);
+		C2D_TextOptimize(&_data->g_game_titles[_data->number_games]);
 		_data->number_games++;
 	}
 	return true;

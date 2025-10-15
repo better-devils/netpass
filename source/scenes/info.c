@@ -42,6 +42,7 @@ void N(init)(Scene* sc) {
 		font = (void*)((u32)font & 0xFFFFFFFE);
 		_data->message = (void*)sc->data;
 		C2D_TextFontParse(&_data->g_info, font, _data->g_staticBuf, (void*)sc->data);
+		C2D_TextOptimize(&_data->g_info);
 	} else {
 		_data->message = 0;
 		TextLangParse(&_data->g_info, _data->g_staticBuf, (void*)sc->data);
