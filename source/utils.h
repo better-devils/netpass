@@ -59,7 +59,8 @@ void* cecGetExtHeader(CecMessageHeader* msg, u32 type);
 u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type);
 char* b64encode(u8* in, size_t len);
 int rmdir_r(char *path);
-void mkdir_p(char* orig_path);
+void mkdir_p(const char* orig_path);
+int cp(const char* from_path, const char* to_path);
 Result APT_Wrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out_size, void* out);
 Result APT_Unwrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out_size, void* out);
 u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val);
@@ -84,9 +85,9 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 int format_uuid(char str[37], u8 uuid[16]);
 u32 blz_decompress_size(u8* compressed, u32 compressedsize);
 bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 decompressedsize);
-Result get_cia_info(char* cia_filename, AM_TitleEntry* info);
+Result get_cia_info(const char* cia_filename, AM_TitleEntry* info);
 FS_MediaType get_title_destination(u64 title_id);
-Result install_cia(char* cia_filename);
+Result install_cia(const char* cia_filename);
 
 #define ERROR_NO_TITLE_ID CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_OUT_OF_RESOURCE, CTR_RESULT_MODULE_APPLICATION, 0)
 #define ERROR_MISSING_SLOT_META CTR_RESULT_MAKE(CTR_RESULT_LEVEL_FATAL, CTR_RESULT_SUMMARY_NOT_FOUND, CTR_RESULT_MODULE_APPLICATION, 1)

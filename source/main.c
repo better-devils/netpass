@@ -19,6 +19,7 @@
 #include <3ds.h>
 #include <citro2d.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "debug.h"
 #include "scene.h"
 #include "api.h"
@@ -69,7 +70,8 @@ Scene* load_new_version(Scene* scene) {
 	if (message) {
 		snprintf(message, 1000, _s(str_new_version), ping_response.version.major, ping_response.version.minor, ping_response.version.patch);
 		C2D_Font font = _font(str_new_version);
-		static const char* cia_filename = "sdmc:/config/netpass/netpass.cia";
+		static const char* filename_cia = "sdmc:/config/netpass/netpass.cia";
+		static const char* filename_3dsx_tmp = "sdmc:/config/netpass/netpass.3dsx";
 		Scene* version_scene = getPromptSceneStr(message, font, getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 			if (R_FAILED(ping_res)) {
 				return getInfoScene(str_new_version_failed);
@@ -78,7 +80,7 @@ Scene* load_new_version(Scene* scene) {
 			return getLoadingScene(getStopScene(), lambda(void, (void) {
 				if (filename_3dsx) return;
 				AM_TitleEntry info;
-				get_cia_info((char*)cia_filename, &info);
+				get_cia_info(filename_cia, &info);
 				Result res = 0;
 				res = _e(APT_PrepareToDoApplicationJump(0, info.titleID, get_title_destination(info.titleID)));
 				if (R_FAILED(res)) goto fail;
@@ -94,14 +96,24 @@ Scene* load_new_version(Scene* scene) {
 		})), lambda(void, (void) {
 			if (filename_3dsx) {
 				// this is easy, just download and overwrite the file
-				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, (void*)1, filename_3dsx, 0));
+				// we first download it to a different file to prevent weird glitches with music and whatnot
+				mkdir_p(filename_3dsx_tmp);
+				printf("filename: %s\n", filename_3dsx);
+				printf("tmp filename: %s\n", filename_3dsx_tmp);
+				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, (void*)1, (char*)filename_3dsx_tmp, 0));
+				if (R_FAILED(ping_res)) return;
+				unlink(filename_3dsx);
+				if (cp(filename_3dsx_tmp, filename_3dsx) != 0) {
+					ping_res = _e_errno();
+					return;
+				}
 				return;
 			}
 			// ok, we have a cia file. this will be a tad harder.
-			mkdir_p((char*)cia_filename);
-			ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, (void*)1, (char*)cia_filename, 0));
+			mkdir_p(filename_cia);
+			ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, (void*)1, (char*)filename_cia, 0));
 			if (R_FAILED(ping_res)) return;
-			ping_res = install_cia((char*)cia_filename);
+			ping_res = install_cia(filename_cia);
 		})));
 		version_scene->pop_scene = scene;
 		scene = version_scene;
@@ -127,7 +139,7 @@ Scene* initial_scene(void) {
 		scene = getLocationScene(location.id);
 	}
 
-	if (ping_response.version.new_version_available) {
+	if (ping_response.version.new_version_available || true) {
 		scene = load_new_version(scene);
 	} else if (ping_response.message.message) {
 		Scene* message_scene = getInfoSceneStr(ping_response.message.message, 0);
