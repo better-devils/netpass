@@ -214,7 +214,7 @@ int rmdir_r(char *path) {
 	return r;
 }
 
-void mkdir_p(char* orig_path) {
+void mkdir_p(const char* orig_path) {
 	int maxlen = strlen(orig_path) + 1;
 	char path[maxlen];
 	memcpy(path, orig_path, maxlen);
@@ -230,6 +230,40 @@ void mkdir_p(char* orig_path) {
 		*found = '/';
 		pos = (int)found - (int)path;
 	} while(pos < maxlen);
+}
+
+int cp(const char* from_path, const char* to_path) {
+	FILE* from = 0;
+	FILE* to = 0;
+	void* buf = 0;
+	from = fopen(from_path, "rb");
+	if (!from) goto fail;
+	to = fopen(to_path, "wb");
+	if (!to) goto fail;
+	buf = malloc(1000);
+	if (!buf) goto fail;
+	fseek(from, 0, SEEK_END);
+	size_t file_size = ftell(from);
+	fseek(from, 0, SEEK_SET);
+	while (file_size > 0) {
+		size_t write_size = file_size < 1000 ? file_size : 1000;
+		
+		fread_blk(buf, write_size, 1, from);
+		fwrite_blk(buf, write_size, 1, to);
+		
+		file_size -= write_size;
+	}
+	free(buf);
+	fclose(from);
+	fclose(to);
+	return 0;
+fail:;
+	int saved_errno = errno;
+	if (buf) free(buf);
+	if (from) fclose(from);
+	if (to) fclose(to);
+	errno = saved_errno;
+	return -1;
 }
 
 // cppcheck-suppress unusedFunction
@@ -748,7 +782,7 @@ u64 getAvailableSpace(void) {
 	return (u64)st.f_bsize * (u64)st.f_bavail;
 }
 
-Result get_cia_info(char* cia_filename, AM_TitleEntry* info) {
+Result get_cia_info(const char* cia_filename, AM_TitleEntry* info) {
 	Result res = 0;
 	
 	char* real_filename = strchr(cia_filename, ':');
@@ -776,7 +810,7 @@ FS_MediaType get_title_destination(u64 title_id) {
 	//     DSiWare                3DS                    DSiWare, System, DLP         Application           System Title
 	return platform == 0x0003 || (platform == 0x0004 && ((category & 0x8011) != 0 || (category == 0x0000 && variation == 0x02))) ? MEDIATYPE_NAND : MEDIATYPE_SD;
 }
-Result install_cia(char* cia_filename) {
+Result install_cia(const char* cia_filename) {
 	Result res = 0;
 	Handle cia_handle, file_handle;
 	AM_TitleEntry info;

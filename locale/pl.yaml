@@ -37,7 +37,7 @@ str_submit: Wyślij
 str_check_inboxes: Sprawdź Skrzynki
 str_toggle_titles: Wł/Wył Gry
 str_toggle_titles_message: Wciśnij {a_button} by rozpocząć lub zatrzymać proces 
-  wymiany.
+  wymiany spotkań.
 str_toggle_titles_on: (WŁ.)
 str_toggle_titles_off: (WYŁ.)
 str_write_patches: Wczytaj łatki
@@ -90,7 +90,7 @@ str_welcome: Witaj w NetPass
 str_welcome_message: Przed uruchomieniem NetPass proszę przeczytać i 
   zaakceptować nasze zasady oraz politykę prywatności.
 str_bad_os_version: "NetPass wymaga wersję systemu 3DS 11.15.0 bądź nowszą aby prawidłowo
-  funkcjonować. Niestety wygląda na to że używasz starszej wersji. Proszę zaauktalizować
+  funkcjonować. Niestety wygląda na to że używasz starszej wersji. Proszę zaktualizować
   i otworzyć NetPass ponownie.\n\nWciśnij dowolny przycisk aby wyjść"
 str_update_patches_poweroff_clear_desc: Pomyślnie usunięto łatki! Twoja konsola 
   uruchomi się teraz ponownie.

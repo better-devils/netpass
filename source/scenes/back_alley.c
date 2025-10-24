@@ -113,6 +113,7 @@ void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amoun
 	char text[50];
 	snprintf(text, 50, s, cost_amount);
 	C2D_TextFontParse(staticText, font, staticBuf, text);
+	C2D_TextOptimize(staticText);
 }
 
 bool N(init_playcoins)(Scene* sc) {
@@ -154,16 +155,16 @@ bool N(init_playcoins)(Scene* sc) {
 	return true;
 }
 
-bool N(init_gamelist)(Scene* sc) {
+void N(init_gamelist)(Scene* sc) {
 	_data->number_games = 0;
 	NetpassTitleData* title_data = getTitleData();
 	for (int i = 0; i < title_data->num_titles; i++) {
 		if (isTitleIgnored(title_data->titles[i].title_id)) continue;
 		_data->title_ids[_data->number_games] = title_data->titles[i].title_id;
 		C2D_TextParse(&_data->g_game_titles[_data->number_games], _data->g_staticBuf, title_data->titles[i].name);
+		C2D_TextOptimize(&_data->g_game_titles[_data->number_games]);
 		_data->number_games++;
 	}
-	return true;
 }
 
 void N(init)(Scene* sc) {
@@ -172,14 +173,9 @@ void N(init)(Scene* sc) {
 	memset(sc->d, 0, sizeof(N(DataStruct)));
 	
 	if (!N(init_playcoins)(sc)) return;
+	get_background_image("back_alley", &_data->spr, &_data->background, false);
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 12*24);
-	if (!N(init_gamelist)(sc)) {
-		C2D_TextBufDelete(_data->g_staticBuf);
-		free(_data->play_coins);
-		free(_data);
-		sc->d = 0;
-		return;
-	}
+	N(init_gamelist)(sc);
 	
 	getCurMusic(_data->prev_music);
 	playMusic("back_alley");
@@ -191,8 +187,6 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_subtext, _data->g_staticBuf, str_back_alley_message);
 	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
-	
-	get_background_image("back_alley", &_data->spr, &_data->background, false);
 }
 
 void N(render)(Scene* sc) {

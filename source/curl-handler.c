@@ -299,7 +299,7 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 	curl_easy_setopt(h->handle, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(h->handle, CURLOPT_CUSTOMREQUEST, h->method);
-	curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 120);
+	curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 300);
 	curl_easy_setopt(h->handle, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
 	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);

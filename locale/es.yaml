@@ -112,3 +112,4 @@ str_enter_event_location: ¿Confirmas que quieres entrar al evento "%s"?
 str_at_event_location: Estas en un evento especial.
 str_new_version_failed: La instalación de la actualización ha fallado. Puedes 
   volver a instalarla mediante Universal Updater o el código QR.
+str_report_list_empty: La lista de informes está vacía.

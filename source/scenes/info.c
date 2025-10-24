@@ -37,13 +37,15 @@ void N(init)(Scene* sc) {
 	C2D_Font font = sc->d;
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(2000);
 	if (font) {
 		font = (void*)((u32)font & 0xFFFFFFFE);
 		_data->message = (void*)sc->data;
+		_data->g_staticBuf = C2D_TextBufNew(strlen(_data->message) + STR_A_OK_LEN);
 		C2D_TextFontParse(&_data->g_info, font, _data->g_staticBuf, (void*)sc->data);
+		C2D_TextOptimize(&_data->g_info);
 	} else {
 		_data->message = 0;
+		_data->g_staticBuf = C2D_TextBufNew(strlen(_s((void*)sc->data)) + STR_A_OK_LEN);
 		TextLangParse(&_data->g_info, _data->g_staticBuf, (void*)sc->data);
 	}
 	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
