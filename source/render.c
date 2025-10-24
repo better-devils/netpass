@@ -96,7 +96,7 @@ void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z,
 			C2D_DrawText(text, C2D_WithColor | flags, i, j, z, scaleX, scaleY, outlineClr, args);
 		}
 	}
-	
+
 	// Actual text
 	C2D_DrawText(text, C2D_WithColor | flags, x, y, z, scaleX, scaleY, textClr, args);
 

@@ -45,6 +45,7 @@ void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	memset(sc->d, 0, sizeof(N(DataStruct)));
+	get_background_image("home", &_data->spr, &_data->background, true);
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
 	_data->view_bg_only = false;
@@ -65,8 +66,6 @@ void N(init)(Scene* sc) {
 		C2D_TextFontParse(&_data->artist, _font(str_artist_copyright), _data->g_staticBuf, string);
 		_data->have_artist = true;
 	}
-	
-	get_background_image("home", &_data->spr, &_data->background, true);
 }
 
 void N(render)(Scene* sc) {

@@ -116,8 +116,8 @@ void N(captureCamThread)(void* arg) {
 	CAMU_Activate(SELECT_NONE);
 	camExit();
 	linearFree(buffer);
-	for(int i = 1; i < 3; i++) {
-		if(cam_events[i] != 0) {
+	for (int i = 1; i < 3; i++) {
+		if (cam_events[i] != 0) {
 			svcCloseHandle(cam_events[i]);
 		}
 	}
@@ -145,6 +145,7 @@ void N(init)(Scene* sc) {
 		N(qr_buffer) = malloc(sizeof(QrBuffer));
 		if (!N(qr_buffer)) {
 			free(_data);
+			sc->d = NULL;
 			return;
 		}
 	}
@@ -227,7 +228,10 @@ void N(exit)(Scene* sc) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}
-	if (N(qr_payload)) free(N(qr_payload));
+	if (N(qr_payload)) {
+		free(N(qr_payload));
+		N(qr_payload) = NULL;
+	}
 }
 
 SceneResult N(process)(Scene* sc) {
@@ -341,6 +345,7 @@ SceneResult N(process)(Scene* sc) {
 Scene* getScanQrScene(void) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
+	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
 	scene->render = N(render);
 	scene->exit = N(exit);
