@@ -20,6 +20,7 @@
 
 #include "scan_qr.h"
 #include "../qr.h"
+#include "../render.h"
 #include "loading.h"
 #include "prompt.h"
 #include <stdlib.h>
@@ -209,11 +210,9 @@ void N(render)(Scene* sc) {
 	static const Tex3DS_SubTexture subt3x = { SCREEN_TOP_WIDTH, SCREEN_TOP_HEIGHT, 0.0, 1.0, SCREEN_TOP_WIDTH*1.0/512.0, 1.0 - (SCREEN_TOP_HEIGHT*1.0/256.0) };
 	C2D_DrawImageAt((C2D_Image){ &_data->tex, &subt3x }, 0, 0, 0, NULL, 1, 1);
 	
-	u32 clr_bg = C2D_Color32(0x20, 0xAE, 0x5E, 0xFF);
-	u32 clr_text = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
-	C2D_DrawRectSolid(0, SCREEN_TOP_HEIGHT - 17, 0, SCREEN_TOP_WIDTH, 17, clr_bg);
-	C2D_DrawText(&_data->g_b_back, C2D_AlignLeft | C2D_WithColor, 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_text);
-	C2D_DrawText(&_data->g_x_switch_camera, C2D_AlignCenter | C2D_WithColor, SCREEN_TOP_WIDTH / 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_text);
+	C2D_DrawRectSolid(0, SCREEN_TOP_HEIGHT - 17, 0, SCREEN_TOP_WIDTH, 17, clr_netpass_green);
+	C2D_DrawText(&_data->g_b_back, C2D_AlignLeft | C2D_WithColor, 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_white);
+	C2D_DrawText(&_data->g_x_switch_camera, C2D_AlignCenter | C2D_WithColor, SCREEN_TOP_WIDTH / 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_white);
 }
 
 void N(exit)(Scene* sc) {
