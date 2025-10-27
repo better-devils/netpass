@@ -118,3 +118,7 @@ str_new_version_failed: Die Installation der neuen Version ist fehlgeschlagen.
   Du kannst sie immer noch über Universal Updater oder mit dem QR-Code 
   installieren.
 str_report_list_empty: Die Meldeliste ist leer.
+str_logging: 'Logs:'
+str_logging_none: Keine
+str_logging_screen: Bildschirm
+str_logging_file: Datei
