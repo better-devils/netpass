@@ -31,19 +31,19 @@ const char* LOG_LEVEL_NAMES[] = { "ERROR", "WARN", "INFO", "DEBUG" };
 __FILE* log_file = NULL;
 
 void logInit() {
-	if (config.log_output == File) {
+	if (config.log_output == LogOutputFile) {
 		log_file = fopen(LOG_FILE_NAME, "w");
 		if (!log_file) {
 			_e_errno();
 			return;
 		}
-	} else {
+	} else if (config.log_output == LogOutputDisabled) {
 		log_file = stdout;
 	}
 }
 
 void logExit() {
-	if (config.log_output == File && log_file) fclose(log_file);
+	if (config.log_output == LogOutputFile && log_file) fclose(log_file);
 }
 
 void logln(enum LogLevel level, const char *restrict format, ...) {
@@ -75,7 +75,7 @@ LogMessage* log_start(enum LogLevel level) {
 }
 
 void log_multi(LogMessage* log, const char *restrict format, ...) {
-	if (!log) return;
+	if (!log || !log_file) return;
 	va_list args;
 	va_start(args, format);
 	int buf_length = 10;
@@ -121,6 +121,7 @@ void log_end(LogMessage* log) {
 }
 
 void log_line_start(enum LogLevel level, const char *restrict format, ...) {
+	if (!log_file) return;
 	va_list args;
 	va_start(args, format);
 	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
@@ -130,6 +131,7 @@ void log_line_start(enum LogLevel level, const char *restrict format, ...) {
 }
 
 void log_line_continue(const char *restrict format, ...) {
+	if (!log_file) return;
 	va_list args;
 	va_start(args, format);
 	vfprintf(log_file, format, args);
@@ -138,6 +140,7 @@ void log_line_continue(const char *restrict format, ...) {
 }
 
 void log_line_finish(const char *restrict format, ...) {
+	if (!log_file) return;
 	va_list args;
 	va_start(args, format);
 	fputc(' ', log_file);

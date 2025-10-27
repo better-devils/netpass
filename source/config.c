@@ -49,7 +49,7 @@ Config config = {
 	.welcome_version = 0,
 	.patches_version = 0,
 	.bg_music = 1,
-	.log_output = BottomScreen,
+	.log_output = LogOutputDisabled,
 	.log_level = INFO
 };
 

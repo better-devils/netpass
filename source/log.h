@@ -19,9 +19,9 @@
 #pragma once
 
 enum LogOutput {
-	BottomScreen = 0,
-	File,
-	Disabled,
+	LogOutputDisabled = 0,
+	LogOutputBottomScreen,
+	LogOutputFile,
 };
 
 enum LogLevel {
