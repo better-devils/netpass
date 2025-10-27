@@ -111,3 +111,7 @@ str_enter_event_location: Tem certeza de que deseja participar do evento “%s�
 str_at_event_location: Você está em um evento especial.
 str_artist_copyright: Arte © %s
 str_report_list_empty: A lista de denúncias está vazia.
+str_logging: 'Registros:'
+str_logging_none: Nenhum
+str_logging_screen: Tela
+str_logging_file: Arquivo
