@@ -57,12 +57,12 @@ str_update_patches: Mettre les rustines à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
 str_report_source: 'Source : %s'
-str_update_patches_desc: Pour installer correctement NetPass, quelques fichiers 
-  mettant à jour le sysmodule vont maintenant être créées. Pour que celles-ci 
+str_update_patches_desc: Pour installer correctement NetPass, quelques 
+  correctifs sysmodules vont maintenant être créées. Pour que celles-ci 
   fonctionnent, vous devez activer «Enable loading external FIRMs and modules» 
   dans les réglages de Luma3DS. Pour y accéder, éteignez la console et maintenez
-  {select_button} enfoncé pendant que la console s'allume {power_button}. Vous 
-  pouvez faire cela après l’instalation des rustines.
+  {select_button} pendant que la console s'allume {power_button}. Vous pouvez 
+  faire cela après l’instalation des rustines.
 str_integrations_message: Les intégrations tierces ne sont pas gérées par 
   NetPass. Utilisez-les à vos risques et périls !
 str_update_patches_poweroff_desc: Mise à jour terminée ! Votre console va 
@@ -110,7 +110,7 @@ str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDéb
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_at_event_location: Vous êtes à un événement spécial.
-str_artist_copyright: Illustration par %s ©
+str_artist_copyright: Illustration © %s
 str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
 str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez 
   toujours l'actualiser via Universal Updater ou par QR Code.
