@@ -317,9 +317,9 @@ Result doSlotExchange(void) {
 		}
 		Result res2 = uploadSlot(&slotinfo.metadata[i]);
 		if (R_FAILED(res2)) {
-			printf("-");
+			log_line_continue("-");
 		} else {
-			printf("=");
+			log_line_continue("=");
 		}
 		error_origin = "upload slot";
 		res = _e_cec(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2)));

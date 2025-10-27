@@ -21,14 +21,16 @@
 #include "../curl-handler.h"
 #define N(x) scenes_misc_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_BACK_LEN)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_BACK_LEN + STR_LOGGING_LEN)
 
-#define NUM_ENTRIES 7
+#define NUM_ENTRIES 8
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_title;
 	C2D_Text g_entries[NUM_ENTRIES];
+	C2D_Text g_logs[3];
+	float logs_width;
 	int cursor;
 } N(DataStruct);
 
@@ -46,7 +48,14 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_update_patches);
 	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_view_privacy);
 	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_view_rules);
-	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_logging);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
+	
+	C2D_TextGetDimensions(&_data->g_entries[6], 1.0, 1.0, &_data->logs_width, 0);
+	
+	TextLangParse(&_data->g_logs[0], _data->g_staticBuf, str_logging_none);
+	TextLangParse(&_data->g_logs[1], _data->g_staticBuf, str_logging_screen);
+	TextLangParse(&_data->g_logs[2], _data->g_staticBuf, str_logging_file);
 }
 
 void N(render)(Scene* sc) {
@@ -55,6 +64,8 @@ void N(render)(Scene* sc) {
 	for (int i = 0; i < NUM_ENTRIES; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
+	
+	C2D_DrawText(&_data->g_logs[config.log_output], C2D_AlignLeft, 30 + _data->logs_width + 3, 10 + 7*25, 0, 1, 1);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
@@ -126,7 +137,11 @@ SceneResult N(process)(Scene* sc) {
 			if (_data->cursor == 5) {
 				open_url(RULES_URL);
 			}
-			if (_data->cursor == 6) return scene_pop;
+			if (_data->cursor == 6) {
+				config.log_output = (config.log_output + 1) % 3;
+				configWrite();
+			}
+			if (_data->cursor == 7) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;

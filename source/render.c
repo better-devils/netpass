@@ -24,7 +24,10 @@
 #include "render.h"
 #include "utils.h"
 
-C2D_SpriteSheet spr_cursor = 0;
+static C2D_SpriteSheet spr_cursor = 0;
+static C2D_SpriteSheet spr_bottom_screen = 0;
+static C2D_Text version_text;
+static C2D_TextBuf g_textbuf;
 
 u32 clr_white;
 u32 clr_gray;
@@ -34,7 +37,19 @@ u32 clr_focus_blue;
 u32 clr_off_red;
 
 void renderInit(void) {
+	g_textbuf = C2D_TextBufNew(50);
+	
+	char version[20];
+#ifdef _VERSION_GIT_SHA_
+	snprintf(version, 20, "v%d.%d.%d+%s", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, (char*)_VERSION_GIT_SHA_);
+#else
+	snprintf(version, 20, "v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+#endif
+	C2D_TextParse(&version_text, g_textbuf, version);
+	C2D_TextOptimize(&version_text);
+
 	spr_cursor = C2D_SpriteSheetLoad("romfs:/gfx/cursor.t3x");
+	spr_bottom_screen = C2D_SpriteSheetLoad("romfs:/gfx/botscreen.t3x");
 	
 	clr_white = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
 	clr_gray = C2D_Color32(0x4c, 0x4c, 0x4c, 0xFF);
@@ -46,6 +61,8 @@ void renderInit(void) {
 
 void renderExit(void) {
 	if (spr_cursor) C2D_SpriteSheetFree(spr_cursor);
+	if (spr_bottom_screen) C2D_SpriteSheetFree(spr_bottom_screen);
+	C2D_TextBufDelete(g_textbuf);
 }
 
 void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z, float scaleX, float scaleY, float outlineWidth, u32 textClr, u32 outlineClr, ...) {
@@ -65,34 +82,10 @@ void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z,
 	// Outline
 	int steps = 3 + outlineWidth;
 	float stepSize = outlineWidth * 2. / steps;
-	// We want to do as few C2D_DrawText calls as possible, so we deduplicate with
-	// the rounded (x, y) coordinates.
-	u32 had_x[steps];
-	u32 had_y[steps];
-	int ii = 0;
-	for (float i = xNeg; i <= xPos; i += stepSize, ii++) {
-		bool found = false;
-		for (int k = 0; k < ii; k++) {
-			if (had_x[k] == ii) {
-				found = true;
-				break;
-			}
-		}
-		had_x[ii] = round(i);
-		if (found) continue;
-		int jj = 0;
-		for (float j = yNeg; j <= yPos; j += stepSize, jj++) {
+	for (float i = xNeg; i <= xPos; i += stepSize) {
+		for (float j = yNeg; j <= yPos; j += stepSize) {
 			if (i != xNeg && i != xPos && j != yNeg && j != yPos) continue;
 			if (round(i) == round(x) && round(j) == round(y)) continue;
-			bool found = false;
-			for (int k = 0; k < jj; k++) {
-				if (had_y[k] == jj) {
-					found = true;
-					break;
-				}
-			}
-			had_y[jj] = round(j);
-			if (found) continue;
 			C2D_DrawText(text, C2D_WithColor | flags, i, j, z, scaleX, scaleY, outlineClr, args);
 		}
 	}
@@ -118,4 +111,10 @@ void renderCursor(float x, float y, float scale) {
 	if (!spr_cursor) return;
 	C2D_Image img = C2D_SpriteSheetGetImage(spr_cursor, 0);
 	C2D_DrawImageAt(img, x, y, 0, NULL, scale, scale);
+}
+
+void renderBottomScreen(void) {
+	C2D_Image img = C2D_SpriteSheetGetImage(spr_bottom_screen, 0);
+	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1.0, 1.0);
+	renderText(&version_text, 3, 0, 0.4, 0);
 }

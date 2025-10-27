@@ -27,6 +27,7 @@
 #define LOG_FILE_NAME "sdmc:/config/netpass/log.txt"
 
 const char* LOG_LEVEL_NAMES[] = { "ERROR", "WARN", "INFO", "DEBUG" };
+const char* LOG_LEVEL_COLORS[] = { "34", "36", "35", "31" };
 
 __FILE* log_file = NULL;
 
@@ -37,7 +38,7 @@ void logInit() {
 			_e_errno();
 			return;
 		}
-	} else if (config.log_output == LogOutputDisabled) {
+	} else if (config.log_output == LogOutputBottomScreen) {
 		log_file = stdout;
 	}
 }
@@ -124,7 +125,11 @@ void log_line_start(enum LogLevel level, const char *restrict format, ...) {
 	if (!log_file) return;
 	va_list args;
 	va_start(args, format);
-	fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
+	if (log_file == stdout) {
+		fprintf(log_file, "\x1b[%sm[%s]\x1b[0m ", LOG_LEVEL_COLORS[level], LOG_LEVEL_NAMES[level]);
+	} else {
+		fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
+	}
 	vfprintf(log_file, format, args);
 	fflush(log_file);
 	va_end(args);

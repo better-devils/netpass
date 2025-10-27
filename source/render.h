@@ -50,3 +50,4 @@ void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z,
 void renderText(C2D_Text* text, float x, float y, float scale, u32 clr);
 void renderTextFlags(C2D_Text* text, u32 flags, float x, float y, float scale, u32 clr, ...);
 void renderCursor(float x, float y, float scale);
+void renderBottomScreen(void);

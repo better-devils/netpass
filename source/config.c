@@ -50,7 +50,7 @@ Config config = {
 	.patches_version = 0,
 	.bg_music = 1,
 	.log_output = LogOutputDisabled,
-	.log_level = INFO
+	.log_level = INFO,
 };
 
 void addIgnoredTitle(u32 title_id) {
@@ -203,6 +203,8 @@ void configWrite(void) {
 			}
 		}
 	}
+	snprintf(line, 250, "log_output=%d\n", config.log_output);
+	fputs_blk(line, f);
 	snprintf(line, 250, "title_ids_ignored=");
 	for (size_t i = 0; i < 24; i++) {
 		snprintf(line + 18 + (9*i), 250 - (18 + (9*i)), "%08lx,", config.title_ids_ignored[i]);

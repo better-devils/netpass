@@ -109,3 +109,7 @@ str_artist_copyright: "Artwork © %s"
 str_new_version_failed: "Installing the new version failed. You can still install
   it again via Universal Updater or via QR-Code."
 str_report_list_empty: "The report list is empty."
+str_logging: "Logs:"
+str_logging_none: "None"
+str_logging_screen: "Screen"
+str_logging_file: "File"

@@ -21,6 +21,7 @@
 #include <citro2d.h>
 #include <stdlib.h>
 #include <unistd.h> // TODO: check if needed
+#include "log.h"
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
@@ -201,7 +202,6 @@ int main(int nargs, char** argv) {
 	_e(frdInit(false));
 	_e(fsInit());
 	_e(cecdInit());
-	consoleInit(GFX_BOTTOM, NULL);
 	
 	if (nargs >= 1) {
 		filename_3dsx = argv[0];
@@ -209,6 +209,12 @@ int main(int nargs, char** argv) {
 
 	configInit(); // must be after cecdInit()
 	logInit(); // must be after configInit();
+	
+	bool output_bottom_screen = config.log_output != LogOutputBottomScreen;
+	
+	if (!output_bottom_screen) {
+		consoleInit(GFX_BOTTOM, NULL);
+	}
 
 	LogMessage* log = log_start(INFO);
 	log_multi(log, "Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
@@ -250,6 +256,7 @@ int main(int nargs, char** argv) {
 	_e(playMusic("home")); // start the default music
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	C3D_RenderTarget* bottom = output_bottom_screen ? C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT) : NULL;
 
 	Scene* scene;
 	{
@@ -301,13 +308,19 @@ int main(int nargs, char** argv) {
 			scene = err_scene;
 		}
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		C2D_TargetClear(top, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+		C2D_TargetClear(top, clr_white);
 		C2D_SceneBegin(top);
 		if (scene->is_popup && scene->pop_scene) {
 			scene->pop_scene->render(scene->pop_scene);
 			C2D_Flush();
 		}
 		scene->render(scene);
+		
+		if (bottom) {
+			C2D_TargetClear(bottom, clr_white);
+			C2D_SceneBegin(bottom);
+			renderBottomScreen();
+		}
 		C3D_FrameEnd(0);
 		svcSleepThread(1);
 	}
