@@ -110,3 +110,7 @@ str_artist_copyright: Konstverk © %s
 str_new_version_failed: Installation av den nya versionen misslyckades. Du kan 
   fortfarande installera den via Universal Updater eller QR-koden.
 str_report_list_empty: Anmälningslistan är tom.
+str_logging: 'Loggar:'
+str_logging_none: Inga
+str_logging_screen: Skärm
+str_logging_file: Fil
