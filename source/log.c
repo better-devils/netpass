@@ -82,16 +82,19 @@ void log_multi(LogMessage* log, const char *restrict format, ...) {
 	char *buf = malloc(buf_length);
 	if (!buf) {
 		_e(ERROR_OUT_OF_MEMORY);
+		va_end(args);
 		return;
 	}
+	int written;
 try_write:
-	int written = vsnprintf(buf, buf_length, format, args);
+	written = vsnprintf(buf, buf_length, format, args);
 	if (written >= buf_length) {
 		buf_length = written + 1;
 		char *tmp = realloc(buf, buf_length);
 		if (!tmp) {
 			free(buf);
 			_e(ERROR_OUT_OF_MEMORY);
+			va_end(args);
 			return;
 		}
 		buf = tmp;
