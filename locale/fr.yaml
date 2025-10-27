@@ -115,3 +115,7 @@ str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
 str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez 
   toujours l'actualiser via Universal Updater ou par QR Code.
 str_report_list_empty: La liste des signalements est vide.
+str_logging: 'Journaux :'
+str_logging_none: Aucun
+str_logging_screen: Écran
+str_logging_file: Fichier
