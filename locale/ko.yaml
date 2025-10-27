@@ -99,3 +99,7 @@ str_new_version_failed: 새 버전 설치에 실패했습니다. Universal Updat
 str_report_list_empty: 보고서 목록이 비어 있습니다.
 str_enter_event_location: 이벤트 "%s"에 참가하시겠습니까?
 str_at_event_location: 특별한 이벤트에 참여 중입니다.
+str_logging: '로그:'
+str_logging_none: 없음
+str_logging_screen: 화면
+str_logging_file: 파일
