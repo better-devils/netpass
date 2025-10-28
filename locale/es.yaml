@@ -33,7 +33,7 @@ str_back_alley: Callejón
 str_back_alley_pay: Compra un pase por {playcoin}%d
 str_back_alley_message: ¡Consigamos más pases!
 str_check_inboxes: Comprobar pases
-str_toggle_titles: Activar o desactivar juegos
+str_toggle_titles: Alternar juegos
 str_toggle_titles_on: (SI)
 str_toggle_titles_off: (NO)
 str_toggle_titles_message: Pulsa {a_button} para activar o desactivar la 
