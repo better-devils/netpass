@@ -111,3 +111,8 @@ str_enter_event_location: Уверены, что хотите принять у�
 str_at_event_location: Вы на специальном событии.
 str_new_version_failed: Не удалось установить новую версию. Вы всё равно можете 
   установить её через Universal Updater или QR-код.
+str_logging_file: Файл
+str_logging_screen: Экран
+str_logging: 'Логи:'
+str_report_list_empty: Список для жалоб пуст.
+str_logging_none: Ничего
