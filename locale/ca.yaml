@@ -112,3 +112,7 @@ str_artist_copyright: Il·lustració © %s
 str_new_version_failed: L'instal·lació de la nova versió ha fallat. Pots tornar 
   a provar d'instal·lar-la mitjançant Universal Updater o el codi QR.
 str_report_list_empty: La llista d'informes és buida.
+str_logging: 'Registres:'
+str_logging_none: Cap registre
+str_logging_screen: Pantalla
+str_logging_file: Arxiu
