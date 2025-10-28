@@ -114,3 +114,7 @@ str_new_version_failed: Nabigo ang pag-install ng bagong bersyon. Maaari mo pa
   ring i-install ito muli gamit ng Universal Updater o QR-Code.
 str_enter_event_location: Sigurado ka ba na gusto mong sumali sa kaganapan "%s"?
 str_report_list_empty: Ang listahan ng ulat ay walang laman.
+str_logging: 'Tala:'
+str_logging_none: Wala
+str_logging_screen: Screen
+str_logging_file: File
