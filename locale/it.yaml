@@ -116,3 +116,7 @@ str_enter_event_location: Sei sicuro di voler entrare nell'evento "%s"?
 str_new_version_failed: Installazione fallita. È possibile reinstallare NetPass 
   tramite Universal Updater o tramite codice QR.
 str_report_list_empty: La lista delle segnalazioni è vuota.
+str_logging: 'Log:'
+str_logging_none: Nessuno
+str_logging_screen: Schermata
+str_logging_file: File
