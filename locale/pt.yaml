@@ -114,3 +114,7 @@ str_new_version_failed: A atualização falhou. Ainda pode instalá-la novamente
   através do Universal Updater ou por código QR.
 str_at_event_location: Está num evento especial.
 str_report_list_empty: A lista de denúncias está vazia.
+str_logging: 'Registos:'
+str_logging_none: Nenhum
+str_logging_screen: Ecrã
+str_logging_file: Ficheiro
