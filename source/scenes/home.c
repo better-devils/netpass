@@ -134,17 +134,15 @@ SceneResult N(process)(Scene* sc) {
 				return scene_push;
 			}
 			new_location = _data->cursor;
-			sc->next_scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
-				if (R_FAILED(N(location_res))) return getHomeScene();
-				return getLocationScene(location.id);
-			})), lambda(void, (void) {
+			// we do not need to actually switch scenes to the location scene here, as our other code will do that for us
+			sc->next_scene = getLoadingScene(NULL, lambda(void, (void) {
 				N(location_res) = _e(setLocation(new_location));
 				if (!R_FAILED(N(location_res))) {
 					N(location_res) = _e(getLocation());
 				}
 				triggerDownloadInboxes();
 			}));
-			return scene_switch;
+			return scene_push;
 		}
 		if (location.id != -1) {
 			sc->next_scene = getLocationScene(location.id);

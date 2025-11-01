@@ -74,6 +74,13 @@ typedef enum {
 	CEC_STATE_ABBREV_OTHER = 5,
 } CecStateAbbrev;
 
+typedef enum {
+	CEC_EXT_HEADER_TYPE_ICON = 2,
+	CEC_EXT_HEADER_TYPE_GAME_NAME = 3,
+	CEC_EXT_HEADER_TYPE_NOTIFICATION_TEXT = 4,
+	CEC_EXT_HEADER_TYPE_REGION = 5,
+} CecExtHeaderType;
+
 // seems to be the max number of bytes for transfering stuffs
 #define MAX_MESSAGE_SIZE 0x19000
 #define MAX_SLOT_SIZE (MAX_MESSAGE_SIZE + 0x14)

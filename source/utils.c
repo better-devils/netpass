@@ -436,6 +436,8 @@ void C2D_ImageDelete(C2D_Image* img) {
 	C3D_TexDelete(img->tex);
 	free(img->tex);
 	free((void*)img->subtex);
+	img->tex = 0;
+	img->subtex = 0;
 }
 
 bool loadJpeg(C2D_Image* img, u8* data, u32 size) {
