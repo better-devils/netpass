@@ -115,3 +115,7 @@ str_new_version_failed: Az új verzió telepítése sikertelen. Még mindig
 str_report_list_empty: A bejelentés lista üres.
 str_enter_event_location: Biztosan csatlakozni szeretnél a(z) "%s" eseményhez?
 str_artist_copyright: Grafika © %s
+str_logging: 'Naplózás:'
+str_logging_none: Nincs
+str_logging_screen: Képernyőre
+str_logging_file: Fájlba
