@@ -122,3 +122,4 @@ str_logging: 'Logs:'
 str_logging_none: Keine
 str_logging_screen: Bildschirm
 str_logging_file: Datei
+str_downloading: Lädt herunter ...
