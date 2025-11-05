@@ -118,3 +118,4 @@ str_logging: 'Logy:'
 str_logging_none: Nic
 str_logging_screen: Obrazovka
 str_logging_file: Soubor
+str_downloading: Stahování...
