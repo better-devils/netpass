@@ -116,3 +116,4 @@ str_logging_screen: Экран
 str_logging: 'Логи:'
 str_report_list_empty: Список для жалоб пуст.
 str_logging_none: Ничего
+str_downloading: Загрузка...
