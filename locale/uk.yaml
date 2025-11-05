@@ -118,3 +118,4 @@ str_logging: 'Лоґи:'
 str_logging_none: Нічого
 str_logging_screen: Екран
 str_logging_file: Файл
+str_downloading: Завантаження...
