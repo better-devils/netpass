@@ -114,3 +114,4 @@ str_logging: 'Loggar:'
 str_logging_none: Inga
 str_logging_screen: Skärm
 str_logging_file: Fil
+str_downloading: Laddar ner...
