@@ -105,3 +105,4 @@ str_logging: 'ログ:'
 str_logging_none: 無し
 str_logging_screen: 画面
 str_logging_file: ファイル
+str_downloading: ダウンロード中...
