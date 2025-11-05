@@ -115,3 +115,4 @@ str_logging: 'Registros:'
 str_logging_none: Nenhum
 str_logging_screen: Tela
 str_logging_file: Arquivo
+str_downloading: Baixando...
