@@ -119,3 +119,4 @@ str_logging: 'Journaux :'
 str_logging_none: Aucun
 str_logging_screen: Écran
 str_logging_file: Fichier
+str_downloading: Téléchargement...
