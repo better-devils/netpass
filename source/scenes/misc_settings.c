@@ -117,7 +117,7 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
 					char url[50];
 					snprintf(url, 50, "%s/data", BASE_URL);
-					Result res = httpRequest("DELETE", url, 0, 0, 0, 0, 0);
+					Result res = httpRequest("DELETE", url, 0, 0, 0, 0);
 					if (R_FAILED(res)) {
 						logln(ERROR, "deleting all data: %ld", res);
 						return;
@@ -150,15 +150,12 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getMiscSettingsScene(void) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	scene->is_popup = false;
-	scene->need_free = true;
 	return scene;
 }
 
@@ -170,7 +167,7 @@ static void downloadDataThread(void) {
 #define URL_SIZE 52
 	char url[URL_SIZE];
 	snprintf(url, URL_SIZE, "%s/data/request", BASE_URL);
-	Result res = httpRequest("GET", url, 0, NULL, 0, 0, 0);
+	Result res = httpRequest("GET", url, 0, NULL, 0, 0);
 	if (R_FAILED(res)) {
 		logln(ERROR, "%ld", res);
 		return;
@@ -185,7 +182,7 @@ static void downloadDataThread(void) {
 #define MAX_WAIT_NANOS 15ULL*1000000000ULL // 15s
 	u64 backoff = 500000000ULL; // 0.5s
 	while (true) {
-		res = httpRequest("GET", url, 0, NULL, 0, 0, 0);
+		res = httpRequest("GET", url, 0, NULL, 0, 0);
 		if (res == 200) {
 			logln(INFO, "Ready.");
 			break;
@@ -215,7 +212,7 @@ static void downloadDataThread(void) {
 	}
 	n_strftime(filename, 200, "sdmc:/netpass_export_%Y%m%dT%H%M%S.zip", &now_tm);
 	logln(INFO, "Downloading...");
-	res = httpRequest("GET", url, 0, 0, (void*)1, filename, 0);
+	res = httpRequest("GET", url, 0, 0, 0, filename);
 	if (res != 200) {
 		logln(ERROR, "Download: bad status code %ld", res);
 		remove(filename);

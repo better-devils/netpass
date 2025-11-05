@@ -151,7 +151,7 @@ Result uploadSlot(SlotMetadata* metadata) {
 	if (metadata->size == 0 || metadata->send_method == 1) {
 		// recv only, delete outbox
 		snprintf(url, 50, "%s/outbox/%08lx", BASE_URL, metadata->title_id);
-		res = _e(httpRequest("DELETE", url, 0, 0, 0, 0, 0));
+		res = _e(httpRequest("DELETE", url, 0, 0, 0, 0));
 		return res;
 	}
 
@@ -170,7 +170,7 @@ Result uploadSlot(SlotMetadata* metadata) {
 
 	// now upload the slot
 	snprintf(url, 50, "%s/outbox/slot", BASE_URL);
-	res = _e(httpRequest("POST", url, metadata->size, slot, 0, 0, 0));
+	res = _e(httpRequest("POST", url, metadata->size, slot, 0, 0));
 	free(slot);
 	return res;
 }
@@ -186,7 +186,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 	char url[100];
 	snprintf(url, 100, "%s/inbox/%lx/slot", BASE_URL, metadata->title_id);
 	CurlReply* reply;
-	res = _e(httpRequest("GET", url, 0, 0, &reply, 0, 0));
+	res = _e(httpRequest("GET", url, 0, 0, &reply, 0));
 	if (R_FAILED(res)) goto fail;
 	u32 http_code = res;
 	if (http_code == 204) {
@@ -276,7 +276,7 @@ Result doSlotExchange(void) {
 		}
 		char url[50];
 		snprintf(url, 50, "%s/outbox/mboxlist_ext2", BASE_URL);
-		res = _e(httpRequest("POST", url, sizeof(CecMboxListHeaderWithCapacities), (u8*)mbox_list, 0, 0, 0));
+		res = _e(httpRequest("POST", url, sizeof(CecMboxListHeaderWithCapacities), (u8*)mbox_list, 0, 0));
 		free(mbox_list);
 		error_origin = "sending mboxlist ext";
 		if (R_FAILED(res)) goto fail;
@@ -427,7 +427,7 @@ Result getLocation(void) {
 	CurlReply* reply;
 	char url[80];
 	snprintf(url, 80, "%s/location/current/info", BASE_URL);
-	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
+	res = httpRequest("GET", url, 0, 0, &reply, 0);
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	if (http_code == 200) {
@@ -474,7 +474,7 @@ Result setLocation(int location) {
 	// now actually ask the server to enter the location
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
-	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
+	res = httpRequest("PUT", url, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
 		logln(ERROR, "Failed to enter location %d: %ld", location, res);
 		return res;
@@ -500,7 +500,7 @@ Result setEventLocation(u8 uuid[16]) {
 	format_uuid(uuidstr, uuid);
 	char url[80];
 	snprintf(url, 80, "%s/location/%s/enter", BASE_URL, uuidstr);
-	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
+	res = httpRequest("PUT", url, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
 		logln(ERROR, "Failed to event enter location %s: %ld", uuidstr, res);
 	}

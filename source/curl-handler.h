@@ -26,6 +26,8 @@ typedef struct {
 	u8 ptr[MAX_SLOT_SIZE];
 	size_t len;
 	int offset;
+	curl_off_t dltotal;
+	curl_off_t dlnow;
 } CurlReply;
 
 #define IS_HTTP_SUCCESS(x) ((x) >= 200 && (x) < 300)
@@ -35,6 +37,6 @@ void deinitCurlReply(CurlReply* r);
 Result curlInit(void);
 void curlExit(void);
 void curlFreeHandler(int offset);
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name, char* hmac_key);
+Result httpRequest(const char* method, const char* url, int size, u8* body, CurlReply** reply, const char* filename);
 u8* getMacBuf(void);
 void getMacStr(char value[13]);

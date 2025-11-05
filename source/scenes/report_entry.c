@@ -115,7 +115,7 @@ SceneResult N(report)(Scene* sc) {
 
 			char url[50];
 			snprintf(url, 50, "%s/report/new", BASE_URL);
-			res = _e(httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0, 0));
+			res = _e(httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0));
 			free(data);
 			if (R_FAILED(res)) {
 				logln(ERROR, "Error sending report: %ld", res);
@@ -368,15 +368,13 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getReportEntryScene(ReportListEntry* entry) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	scene->is_popup = false;
-	scene->need_free = true;
 	scene->data = (u32)(void*)entry;
 	return scene;
 }

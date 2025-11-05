@@ -73,30 +73,26 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getInfoScene(LanguageString s) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = (u32)s;
 	scene->is_popup = true;
-	scene->need_free = true;
 	return scene;
 }
 
 Scene* getInfoSceneStr(char* s, C2D_Font font) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = (u32)s;
 	scene->d = (void*)((u32)font | 1);
 	scene->is_popup = true;
-	scene->need_free = true;
 	return scene;
 }

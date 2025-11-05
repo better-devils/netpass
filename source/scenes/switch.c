@@ -21,7 +21,6 @@
 #define N(x) scenes_switch_namespace_##x
 
 void N(init)(Scene* sc) { }
-void N(render)(Scene* sc) { }
 void N(exit)(Scene* sc) { }
 
 SceneResult N(process)(Scene* sc) {
@@ -31,15 +30,11 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getSwitchScene(Scene*(*next_scene)(void)) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = (u32)next_scene;
-	scene->is_popup = false;
-	scene->need_free = true;
 	return scene;
 }

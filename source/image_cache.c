@@ -43,7 +43,7 @@ Result cache_current_location_image(void) {
 	char url[100];
 	logln(INFO, "Downloading new location image %s.png...", hash);
 	snprintf(url, 100, "%s/location/current/image", BASE_URL);
-	res = httpRequest("GET", url, 0, 0, (void*)1, filename, 0);
+	res = httpRequest("GET", url, 0, 0, (void*)1, filename);
 	
 	return res;
 }

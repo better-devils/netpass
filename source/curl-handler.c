@@ -48,8 +48,6 @@ struct CurlHandle {
 	volatile int status;
 	char* method;
 	char* url;
-	char* title_name;
-	char* hmac_key;
 	int size;
 	u8* body;
 	Result res;
@@ -99,6 +97,13 @@ size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	return size*nmemb;
 }
 
+static int xferinfo_callback(void *ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
+	struct CurlHandle *h = ptr;
+	h->reply.dltotal = dltotal;
+	h->reply.dlnow = dlnow;
+	return 0;
+}
+
 size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 	char buf[size*nmemb + 1];
 	memcpy(buf, data, size*nmemb);
@@ -114,7 +119,7 @@ void curlFreeHandler(int offset) {
 	handles[offset].status = CURL_HANDLE_STATUS_RESET;
 }
 
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name, char* hmac_key) {
+Result httpRequest(const char* method, const char* url, int size, u8* body, CurlReply** reply, const char* filename) {
 	Result res = 0;
 	int curl_handle_slot = 0;
 	bool found_handle_slot = false;
@@ -131,9 +136,9 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	}
 
 	FILE* file = 0;
-	if ((u32)reply == 1) {
+	if (filename) {
 		// we have a file reply
-		file = fopen(title_name, "wb");
+		file = fopen(filename, "wb");
 		if (!file) {
 			_e_errno();
 			return ERROR_ERRNO;
@@ -145,12 +150,13 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	handles[curl_handle_slot].url = url;
 	handles[curl_handle_slot].size = size;
 	handles[curl_handle_slot].body = body;
-	handles[curl_handle_slot].title_name = title_name;
-	handles[curl_handle_slot].hmac_key = hmac_key;
-	if (handles[curl_handle_slot].file_reply) {
-		handles[curl_handle_slot].title_name = 0;
-		handles[curl_handle_slot].hmac_key = 0;
+	
+	if (reply) {
+		*reply = &handles[curl_handle_slot].reply;
 	}
+	handles[curl_handle_slot].reply.dltotal = 0;
+	handles[curl_handle_slot].reply.dlnow = 0;
+	
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	// request is being sent, let's wait until it is back
 	
@@ -160,9 +166,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	}
 
 	res = handles[curl_handle_slot].res;
-	if (reply && (u32)reply != 1) {
-		*reply = &handles[curl_handle_slot].reply;
-	} else {
+	if (!reply) {
 		curlFreeHandler(curl_handle_slot);
 	}
 	if (file) fclose(file);
@@ -273,16 +277,6 @@ void curl_multi_loop_request_setup(int i) {
 		snprintf(header_bossuid, sizeof(header_bossuid), "3ds-boss-userid: %016llX", boss_userid);
 		headers = curl_slist_append(headers, header_bossuid);
 	}
-	if (h->title_name && !h->file_reply) {
-		char header_title_name[255];
-		snprintf(header_title_name, sizeof(header_title_name), "3ds-title-name: %s", h->title_name);
-		headers = curl_slist_append(headers, header_title_name);
-	}
-	if (h->hmac_key && !h->file_reply) {
-		char header_hmac_key[255];
-		snprintf(header_hmac_key, sizeof(header_hmac_key), "3ds-hmac-key: %s", h->hmac_key);
-		headers = curl_slist_append(headers, header_hmac_key);
-	}
 
 	if (h->body) {
 		curl_easy_setopt(h->handle, CURLOPT_POSTFIELDS, h->body);
@@ -299,7 +293,9 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 	curl_easy_setopt(h->handle, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(h->handle, CURLOPT_CUSTOMREQUEST, h->method);
-	curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 300);
+	if (!h->file_reply) {
+		curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 40);
+	}
 	curl_easy_setopt(h->handle, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
 	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);
@@ -317,6 +313,11 @@ void curl_multi_loop_request_setup(int i) {
 		h->reply.offset = i;
 		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, &h->reply);
 	}
+	
+	// set up progress
+	curl_easy_setopt(h->handle, CURLOPT_XFERINFODATA, h);
+    curl_easy_setopt(h->handle, CURLOPT_NOPROGRESS, 0L);
+    curl_easy_setopt(h->handle, CURLOPT_XFERINFOFUNCTION, xferinfo_callback);
 
 	h->status = CURL_HANDLE_STATUS_RUNNING;
 	curl_multi_add_handle(curl_multi_handle, h->handle);

@@ -16,21 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stop.h"
-#define N(x) scenes_stop_namespace_##x
+#pragma once
 
-void N(init)(Scene* sc) { }
-void N(exit)(Scene* sc) { }
+#include "../scene.h"
+#include "../curl-handler.h"
 
-SceneResult N(process)(Scene* sc) {
-	return scene_stop;
-}
-
-Scene* getStopScene(void) {
-	Scene* scene = createScene(0);
-	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->exit = N(exit);
-	scene->process = N(process);
-	return scene;
-}
+Scene* getDownloadProgressScene(CurlReply** reply, Scene* next_scene, void(*func)(void));

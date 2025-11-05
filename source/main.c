@@ -29,6 +29,7 @@
 #include "config.h"
 #include "music.h"
 #include "integration.h"
+#include "scenes/download_progress.h"
 #include "scenes/switch.h"
 #include "render.h"
 
@@ -66,6 +67,7 @@ Scene* load_is_banned(void) {
 	return scene;
 }
 
+CurlReply* reply_new_version = 0;
 Scene* load_new_version(Scene* scene) {
 	char* message = malloc(1000);
 	if (message) {
@@ -73,12 +75,14 @@ Scene* load_new_version(Scene* scene) {
 		C2D_Font font = _font(str_new_version);
 		static const char* filename_cia = "sdmc:/config/netpass/netpass.cia";
 		static const char* filename_3dsx_tmp = "sdmc:/config/netpass/netpass.3dsx";
-		Scene* version_scene = getPromptSceneStr(message, font, getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+		Scene* version_scene = getPromptSceneStr(message, font, getDownloadProgressScene(&reply_new_version, getSwitchScene(lambda(Scene*, (void) {
+			curlFreeHandler(reply_new_version->offset);
 			if (R_FAILED(ping_res)) {
 				return getInfoScene(str_new_version_failed);
 			}
 			// things were successful, let's restart!
 			return getLoadingScene(getStopScene(), lambda(void, (void) {
+				aptSetHomeAllowed(true);
 				if (filename_3dsx) return;
 				AM_TitleEntry info;
 				get_cia_info(filename_cia, &info);
@@ -99,10 +103,11 @@ Scene* load_new_version(Scene* scene) {
 				// this is easy, just download and overwrite the file
 				// we first download it to a different file to prevent weird glitches with music and whatnot
 				mkdir_p(filename_3dsx_tmp);
-				printf("filename: %s\n", filename_3dsx);
-				printf("tmp filename: %s\n", filename_3dsx_tmp);
-				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, (void*)1, (char*)filename_3dsx_tmp, 0));
+				logln(DEBUG, "filename: %s\n", filename_3dsx);
+				logln(DEBUG, "tmp filename: %s\n", filename_3dsx_tmp);
+				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, &reply_new_version, filename_3dsx_tmp));
 				if (R_FAILED(ping_res)) return;
+				aptSetHomeAllowed(false);
 				unlink(filename_3dsx);
 				if (cp(filename_3dsx_tmp, filename_3dsx) != 0) {
 					ping_res = _e_errno();
@@ -112,8 +117,9 @@ Scene* load_new_version(Scene* scene) {
 			}
 			// ok, we have a cia file. this will be a tad harder.
 			mkdir_p(filename_cia);
-			ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, (void*)1, (char*)filename_cia, 0));
+			ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, &reply_new_version, filename_cia));
 			if (R_FAILED(ping_res)) return;
+			aptSetHomeAllowed(false);
 			ping_res = install_cia(filename_cia);
 		})));
 		version_scene->pop_scene = scene;
@@ -160,7 +166,7 @@ void initial_load(void) {
 	int check_count = 0;
 	int max_count = 100;
 	while (true) {
-		ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0, 0);
+		ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0);
 		if (R_SUCCEEDED(ping_res)) break;
 		check_count++;
 		curlFreeHandler(ping_reply->offset);
@@ -308,17 +314,22 @@ int main(int nargs, char** argv) {
 			scene = err_scene;
 		}
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		C2D_TargetClear(top, clr_white);
-		C2D_SceneBegin(top);
-		if (scene->is_popup && scene->pop_scene) {
-			scene->pop_scene->render(scene->pop_scene);
-			C2D_Flush();
+		if (top) {
+			C2D_TargetClear(top, 0xFFFFFFFF);
+			C2D_SceneBegin(top);
+			if (scene->is_popup && scene->pop_scene) {
+				renderTopScene(scene->pop_scene);
+			}
+			renderTopScene(scene);
 		}
-		scene->render(scene);
 		
 		if (bottom) {
-			C2D_TargetClear(bottom, clr_white);
+			C2D_TargetClear(bottom, 0xFFFFFFFF);
 			C2D_SceneBegin(bottom);
+			if (scene->is_popup && scene->pop_scene) {
+				renderBottomScene(scene->pop_scene);
+			}
+			renderBottomScene(scene);
 			renderBottomScreen();
 		}
 		C3D_FrameEnd(0);

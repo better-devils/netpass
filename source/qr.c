@@ -104,7 +104,7 @@ Result qr_verify(QrBuffer* buffer) {
 	}
 	char url[80];
 	snprintf(url, 80, "%s/verify", BASE_URL);
-	res = httpRequest("POST", url, strlen(token) + 1, (u8*)token, 0, 0, 0);
+	res = httpRequest("POST", url, strlen(token) + 1, (u8*)token, 0, 0);
 	if (R_FAILED(res)) return res;
 	int http_code = res;
 	if (!IS_HTTP_SUCCESS(http_code)) return -res;
@@ -129,7 +129,7 @@ Result qr_dl_pass(QrBuffer* buffer) {
 		return ERROR_MISSING_PASS_URL;
 	}
 	CurlReply* reply;
-	res = _e(httpRequest("GET", url, 0, 0, &reply, 0, 0));
+	res = _e(httpRequest("GET", url, 0, 0, &reply, 0));
 	if (R_FAILED(res)) goto fail;
 	int http_code = res;
 	if (!IS_HTTP_SUCCESS(http_code)) {

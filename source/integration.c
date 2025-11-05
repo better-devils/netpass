@@ -29,7 +29,7 @@ Result lazy_init(void) {
 	CurlReply* reply;
 	char url[80];
 	snprintf(url, 80, "%s/integration", BASE_URL);
-	res = _e(httpRequest("GET", url, 0, 0, &reply, 0, 0));
+	res = _e(httpRequest("GET", url, 0, 0, &reply, 0));
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	IntegrationListHeader* list_header = (IntegrationListHeader*)reply->ptr;
@@ -78,7 +78,7 @@ Result toggle_integration(u32 id) {
 	char url[80];
 	snprintf(url, 80, "%s/integration/%ld", BASE_URL, id);
 	char* method = g_list->entries[index].enabled ? "DELETE" : "PUT";
-	res = _e(httpRequest(method, url, 0, 0, 0, 0, 0));
+	res = _e(httpRequest(method, url, 0, 0, 0, 0));
 	if (R_FAILED(res)) return res;
 	g_list->entries[index].enabled = !g_list->entries[index].enabled;
 	return res;

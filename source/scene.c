@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,9 +72,41 @@ Scene* processScene(Scene* scene) {
 	{
 		Scene* new_scene = scene->pop_scene;
 		exitScene(scene);
-		initScene(new_scene);
+		if (new_scene) initScene(new_scene);
 		return new_scene;
 	}
+	}
+	return scene;
+}
+
+void renderTopScene(Scene* scene) {
+	if (scene->render_top) {
+		scene->render_top(scene);
+	} else if (scene->pop_scene) {
+		renderTopScene(scene->pop_scene);
+	}
+}
+
+void renderBottomScene(Scene* scene) {
+	if (scene->render_bottom) {
+		scene->render_bottom(scene);
+	} else if (scene->pop_scene) {
+		renderBottomScene(scene->pop_scene);
+	}
+}
+
+Scene* createScene(size_t data_size) {
+	Scene* scene = malloc(sizeof(Scene));
+	if (!scene) return NULL;
+	memset(scene, 0, sizeof(Scene));
+	scene->need_free = true;
+	if (data_size) {
+		void* data = malloc(data_size);
+		if (!data) {
+			free(scene);
+			return NULL;
+		}
+		scene->data = (u32)data;
 	}
 	return scene;
 }

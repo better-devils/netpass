@@ -30,7 +30,8 @@ typedef struct Scene Scene;
 
 struct Scene {
 	void (*init)(Scene*);
-	void (*render)(Scene*);
+	void (*render_top)(Scene*);
+	void (*render_bottom)(Scene*);
 	void (*exit)(Scene*);
 	SceneResult (*process)(Scene*);
 	Scene* next_scene;
@@ -43,6 +44,9 @@ struct Scene {
 };
 
 Scene* processScene(Scene* scene);
+Scene* createScene(size_t data_size);
+void renderTopScene(Scene* scene);
+void renderBottomScene(Scene* scene);
 
 #include "api.h"
 #include "strings.h"
@@ -52,6 +56,7 @@ Scene* processScene(Scene* scene);
 #include "scenes/about.h"
 #include "scenes/back_alley.h"
 #include "scenes/bad_os_version.h"
+#include "scenes/download_progress.h"
 #include "scenes/error.h"
 #include "scenes/home.h"
 #include "scenes/info.h"

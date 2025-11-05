@@ -128,21 +128,13 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getErrorScene(ErrorData* error) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(sizeof(ErrorData));
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	ErrorData* err = malloc(sizeof(ErrorData));
-	if (!err) {
-		free(scene);
-		return NULL;
-	}
-	memcpy(err, error, sizeof(ErrorData));
-	scene->data = (u32)err;
+	memcpy((void*)scene->data, error, sizeof(ErrorData));
 	scene->is_popup = true;
-	scene->need_free = true;
 	return scene;
 }

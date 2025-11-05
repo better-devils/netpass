@@ -73,7 +73,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 	Scene* scene = getLoadingScene(0, lambda(void, (void) {
 		char url[80];
 		snprintf(url, 80, "%s/pass/title_id/%lx", BASE_URL, N(buy_title_id));
-		Result res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
+		Result res = httpRequest("PUT", url, 0, 0, 0, 0);
 		if (R_FAILED(res)) {
 			if (res == -404) {
 				logln(ERROR, "No fitting pass found!");
@@ -279,14 +279,11 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getBackAlleyScene() {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	scene->is_popup = false;
-	scene->need_free = true;
 	return scene;
 }

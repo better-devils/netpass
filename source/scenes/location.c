@@ -179,15 +179,12 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getLocationScene(int location_id) {
-	Scene* scene = malloc(sizeof(Scene));
+	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = N(init);
-	scene->render = N(render);
+	scene->render_top = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
-	scene->is_popup = false;
-	scene->need_free = true;
 	scene->data = (u32)location_id;
 	return scene;
 }
