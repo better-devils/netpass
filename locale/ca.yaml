@@ -116,3 +116,4 @@ str_logging: 'Registres:'
 str_logging_none: Cap registre
 str_logging_screen: Pantalla
 str_logging_file: Arxiu
+str_downloading: Descarregant...
