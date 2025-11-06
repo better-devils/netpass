@@ -34,11 +34,11 @@ str_submit: Envoyer
 str_back_alley_message: Allons dénicher plus de StreetPass !
 str_back_alley: Ruelle
 str_back_alley_pay: Acheter un StreetPass {playcoin}%d
-str_toggle_titles: Trieur de Trocs
+str_toggle_titles: Activer jeux
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les 
-  trocs StreetPass.
+  échanges StreetPass.
 str_check_inboxes: Vérifier le courrier
 str_write_patches: Écrire des corrections SPR
 str_clear_spr_cache: Supprimer le cache SPR
