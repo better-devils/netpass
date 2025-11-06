@@ -103,3 +103,4 @@ str_logging: '로그:'
 str_logging_none: 없음
 str_logging_screen: 화면
 str_logging_file: 파일
+str_downloading: 다운로드 중...
