@@ -119,3 +119,4 @@ str_logging: 'Naplózás:'
 str_logging_none: Nincs
 str_logging_screen: Képernyőre
 str_logging_file: Fájlba
+str_downloading: Letöltés...
