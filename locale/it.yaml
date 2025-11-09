@@ -120,3 +120,4 @@ str_logging: 'Log:'
 str_logging_none: Nessuno
 str_logging_screen: Schermata
 str_logging_file: File
+str_downloading: Scaricando...
