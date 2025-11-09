@@ -46,8 +46,8 @@ struct CurlHandle {
 	CURL* handle;
 	CURLcode result;
 	volatile int status;
-	char* method;
-	char* url;
+	const char* method;
+	const char* url;
 	int size;
 	u8* body;
 	Result res;
