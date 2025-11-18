@@ -118,3 +118,4 @@ str_logging: 'Tala:'
 str_logging_none: Wala
 str_logging_screen: Screen
 str_logging_file: File
+str_downloading: Dina-download...
