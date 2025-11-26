@@ -99,3 +99,8 @@ str_at_event_location: 你正在特殊活动中。
 str_artist_copyright: 美术 © %s
 str_new_version_failed: 新版本安装失败。你仍可以通过 Universal Updater 或二维码再次安装。
 str_report_list_empty: 举报列表为空。
+str_logging: 日志：
+str_logging_none: 无
+str_logging_screen: 屏幕
+str_logging_file: 文件
+str_downloading: 下载中...
