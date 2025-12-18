@@ -19,6 +19,7 @@
  */
 
 #include "config.h"
+#include "log.h"
 #include "strings.h"
 #include "utils.h"
 #include "cecd.h"
@@ -113,35 +114,45 @@ void load(void) {
 					}
 				}
 			}
-		}
-		if (strcmp(key, "LAST_LOCATION") == 0) {
+		} else if (strcmp(key, "LAST_LOCATION") == 0) {
 			config.last_location = atoi(value);
-		}
-		if (strcmp(key, "YEAR") == 0) {
+		} else if (strcmp(key, "YEAR") == 0) {
 			config.year = atoi(value);
-		}
-		if (strcmp(key, "MONTH") == 0) {
+		} else if (strcmp(key, "MONTH") == 0) {
 			config.month = atoi(value);
-		}
-		if (strcmp(key, "DAY") == 0) {
+		} else if (strcmp(key, "DAY") == 0) {
 			config.day = atoi(value);
-		}
-		if (strcmp(key, "PRICE") == 0) {
+		} else if (strcmp(key, "PRICE") == 0) {
 			config.price = atoi(value);
-		}
-		if (strcmp(key, "WELCOME_VERSION") == 0) {
+		} else if (strcmp(key, "WELCOME_VERSION") == 0) {
 			config.welcome_version = atoi(value);
-		}
-		if (strcmp(key, "PATCHES_VERSION") == 0) {
+		} else if (strcmp(key, "PATCHES_VERSION") == 0) {
 			config.patches_version = atoi(value);
-		}
-		if (strcmp(key, "BG_MUSIC") == 0) {
+		} else if (strcmp(key, "BG_MUSIC") == 0) {
 			config.bg_music = strcmp(value, "TRUE") == 0;
-		}
-		if (strcmp(key, "LOG_OUTPUT") == 0) {
-			config.log_output = atoi(value);
-		}
-		if (strcmp(key, "TITLE_IDS_IGNORED") == 0) {
+		} else if (strcmp(key, "LOG_OUTPUT") == 0) {
+			if (strcmp(value, "NONE") == 0) {
+				config.log_output = LogOutputDisabled;
+			} else if (strcmp(value, "SCREEN") == 0) {
+				config.log_output = LogOutputBottomScreen;
+			} else if (strcmp(value, "FILE") == 0) {
+				config.log_output = LogOutputFile;
+			} else {
+				config.log_output = atoi(value);
+			}
+		} else if (strcmp(key, "LOG_LEVEL") == 0) {
+			if (strcmp(value, "ERROR") == 0) {
+				config.log_level = ERROR;
+			} else if (strcmp(value, "WARN") == 0) {
+				config.log_level = WARN;
+			} else if (strcmp(value, "INFO") == 0) {
+				config.log_level = INFO;
+			} else if (strcmp(value, "DEBUG") == 0) {
+				config.log_level = DEBUG;
+			} else {
+				config.log_level = atoi(value);
+			}
+		} else if (strcmp(key, "TITLE_IDS_IGNORED") == 0) {
 			// Open mbox_list now to avoid repeatedly doing it later
 			Result res = 0;
 			CecMboxListHeader mbox_list;
@@ -203,8 +214,34 @@ void configWrite(void) {
 			}
 		}
 	}
-	snprintf(line, 250, "log_output=%d\n", config.log_output);
+	switch (config.log_output) {
+		case LogOutputDisabled:
+			snprintf(line, 250, "log_output=none\n");
+			break;
+		case LogOutputBottomScreen:
+			snprintf(line, 250, "log_output=screen\n");
+			break;
+		case LogOutputFile:
+			snprintf(line, 250, "log_output=file\n");
+			break;
+	}
 	fputs_blk(line, f);
+	switch (config.log_level) {
+		case ERROR:
+			snprintf(line, 250, "log_level=error\n");
+			break;
+		case WARN:
+			snprintf(line, 250, "log_level=warn\n");
+			break;
+		case INFO:
+			snprintf(line, 250, "log_level=info\n");
+			break;
+		case DEBUG:
+			snprintf(line, 250, "log_level=debug\n");
+			break;
+	}
+	fputs_blk(line, f);
+	
 	snprintf(line, 250, "title_ids_ignored=");
 	for (size_t i = 0; i < 24; i++) {
 		snprintf(line + 18 + (9*i), 250 - (18 + (9*i)), "%08lx,", config.title_ids_ignored[i]);
