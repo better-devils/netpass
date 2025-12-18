@@ -6,3 +6,4 @@ missingIncludeSystem:*
 staticFunction:*
 unusedFunction:source/boss.c
 unusedFunction:source/cecd.c
+unusedFunction:source/ctr_results.c

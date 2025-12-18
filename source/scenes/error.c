@@ -80,17 +80,13 @@ void N(init)(Scene* sc) {
 		// 3ds error code
 		snprintf(str, sizeof(str), _s(str_3ds_error), (u32)_data->err->error);
 		str_font = _font(str_3ds_error);
-		char level[100] = {0};
-		char summary[200] = {0};
 		char module[200] = {0};
 		char description[200] = {0};
-		get_level_formatted(level, sizeof(level), _data->err->error);
-		get_summary_formatted(summary, sizeof(summary), _data->err->error);
 		get_module_formatted(module, sizeof(module), _data->err->error);
 		get_description_formatted(description, sizeof(description), _data->err->error);
 		snprintf(
-			subtext, sizeof(subtext), "Level: %s\nModule: %s\nSummary: %s\nDescription: %s",
-			level, module, summary, description
+			subtext, sizeof(subtext), "Description: %s\nLevel: %s (%d)\nModule: %s",
+			description, get_level_string(_data->err->error), (int)CTR_RESULT_GET_LEVEL(_data->err->error), module
 		);
 		break;
 	} while(1);
