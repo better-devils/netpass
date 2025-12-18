@@ -105,12 +105,26 @@ static int xferinfo_callback(void *ptr, curl_off_t dltotal, curl_off_t dlnow, cu
 }
 
 size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
+	struct CurlHandle *h = ptr;
 	char buf[size*nmemb + 1];
 	memcpy(buf, data, size*nmemb);
 	buf[size*nmemb] = '\0';
 	static const char header_name[] = "3ds-netpass-msg: ";
 	if (strncmp(header_name, buf, strlen(header_name)) == 0) {
 		logln(INFO, "%s", buf + strlen(header_name));
+	}
+	static const char slot_header_name[] = "x-spr-slot00-result: ";
+	if (strncmp(slot_header_name, buf, strlen(slot_header_name)) == 0) {
+		char* ptr = buf + strlen(slot_header_name);
+		ptr = strchr(ptr, ',');
+		if (ptr) {
+			ptr++;
+			char* end = strchr(ptr, ',');
+			if (end) {
+				*end = 0;
+				h->reply.header = atoi(ptr);
+			}
+		}
 	}
 	return size*nmemb;
 }
@@ -156,6 +170,7 @@ Result httpRequest(const char* method, const char* url, int size, u8* body, Curl
 	}
 	handles[curl_handle_slot].reply.dltotal = 0;
 	handles[curl_handle_slot].reply.dlnow = 0;
+	handles[curl_handle_slot].reply.header = 0xFFFFFFFF;
 	
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	// request is being sent, let's wait until it is back
@@ -302,7 +317,7 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
 	curl_easy_setopt(h->handle, CURLOPT_HEADERFUNCTION, curlHeader);
-	curl_easy_setopt(h->handle, CURLOPT_HEADERDATA, NULL);
+	curl_easy_setopt(h->handle, CURLOPT_HEADERDATA, h);
 
 	if (h->file_reply) {
 		curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, fwrite);

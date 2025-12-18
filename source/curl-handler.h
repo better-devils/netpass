@@ -28,6 +28,7 @@ typedef struct {
 	int offset;
 	curl_off_t dltotal;
 	curl_off_t dlnow;
+	int header;
 } CurlReply;
 
 #define IS_HTTP_SUCCESS(x) ((x) >= 200 && (x) < 300)

@@ -188,6 +188,10 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 	CurlReply* reply;
 	res = _e(httpRequest("GET", url, 0, 0, &reply, 0));
 	if (R_FAILED(res)) goto fail;
+	if (reply->header != 0xFFFFFFFF) {
+		metadata->send_method = reply->header;
+	}
+	logln(DEBUG, "%08X recv send_method: %d", metadata->title_id, metadata->send_method);
 	u32 http_code = res;
 	if (http_code == 204) {
 		metadata->size = 0;
@@ -203,9 +207,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 		curlFreeHandler(reply->offset);
 		return res;
 	}
-	CecMessageHeader* msg = (CecMessageHeader*)(reply->ptr + sizeof(CecSlotHeader));
 	CecSlotHeader* slot = (CecSlotHeader*)reply->ptr;
-	metadata->send_method = msg->send_method;
 	metadata->size = slot->size;
 	slotinfo->slots[i] = malloc(slot->size);
 	if (!slotinfo->slots[i]) {
@@ -322,23 +324,18 @@ Result doSlotExchange(void) {
 			log_line_continue("=");
 		}
 		error_origin = "upload slot";
-		res = _e_cec(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2)));
+		if (R_FAILED(res2)) {
+			res = _e_cec(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, false));
+		}
 		if (res2 == -400) { // we still want to continue if it was http 400
 			res2 = 0;
 		}
 		if (R_FAILED(res) || R_FAILED(res = res2)) goto fail;
 	}
-	// we are done sending things
-	res = _e_cec(cecdSprFinaliseSend());
-	error_origin = "finalise send";
-	if (R_FAILED(res)) goto fail;
-	log_line_finish("Done");
-	log_line_start(INFO, "Downloading inboxes (%ld/%d)... ", slots_total, numUsedTitles());
-
-	// time to start download!
-	res = _e_cec(cecdSprStartRecv());
-	error_origin = "start recv";
-	if (R_FAILED(res)) goto fail;
+	
+	// we need to finalise sending and stuffs after we downloaded the slots
+	// so that we know if the slots "sent" successfully to appropriately have
+	// cecd decrease the send_count
 
 	// download all slots
 	for (int i = 0; i < slots_total; i++) {
@@ -356,7 +353,23 @@ Result doSlotExchange(void) {
 		res = downloadSlot(i, &slotinfo);
 		error_origin = "download slot";
 		if (R_FAILED(res)) goto fail;
+		// if the send method is recv only then we did not actually successfully send
+		res = _e_cec(cecdSprSetTitleSent(slotinfo.metadata[i].title_id, slotinfo.metadata[i].send_method != 1));
+		error_origin = "setting title sent status";
+		if (R_FAILED(res)) goto fail;
 	}
+	
+	// we are done sending things
+	res = _e_cec(cecdSprFinaliseSend());
+	error_origin = "finalise send";
+	if (R_FAILED(res)) goto fail;
+	log_line_finish("Done");
+	log_line_start(INFO, "Downloading inboxes (%ld/%d)... ", slots_total, numUsedTitles());
+
+	// time to start download!
+	res = _e_cec(cecdSprStartRecv());
+	error_origin = "start recv";
+	if (R_FAILED(res)) goto fail;
 
 	// notify cecd of the slots
 	res = _e_cec(cecdSprAddSlotsMetadata(sizeof(SlotMetadata)*slots_total, (u8*)slotinfo.metadata));
