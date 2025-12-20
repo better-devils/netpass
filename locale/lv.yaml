@@ -114,3 +114,8 @@ str_report_mii_name: 'Mii vārds: %s'
 str_report_mario_kart_7_greeting: 'Sveiciens: %s'
 str_report_mii_plaza_last_game: 'Pēdējā spēle: %s'
 str_about_production_cat: Produkcijas kaķis
+str_logging: 'Žurnāls:'
+str_logging_none: Nav
+str_logging_screen: Ekrāns
+str_logging_file: Fails
+str_downloading: Lejupielāde...
