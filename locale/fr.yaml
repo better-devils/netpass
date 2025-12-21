@@ -31,14 +31,14 @@ str_report_user: Signaler un utilisateur
 str_report_user_hint: Signaler "%s"
 str_cancel: Annuler
 str_submit: Envoyer
-str_back_alley_message: Allons dénicher plus de StreetPass !
+str_back_alley_message: Allons faire plus de rencontres !
 str_back_alley: Ruelle
-str_back_alley_pay: Acheter un StreetPass {playcoin}%d
-str_toggle_titles: Dé-Activer les jeux
+str_back_alley_pay: Acheter une rencontre {playcoin}%d
+str_toggle_titles: Activer/Désactiver les jeux
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les 
-  échanges StreetPass.
+  rencontres StreetPass.
 str_check_inboxes: Vérifier le courrier
 str_write_patches: Écrire des corrections SPR
 str_clear_spr_cache: Supprimer le cache SPR
@@ -53,25 +53,25 @@ str_report_mii_plaza_last_game: 'Dernière Partie : %s'
 str_report_mii_plaza_custom_message: 'Votre propre salutation : %s'
 str_integrations: Intégrations
 str_b_cancel: '{b_button} Annuler'
-str_update_patches: Mettre les correctifs à jour
+str_update_patches: Mettre les patchs à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
 str_report_source: 'Source : %s'
-str_update_patches_desc: Pour installer correctement NetPass, quelques 
-  correctifs sysmodules vont maintenant être créées. Pour que celles-ci 
-  fonctionnent, vous devez activer «Enable loading external FIRMs and modules» 
-  dans les réglages de Luma3DS. Pour y accéder, éteignez la console et maintenez
-  {select_button} pendant que la console s'allume {power_button}. Vous pouvez 
-  faire cela après l’instalation des correctifs.
+str_update_patches_desc: Pour installer correctement NetPass, quelques patchs de
+  sysmodules vont maintenant être créées. Pour que celles-ci fonctionnent, vous 
+  devez activer «Enable loading external FIRMs and modules» dans les réglages de
+  Luma3DS. Pour y accéder, éteignez la console et maintenez {select_button} 
+  pendant que la console s'allume {power_button}. Vous pouvez faire cela après 
+  l’installation des correctifs.
 str_integrations_message: Les intégrations tierces ne sont pas gérées par 
   NetPass. Utilisez-les à vos risques et périls !
 str_update_patches_poweroff_desc: Mise à jour terminée ! Votre console va 
   maintenant redémarrer.
 str_update_patches_error_desc: Un problème est survenu pendant l'installation 
-  des correctifs. Merci de prendre le temps de le signaler sur GitLab, GBAtemp 
-  ou Discord. https://netpass.cafe/discord
+  des patchs. Merci de prendre le temps de le signaler sur GitLab, GBAtemp ou 
+  Discord. https://netpass.cafe/discord
 str_settings_about: À propos
-str_about_lead_dev: Développeur principal
+str_about_lead_dev: Développeuse principale
 str_about_reports: Système de signalement
 str_about_graphics: Art et Graphismes
 str_about_localisation: Traductions
@@ -93,8 +93,8 @@ str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les
 str_continue: Continuer
 str_bad_os_version: "Votre 3DS nécessite la version 11.15.0 ou plus pour pouvoir utiliser
   NetPass. Malheureusement, vous semblez avoir une version plus ancienne. Veuillez
-  mettre à jour et redémarrer NetPass.\n\nAppuyer sur une touche pour quitter"
-str_update_patches_poweroff_clear_desc: Correctifs supprimées ! Votre console va
+  la mettre à jour et redémarrer NetPass.\n\nAppuyer sur une touche pour quitter"
+str_update_patches_poweroff_clear_desc: Patchs supprimées ! Votre console va 
   maintenant redémarrer.
 str_bg_music: Musique de fond
 str_prompt_dl_pass: Êtes-vous certain de vouloir télécharger cette rencontre ?
@@ -102,18 +102,19 @@ str_report_integration: Ce message provient d'une intégration. Pour le signaler
   demander à l'équipe de modération de l'intégration.
 str_skip: Passer
 str_install: Installer
-str_remove: Déinstaller
+str_remove: Désinstaller
 str_new_version: "Nouvelle version de NetPass disponible :\nv%d.%d.%d !\n\nVoulez-vous
   mettre NetPass à jour maintenant ?"
-str_banned: "Vous êtes bannis de l'utilisation de Netpass. Raison :\n%s\n\nDébut du
+str_banned: "Vous êtes bannis de l'utilisation de NetPass. Raison :\n%s\n\nDébut du
   ban : %s\nFin du ban : %s"
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
-str_at_event_location: Vous êtes à un événement spécial.
+str_at_event_location: Vous êtes à un évènement spécial.
 str_artist_copyright: Illustration © %s
-str_enter_event_location: Êtes-vous certain d'entrer l'événement «%s» ?
+str_enter_event_location: Êtes-vous certain de vouloir participer à l'évènement 
+  «%s» ?
 str_new_version_failed: L'installation de la mise à jour a échouée. Vous pouvez 
-  toujours l'actualiser via Universal Updater ou par QR Code.
+  toujours réessayer via Universal Updater ou par QR Code.
 str_report_list_empty: La liste des signalements est vide.
 str_logging: 'Journaux :'
 str_logging_none: Aucun
