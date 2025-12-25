@@ -21,6 +21,7 @@
 #include "scan_qr.h"
 #include "../qr.h"
 #include "../render.h"
+#include "../music.h"
 #include "loading.h"
 #include "prompt.h"
 #include <stdlib.h>
@@ -44,6 +45,7 @@ typedef struct {
 	C3D_Tex tex;
 	Handle cancel_event;
 	Thread cam_thread;
+	char prev_music[20];
 } N(DataStruct);
 
 QrBuffer* N(qr_buffer) = 0;
@@ -150,6 +152,10 @@ void N(init)(Scene* sc) {
 			return;
 		}
 	}
+	
+	getCurMusic(_data->prev_music);
+	playMusic("qr_code");
+	
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	TextLangParse(&_data->g_b_back, _data->g_staticBuf, str_b_go_back);
 	TextLangParse(&_data->g_x_switch_camera, _data->g_staticBuf, str_x_switch_camera);
@@ -224,6 +230,7 @@ void N(exit)(Scene* sc) {
 		svcCloseHandle(_data->mutex);
 		quirc_destroy(_data->qr_context);
 		free(_data->buffer);
+		playMusic(_data->prev_music);
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}

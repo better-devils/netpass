@@ -90,7 +90,7 @@ void N(init)(Scene* sc) {
 	
 	if (_data->event_location) {
 		get_background_image("event_location", &_data->spr, &_data->background, true);
-		playMusic("home");
+		playMusic("event");
 		return;
 	}
 	if (location.id < 0 || location.id >= NUM_LOCATIONS) return;
