@@ -25,7 +25,8 @@ str_goto_catcafe: 'Ga naar het Kattencafé'
 str_at_catcafe: 'Je bent in het Kattencafé.'
 str_system_language: 'Systeemtaal'
 str_language_pick: 'Taal:'
-str_no_location_twice: Je kan niet twee keer achter elkaar naar dezelfde locatie gaan!
+str_no_location_twice: Je kan niet twee keer achter elkaar naar dezelfde locatie
+  gaan!
 str_report_user: Gebruiker rapporteren
 str_report_user_hint: Rapporteer "%s"
 str_cancel: Annuleer
@@ -38,8 +39,8 @@ str_write_patches: Schrijf patches
 str_clear_spr_cache: Wis spr cache
 str_toggle_titles_off: (UIT)
 str_toggle_titles_on: (AAN)
-str_toggle_titles_message: Druk op {a_button} om de uitwisseling van ontmoetingen
-  aan/uitschakelen.
+str_toggle_titles_message: Druk op {a_button} om de uitwisseling van 
+  ontmoetingen aan/uitschakelen.
 str_toggle_titles: Spellen Aan-/uitschakelen
 str_a_ok: '{a_button} Oké'
 str_bg_music: Achtergrondmuziek
@@ -56,8 +57,8 @@ str_b_go_back: '{b_button} Ga terug'
 str_report_source_unknown: Onbekende bron
 str_b_cancel: '{b_button} Annuleren'
 str_update_patches: Patches bijwerken
-str_update_patches_poweroff_desc: Patches bijwerken gelukt! Je console wordt nu opnieuw
-  opgestart.
+str_update_patches_poweroff_desc: Patches bijwerken gelukt! Je console wordt nu 
+  opnieuw opgestart.
 str_prompt_verify: Weet je zeker dat je deze 3DS wilt verifiëren?
 str_settings_misc: Overig
 str_settings_about: Over
@@ -66,39 +67,42 @@ str_about_reports: Rapportagesysteem
 str_about_graphics: Kunst en grafiek
 str_about_music: Muziek
 str_about_special_thanks: Speciaal bedankt
-str_about_special_thanks_txt: De 3DS-homebrewgemeenschap voor alle reverse-engineering
-  en documentatie
+str_about_special_thanks_txt: De 3DS-homebrewgemeenschap voor alle 
+  reverse-engineering en documentatie
 str_about_production_cat: Productie kat
-str_update_patches_error_desc: Er is iets misgegaan tijdens het updaten van patches.
-  Meld dit probleem alsjeblieft op GitLab, GBAtemp of Discord. https://netpass.cafe/discord
+str_update_patches_error_desc: Er is iets misgegaan tijdens het updaten van 
+  patches. Meld dit probleem alsjeblieft op GitLab, GBAtemp of Discord. 
+  https://netpass.cafe/discord
 str_view_rules: Regels bekijken
 str_view_privacy: Privacybeleid bekijken
 str_continue: Ga verder
-str_update_patches_desc: Om NetPass goed te installeren worden er nu enkele sysmodule
-  patches aangemaakt. Om deze te laten werken, moet je “Enable loading external FIRMs
-  and modules” aanzetten in de Luma3DS instellingen. Om toegang te krijgen tot de
-  instellingen, schakelt u de console uit en drukt u op {select_button} terwijl u
-  de console inschakelt {power_button}. U kunt dit doen nadat de patches zijn geschreven.
+str_update_patches_desc: Om NetPass goed te installeren worden er nu enkele 
+  sysmodule patches aangemaakt. Om deze te laten werken, moet je “Enable loading
+  external FIRMs and modules” aanzetten in de Luma3DS instellingen. Om toegang 
+  te krijgen tot de instellingen, schakelt u de console uit en drukt u op 
+  {select_button} terwijl u de console inschakelt {power_button}. U kunt dit 
+  doen nadat de patches zijn geschreven.
 str_welcome: Welkom bij NetPass
 str_report_mii_plaza_country: 'Land: %s - %s'
-str_integrations_message: Integraties van derden vallen buiten de NetPass moderatie.
-  Gebruik op eigen risico!
+str_integrations_message: Integraties van derden vallen buiten de NetPass 
+  moderatie. Gebruik op eigen risico!
 str_about_localisation: Lokalisatie
 str_scan_qr: QR-code scannen
 str_x_switch_camera: '{x_button} Camera schakelen'
 str_about_netpass_community: De NetPass community
-str_welcome_message: Lees en accepteer onze regels en privacybeleid voordat je NetPass
-  start.
-str_report_integration: Dit bericht is afkomstig van een integratie. Stuur een bericht
-  naar het moderatieteam van de integratie om dit te melden.
+str_welcome_message: Lees en accepteer onze regels en privacybeleid voordat je 
+  NetPass start.
+str_report_integration: Dit bericht is afkomstig van een integratie. Stuur een 
+  bericht naar het moderatieteam van de integratie om dit te melden.
 str_bad_os_version: "NetPass vereist 3DS OS 11.15.0 of hoger om goed te functioneren.
   Helaas lijkt het erop dat je een oudere versie gebruikt. Update en start NetPass
   opnieuw.\n\nDruk op een willekeurige toets om af te sluiten"
-str_update_patches_poweroff_clear_desc: Patches succesvol verwijderd! Je console wordt
-  nu opnieuw opgestart.
+str_update_patches_poweroff_clear_desc: Patches succesvol verwijderd! Je console
+  wordt nu opnieuw opgestart.
 str_skip: Overslaan
 str_install: Installeer
 str_remove: Verwijder
 str_prompt_dl_pass: Weet je zeker dat je deze pas wilt downloaden?
 str_date_time: '%d-%m-%Y %H:%M:%S'
 str_date: '%d-%m-%Y'
+str_logging_screen: Beeldscherm
