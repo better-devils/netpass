@@ -33,7 +33,7 @@ str_submit: 'Virleeën'
 str_back_alley: 'Schloff'
 str_back_alley_message: 'Loosst eis fir puer méi Spillpäss joen!'
 str_back_alley_pay: "Kaaft e Spillpass {playcoin}%d"
-str_check_inboxes: 'Infokëscht préiwen'
+str_check_inboxes: 'Agangkëschte préiwen'
 str_toggle_titles: 'Aschalten/ausschalte spiller'
 str_toggle_titles_message: "Dréckt {a_button} fir Spillpäss demarréieren oder ze apaken."
 str_toggle_titles_on: "(OP)"
@@ -49,15 +49,15 @@ str_report_tomodachi_life_island_name: "Numm Insel: %s"
 str_b_go_back: "{b_button} Erëm"
 str_b_cancel: "{b_button} Ofsoen"
 str_a_ok: "{a_button} Okee"
-str_update_patches: "Aktualiséiere Lopinnen"
-str_update_patches_desc: "Fir NetPass richteg z'installéieren, ginn e puer Sysmodule
-  Lopinnen elo erstallt. Fir déi ze schaffen, musst Dir \"Enable loading external
-  FIRMs and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen
-  ze kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
-  d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Lopinne geschriwwe sinn."
-str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Lopinnen-Aktualiséiere.
+str_update_patches: "Aktualiséiere Lapinen"
+str_update_patches_desc: "Fir NetPass richteg z'abauen, ginn e puer Sysmodule Lapinen
+  elo erstallt. Fir déi ze schaffen, musst Dir \"Enable loading external FIRMs and
+  modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen ze kréien,
+  schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
+  d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Lapine geschriwwe sinn."
+str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Lapinen-Aktualiséiere.
   Gewisen wannechgelift dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
-str_update_patches_poweroff_desc: "Aktualiséiere Lopinnen erfollegräich! Är Konsole
+str_update_patches_poweroff_desc: "Aktualiséiere Lapinen erfollegräich! Är Konsole
   wäert elo nei ufänken."
 str_integrations: "Integratioun"
 str_integrations_message: "Drëttpartei Integratiounen sinn ausserhalb vun der NetPass
@@ -66,14 +66,14 @@ str_report_source: "Quell: %s"
 str_report_source_unknown: "Hondsfriem Quell"
 str_settings_misc: "Verschiddenes"
 str_settings_about: "Infoen"
-str_about_lead_dev: "Haaptentwéckler"
+str_about_lead_dev: "Haaptentwécklerin"
 str_about_reports: "Mellesystem"
 str_about_graphics: "Konscht a Grafiken"
 str_about_music: "Musek"
 str_about_localisation: "Iwwersetzungen"
-str_about_netpass_community: "D'NetPass Gemeinschaft"
+str_about_netpass_community: "D'Gemeinschaft NetPass"
 str_about_special_thanks: "Mercien"
-str_about_special_thanks_txt: "D'3DS Homebrew-Gemeinschaft fir all Reverse-engineering
+str_about_special_thanks_txt: "D'Gemeinschaft 3DS-Homebrew fir all Reverse-engineering
   an Dokumentatioun"
 str_about_production_cat: "Produktioun-Muuss"
 str_scan_qr: "QR-Code scannen"
@@ -84,19 +84,34 @@ str_welcome_message: "Ier Dir NetPass ufänkt, liest eis Regelen a Privatsphär 
 str_view_rules: "Gesi Regelen"
 str_view_privacy: "Gesi Privatsphär Politik"
 str_continue: "Weiderfueren"
-str_update_patches_poweroff_clear_desc: Lopinnen erfollegräich geläscht! Är Konsole
-  wäert elo demarréieren.
+str_update_patches_poweroff_clear_desc: Lapinen erfollegräich geläscht! Är 
+  Konsole wäert elo demarréieren.
 str_bg_music: Hannergrondmusek
 str_bad_os_version: "NetPass erfuerdert 3DS OS 11.15.0 oder méi spéit fir richteg
   ze funktionéieren. Leider schéngt et datt Dir eng méi al Versioun benotzt. Aktualiséieren
   an demarréieren dann NetPass nees, villmools merci.\n\nDréckt all Taste fir ze verloossen"
 str_prompt_dl_pass: Sidd Dir sécher datt Dir dëse Spillpass erofluede wëllt?
-str_report_integration: Dëse Message staamt aus enger Integratioun. Fir et ze mellen,
-  schéckt wannechgelift d'Moderatioun-Ekipp vun der Integratioun.
+str_report_integration: Dëse Message staamt aus enger Integratioun. Fir et ze 
+  mellen, schéckt wannechgelift d'Moderatiounekipp vun der Integratioun.
 str_skip: Iwwersprangen
-str_install: Installéieren
-str_remove: Suppriméieren
+str_install: Abauen
+str_remove: Ausbauen
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
 str_banned: "Dir sidd vum Netpass verbitt. Grond:\n%s\n\nUfank vum Verbuet: %s\nEnn
   vum Verbuet: %s"
+str_new_version_failed: D'Installatioun vun der neier Versioun ass gescheitert. 
+  Dir kënnt se nach ëmmer iwwer Universal Updater oder mam QR-Code 
+  installéieren.
+str_new_version: "Nei NetPass Versioun verfügbar:\n\nv%d.%d.%d!\n\nWëllt Dir NetPass
+  elo aktualiséieren?"
+str_enter_event_location: Bass du sécher, datt du un der Veranstaltung "%s" 
+  deelhuele wëlls?
+str_at_event_location: Dir sidd op engem speziellen Veranstaltung.
+str_artist_copyright: Illustratioun © %s
+str_report_list_empty: D'Berichtlëscht ass eidel.
+str_logging: 'Regëster:'
+str_logging_none: Keng
+str_logging_screen: Bildschierm
+str_logging_file: Datei
+str_downloading: Eroflueden...
