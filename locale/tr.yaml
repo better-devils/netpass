@@ -81,8 +81,8 @@ str_scan_qr: "QR Kodu Tara"
 str_x_switch_camera: "{x_button} Kamera Değiştir"
 str_prompt_verify: "Bu 3DS'i doğrulamak istediğinizden emin misiniz?"
 str_welcome: NetPass'e Hoşgeldiniz
-str_welcome_message: NetPass'i başlatmadan önce lütfen kurallarımızı ve gizlilik politikamızı
-  okuyun ve kabul edin.
+str_welcome_message: NetPass'i başlatmadan önce lütfen kurallarımızı ve gizlilik
+  politikamızı okuyun ve kabul edin.
 str_view_rules: Kuralları Görüntüle
 str_view_privacy: Gizlilik Politikasını Görüntüle
 str_continue: Devam et
@@ -92,18 +92,27 @@ str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
 str_bg_music: AP Müziği
 str_prompt_dl_pass: Bu pass'i indirmek istediğinizden emin misiniz?
-str_report_integration: Bu mesaj bir entegrasyondan kaynaklanmaktadır. Bildirmek için
-  lütfen söz konusu entegrasyonun moderasyon ekibine mesaj gönderin.
+str_report_integration: Bu mesaj bir entegrasyondan kaynaklanmaktadır. Bildirmek
+  için lütfen söz konusu entegrasyonun moderasyon ekibine mesaj gönderin.
 str_bad_os_version: "NetPass'ın düzgün çalışması için 3DS OS 11.15.0 veya daha yeni
   bir sürüm gereklidir. Maalesef, daha eski bir sürüm kullanıyor gibi görünüyorsunuz.
   Lütfen güncelleme yapın ve NetPass'ı yeniden başlatın.\n\nÇıkmak için herhangi bir
   tuşa basın"
-str_update_patches_poweroff_clear_desc: Yamalar başarıyla kaldırıldı! Konsolunuz şimdi
-  yeniden başlatılacak.
+str_update_patches_poweroff_clear_desc: Yamalar başarıyla kaldırıldı! Konsolunuz
+  şimdi yeniden başlatılacak.
 str_banned: "NetPass'ı kullanmanız yasaklanmıştır. Sebebi:\n%s\n\nYasak başlangıcı:
   %s\nYasak bitişi: %s"
 str_remove: Kaldır
-str_new_version: ""
+str_new_version: "Yeni NetPass sürümü mevcut:\nv%d.%d.%d!\n\nNetPass'ı şimdi güncellemek
+  ister misiniz?"
 str_at_event_location: Özel bir etkinliktesiniz.
 str_artist_copyright: Resim © %s
 str_enter_event_location: “%s” etkinliğine girmek istediğinizden emin misiniz?
+str_new_version_failed: Yeni sürümün kurulumu başarısız oldu. Universal Updater 
+  veya QR kod aracılığıyla yeniden yükleyebilirsiniz.
+str_report_list_empty: Rapor listesi boş.
+str_logging: 'Kayıtlar:'
+str_logging_none: Yok
+str_logging_screen: Ekran
+str_logging_file: Dosya
+str_downloading: İndiriliyor...
