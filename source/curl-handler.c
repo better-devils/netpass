@@ -274,23 +274,37 @@ void curl_multi_loop_request_setup(int i) {
 		headers = curl_slist_append(headers, header_time);
 	}
 	
-	FriendKey friend_key;
-	Result res = FRD_GetMyFriendKey(&friend_key);
-	if (R_SUCCEEDED(res)) {
-		u64 fc;
-		res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
+	Result res;
+	{
+		FriendKey friend_key;
+		res = FRD_GetMyFriendKey(&friend_key);
 		if (R_SUCCEEDED(res)) {
-			char header_fc[100];
-			snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", fc);
-			headers = curl_slist_append(headers, header_fc);
+			u64 fc;
+			res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
+			if (R_SUCCEEDED(res)) {
+				char header_fc[100];
+				snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", fc);
+				headers = curl_slist_append(headers, header_fc);
+			}
 		}
 	}
-	u64 boss_userid;
-	res = cecdGetBossUserid(&boss_userid);
-	if (R_SUCCEEDED(res)) {
-		char header_bossuid[100];
-		snprintf(header_bossuid, sizeof(header_bossuid), "3ds-boss-userid: %016llX", boss_userid);
-		headers = curl_slist_append(headers, header_bossuid);
+	{
+		u64 seed;
+		res = CFGI_GetLocalFriendCodeSeed(&seed);
+		if (R_SUCCEEDED(res)) {
+			char header_lfcs[100];
+			snprintf(header_lfcs, sizeof(header_lfcs), "3ds-lfcs: %016llX", seed);
+			headers = curl_slist_append(headers, header_lfcs);
+		}
+	}
+	{
+		u64 boss_userid;
+		res = cecdGetBossUserid(&boss_userid);
+		if (R_SUCCEEDED(res)) {
+			char header_bossuid[100];
+			snprintf(header_bossuid, sizeof(header_bossuid), "3ds-boss-userid: %016llX", boss_userid);
+			headers = curl_slist_append(headers, header_bossuid);
+		}
 	}
 
 	if (h->body) {
