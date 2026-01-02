@@ -24,6 +24,7 @@
 #include "qr.h"
 #include "curl-handler.h"
 #include "image_cache.h"
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -529,12 +530,11 @@ void init_main_thread_prio(void) {
 	svcGetThreadPriority(&main_thread_prio_s, CUR_THREAD_HANDLE);
 }
 
-static volatile int dl_inbox_status = 1;
+static volatile bool trigger_inbox_download = false;
 static bool dl_loop_running = true;
 Thread bg_loop_thread = 0;
 void triggerDownloadInboxes(void) {
-	while (dl_inbox_status != 0) svcSleepThread((u64)1000000 * 100);
-	dl_inbox_status = 1;
+	trigger_inbox_download = true;
 }
 
 Result doSlotExchangeRetry(void) {
@@ -558,13 +558,12 @@ Result doSlotExchangeRetry(void) {
 
 void bgLoop(void* p) {
 	do {
-		dl_inbox_status = 2;
 		_e(doSlotExchangeRetry());
-		dl_inbox_status = 0;
 		for(int i = 0; i < 10*60*5; i++) {
+			if (trigger_inbox_download || !dl_loop_running) break;
 			svcSleepThread((u64)1000000 * 100);
-			if (dl_inbox_status == 1 || !dl_loop_running) break;
 		}
+		trigger_inbox_download = false;
 	} while(dl_loop_running);
 }
 
@@ -575,6 +574,7 @@ void bgLoopInit(void) {
 void bgLoopExit(void) {
 	dl_loop_running = false;
 	if (bg_loop_thread) {
+		threadJoin(bg_loop_thread, UINT64_MAX);
 		threadFree(bg_loop_thread);
 	}
 }
