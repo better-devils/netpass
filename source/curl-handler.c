@@ -20,6 +20,7 @@
 #include "cecd.h"
 #include "api.h"
 #include "hmac_sha256/hmac_sha256.h"
+#include "log.h"
 #include "utils.h"
 #include <malloc.h>
 #include <string.h>
@@ -130,6 +131,10 @@ size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 }
 
 void curlFreeHandler(int offset) {
+	if (!handles[offset].handle) {
+		logln(WARN, "Tried to free already freed curl handler with offset %d", offset);
+		return;
+	}
 	handles[offset].status = CURL_HANDLE_STATUS_RESET;
 }
 
@@ -206,7 +211,7 @@ void curl_multi_loop_request_finish(int i) {
 	h->res = http_code;
 cleanup:
 	curl_multi_remove_handle(curl_multi_handle, h->handle);
-	curl_easy_cleanup(h->handle);
+	if (h->handle) curl_easy_cleanup(h->handle);
 	h->handle = 0;
 	h->status = CURL_HANDLE_STATUS_DONE;
 }

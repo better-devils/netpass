@@ -496,7 +496,6 @@ Result setLocation(int location) {
 	config.last_location = location;
 	configWrite();
 	logln(INFO, "Entered location %d!", location);
-	cache_current_location_image();
 	return res;
 }
 
