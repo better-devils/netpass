@@ -109,9 +109,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-Result N(location_res);
-
-s32 new_location;
+s32 N(new_location);
 
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
@@ -133,12 +131,12 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getInfoScene(str_no_location_twice);
 				return scene_push;
 			}
-			new_location = _data->cursor;
+			N(new_location) = _data->cursor;
 			// we do not need to actually switch scenes to the location scene here, as our other code will do that for us
 			sc->next_scene = getLoadingScene(NULL, lambda(void, (void) {
-				N(location_res) = _e(setLocation(new_location));
-				if (!R_FAILED(N(location_res))) {
-					N(location_res) = _e(getLocation());
+				Result res = _e(setLocation(N(new_location)));
+				if (!R_FAILED(res)) {
+					_e(getLocation());
 				}
 				triggerDownloadInboxes();
 			}));
