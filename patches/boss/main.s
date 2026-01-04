@@ -45,7 +45,7 @@ CreateFileBuffers equ 0x13d7d8
 
 ; set the policy list to our own url
 .org boss_policy_url
-  .asciiz "https://nppl.api.netpass.cafe/boss"
+  .asciiz "https://api.netpass.cafe/nppl"
 
 .org trampoline_entry
   bl SaveSlotData
@@ -64,7 +64,7 @@ SlotBufferSize equ SlotBuffer + 0x4
 PathBuffer equ SlotBufferSize + 0x4
 StackArgsSize equ PathBuffer + 0x34
 
-.org 0x13ade0
+.org 0x13ADE0
 .area 0x98
 .align 2
 SaveSlotData:
@@ -161,7 +161,7 @@ slotPathPatternPtr:
   .word slotPathPattern
 .endarea
 
-.org 0x10d6c4
+.org 0x10D6C4
 .area 0x2C
 .db 0, 0 ; zero-termination of "string"
 .align 2
@@ -189,7 +189,7 @@ fail2:
   bl fail
 .endarea
 
-.org 0x12a948
+.org 0x12A948
 .area 0x32
 .db 0, 0 ; zero-termination of "string"
 func_cont2:
@@ -235,8 +235,11 @@ no_close_archive:
 ;;;
 
 ; The function at 0x0010B1BC ("BOSS_ConvertAakamaitoNPDL") patches the requested URL to fix legacy akamai links. Let's add our own URL patch to it!
-; If it starts with the initialNPDLUrl (https://npdl.cdn.nintendowifi.net/), replace it with newNPDLUrl (https://npdl.api.netpass.cafe/boss).
-; This way, we redirect SpotPass NPDL requests to our server, 
+; We save the first subdomain of the URL. Then, we check if it starts with "np".
+; If so, then make sure the rest of the domain name matches with initialSpotpassUrl (cdn.nintendowifi.net).
+; Finally, build a new URL with newSpotpassUrl (https://api.netpass.cafe/) followed by the saved subdomain and then the original path
+; This way, we redirect SpotPass requests to our server.
+; For example, "https://npdl.cdn.nintendowifi.net/some/path" should be turned into "https://api.netpass.cafe/npdl/some/path"
 
 strncmp equ 0x125148
 strncpy equ 0x126C08
@@ -274,136 +277,251 @@ BOSS_ConvertAakamaitoNPDL_SecondEnding equ 0x10B1FE
 ConvertAakamaitoNPDL_NewFirstEnding:
   push {r4, r5, r6, r7, lr}
   bl sub_10C104 ; Call the original method
-  b BranchToPatchNpdlUrl
+  b BranchToPatchSpotpassUrl
 
 ConvertAakamaitoNPDL_NewSecondEnding:
   push {r4, r5, r6, r7, lr}
   blx strncpy ; Call the original method
 
-BranchToPatchNpdlUrl:
+BranchToPatchSpotpassUrl:
   push {r0, r1, r2, r3}
-  bl PatchNpdlUrl
+  bl PatchSpotpassUrl
 .endarea
 
 ; This function essentially:
-; - Gets the URL buffer size
-; - Checks if the URL is an NPDL link, which are used by games to get SpotPass data
+; - Finds the index to the end of the protocol part of the URL (after "https://" in the case of an HTTPS request, for example)
+;   - If there isn't any protocol, then consider it's automatic and just use index 0
+; - From this, checks if the subdomain starts with "np"
 ;   - If not:
 ;     - Leave
 ;   - If yes:
-;     - Copy the current URL on a temporary buffer
-;     - Build the patched URL from our URL and the one in the temporary buffer into the original URL buffer
+;     - Find the index of the end of the first subdomain part of the URL.
+;     - From this, save the subdomain into a buffer, and check if the rest of the domain is Nintendo's CDN
+;       - If not:
+;         - Leave
+;       - If yes:
+;         - Buffer the URL into a temporary buffer
+;         - Build a new URL from our URL, the buffered subdomain, and the aforementionned temporary buffer
 
 .org 0x10BBCC
 .area 0x1C
 .db 0, 0 ; zero-termination of "string"
-PatchNpdlUrl:
+PatchSpotpassUrl:
   ldr r6, [URLBufferSizePtrPtr]
   ldr r6, [r6]
 
-  bl CallPatchNpdlUrl_cont1
+  ; We want 0x14 + (URL buffer size) bytes of temporary memory in the stack.
+  ; Unfortunately, "sub sp, r6" is unsupported by the 3DS. As a solution, add the negative equivalent of r6
+  neg r6, r6
+  add sp, r6
+  neg r6, r6
+
+  sub sp, 0x18 ; 8 bytes for the snprintf parameters, 0x10 bytes for the subdomain buffer
+
+  ; We want to keep the pointer to the URL buffer and to the temporary buffer somewhere persistent
+
+  mov r4, r7 ; URL buffer (passed by the parent function)
+  add r5, sp, 0x18 ; Temporary buffer 
+
+  mov r0, #0 ; r0 will be our reusable index
+
+  bl PatchSpotpassUrl_cont1
 
 .align
 URLBufferSizePtrPtr:
   .word URLBufferSizePtr ; The URL buffer's size is fixed and stored in memory. Let's get it from there instead of re-hardcoding it
 .endarea
 
-.org 0x111878
-.area 0x2C
+.org 0x12981C
+.area 0x30
 .db 0, 0 ; zero-termination of "string"
-CallPatchNpdlUrl_cont1:
-  ; We want 4 + (URL buffer size) bytes of temporary memory in the stack.
-  ; Unfortunately, "sub sp, r6" is unsupported by the 3DS. As a solution, add the negative equivalent of r6
-  neg r6, r6
-  add sp, r6
-  neg r6, r6
+PatchSpotpassUrl_cont1:
+  ; Find the offset to the end of the protocol par of the URL
 
-  sub sp, 4
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
+  cmp r1, 0 ; Is it null?
+  beq PatchSpotpassUrl_FindEndProtocolLoop_ExitNoProtocol
 
-  ; We want to keep the pointer to the URL buffer and to the temporary buffer somewhere persistent
+  b PatchSpotpassUrl_FindEndProtocolLoop_DoLoop ; Otherwise, start the loop
 
-  mov r4, r7 ; URL buffer (passed by the parent function)
-  add r5, sp, 0x4 ; Temporary buffer 
+PatchSpotpassUrl_FindEndProtocolLoop_NextIteration:
+  add r0, r0, 1 ; Increment the reusable index
+  cmp r0, r6 ; Compare with the URL buffer size
+  bge PatchSpotpassUrl_SkipPatch_Redirect1 ; If index >= URL buffer size, then we must break from the loop
 
-  ; Get the length of the URL prefix we want to patch
+PatchSpotpassUrl_FindEndProtocolLoop_DoLoop:
+  add r1, r4, r0
+  ldrb r1, [r1, 1] ; Read the (r0+1)'th character of the URL buffer
 
-  ldr r0, [initialNPDLUrlPtr] ; Original prefix pointer
-  blx strlen
+  cmp r1, '/' ; Is it a slash?
+  beq PatchSpotpassUrl_FindEndProtocolLoop_NextIsSlash ; If so, go check for the rest
 
-  mov r7, r0 ; Save its length in r7
+  cmp r1, 0 ; Is it null?
+  beq PatchSpotpassUrl_FindEndProtocolLoop_ExitNoProtocol ; If so, there's no protocol in the URL, move on
 
-  ; Compare the r7 bytes of the URL buffer with the URL prefix to patch, so we can see if the URL we want to use needs to be patched
+  b PatchSpotpassUrl_FindEndProtocolLoop_NextIteration ; If neither or slash nor null, go to the next iteration
 
-  mov r0, r4
-  ldr r1, [initialNPDLUrlPtr] ; Original prefix
-  mov r2, r7 ; Length of the original prefix
-  blx strncmp
+PatchSpotpassUrl_FindEndProtocolLoop_NextIsSlash:
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
+  cmp r1, '/' ; Is it a slash?
+  bne PatchSpotpassUrl_FindEndProtocolLoop_NextIteration ; If not, move to the next iteration
 
-  bl CallPatchNpdlUrl_cont2
+  add r1, r0, 2 ; We just read two slashes in a row, so remember the index of the character right after it
 
-.align
-initialNPDLUrlPtr:
-  .word initialNPDLUrl
+PatchSpotpassUrl_FindEndProtocolLoop_ExitNoProtocol:
+PatchSpotpassUrl_FindEndProtocolLoop_ExitEndLoop:
+  bl PatchSpotpassUrl_cont2
+
+PatchSpotpassUrl_SkipPatch_Redirect1:
+  bl PatchSpotpassUrl_SkipPatch
+
+.endarea
+
+.org 0x12F0A0
+.area 0x1C
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_cont2:
+  mov r0, r1 ; Here, either r1 is 0 from reading a null character, or it is the index to the subdomain
+
+  ; Now, r0 contains the index to the subdomain part of the URL.
+  ; Make sure it starts with "np"
+
+  mov r2, r0 ; Back up the index of the subdomain
+
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
+  cmp r1, 'n' ; Is it an 'n'?
+  bne PatchSpotpassUrl_SkipPatch_Redirect2 ; If not, we have nothing to patch, move on
+
+  add r0, r0, 1 ; Increment the reusable index
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
+  cmp r1, 'p' ; Is it an 'p'?
+  bne PatchSpotpassUrl_SkipPatch_Redirect2 ; If not, we have nothing to patch, move on
+
+  bl PatchSpotpassUrl_cont3
+
+PatchSpotpassUrl_SkipPatch_Redirect2:
+  bl PatchSpotpassUrl_SkipPatch
 
 .endarea
 
 .org 0x113694
 .area 0x24
 .db 0, 0 ; zero-termination of "string"
-CallPatchNpdlUrl_cont2:
-  ; If the URL in the URL buffer does not need patching, then skip the rest of the function
+PatchSpotpassUrl_cont3:
+  ; Now that we know the subdomain starts with "np", loop until we find a dot so we can establish the index to the end of the subdomain
 
-  cmp r0, 0
-  bne skipPatchNpdlUrl
+PatchSpotpassUrl_FindEndSubdomainLoop_NextIteration:
+  add r0, r0, 1 ; Increment the reusable index
+  cmp r0, r6
+  bge PatchSpotpassUrl_SkipPatch_Redirect3
 
-  ; If the URL in the URL buffer needs to be patched, copy it in the temporary buffer
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
 
-  mov r0, r5 ; Temporary buffer
-  mov r1, r4 ; URL buffer
-  mov r2, r6 ; URL/Temporary buffer size
-  blx strncpy
+  cmp r1, 0 ; Is it null?
+  beq PatchSpotpassUrl_SkipPatch_Redirect3 ; If so, we have nothing to patch, move on
+  
+  cmp r1, '/' ; Is it a slash?
+  beq PatchSpotpassUrl_SkipPatch_Redirect3 ; If so, we have nothing to patch, move on
+  
+  cmp r1, '.' ; Is it a dot?
+  bne PatchSpotpassUrl_FindEndSubdomainLoop_NextIteration ; If not, move to the next iteration
 
-  ; Concatenate the new URL prefix with the other part of the original URL into the URL buffer
+PatchSpotpassUrl_FindEndSubdomainLoop_EndLoop:
+  ; Now that we know where the subdomain starts and end within the URL, copy it to a buffer on the stack
 
-  mov r0, r4 ; URL buffer
-  mov r1, r6 ; URL/Temporary buffer size
+  add r0, r0, 1 ; Skip the dot
+  mov r7, r0 ; Back-up the index to the end of the subdomain
 
-  bl CallPatchNpdlUrl_cont3
+  bl PatchSpotpassUrl_cont4
 
-skipPatchNpdlUrl:
-  ; Move the stack pointer to its original position
-
-  add sp, r6
-  add sp, 4
-
-  ; Restore the registers we've saved and return to the patched function
-
-  pop {r0, r1, r2, r3}
-  pop {r4, r5, r6, r7, pc}
+PatchSpotpassUrl_SkipPatch_Redirect3:
+  bl PatchSpotpassUrl_SkipPatch
 
 .endarea
 
 .org 0x113818
 .area 0x2C
 .db 0, 0 ; zero-termination of "string"
-CallPatchNpdlUrl_cont3:
-  ldr r2, [newNPDLUrlPatternPtr] ; Pattern
+PatchSpotpassUrl_cont4:
+  add r1, r4, r2 ; URL buffer + Subdomain index
+  sub r2, r0, r2 ; End of subdomain index - Subdomain index
+  add r0, sp, 8 ; Subdomain buffer
+  blx strncpy
 
-  ldr r3, [newNPDLUrlPtr] ; Custom BOSS URL
-  add r4, r5, r7 ; Temporary buffer + length of the original prefix = rest of URL
-  str r4, [sp, 0x0]
+  ; Get the length of the domain we want to patch
 
-  bl snprintf
+  ldr r0, [initialSpotpassUrlPtr] ; Pointer to the original domain
+  blx strlen
+  mov r2, r0 ; Save its length into r2
 
-  ; We're done patching, move back to the end of the procedure
-  
-  bl skipPatchNpdlUrl
+  ; Check that the domain of the URL is the one we're targetting
+
+  mov r0, r7 ; Get back the index to the end of the subdomain
+  add r0, r4, r0 ; Get the pointer this corresponds to in the URL buffer
+  ldr r1, [initialSpotpassUrlPtr] ; Index to compare to
+  add r7, r7, r2 ; Make our index point to the path part of the URL
+  blx strncmp
+
+  bl PatchSpotpassUrl_cont5
 
 .align
-newNPDLUrlPtr:
-  .word newNPDLUrl
-newNPDLUrlPatternPtr:
-  .word newNPDLUrlPattern
+initialSpotpassUrlPtr:
+  .word initialSpotpassUrl
+  
+.endarea
+
+.org 0x1138D8
+.area 0x34
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_cont5:
+  cmp r0, 0 ; Is the result 0?
+  bne PatchSpotpassUrl_SkipPatch ; If not, then it means we're not looking at the domain we want to patch, so move on
+  
+  ; Copy the URL to the temporary buffer
+
+  mov r0, r5 ; Temporary buffer
+  mov r1, r4 ; URL buffer
+  mov r2, r6 ; URL/Temporary buffer size
+  blx strncpy
+
+  ; Merge the URL parts we want to rewrite it in the URL buffer
+
+  mov r0, r4 ; URL Buffer
+  mov r1, r6 ; URL/Temporary buffer size
+  ldr r2, [newSpotpassUrlPatternPtr] ; Pattern
+  ldr r3, [newSpotpassUrlPtr] ; Custom BOSS URL
+  add r4, r5, r7 ; Temporary buffer + length of the original prefix = rest of URL
+  str r4, [sp, 4]
+  add r4, sp, 8 ; Subdomain buffer
+  str r4, [sp, 0]
+  bl snprintf
+  
+PatchSpotpassUrl_SkipPatch:
+  ; Move the stack pointer to its original position
+
+  add sp, r6
+  add sp, 0x18
+
+  ; Restore the registers we've saved and return to the patched function
+
+  pop {r0, r1, r2, r3}
+  pop {r4, r5, r6, r7, pc}
+
+.align
+newSpotpassUrlPtr:
+  .word newSpotpassUrl
+newSpotpassUrlPatternPtr:
+  .word newSpotpassUrlPattern
+
+.endarea
+
+
+; When the server returns a 30X (redirect), the path part is copied into the URL buffer, but with an artificial limit of 0x40 bytes, which breaks URLs considering it's super short.
+; The buffer it's stored into already is larger, so just increase it that limit to 0xFC, it should have us covered.
+
+.org 0x1218DE
+.area 1
+.db 0xFC
 .endarea
 
 ; We could have also patched the RSA checks at the following pointers:
@@ -419,17 +537,20 @@ newNPDLUrlPatternPtr:
 
 ; Already used:
 ;  StreetPass Relay (SPR) Patches:
-;   - 0x13ade0
-;   - 0x10d6c4
-;   - 0x12a948
+;   - 0x13ADE0
+;   - 0x10D6C4
+;   - 0x12A948
 ;  SpotPass Patches:
 ;   - 0x11E0E4
 ;   - 0x10BBCC
-;   - 0x111878
+;   - 0x12981C
+;   - 0x12F0A0
 ;   - 0x113694
 ;   - 0x113818
-; Free:
-;  - 001138D8, 001154BC, 001225D0, 00122BEC, 00122F04, 00123158, 0012984C, 001299C0, 0012EC74, 0012F0A0, 0012F1A8, 0013B3FC
+;   - 0x1138D8
+; Free strings:
+;  - 00111878, 001154BC, 001225D0, 00122BEC, 00122F04, 00123158, 0012984C, 001299C0, 0012EC74, 0012F0BC, 0012F1A8, 0012F1E0, 0013B3FC
+;        0x2C,     0x24,     0x18,     0x18,     0x20,     0x20,     0x28,     0x2C,     0x18,     0x30,     0x38,     0x20,     0x18
 
 
 ;;;
@@ -441,14 +562,14 @@ newNPDLUrlPatternPtr:
 slotPathPattern:
   .asciiz "/config/netpass/log_spr/_%08lx_%08lx_%ld"
   .align 4
-initialNPDLUrl:
-  .asciiz "https://npdl.cdn.nintendowifi.net/"
+initialSpotpassUrl:
+  .asciiz "cdn.nintendowifi.net"
   .align 4
-newNPDLUrl:
-  .asciiz "https://npdl.api.netpass.cafe/boss"
+newSpotpassUrl:
+  .asciiz "https://api.netpass.cafe/"
   .align 4
-newNPDLUrlPattern:
-  .asciiz "%s/%s"
+newSpotpassUrlPattern:
+  .asciiz "%s%s%s"
   .align 4
 .endarea
 
