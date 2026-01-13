@@ -185,7 +185,7 @@ void initial_load(void) {
 	if (ping_response.ban.is_banned) return;
 	_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
 	initTitleData();
-	doSlotExchangeRetry();
+	doSlotExchangeRetry(true);
 	Result ping_res = getLocation();
 	if (R_FAILED(ping_res)) {
 		logln(ERROR, "failed to get location: %ld", ping_res);

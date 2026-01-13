@@ -228,6 +228,7 @@ fail:
 
 Result doSlotExchange(void) {
 	Result res = 0;
+	int slot_new_data_num = 0;
 	TitleExtraInfo title_extra_info[12];
 	memset(&title_extra_info, 0, sizeof(TitleExtraInfo)*12);
 	SlotInfo slotinfo;
@@ -379,7 +380,6 @@ Result doSlotExchange(void) {
 
 	// add all slots
 	error_origin = "add slots";
-	int slot_new_data_num = 0;
 	for (int i = 0; i < slots_total; i++) {
 		// make sure the slot isn't disabled
 		bool found = false;
@@ -430,10 +430,9 @@ cleanup:
 	Result res_bak = res;
 	// get cecd into the normal state
 	res = waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
-	if (R_FAILED(res_bak)) {
-		return res_bak;
-	}
-	return res;
+	return R_FAILED(res_bak) ? res_bak :
+		R_FAILED(res) ? res :
+		slot_new_data_num;
 }
 
 Result getLocation(void) {
@@ -536,7 +535,7 @@ void triggerDownloadInboxes(void) {
 	trigger_inbox_download = true;
 }
 
-Result doSlotExchangeRetry(void) {
+Result doSlotExchangeRetry(bool once) {
 	int count = 0;
 	while(true) {
 		Result res = doSlotExchange();
@@ -551,13 +550,15 @@ Result doSlotExchangeRetry(void) {
 			}
 			return res;
 		}
-		return 0;
+		if (res == 0 || once) {
+			return 0;
+		}
 	}
 }
 
 void bgLoop(void* p) {
 	do {
-		_e(doSlotExchangeRetry());
+		_e(doSlotExchangeRetry(false));
 		for(int i = 0; i < 10*60*5; i++) {
 			if (trigger_inbox_download || !dl_loop_running) break;
 			svcSleepThread((u64)1000000 * 100);
