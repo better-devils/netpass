@@ -550,7 +550,7 @@ Result doSlotExchangeRetry(bool once) {
 			}
 			return res;
 		}
-		if (res == 0 || once) {
+		if (res == 0 || once || !dl_loop_running) {
 			return 0;
 		}
 	}
