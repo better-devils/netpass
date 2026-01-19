@@ -90,6 +90,7 @@ NetpassTitleData* getTitleData(void);
 int numUsedTitles(void);
 void clearIgnoredTitles(CecMboxListHeader* mbox_list);
 
+bool getSlotExchangeRunning(void);
 Result doSlotExchangeRetry(bool once);
 Result getLocation(void);
 Result setLocation(int location);

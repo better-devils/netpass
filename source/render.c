@@ -22,11 +22,13 @@
 #include <stdarg.h>
 #include <math.h>
 #include "render.h"
+#include "api.h"
 #include "utils.h"
 
 static C2D_SpriteSheet spr_cursor = 0;
 static C2D_SpriteSheet spr_bottom_screen = 0;
 static C2D_Text version_text;
+static C2D_Text spinner_text[8];
 static C2D_TextBuf g_textbuf;
 
 u32 clr_white;
@@ -47,6 +49,15 @@ void renderInit(void) {
 #endif
 	C2D_TextParse(&version_text, g_textbuf, version);
 	C2D_TextOptimize(&version_text);
+
+	// spinner characters as listed in https://www.3dbrew.org/wiki/System_Font#Unicode_Private_Use_characters
+	static const char* spinner_strings[8] = {
+		"\uE020", "\uE021", "\uE022", "\uE023", "\uE024", "\uE025", "\uE026", "\uE027"
+	};
+	for (int i = 0; i < 8; ++i) {
+		C2D_TextParse(&spinner_text[i], g_textbuf, spinner_strings[i]);
+		C2D_TextOptimize(&spinner_text[i]);
+	}
 
 	spr_cursor = C2D_SpriteSheetLoad("romfs:/gfx/cursor.t3x");
 	spr_bottom_screen = C2D_SpriteSheetLoad("romfs:/gfx/botscreen.t3x");
@@ -117,4 +128,14 @@ void renderBottomScreen(void) {
 	C2D_Image img = C2D_SpriteSheetGetImage(spr_bottom_screen, 0);
 	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1.0, 1.0);
 	renderText(&version_text, 3, 0, 0.4, 0);
+
+	if (getSlotExchangeRunning()) {
+		static int spinner_step = 0;
+		static int spinner_divider = 0;
+		renderText(&spinner_text[spinner_step], 10, 204, 1, 0);
+		spinner_divider = (spinner_divider + 1) % 5;
+		if (0 == spinner_divider) {
+			spinner_step = (spinner_step + 1) % 8;
+		}
+	}
 }

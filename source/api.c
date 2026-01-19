@@ -530,12 +530,18 @@ void init_main_thread_prio(void) {
 
 static volatile bool trigger_inbox_download = false;
 static bool dl_loop_running = true;
+static bool slot_exchange_running = false;
 Thread bg_loop_thread = 0;
 void triggerDownloadInboxes(void) {
 	trigger_inbox_download = true;
 }
 
+bool getSlotExchangeRunning(void) {
+	return slot_exchange_running;
+}
+
 Result doSlotExchangeRetry(bool once) {
+	slot_exchange_running = true;
 	int count = 0;
 	while(true) {
 		Result res = doSlotExchange();
@@ -548,9 +554,11 @@ Result doSlotExchangeRetry(bool once) {
 					continue;
 				}
 			}
+			slot_exchange_running = false;
 			return res;
 		}
 		if (res == 0 || once || !dl_loop_running) {
+			slot_exchange_running = false;
 			return 0;
 		}
 	}
