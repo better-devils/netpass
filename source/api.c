@@ -530,7 +530,7 @@ void init_main_thread_prio(void) {
 
 static volatile bool trigger_inbox_download = false;
 static bool dl_loop_running = true;
-static bool slot_exchange_running = false;
+static volatile bool slot_exchange_running = false;
 Thread bg_loop_thread = 0;
 void triggerDownloadInboxes(void) {
 	trigger_inbox_download = true;
