@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 yabobay
+ *               2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +45,10 @@ void logInit() {
 }
 
 void logExit() {
-	if (config.log_output == LogOutputFile && log_file) fclose(log_file);
+	if (config.log_output == LogOutputFile && log_file) {
+		fclose(log_file);
+		log_file = NULL;
+	}
 }
 
 void logln(enum LogLevel level, const char *restrict format, ...) {
