@@ -26,68 +26,96 @@ If you want to contribute to translations, we are doing that on [our Weblate](ht
 
 ## Prerequisites
 
+### For the NetPass 3DS homebrew
+
+You need to have the following tools installed and added in your ``PATH`` environment variable:
 - [devkitPro](https://devkitpro.org/wiki/Getting_Started)
+  
+  After installing devkitPro, you will need to download the following using [devkitPro pacman](https://devkitpro.org/wiki/devkitPro_pacman) or the devkitPro updater:
+  - ``3ds-dev``
+  - ``3ds-curl``
+  - ``3ds-opusfile``
 
-After installing devkitPro, you will need to download the following using [devkitPro pacman](https://devkitpro.org/wiki/devkitPro_pacman) or the devkitPro updater:
+  In other words, you'll need to run the following command in a Terminal/command prompt (with administrator/root privileges):
 
-- 3ds-dev
-- 3ds-curl
-- 3ds-opusfile
+  ```bash
+  dkp-pacman -S 3ds-dev 3ds-curl 3ds-opusfile
+  ```
+  Or if you are using a customized Pacman install:
+  ```bash
+  pacman -S 3ds-dev 3ds-curl 3ds-opusfile
+  ```
+- [FFMpeg](https://ffmpeg.org/)
+- [Python](https://www.python.org)
+  - [Python-PyYAML](https://pypi.org/project/PyYAML/)
+  - [Python-Requests](https://pypi.org/project/requests/)
+- [Bannertool](https://github.com/diasurgical/bannertool/releases)
 
-In other words, you'll need to run the following command in a Terminal/command prompt (with administrator/root privileges):
-
-```bash
-dkp-pacman -S 3ds-dev 3ds-curl 3ds-opusfile
-```
-Or if you are using a customized Pacman install:
-```bash
-pacman -S 3ds-dev 3ds-curl 3ds-opusfile
-```
-
-Furthermore, you need to have `FFmpeg` and `Python3` and `python-pyyaml` and `python-requests` installed.
-Links to FFmpeg, Python, PythonPyyAML:
-[FFMpeg](https://ffmpeg.org/)
-[Python](https://www.python.org)
-[Python-PyYAML](https://pypi.org/project/PyYAML/)
-
-Be sure to run `make codegen` first.
-```bash
-make codegen
-make
-```
-
-### For building patches
-If you want to build patches you have to manually dump their decrypted code from a 3ds and then place the file as `code.bin` into the respective patch folder. After that, you can run:
-```bash
-make patch
-```
-
-### Additional prerequisites to build the `.CIA`
- - Makerom: You need the `makerom` executable in your `$PATH`
+#### Additional prerequisite to build the `.cia` file
+ - Makerom: You need the `makerom` executable in your `PATH` environment variable
    You can get it precompiled on https://github.com/3DSGuy/Project_CTR/releases and then copy it to `$DEVKITPRO/tools/bin`
- - Bannertool: You need the `bannertool` executable in your `$PATH`
-   You can get it precompiled on https://github.com/diasurgical/bannertool/releases
+
+### For the sysmodule patches
+
+You will need to install the following tools. Make sure they are in your ``PATH`` environment variable.
+- [armips](https://github.com/Kingcom/armips)
+- [flips](https://github.com/Alcaro/Flips)
+
+You will also have to manually dump the decrypted code of each of the sysmodules to patch from a 3DS, and then place the file as `code.bin` into the respective patch folder.
+- Boot into [GodMode9](https://github.com/d0k3/GodMode9)
+- Press the Home button, select ``Title manager`` and press A
+- Select ``[1:] NAND / TWL`` and press A
+- For each sysmodule:
+  - Find its TitleID in the list
+    - BOSS: ``0004013000003402``
+    - CECD: ``0004013000002602``
+    - SSL: ``0004013000002F02``
+  - Select it and press A
+  - Select ``Open title folder`` and press A
+  - Without changing your selection, press A
+  - Select ``NCCH image options...`` and press A
+  - Select ``Extract .code`` and press A
+  - Wait for the operation to finish. When prompted, press A to continue
+- Plug your SD card into your computer
+- You should find files named ``<TitleID>.dec.code`` with ``<TitleID>`` being the TitleIDs of each sysmodule
+- Copy them over to their respective folder (under ``./patches/<sysmodule name>/``)
+- Rename each file into ``code.bin``
 
 ## Compilation
 
 This project ships with a [Makefile](Makefile), which is meant to simplify the compilation process. If you're unfamiliar with them, you can find out more about GNU Make [here](https://www.gnu.org/software/make/).
 
+### For the NetPass 3DS homebrew
+
+As a 3DSX file:
 ```bash
 make
 ```
 
-To build `.cia` files, run
-
+As both a 3DSX and a CIA file:
 ```bash
-./build_release.sh
+make all
 ```
 
+You will find the compiled binaries in the ``./out/`` directory.
+
+### For the sysmodule patches
+
+```bash
+make patches
+```
+
+You will find the resulting IPS patches in the ``./romfs/patches`` directory.
+
 ## Credits
+
 ### Research
  - [This gist](https://gist.github.com/wwylele/29a8caa6f5e5a7d88a00bedae90472ed) by wwylele, describing some cecd functionality
  - [This repo](https://github.com/NarcolepticK/CECDocs) by NarcolepticK documenting some more of the cecd sysmodule
- - [StreetPass 2](https://gbatemp.net/threads/streetpass-2-rise-from-the-ashes.526749/) for valuable data dumps
- - 3Dbrew and all its contributors, especially of the [cecd service](https://www.3dbrew.org/wiki/CECD_Services)
+ - [StreetPass 2](https://gbatemp.net/threads/streetpass-2-rise-from-the-ashes.526749/) for valuable StreetPass data dumps
+ - [Sheeple](https://github.com/MisterSheeple) & the [SpotPass Archival Project](https://spotpassarchive.github.io/) contributors for valuable SpotPass data dumps
+ - [3DBrew](https://www.3dbrew.org) and all its contributors, especially of the [CECD service](https://www.3dbrew.org/wiki/CECD_Services) and [SpotPass](https://www.3dbrew.org/wiki/SpotPass)-related structures
+ - [DaniElecta](https://github.com/DaniElectra) for his BOSS module research and documentation
 
 ### Translations
  - English: Sorunome
@@ -102,3 +130,7 @@ To build `.cia` files, run
  - Ukrainian: Geo
  - Portuguese: Lia, arth
  - Dutch: Robbin12391, aiydn
+
+ ### Additional programming
+
+ - [RSM](https://github.com/giroletm/): SpotPass URL rewriting patch for the BOSS sysmodule
