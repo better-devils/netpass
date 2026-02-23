@@ -16,6 +16,8 @@ snprintf equ 0x124b24
 ;;;
 
 spr_url_addr equ 0x144048
+hpp_domain_addr equ 0x147e59
+reports_url_addr equ 0x10a3cc
 spr_startup_time equ 0x1027be
 spr_ap_filter_time equ 0x122968
 boss_policy_url equ 0x1074f0
@@ -46,6 +48,12 @@ CreateFileBuffers equ 0x13d7d8
 ; set the policy list to our own url
 .org boss_policy_url
   .asciiz "https://api.netpass.cafe/nppl"
+
+.org hpp_domain_addr
+  .asciiz "api.netpass.cafe"
+
+.org reports_url_addr
+  .asciiz "https://api.netpass.cafe/npvk/reports"
 
 .org trampoline_entry
   bl SaveSlotData
