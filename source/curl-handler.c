@@ -284,13 +284,24 @@ void curl_multi_loop_request_setup(int i) {
 		FriendKey friend_key;
 		res = FRD_GetMyFriendKey(&friend_key);
 		if (R_SUCCEEDED(res)) {
-			u64 fc;
-			res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
-			if (R_SUCCEEDED(res)) {
-				char header_fc[100];
-				snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", fc);
-				headers = curl_slist_append(headers, header_fc);
-			}
+			char header_fc[100];
+			snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", friend_key.localFriendCode);
+			headers = curl_slist_append(headers, header_fc);
+			
+			char header_pid[100];
+			snprintf(header_pid, sizeof(header_pid), "3ds-pid: %ld", friend_key.principalId);
+			headers = curl_slist_append(headers, header_pid);
+		}
+	}
+	{
+		char nex_password[0x11];
+		res = FRD_GetMyPassword(nex_password, sizeof(nex_password));
+		if (R_SUCCEEDED(res)) {
+			char* nex_pwd = b64encode((u8*)nex_password, strlen(nex_password));
+			char header_nex_pwd[100];
+			snprintf(header_nex_pwd, sizeof(header_nex_pwd), "3ds-nex-pwd: %s", nex_pwd);
+			headers = curl_slist_append(headers, header_nex_pwd);
+			free(nex_pwd);
 		}
 	}
 	{
