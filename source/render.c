@@ -2,6 +2,7 @@
  * NetPass
  * Copyright (C) 2024 SunOfLife1
  *               2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
