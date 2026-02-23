@@ -227,6 +227,56 @@ void getMacStr(char value[13]) {
 	}
 }
 
+Result ACU_GetProxyAuthType(u8* auth_type) {
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x37, 0, 0);
+	
+	if (R_FAILED(ret = svcSendSyncRequest(*acGetSessionHandle()))) return ret;
+	*auth_type = (u8)cmdbuf[2];
+	return (Result)cmdbuf[1];
+}
+
+Result curl_add_proxy(CURL* handle) {
+	Result res = 0;
+	bool enable;
+	res = ACU_GetProxyEnable(&enable);
+	if (R_FAILED(res) || !enable) {
+		curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 1);
+		return res;
+	}
+	{
+		char host[0x100] = {0};
+		u16 port;
+		res = ACU_GetProxyHost(host);
+		if (R_FAILED(res)) return res;
+		res = ACU_GetProxyPort(&port);
+		if (R_FAILED(res)) return res;
+		curl_easy_setopt(handle, CURLOPT_PROXY, host);
+		curl_easy_setopt(handle, CURLOPT_PROXYPORT, port);
+	}
+	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_easy_setopt(handle, CURLOPT_PROXY_SSL_VERIFYPEER, 0);
+	u8 auth_type = 0;
+	ACU_GetProxyAuthType(&auth_type);
+	switch (auth_type) {
+		case 0:
+			break;
+		case 1: { // simple auth
+			char username[0x20] = {0};
+			char password[0x20] = {0};
+			res = ACU_GetProxyUserName(username);
+			if (R_FAILED(res)) return res;
+			res = ACU_GetProxyPassword(password);
+			if (R_FAILED(res)) return res;
+			curl_easy_setopt(handle, CURLOPT_PROXYUSERNAME, username);
+			curl_easy_setopt(handle, CURLOPT_PROXYPASSWORD, password);
+		}
+	}
+	
+	return res;
+}
+
 void curl_multi_loop_request_setup(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();
@@ -235,6 +285,7 @@ void curl_multi_loop_request_setup(int i) {
 		h->status = CURL_HANDLE_STATUS_DONE;
 		return;
 	}
+	curl_add_proxy(h->handle);
 	struct curl_slist* headers = NULL;
 
 	// add mac header
@@ -344,7 +395,6 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
 	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);
-	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
 	curl_easy_setopt(h->handle, CURLOPT_HEADERFUNCTION, curlHeader);
 	curl_easy_setopt(h->handle, CURLOPT_HEADERDATA, h);

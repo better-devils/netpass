@@ -202,6 +202,7 @@ int main(int nargs, char** argv) {
 	gfxInitDefault();
 	miscInit();
 	_e(cfguInit());
+	_e(acInit());
 	_e(amInit());
 	_e(nsInit());
 	_e(aptInit());
@@ -350,6 +351,7 @@ int main(int nargs, char** argv) {
 	aptExit();
 	nsExit();
 	amExit();
+	acExit();
 	cfguExit();
 	gfxExit();
 	return 0;
