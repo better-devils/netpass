@@ -34,12 +34,12 @@
 #include "scenes/switch.h"
 #include "render.h"
 
-CurlReply* ping_reply = 0;
-Result ping_res = 0;
-PingResponse ping_response = {0};
-char* filename_3dsx = 0;
+static CurlReply* ping_reply = 0;
+static Result ping_res = 0;
+static PingResponse ping_response = {0};
+static char* filename_3dsx = 0;
 
-Scene* load_is_banned(void) {
+static Scene* load_is_banned(void) {
 	char ban_start[40];
 	char ban_end[40];
 	struct tm tm = {0};
@@ -68,8 +68,8 @@ Scene* load_is_banned(void) {
 	return scene;
 }
 
-CurlReply* reply_new_version = 0;
-Scene* load_new_version(Scene* scene) {
+static CurlReply* reply_new_version = 0;
+static Scene* load_new_version(Scene* scene) {
 	char* message = malloc(1000);
 	if (message) {
 		snprintf(message, 1000, _s(str_new_version), ping_response.version.major, ping_response.version.minor, ping_response.version.patch);
@@ -129,7 +129,7 @@ Scene* load_new_version(Scene* scene) {
 	return scene;
 }
 
-Scene* initial_scene(void) {
+static Scene* initial_scene(void) {
 	if (R_FAILED(ping_res)) {
 		// something not working
 		_e(ping_res);
@@ -157,7 +157,7 @@ Scene* initial_scene(void) {
 	return scene;
 }
 
-void initial_load(void) {
+static void initial_load(void) {
 	// first, we import the locally stored passes for reports to work
 	reportInit();
 	// next, we gotta wait for having internet

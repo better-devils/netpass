@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +23,7 @@
 #include "ctr_results.h"
 #include <stdio.h>
 
-const char* const level_to_string[] = {
+static const char* const level_to_string[] = {
 	"Success",
 	"Info",
 	"Status",
@@ -34,7 +35,7 @@ const char* const level_to_string[] = {
 	"Fatal",
 };
 
-const char* const level_description[] = {
+static const char* const level_description[] = {
 	"Success. There is no additional information available.",
 	"Success. There is additional information available.",
 	"Expected failure.",
@@ -46,7 +47,7 @@ const char* const level_description[] = {
 	"Fatal system level error. Software recovery not possible. Jump to support center guide sequence.",
 };
 
-const char* const summary_to_string[] = {
+static const char* const summary_to_string[] = {
 	"Success",
 	"Nothing Happened",
 	"Would Block",
@@ -61,7 +62,7 @@ const char* const summary_to_string[] = {
 	"Internal",
 };
 
-const char* const summary_description[] = {
+static const char* const summary_description[] = {
 	"Succeeded.",
 	"Nothing happens.",
 	"The process may be blocked.",
@@ -76,7 +77,7 @@ const char* const summary_description[] = {
 	"Error that is used within the library.",
 };
 
-const char* const module_to_string[] = {
+static const char* const module_to_string[] = {
 	"cmn",
 	"kern",
 	"util",
@@ -180,7 +181,7 @@ const char* const module_to_string[] = {
 	"npt",
 };
 
-const char* const module_description[] = {
+static const char* const module_description[] = {
 	"Common",
 	"Kernel",
 	"Util",
@@ -284,7 +285,7 @@ const char* const module_description[] = {
 	"NPT",
 };
 
-const char* const description_to_string[] = {
+static const char* const description_to_string[] = {
 	"Invalid Selection",
 	"Too Large",
 	"Not Authorized",
@@ -311,7 +312,7 @@ const char* const description_to_string[] = {
 	"Invalid Result Value",
 };
 
-const char* const description_description[] = {
+static const char* const description_description[] = {
 	"An invalid value was specified when a specifiable value is discrete.",
 	"The value is too large.",
 	"Unauthorized operation.",
@@ -338,7 +339,7 @@ const char* const description_description[] = {
 	"These values are not used.",
 };
 
-const char* get_desc_str_ac(int desc) {
+static const char* get_desc_str_ac(int desc) {
 	switch (desc) {
 		case 50: return "WanConnected";
 		case 51: return "LanConnected";
@@ -374,7 +375,7 @@ const char* get_desc_str_ac(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ac(int desc) {
+static const char* get_desc_desc_ac(int desc) {
 	switch (desc) {
 		case 50: return "WAN connection established";
 		case 51: return "LAN connection established";
@@ -410,7 +411,7 @@ const char* get_desc_desc_ac(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_am(int desc) {
+static const char* get_desc_str_am(int desc) {
 	const char* const map[] = {
 		"InvalidCiaFormat",
 		"InvalidImportPipeState",
@@ -502,7 +503,7 @@ const char* get_desc_str_am(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_am(int desc) {
+static const char* get_desc_desc_am(int desc) {
 	const char* const map[] = {
 		"Invalid CIA format",
 		"Invalid import pipe state",
@@ -594,7 +595,7 @@ const char* get_desc_desc_am(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_applet(int desc) {
+static const char* get_desc_str_applet(int desc) {
 	const char* const map[] = {
 		"AppletNoAreaToRegister",
 		"AppletParameterBufferNotEmtpy",
@@ -613,7 +614,7 @@ const char* get_desc_str_applet(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_applet(int desc) {
+static const char* get_desc_desc_applet(int desc) {
 	const char* const map[] = {
 		"There is no space in the table used for registration.",
 		"The parameter region is not empty.",
@@ -632,7 +633,7 @@ const char* get_desc_desc_applet(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_boss(int desc) {
+static const char* get_desc_str_boss(int desc) {
 	const char* const map[] = {
 		"InvalidPolicy",
 		"InvalidAction",
@@ -726,7 +727,7 @@ const char* get_desc_str_boss(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_boss(int desc) {
+static const char* get_desc_desc_boss(int desc) {
 	const char* const map[] = {
 		"The policy information pointer is NULL.",
 		"The task action pointer is NULL.",
@@ -818,7 +819,7 @@ const char* get_desc_desc_boss(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_camera(int desc) {
+static const char* get_desc_str_camera(int desc) {
 	const char* const map[] = {
 		"CameraIsSleeping",
 		"CameraFatalError",
@@ -827,7 +828,7 @@ const char* get_desc_str_camera(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_camera(int desc) {
+static const char* get_desc_desc_camera(int desc) {
 	const char* const map[] = {
 		"Camera is sleeping",
 		"Camera fatal error",
@@ -836,7 +837,7 @@ const char* get_desc_desc_camera(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_cardspi(int desc) {
+static const char* get_desc_str_cardspi(int desc) {
 	const char* const map[] = {
 		"NotPermitted",
 		"CardIreqTimeOut",
@@ -849,7 +850,7 @@ const char* get_desc_str_cardspi(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_cardspi(int desc) {
+static const char* get_desc_desc_cardspi(int desc) {
 	const char* const map[] = {
 		"The operation is not permitted.",
 		"The card interrupt request timed out.",
@@ -862,7 +863,7 @@ const char* get_desc_desc_cardspi(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_cec(int desc) {
+static const char* get_desc_str_cec(int desc) {
 	const char* const map[] = {
 		"Unknown",
 		"BoxSizeFull",
@@ -881,7 +882,7 @@ const char* get_desc_str_cec(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_cec(int desc) {
+static const char* get_desc_desc_cec(int desc) {
 	const char* const map[] = {
 		"Unknown",
 		"The box size is full.",
@@ -900,7 +901,7 @@ const char* get_desc_desc_cec(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_cfg(int desc) {
+static const char* get_desc_str_cfg(int desc) {
 	const char* const map[] = {
 		"NotVerified",
 		"VerificationFailed",
@@ -914,7 +915,7 @@ const char* get_desc_str_cfg(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_cfg(int desc) {
+static const char* get_desc_desc_cfg(int desc) {
 	const char* const map[] = {
 		"Signature not verified.",
 		"Signature verification failed.",
@@ -928,7 +929,7 @@ const char* get_desc_desc_cfg(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_csnd(int desc) {
+static const char* get_desc_str_csnd(int desc) {
 	const char* const map[] = {
 		"Sleep",
 		"InferiorPriority",
@@ -937,7 +938,7 @@ const char* get_desc_str_csnd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_csnd(int desc) {
+static const char* get_desc_desc_csnd(int desc) {
 	const char* const map[] = {
 		"The operation is not supported in the current state.",
 		"The operation is not supported in the current state.",
@@ -946,7 +947,7 @@ const char* get_desc_desc_csnd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_cup(int desc) {
+static const char* get_desc_str_cup(int desc) {
 	const char* const map[] = {
 		"UpdateCancelled",
 		"NotInitialized",
@@ -966,7 +967,7 @@ const char* get_desc_str_cup(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_cup(int desc) {
+static const char* get_desc_desc_cup(int desc) {
 	const char* const map[] = {
 		"The update was cancelled.",
 		"The update was not initialized.",
@@ -986,7 +987,7 @@ const char* get_desc_desc_cup(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_dbg(int desc) {
+static const char* get_desc_str_dbg(int desc) {
 	const char* const map[] = {
 		"DebugOutputIsDisabled",
 		"DebuggerNotPresent",
@@ -996,7 +997,7 @@ const char* get_desc_str_dbg(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_dbg(int desc) {
+static const char* get_desc_desc_dbg(int desc) {
 	const char* const map[] = {
 		"Debug output is disabled",
 		"Debugger is not connected",
@@ -1006,8 +1007,8 @@ const char* get_desc_desc_dbg(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_fs(int desc);
-const char* get_desc_str_dbm(int desc) {
+static const char* get_desc_str_fs(int desc);
+static const char* get_desc_str_dbm(int desc) {
 	switch (desc) {
 		case 714:
 		case 205:
@@ -1037,8 +1038,8 @@ const char* get_desc_str_dbm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_fs(int desc);
-const char* get_desc_desc_dbm(int desc) {
+static const char* get_desc_desc_fs(int desc);
+static const char* get_desc_desc_dbm(int desc) {
 	switch (desc) {
 		case 714:
 		case 205:
@@ -1068,7 +1069,7 @@ const char* get_desc_desc_dbm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_dd(int desc) {
+static const char* get_desc_str_dd(int desc) {
 	const char* const map[] = {
 		"InvalidSelection",
 		"InnaccessiblePage",
@@ -1079,7 +1080,7 @@ const char* get_desc_str_dd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_dd(int desc) {
+static const char* get_desc_desc_dd(int desc) {
 	const char* const map[] = {
 		"Bad selection",
 		"Contains inaccessible pages",
@@ -1090,7 +1091,7 @@ const char* get_desc_desc_dd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_dlp(int desc) {
+static const char* get_desc_str_dlp(int desc) {
 	const char* const map[] = {
 		"InternalState",
 		"InternalError",
@@ -1109,7 +1110,7 @@ const char* get_desc_str_dlp(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_dlp(int desc) {
+static const char* get_desc_desc_dlp(int desc) {
 	const char* const map[] = {
 		"The internal state is innappropriate for using the API.",
 		"An error occured that cannot be handled from the application.",
@@ -1128,7 +1129,7 @@ const char* get_desc_desc_dlp(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_dmnt(int desc) {
+static const char* get_desc_str_dmnt(int desc) {
 	const char* const map[] = {
 		"MaxHandle",
 		"InvalidHandle",
@@ -1149,7 +1150,7 @@ const char* get_desc_str_dmnt(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_dmnt(int desc) {
+static const char* get_desc_desc_dmnt(int desc) {
 	const char* const map[] = {
 		"maximum number of handles reached",
 		"invalid handle",
@@ -1170,7 +1171,7 @@ const char* get_desc_desc_dmnt(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_dsp(int desc) {
+static const char* get_desc_str_dsp(int desc) {
 	const char* const map[] = {
 		"OK",
 		"ComponentNotLoaded",
@@ -1179,7 +1180,7 @@ const char* get_desc_str_dsp(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_dsp(int desc) {
+static const char* get_desc_desc_dsp(int desc) {
 	const char* const map[] = {
 		"The operation was successful.",
 		"The component is not loaded.",	};
@@ -1187,7 +1188,7 @@ const char* get_desc_desc_dsp(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ec(int desc) {
+static const char* get_desc_str_ec(int desc) {
 	const char* const map1[] = {
 		"TooManyContents",
 		"TooManyTitles",
@@ -1316,7 +1317,7 @@ const char* get_desc_str_ec(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ec(int desc) {
+static const char* get_desc_desc_ec(int desc) {
 	const char* const map1[] = {
 		"Too many contents.",
 		"Too many titles.",
@@ -1445,7 +1446,7 @@ const char* get_desc_desc_ec(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_enc(int desc) {
+static const char* get_desc_str_enc(int desc) {
 	const char* const map[] = {
 		"NoBufferLeft",
 		"InvalidParameter",
@@ -1455,7 +1456,7 @@ const char* get_desc_str_enc(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_enc(int desc) {
+static const char* get_desc_desc_enc(int desc) {
 	const char* const map[] = {
 		"No buffer left.",
 		"Invalid parameter.",
@@ -1465,17 +1466,17 @@ const char* get_desc_desc_enc(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_fnd(int desc) {
+static const char* get_desc_str_fnd(int desc) {
 	if (desc == 33) return "InvalidTlsIndex";
 	return NULL;
 }
 
-const char* get_desc_desc_fnd(int desc) {
+static const char* get_desc_desc_fnd(int desc) {
 	if (desc == 33) return "An unallocated TLS index was specified.";
 	return NULL;
 }
 
-const char* get_desc_str_friends(int desc) {
+static const char* get_desc_str_friends(int desc) {
 	int map_picker = CTR_RESULT_GET_CODE_BITS(desc, 0b111100000, 5);
 	int map_val = CTR_RESULT_GET_CODE_BITS(desc, 0b11111, 5);
 	const char* const map1[] = {
@@ -1651,7 +1652,7 @@ const char* get_desc_str_friends(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_friends(int desc) {
+static const char* get_desc_desc_friends(int desc) {
 	int map_picker = CTR_RESULT_GET_CODE_BITS(desc, 0b111100000, 5);
 	int map_val = CTR_RESULT_GET_CODE_BITS(desc, 0b11111, 5);
 	const char* const map1[] = {
@@ -1827,7 +1828,7 @@ const char* get_desc_desc_friends(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_fs(int desc) {
+static const char* get_desc_str_fs(int desc) {
 	switch (desc) {
 		case 10: return "FindFinished";
 		case 20: return "DbmFindFinished";
@@ -1984,7 +1985,7 @@ const char* get_desc_str_fs(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_fs(int desc) {
+static const char* get_desc_desc_fs(int desc) {
 	switch (desc) {
 		case 10: return "Search finished";
 		case 20: return "DBM search completed";
@@ -2141,7 +2142,7 @@ const char* get_desc_desc_fs(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_gd(int desc) {
+static const char* get_desc_str_gd(int desc) {
 	const char* const map[] = {
 		"Success",
 		"InvalidParameter",
@@ -2187,7 +2188,7 @@ const char* get_desc_str_gd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_gd(int desc) {
+static const char* get_desc_desc_gd(int desc) {
 	const char* const map[] = {
 		"Represents success.",
 		"A parameter is invalid.",
@@ -2233,7 +2234,7 @@ const char* get_desc_desc_gd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_hio(int desc) {
+static const char* get_desc_str_hio(int desc) {
 	const char* const map[] = {
 		"InvalidSelection",
 		"TooLarge",
@@ -2264,7 +2265,7 @@ const char* get_desc_str_hio(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_hio(int desc) {
+static const char* get_desc_desc_hio(int desc) {
 	const char* const map[] = {
 		"An invalid selection was specified.",
 		"The size is too large.",
@@ -2295,7 +2296,7 @@ const char* get_desc_desc_hio(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_http(int desc) {
+static const char* get_desc_str_http(int desc) {
 	const char* const map_00[] = {
 		"httpDescription",
 		"InvalidStatus",
@@ -2383,7 +2384,7 @@ const char* get_desc_str_http(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_http(int desc) {
+static const char* get_desc_desc_http(int desc) {
 	const char* const map_00[] = {
 		"No error",
 		"Invalid status",
@@ -2469,7 +2470,7 @@ const char* get_desc_desc_http(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ir(int desc) {
+static const char* get_desc_str_ir(int desc) {
 	const char* const map[] = {
 		"MachineSleep",
 		"FatalError",
@@ -2497,7 +2498,7 @@ const char* get_desc_str_ir(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ir(int desc) {
+static const char* get_desc_desc_ir(int desc) {
 	const char* const map[] = {
 		"Sleeping because the system is in Sleep Mode.",
 		"The IR module may be malfunctioning.",
@@ -2525,7 +2526,7 @@ const char* get_desc_desc_ir(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_kern(int desc) {
+static const char* get_desc_str_kern(int desc) {
 	const char* const map[] = {
 		"NoSuchThread",
 		"SessionMustBeLocked",
@@ -2547,7 +2548,7 @@ const char* get_desc_str_kern(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_kern(int desc) {
+static const char* get_desc_desc_kern(int desc) {
 	const char* const map[] = {
 		"No such thread",
 		"Called without locking",
@@ -2569,7 +2570,7 @@ const char* get_desc_desc_kern(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_l2b(int desc) {
+static const char* get_desc_str_l2b(int desc) {
 	const char* const map[] = {
 		"IsSleeping",
 		"InvalidL2bNo",
@@ -2578,7 +2579,7 @@ const char* get_desc_str_l2b(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_l2b(int desc) {
+static const char* get_desc_desc_l2b(int desc) {
 	const char* const map[] = {
 		"The L2B is sleeping.",
 		"The L2B number is invalid.",
@@ -2587,7 +2588,7 @@ const char* get_desc_desc_l2b(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ldr(int desc) {
+static const char* get_desc_str_ldr(int desc) {
 	const char* const map[] = {
 		"FailedHostFileOperation",
 		"InvalidRomFormat",
@@ -2599,7 +2600,7 @@ const char* get_desc_str_ldr(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ldr(int desc) {
+static const char* get_desc_desc_ldr(int desc) {
 	const char* const map[] = {
 		"Failed to perform host file operation",
 		"Invalid ROM format",
@@ -2611,27 +2612,27 @@ const char* get_desc_desc_ldr(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_mcu(int desc) {
+static const char* get_desc_str_mcu(int desc) {
 	if (desc == 1) return "InvalidAddressOrScale";
 	return NULL;
 }
 
-const char* get_desc_desc_mcu(int desc) {
+static const char* get_desc_desc_mcu(int desc) {
 	if (desc == 1) return "Invalid address or abnormal scale value is specified.";
 	return NULL;
 }
 
-const char* get_desc_str_mic(int desc) {
+static const char* get_desc_str_mic(int desc) {
 	if (desc == 1) return "MicShellClose";
 	return NULL;
 }
 
-const char* get_desc_desc_mic(int desc) {
+static const char* get_desc_desc_mic(int desc) {
 	if (desc == 1) return "The microphone cannot be used because the system is closed.";
 	return NULL;
 }
 
-const char* get_desc_str_midi(int desc) {
+static const char* get_desc_str_midi(int desc) {
 	const char* const map[] = {
 		"AlreadyOpened",
 		"NotOpened",
@@ -2645,7 +2646,7 @@ const char* get_desc_str_midi(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_midi(int desc) {
+static const char* get_desc_desc_midi(int desc) {
 	const char* const map[] = {
 		"The device is already opened.",
 		"The device is not opened.",
@@ -2659,7 +2660,7 @@ const char* get_desc_desc_midi(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_mp(int desc) {
+static const char* get_desc_str_mp(int desc) {
 	const char* const map[] = {
 		"Failed",
 		"IllegalState",
@@ -2683,7 +2684,7 @@ const char* get_desc_str_mp(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_mp(int desc) {
+static const char* get_desc_desc_mp(int desc) {
 	const char* const map[] = {
 		"An internal error (WL command error) has occurred.",
 		"You called a function that cannot be called in the current state of the MP library.",
@@ -2707,7 +2708,7 @@ const char* get_desc_desc_mp(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_mvd(int desc) {
+static const char* get_desc_str_mvd(int desc) {
 	const char* const map1[] = {
 		"Ok",
 		"StrmProcessed",
@@ -2781,7 +2782,7 @@ const char* get_desc_str_mvd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_mvd(int desc) {
+static const char* get_desc_desc_mvd(int desc) {
 	const char* const map1[] = {
 		"No error",
 		"Stream buffer processed",
@@ -2855,7 +2856,7 @@ const char* get_desc_desc_mvd(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ndm(int desc) {
+static const char* get_desc_str_ndm(int desc) {
 	const char* const map[] = {
 		"InterruptByRequest",
 		"ProcessingPriorityRequest",
@@ -2881,7 +2882,7 @@ const char* get_desc_str_ndm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ndm(int desc) {
+static const char* get_desc_desc_ndm(int desc) {
 	const char* const map[] = {
 		"Interrupted by request",
 		"Already processing priority request",
@@ -2907,7 +2908,7 @@ const char* get_desc_desc_ndm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_news(int desc) {
+static const char* get_desc_str_news(int desc) {
 	const char* const map[] = {
 		"None",
 		"InvalidSubjectSize",
@@ -2919,7 +2920,7 @@ const char* get_desc_str_news(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_news(int desc) {
+static const char* get_desc_desc_news(int desc) {
 	const char* const map[] = {
 		"No error.",
 		"The length of the subject line is too large.",
@@ -2931,7 +2932,7 @@ const char* get_desc_desc_news(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_nfc(int desc) {
+static const char* get_desc_str_nfc(int desc) {
 	const char* const map[] = {
 		"InvalidOperation",
 		"InvalidArgument",
@@ -2954,7 +2955,7 @@ const char* get_desc_str_nfc(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_nfc(int desc) {
+static const char* get_desc_desc_nfc(int desc) {
 	const char* const map[] = {
 		"Invalid operation was requested.",
 		"Invalid argument was passed.",
@@ -2977,7 +2978,7 @@ const char* get_desc_desc_nfc(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_nim(int desc) {
+static const char* get_desc_str_nim(int desc) {
 	const char* const map[] = {
 		"Ok",
 		"NotTerminatedString",
@@ -3059,7 +3060,7 @@ const char* get_desc_str_nim(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_nim(int desc) {
+static const char* get_desc_desc_nim(int desc) {
 	const char* const map[] = {
 		"Success.",
 		"The string is not terminated.",
@@ -3141,7 +3142,7 @@ const char* get_desc_desc_nim(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ns(int desc) {
+static const char* get_desc_str_ns(int desc) {
 	const char* const map[] = {
 		"RebootNotRequired",
 		"ShutdownProcessing",
@@ -3152,7 +3153,7 @@ const char* get_desc_str_ns(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ns(int desc) {
+static const char* get_desc_desc_ns(int desc) {
 	const char* const map[] = {
 		"Reboot is not required.",
 		"Shutting down.",
@@ -3163,7 +3164,7 @@ const char* get_desc_desc_ns(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_nwm(int desc) {
+static const char* get_desc_str_nwm(int desc) {
 	const char* const map[] = {
 		"SdioInitFailure",
 		"ModuleInitFailure",
@@ -3187,7 +3188,7 @@ const char* get_desc_str_nwm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_nwm(int desc) {
+static const char* get_desc_desc_nwm(int desc) {
 	const char* const map[] = {
 		"Failed to initialize SDIO",
 		"Failed to initialize the wireless module.",
@@ -3211,7 +3212,7 @@ const char* get_desc_desc_nwm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_os(int desc) {
+static const char* get_desc_str_os(int desc) {
 	const char* const map[] = {
 		"FailedToAllocateMemory",
 		"FailedToAllocateSharedMemory",
@@ -3278,7 +3279,7 @@ const char* get_desc_str_os(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_os(int desc) {
+static const char* get_desc_desc_os(int desc) {
 	const char* const map[] = {
 		"Reached the physical memory limit",
 		"Reached the shared memory limit",
@@ -3345,31 +3346,31 @@ const char* get_desc_desc_os(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_pdn(int desc) {
+static const char* get_desc_str_pdn(int desc) {
 	if (desc == 1) return "ClockNotSupplied";
 	return NULL;
 }
 
-const char* get_desc_desc_pdn(int desc) {
+static const char* get_desc_desc_pdn(int desc) {
 	if (desc == 1) return "Clock not supplied";
 	return NULL;
 }
 
-const char* get_desc_str_pl(int desc) {
+static const char* get_desc_str_pl(int desc) {
 	if (desc == 2) return "SharedfontNotFound";
 	if (desc == 100) return "GamecoinDataReset";
 	if (desc == 101) return "LackOfGamecoin";
 	return NULL;
 }
 
-const char* get_desc_desc_pl(int desc) {
+static const char* get_desc_desc_pl(int desc) {
 	if (desc == 2) return "The shared font was not found.";
 	if (desc == 100) return "The data was processed successfully, but was reset because there was a problem in the save data.";
 	if (desc == 101) return "The user attempted to use more game coins than they own.";
 	return NULL;
 }
 
-const char* get_desc_str_pmlow(int desc) {
+static const char* get_desc_str_pmlow(int desc) {
 	const char* const map[] = {
 		"InvalidRomFormat",
 		"FailedToReadProgramInfo",
@@ -3381,7 +3382,7 @@ const char* get_desc_str_pmlow(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_pmlow(int desc) {
+static const char* get_desc_desc_pmlow(int desc) {
 	const char* const map[] = {
 		"Invalid ROM format",
 		"Failed to read program info",
@@ -3393,7 +3394,7 @@ const char* get_desc_desc_pmlow(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ptm(int desc) {
+static const char* get_desc_str_ptm(int desc) {
 	const char* const map[] = {
 		"InvalidSystemtime",
 		"Noalarm",
@@ -3407,7 +3408,7 @@ const char* get_desc_str_ptm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ptm(int desc) {
+static const char* get_desc_desc_ptm(int desc) {
 	const char* const map[] = {
 		"The system time is invalid.",
 		"Indicates that the alarm has not been configured.",
@@ -3421,7 +3422,7 @@ const char* get_desc_desc_ptm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_qtm(int desc) {
+static const char* get_desc_str_qtm(int desc) {
 	const char* const map[] = {
 		"FatalError",
 		"InvalidArgument",
@@ -3437,7 +3438,7 @@ const char* get_desc_str_qtm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_qtm(int desc) {
+static const char* get_desc_desc_qtm(int desc) {
 	const char* const map[] = {
 		"A fatal error has occurred.",
 		"An invalid argument was passed.",
@@ -3453,7 +3454,7 @@ const char* get_desc_desc_qtm(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_rdt(int desc) {
+static const char* get_desc_str_rdt(int desc) {
 	const char* const map[] = {
 		"ResetReceived",
 		"UntimelyCall",
@@ -3463,7 +3464,7 @@ const char* get_desc_str_rdt(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_rdt(int desc) {
+static const char* get_desc_desc_rdt(int desc) {
 	const char* const map[] = {
 		"Thesese results transition to a CLOSED state because a reset signal was received from the partner.",
 		"Do not call the function in this state.",
@@ -3473,7 +3474,7 @@ const char* get_desc_desc_rdt(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ro(int desc) {
+static const char* get_desc_str_ro(int desc) {
 	const char* const map[] = {
 		"AlreadyLoaded",
 		"AtexitNotFound",
@@ -3516,7 +3517,7 @@ const char* get_desc_str_ro(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ro(int desc) {
+static const char* get_desc_desc_ro(int desc) {
 	const char* const map[] = {
 		"The module is already loaded.",
 		"The atexit function is not found.",
@@ -3559,17 +3560,17 @@ const char* get_desc_desc_ro(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_snd(int desc) {
+static const char* get_desc_str_snd(int desc) {
 	if (desc == 1) return "SndNoDspComponentLoaded";
 	return NULL;
 }
 
-const char* get_desc_desc_snd(int desc) {
+static const char* get_desc_desc_snd(int desc) {
 	if (desc == 1) return "No DSP component is loaded.";
 	return NULL;
 }
 
-const char* get_desc_str_socket(int desc) {
+static const char* get_desc_str_socket(int desc) {
 	const char* const map[] = {
 		"FailedToInitializeInterface",
 		"FailedToInitializeSocketCore",
@@ -3594,7 +3595,7 @@ const char* get_desc_str_socket(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_socket(int desc) {
+static const char* get_desc_desc_socket(int desc) {
 	const char* const map[] = {
 		"Failed to initialize socket interface",
 		"Failed to initialize socket core",
@@ -3619,7 +3620,7 @@ const char* get_desc_desc_socket(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_srv(int desc) {
+static const char* get_desc_str_srv(int desc) {
 	const char* const map[] = {
 		"FailedSynchronization",
 		"NoSuchHandle",
@@ -3634,7 +3635,7 @@ const char* get_desc_str_srv(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_srv(int desc) {
+static const char* get_desc_desc_srv(int desc) {
 	const char* const map[] = {
 		"Failed to synchronize with the server",
 		"No such handle exists",
@@ -3649,7 +3650,7 @@ const char* get_desc_desc_srv(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_ssl(int desc) {
+static const char* get_desc_str_ssl(int desc) {
 	const char* const map1[] = {
 		"None",
 		"Failed",
@@ -3692,7 +3693,7 @@ const char* get_desc_str_ssl(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_ssl(int desc) {
+static const char* get_desc_desc_ssl(int desc) {
 	const char* const map1[] = {
 		"No error.",
 		"Error due to SSL protocol failure. (If verification of the client certificate fails on the server side, etc.)",
@@ -3735,7 +3736,7 @@ const char* get_desc_desc_ssl(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_tcb(int desc) {
+static const char* get_desc_str_tcb(int desc) {
 	const char* const map[] = {
 		"UsingRegion",
 		"FailedToAllocateCodeset",
@@ -3762,7 +3763,7 @@ const char* get_desc_str_tcb(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_tcb(int desc) {
+static const char* get_desc_desc_tcb(int desc) {
 	const char* const map[] = {
 		"UsingRegion",
 		"Failed to allocate codeset",
@@ -3789,7 +3790,7 @@ const char* get_desc_desc_tcb(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_uds(int desc) {
+static const char* get_desc_str_uds(int desc) {
 	const char* const map[] = {
 		"NetworkIsFull",
 		"WifiOff",
@@ -3804,7 +3805,7 @@ const char* get_desc_str_uds(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_uds(int desc) {
+static const char* get_desc_desc_uds(int desc) {
 	const char* const map[] = {
 		"Could not connect because the maximum number of stations that can connect to the network has been reached.",
 		"Failed because the system is in wireless off mode.",
@@ -3819,7 +3820,7 @@ const char* get_desc_desc_uds(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_updater(int desc) {
+static const char* get_desc_str_updater(int desc) {
 	const char* const map[] = {
 		"NotExpectedVersion",
 		"HashMismatch",
@@ -3835,7 +3836,7 @@ const char* get_desc_str_updater(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_updater(int desc) {
+static const char* get_desc_desc_updater(int desc) {
 	const char* const map[] = {
 		"The version of the firmware is not as expected.",
 		"The hash of the firmware is not as expected.",
@@ -3850,7 +3851,7 @@ const char* get_desc_desc_updater(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_vctl(int desc) {
+static const char* get_desc_str_vctl(int desc) {
 	const char* const map[] = {
 		"NotInitialized",
 		"AlreadyInitialized",
@@ -3863,7 +3864,7 @@ const char* get_desc_str_vctl(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_vctl(int desc) {
+static const char* get_desc_desc_vctl(int desc) {
 	const char* const map[] = {
 		"A process that requires initialization was called before it was initialized.",
 		"The initialization process was called while already initialized.",
@@ -3876,7 +3877,7 @@ const char* get_desc_desc_vctl(int desc) {
 	return NULL;
 }
 
-const char* get_desc_str_webbrs(int desc) {
+static const char* get_desc_str_webbrs(int desc) {
 	const char* const map[] = {
 		"InvalidUrl",
 		"UnavailableWebBrowser",
@@ -3886,7 +3887,7 @@ const char* get_desc_str_webbrs(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_webbrs(int desc) {
+static const char* get_desc_desc_webbrs(int desc) {
 	const char* const map[] = {
 		"Invalid URL.",
 		"Unavailable.",
@@ -3895,17 +3896,17 @@ const char* get_desc_desc_webbrs(int desc) {
 	return NULL;
 }
 
-int application_desc_size = 0;
-const char** application_desc_str_map = NULL;
-const char** application_desc_desc_map = NULL;
+static int application_desc_size = 0;
+static const char* const * application_desc_str_map = NULL;
+static const char* const * application_desc_desc_map = NULL;
 
-void set_application_desc_map(int size, const char** str_map, const char** desc_map) {
+void set_application_desc_map(int size, const char* const * const str_map, const char* const * const desc_map) {
 	application_desc_size = size;
 	application_desc_str_map = str_map;
 	application_desc_desc_map = desc_map;
 }
 
-const char* get_desc_str_application(int desc) {
+static const char* get_desc_str_application(int desc) {
 	if (!application_desc_str_map) return NULL;
 	
 	if (desc < application_desc_size) return application_desc_str_map[desc];
@@ -3913,7 +3914,7 @@ const char* get_desc_str_application(int desc) {
 	return NULL;
 }
 
-const char* get_desc_desc_application(int desc) {
+static const char* get_desc_desc_application(int desc) {
 	if (!application_desc_desc_map) return NULL;
 	
 	if (desc < application_desc_size) return application_desc_desc_map[desc];
@@ -3921,7 +3922,7 @@ const char* get_desc_desc_application(int desc) {
 	return NULL;
 }
 
-const char* (*module_desc_str[])(int) = {
+static const char* (*module_desc_str[])(int) = {
 	NULL, //"cmn",
 	get_desc_str_kern,
 	NULL, //"util",
@@ -4025,7 +4026,7 @@ const char* (*module_desc_str[])(int) = {
 	NULL, //"npt",
 };
 
-const char* (*module_desc_desc[])(int) = {
+static const char* (*module_desc_desc[])(int) = {
 	NULL, //"cmn",
 	get_desc_desc_kern,
 	NULL, //"util",

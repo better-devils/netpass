@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024, 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +24,7 @@
 #include "../image_cache.h"
 #include "../render.h"
 #include <stdlib.h>
-#define N(x) scenes_location_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (MAX(STR_AT_EVENT_LOCATION_LEN, STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
 typedef struct {
@@ -40,9 +40,9 @@ typedef struct {
 	bool event_location;
 	bool view_bg_only;
 	int location_id;
-} N(DataStruct);
+} DataStruct;
 
-LanguageString* N(locations)[NUM_LOCATIONS] = {
+static const LanguageString* const locations[NUM_LOCATIONS] = {
 	&str_at_train_station,
 	&str_at_plaza,
 	&str_at_mall,
@@ -51,7 +51,7 @@ LanguageString* N(locations)[NUM_LOCATIONS] = {
 	&str_at_catcafe,
 };
 
-const char* N(filenames)[NUM_LOCATIONS] = {
+static const char* const filenames[NUM_LOCATIONS] = {
 	"train_station",
 	"plaza",
 	"mall",
@@ -60,10 +60,10 @@ const char* N(filenames)[NUM_LOCATIONS] = {
 	"cat_cafe",
 };
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	memset(sc->d, 0, sizeof(N(DataStruct)));
+	memset(sc->d, 0, sizeof(DataStruct));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
 	_data->has_artist = false;
@@ -74,7 +74,7 @@ void N(init)(Scene* sc) {
 		TextLangParse(&_data->g_location, _data->g_staticBuf, str_at_event_location);
 		C2D_TextParse(&_data->g_subtitle, _data->g_staticBuf, location.name);
 	} else {
-		TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[location.id >= 0 && location.id < NUM_LOCATIONS ? location.id : 0]);
+		TextLangParse(&_data->g_location, _data->g_staticBuf, *locations[location.id >= 0 && location.id < NUM_LOCATIONS ? location.id : 0]);
 	}
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_check_inboxes);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_back_alley);
@@ -95,11 +95,11 @@ void N(init)(Scene* sc) {
 	}
 	if (location.id < 0 || location.id >= NUM_LOCATIONS) return;
 	
-	get_background_image(N(filenames)[location.id], &_data->spr, &_data->background, true);
-	playMusic(N(filenames)[location.id]);
+	get_background_image(filenames[location.id], &_data->spr, &_data->background, true);
+	playMusic(filenames[location.id]);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	if (_data->spr) {
 		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
@@ -126,7 +126,7 @@ void N(render)(Scene* sc) {
 	renderCursor(x, y, 1);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		if (_data->spr) {
@@ -139,7 +139,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
@@ -181,10 +181,10 @@ SceneResult N(process)(Scene* sc) {
 Scene* getLocationScene(int location_id) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	scene->data = (u32)location_id;
 	return scene;
 }

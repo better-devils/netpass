@@ -2,6 +2,7 @@
  * NetPass
  * Copyright (C) 2025 yabobay
  *               2026 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +28,10 @@
 
 #define LOG_FILE_NAME "sdmc:/config/netpass/log.txt"
 
-const char* LOG_LEVEL_NAMES[] = { "ERROR", "WARN", "INFO", "DEBUG" };
-const char* LOG_LEVEL_COLORS[] = { "34", "36", "35", "31" };
+static const char* const LOG_LEVEL_NAMES[] = { "ERROR", "WARN", "INFO", "DEBUG" };
+static const char* const LOG_LEVEL_COLORS[] = { "34", "36", "35", "31" };
 
-__FILE* log_file = NULL;
+static __FILE* log_file = NULL;
 
 void logInit() {
 	if (config.log_output == LogOutputFile) {

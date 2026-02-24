@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024-2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +46,7 @@
 	x* data = (x*)entry->data; \
 	memset(data, 0, sizeof(x));
 
-FILE* openLogIndex(void) {
+static FILE* openLogIndex(void) {
 	FILE* f = fopen(LOG_INDEX, "rb");
 	if (f) {
 		fseek(f, 0, SEEK_END);

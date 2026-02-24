@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -239,7 +240,7 @@ enum ctr_results_description {
 
 #define CTR_RESULT_MAKE(level, summary, module, description) (CTR_RESULT_SET_LEVEL(level) | CTR_RESULT_SET_SUMMARY(summary) | CTR_RESULT_SET_MODULE(module) | CTR_RESULT_SET_DESCRIPTION(description))
 
-void set_application_desc_map(int size, const char** str_map, const char** desc_map);
+void set_application_desc_map(int size, const char* const * const str_map, const char* const * const desc_map);
 
 const char* get_level_string(int32_t res);
 const char* get_level_description(int32_t res);

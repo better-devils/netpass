@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +32,11 @@
 #define NUM_BUFFERS 4
 #define OPUS_BUFFERSIZE ((size_t)(16 * 1024))
 
-bool stop_playing = false;
-Thread music_thread = 0;
-char curfilename[20] = {0};
+static bool stop_playing = false;
+static Thread music_thread = 0;
+static char curfilename[20] = {0};
 
-void wait_for_state(bool playing) {
+static void wait_for_state(bool playing) {
 	int count = 0;
 	while (ndspChnIsPlaying(MUSIC_CHANNEL) == !playing && count < 100000) {
 		svcSleepThread(10);
@@ -44,7 +45,7 @@ void wait_for_state(bool playing) {
 }
 
 __attribute__((optimize ("O3")))
-u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_read) {
+static u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_read) {
 	u64 samples_read = 0;
 
 	while (samples_to_read > 0) {
@@ -65,7 +66,7 @@ u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_rea
 }
 
 __attribute__((optimize ("O3")))
-void play_thread(void* p) {
+static void play_thread(void* p) {
 	OggOpusFile* opus_file = p;
 	// now allocate the buffers
 	s16* buffers_mem = linearAlloc(OPUS_BUFFERSIZE * sizeof(s16) * NUM_BUFFERS);
@@ -130,7 +131,7 @@ fail:
 	threadExit(0);
 }
 
-bool music_inited = false;
+static bool music_inited = false;
 
 Result playMusic(const char* filename) {
 	if (!music_inited) return ERROR_MUSIC_NOT_INITED;
@@ -189,7 +190,7 @@ void toggleBgMusic(void) {
 	configWrite();
 }
 
-u8* dsp_buf = 0;
+static u8* dsp_buf = 0;
 
 void musicInit(void) {
 	if (music_inited) return;

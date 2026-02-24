@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +18,7 @@
  */
 
 #include "about.h"
-#define N(x) scenes_about_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_B_GO_BACK_LEN + STR_ABOUT_LEAD_DEV_LEN + STR_ABOUT_REPORTS_LEN + STR_ABOUT_GRAPHICS_LEN + STR_ABOUT_MUSIC_LEN + STR_ABOUT_LOCALISATION_LEN + STR_ABOUT_NETPASS_COMMUNITY_LEN + STR_ABOUT_PRODUCTION_CAT_LEN + STR_ABOUT_SPECIAL_THANKS_LEN + STR_ABOUT_SPECIAL_THANKS_TXT_LEN)
 #define NUM_CREDIT_CATAGORIES 7
 
@@ -27,9 +27,9 @@ typedef struct {
 	const int height;
 	const char* entries;
 	const LanguageString* lang_entries;
-} N(RawCategory);
+} RawCategory;
 
-const N(RawCategory) N(raw_credits)[NUM_CREDIT_CATAGORIES] = {
+static const RawCategory raw_credits[NUM_CREDIT_CATAGORIES] = {
 	{&str_about_lead_dev, 1, "Sorunome", 0},
 	{&str_about_reports, 1, "gart, checkraisefold, Sorunome", 0},
 	{&str_about_graphics, 2, "Iveurne, DaGrand39, 24blueroses, KingMayro, MilesTheCreator, Lyril", 0},
@@ -43,31 +43,31 @@ typedef struct {
 	C2D_Text name;
 	int height;
 	C2D_Text entries;
-} N(Category);
+} Category;
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
-	N(Category) credits[NUM_CREDIT_CATAGORIES];
+	Category credits[NUM_CREDIT_CATAGORIES];
 	int y_offset;
 	C2D_Text netpass_website;
 	C2D_Text go_back;
 	float website_x;
 	C2D_SpriteSheet laura;
-} N(DataStruct);
+} DataStruct;
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	_data->y_offset = 0;
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 150);
 	for (int i = 0; i < NUM_CREDIT_CATAGORIES; i++) {
-		TextLangParse(&_data->credits[i].name, _data->g_staticBuf, *N(raw_credits)[i].name);
-		if (N(raw_credits)[i].entries) {
-			C2D_TextParse(&_data->credits[i].entries, _data->g_staticBuf, N(raw_credits)[i].entries);
+		TextLangParse(&_data->credits[i].name, _data->g_staticBuf, *raw_credits[i].name);
+		if (raw_credits[i].entries) {
+			C2D_TextParse(&_data->credits[i].entries, _data->g_staticBuf, raw_credits[i].entries);
 		} else {
-			TextLangParse(&_data->credits[i].entries, _data->g_staticBuf, *N(raw_credits)[i].lang_entries);
+			TextLangParse(&_data->credits[i].entries, _data->g_staticBuf, *raw_credits[i].lang_entries);
 		}
-		_data->credits[i].height = N(raw_credits)[i].height;
+		_data->credits[i].height = raw_credits[i].height;
 	}
 	C2D_TextParse(&_data->netpass_website, _data->g_staticBuf, "https://netpass.cafe");
 	TextLangParse(&_data->go_back, _data->g_staticBuf, str_b_go_back);
@@ -77,7 +77,7 @@ void N(init)(Scene* sc) {
 	_data->laura = C2D_SpriteSheetLoad("romfs:/gfx/laura.t3x");
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	int ycursor = 2 + _data->y_offset;
 	C2D_DrawText(&_data->go_back, C2D_AlignLeft, 10, ycursor, 0, 0.5, 0.5);
@@ -95,7 +95,7 @@ void N(render)(Scene* sc) {
 	C2D_DrawImageAt(img, 0, ycursor, 0, NULL, 1, 1);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		C2D_SpriteSheetFree(_data->laura);
@@ -103,7 +103,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
@@ -118,9 +118,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getAboutScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

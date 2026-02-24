@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +19,11 @@
 
 #include "switch.h"
 #include <stdlib.h>
-#define N(x) scenes_switch_namespace_##x
 
-void N(init)(Scene* sc) { }
-void N(exit)(Scene* sc) { }
+static void init(Scene* sc) { }
+static void exit_scene(Scene* sc) { }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	Scene* next_scene = ((Scene*(*)(void))sc->data)();
 	sc->next_scene = next_scene;
 	return scene_switch;
@@ -32,9 +32,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getSwitchScene(Scene*(*next_scene)(void)) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->exit = exit_scene;
+	scene->process = process;
 	scene->data = (u32)next_scene;
 	return scene;
 }

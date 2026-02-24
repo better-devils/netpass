@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +18,19 @@
  */
 
 #include "stop.h"
-#define N(x) scenes_stop_namespace_##x
 
-void N(init)(Scene* sc) { }
-void N(exit)(Scene* sc) { }
+static void init(Scene* sc) { }
+static void exit_scene(Scene* sc) { }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	return scene_stop;
 }
 
 Scene* getStopScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

@@ -38,7 +38,7 @@
 
 LocationResponse location = {0};
 FS_Archive sharedextdata_b = 0;
-NetpassTitleData title_data;
+static NetpassTitleData title_data;
 
 Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 	QrBuffer buffer;
@@ -144,7 +144,7 @@ typedef struct TitleExtraInfo {
 	u32 title_id;
 } TitleExtraInfo;
 
-Result uploadSlot(SlotMetadata* metadata) {
+static Result uploadSlot(SlotMetadata* metadata) {
 	Result res = 0;
 	char url[50];
 	if (!metadata->title_id) {
@@ -177,7 +177,7 @@ Result uploadSlot(SlotMetadata* metadata) {
 	return res;
 }
 
-Result downloadSlot(int i, SlotInfo* slotinfo) {
+static Result downloadSlot(int i, SlotInfo* slotinfo) {
 	Result res = 0;
 	SlotMetadata* metadata = &slotinfo->metadata[i];
 	if (metadata->send_method == 2) {
@@ -227,7 +227,7 @@ fail:
 	return res;
 }
 
-Result doSlotExchange(void) {
+static Result doSlotExchange(void) {
 	Result res = 0;
 	int slot_new_data_num = 0;
 	TitleExtraInfo title_extra_info[12];
@@ -532,7 +532,7 @@ void init_main_thread_prio(void) {
 static volatile bool trigger_inbox_download = false;
 static bool dl_loop_running = true;
 static volatile bool slot_exchange_running = false;
-Thread bg_loop_thread = 0;
+static Thread bg_loop_thread = 0;
 void triggerDownloadInboxes(void) {
 	trigger_inbox_download = true;
 }
@@ -565,7 +565,7 @@ Result doSlotExchangeRetry(bool once) {
 	}
 }
 
-void bgLoop(void* p) {
+static void bgLoop(void* p) {
 	do {
 		_e(doSlotExchangeRetry(false));
 		for(int i = 0; i < 10*60*5; i++) {

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024, 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +24,7 @@
 #include "../image_cache.h"
 #include "../render.h"
 #include "../music.h"
-#define N(x) scenes_home_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
 #define NUM_ENTRIES (NUM_LOCATIONS + 2)
@@ -39,12 +39,12 @@ typedef struct {
 	int cursor;
 	bool have_artist;
 	bool view_bg_only;
-} N(DataStruct);
+} DataStruct;
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	memset(sc->d, 0, sizeof(N(DataStruct)));
+	memset(sc->d, 0, sizeof(DataStruct));
 	get_background_image("home", &_data->spr, &_data->background, true);
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 50);
 	_data->cursor = 0;
@@ -68,7 +68,7 @@ void N(init)(Scene* sc) {
 	}
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	if (_data->spr) {
 		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
@@ -96,7 +96,7 @@ void N(render)(Scene* sc) {
 	renderCursor(13, 35 + 5 + _data->cursor*14 + 1, 0.5);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		if (_data->spr) {
@@ -109,9 +109,9 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-s32 N(new_location);
+static s32 new_location;
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
@@ -131,10 +131,10 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getInfoScene(str_no_location_twice);
 				return scene_push;
 			}
-			N(new_location) = _data->cursor;
+			new_location = _data->cursor;
 			// we do not need to actually switch scenes to the location scene here, as our other code will do that for us
 			sc->next_scene = getLoadingScene(NULL, lambda(void, (void) {
-				Result res = _e(setLocation(N(new_location)));
+				Result res = _e(setLocation(new_location));
 				if (!R_FAILED(res)) {
 					_e(getLocation());
 				}
@@ -154,9 +154,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getHomeScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

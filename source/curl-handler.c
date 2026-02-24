@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024-2026 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +59,7 @@ struct CurlHandle {
 
 static struct CurlHandle handles[MAX_CONNECTIONS] = {0};
 
-Result getMac(u8 mac[6]) {
+static Result getMac(u8 mac[6]) {
 	Result res = 0;
 	Handle handle;
 	res = srvGetServiceHandle(&handle, "nwm::SOC");
@@ -84,7 +85,7 @@ Result getMac(u8 mac[6]) {
 	return res;
 }
 
-size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
+static size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	CurlReply* r = (CurlReply*)ptr;
 	size_t new_len = r->len + size*nmemb;
 	if (new_len > MAX_SLOT_SIZE) {
@@ -105,7 +106,7 @@ static int xferinfo_callback(void *ptr, curl_off_t dltotal, curl_off_t dlnow, cu
 	return 0;
 }
 
-size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
+static size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 	struct CurlHandle *h = ptr;
 	char buf[size*nmemb + 1];
 	memcpy(buf, data, size*nmemb);
@@ -191,7 +192,7 @@ Result httpRequest(const char* method, const char* url, int size, u8* body, Curl
 
 static CURLM* curl_multi_handle;
 
-void curl_multi_loop_request_finish(int i) {
+static void curl_multi_loop_request_finish(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->res = h->result;
 	if (h->res != CURLE_OK) {
@@ -227,7 +228,7 @@ void getMacStr(char value[13]) {
 	}
 }
 
-Result ACU_GetProxyAuthType(u8* auth_type) {
+static Result ACU_GetProxyAuthType(u8* auth_type) {
 	Result ret = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x37, 0, 0);
@@ -237,7 +238,7 @@ Result ACU_GetProxyAuthType(u8* auth_type) {
 	return (Result)cmdbuf[1];
 }
 
-Result curl_add_proxy(CURL* handle) {
+static Result curl_add_proxy(CURL* handle) {
 	Result res = 0;
 	bool enable;
 	res = ACU_GetProxyEnable(&enable);
@@ -277,7 +278,7 @@ Result curl_add_proxy(CURL* handle) {
 	return res;
 }
 
-void curl_multi_loop_request_setup(int i) {
+static void curl_multi_loop_request_setup(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();
 	if (!h->handle) {
@@ -418,7 +419,7 @@ void curl_multi_loop_request_setup(int i) {
 	curl_multi_add_handle(curl_multi_handle, h->handle);
 }
 
-void curl_multi_loop(void* p) {
+static void curl_multi_loop(void* p) {
 	curl_multi_handle = curl_multi_init();
 	running = true;
 	int openHandles = 0;

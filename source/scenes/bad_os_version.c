@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,35 +18,34 @@
  */
 
 #include "bad_os_version.h"
-#define N(x) scenes_bad_os_version_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_BAD_OS_VERSION_LEN)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text text;
-} N(DataStruct);
+} DataStruct;
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	TextLangParse(&_data->text, _data->g_staticBuf, str_bad_os_version);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->text, C2D_AlignLeft | C2D_WordWrap, 10, 10, 0, 0.7, 0.7, 369.);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	if (hidKeysDown()) {
 		return scene_stop;
@@ -57,9 +57,9 @@ Scene* getBadOsVersionScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

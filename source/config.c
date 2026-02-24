@@ -3,6 +3,7 @@
  * Copyright (C) 2024, 2025 Sorunome
  *               2024 SunOfLife1
  *               2025 yabobay
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +84,7 @@ bool isTitleIgnored(u32 title_id) {
 	return false;
 }
 
-void load(void) {
+static void load(void) {
 	FILE* f = fopen(config_path, "r");
 	// no need to catch the load error as that means we just keep having defaults
 	if (!f) return;

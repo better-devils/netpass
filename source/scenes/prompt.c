@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +19,7 @@
 
 #include "prompt.h"
 
-#define N(x) scenes_prompt_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define WIDTH_SCR 400
 #define HEIGHT_SCR 240
 #define MARGIN 20
@@ -32,11 +32,11 @@ typedef struct {
 	C2D_Text g_a_ok;
 	C2D_Text g_b_back;
 	char* message;
-} N(DataStruct);
+} DataStruct;
 
-void N(init)(Scene* sc) {
+static void init(Scene* sc) {
 	C2D_Font font = sc->d;
-	sc->d = malloc(sizeof(N(DataStruct)));
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	if (font) {
 		font = (void*)((u32)font & 0xFFFFFFFE);
@@ -53,14 +53,14 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_b_back, _data->g_staticBuf, str_b_go_back);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
 	C2D_DrawText(&_data->g_prompt, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 0.7f, 0.7f, (WIDTH - MARGIN - 5) * 1.f);
 	C2D_DrawText(&_data->g_b_back, C2D_AlignLeft, MARGIN + 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 	C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		if (_data->message) free(_data->message);
 		C2D_TextBufDelete(_data->g_staticBuf);
@@ -68,7 +68,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (kDown & KEY_A) return scene_switch;
@@ -85,10 +85,10 @@ SceneResult N(process)(Scene* sc) {
 Scene* getPromptScene(LanguageString s, Scene* success) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	scene->data = (u32)s;
 	scene->next_scene = success;
 	scene->is_popup = true;
@@ -99,10 +99,10 @@ Scene* getPromptSceneStr(char* s, C2D_Font font, Scene* success) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	scene->data = (u32)s;
 	scene->d = (void*)((u32)font | 1);
 	scene->next_scene = success;

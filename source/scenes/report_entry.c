@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,24 +22,23 @@
 #include "../curl-handler.h"
 #include <stdlib.h>
 #include <malloc.h>
-#define N(x) scenes_report_entry_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define SETUP_EXDATA_INIT(a, x) if (!entry->data) break; \
 	a* entry_data = (a*)entry->data; \
-	_data->extra_data[i] = malloc(sizeof(N(x))); \
+	_data->extra_data[i] = malloc(sizeof(x)); \
 	if (!_data->extra_data[i]) break; \
-	N(x)* ex_data = _data->extra_data[i]; \
-	memset(ex_data, 0, sizeof(N(x)));
-#define SETUP_EXDATA_RENDER(x) N(x)* ex_data = _data->extra_data[i]; \
+	x* ex_data = _data->extra_data[i]; \
+	memset(ex_data, 0, sizeof(x));
+#define SETUP_EXDATA_RENDER(x) x* ex_data = _data->extra_data[i]; \
 	if (!ex_data) break;
 
 typedef struct {
 	C2D_Image pane[4];
-} N(ExtraDataLetterbox);
+} ExtraDataLetterbox;
 
 typedef struct {
 	C2D_Text greeting;
-} N(ExtraDataMarioKart7);
+} ExtraDataMarioKart7;
 
 typedef struct {
 	C2D_Text last_game;
@@ -46,11 +46,11 @@ typedef struct {
 	C2D_Text greeting;
 	C2D_Text custom_message;
 	C2D_Text custom_reply;
-} N(ExtraDataMiiPlaza);
+} ExtraDataMiiPlaza;
 
 typedef struct {
 	C2D_Text island_name;
-} N(ExtraDataTomodachiLife);
+} ExtraDataTomodachiLife;
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -64,14 +64,14 @@ typedef struct {
 	void* extra_data[12];
 	C2D_Text go_back;
 	C2D_Text source_name;
-} N(DataStruct);
+} DataStruct;
 
-char* N(send_msg);
-u32 N(send_transfer_id);
+static char* send_msg;
+static u32 send_transfer_id;
 
-SceneResult N(report)(Scene* sc) {
+static SceneResult report(Scene* sc) {
 	static const int msgmaxlen = 200;
-	N(send_msg) = malloc(msgmaxlen + 1);
+	send_msg = malloc(msgmaxlen + 1);
 	SwkbdResult button;
 	{
 		char hint_text[STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN];
@@ -79,22 +79,22 @@ SceneResult N(report)(Scene* sc) {
 		get_mii_name(mii_name, &_data->entry->mii);
 		snprintf(hint_text, STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN, _s(str_report_user_hint), mii_name);
 		SwkbdState swkbd;
-		memset(N(send_msg), 0, msgmaxlen + 1);
+		memset(send_msg, 0, msgmaxlen + 1);
 		swkbdInit(&swkbd, SWKBD_TYPE_NORMAL, 2, msgmaxlen);
 		swkbdSetHintText(&swkbd, hint_text);
 		swkbdSetButton(&swkbd, SWKBD_BUTTON_LEFT, _s(str_cancel), false);
 		swkbdSetButton(&swkbd, SWKBD_BUTTON_RIGHT, _s(str_submit), true);
 		swkbdSetFeatures(&swkbd, SWKBD_DARKEN_TOP_SCREEN | SWKBD_MULTILINE);
 		swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
-		button = swkbdInputText(&swkbd, N(send_msg), msgmaxlen + 1);
+		button = swkbdInputText(&swkbd, send_msg, msgmaxlen + 1);
 	}
 	if (button == SWKBD_D1_CLICK1) {
 		// successfully submitted the input
-		N(send_transfer_id) = _data->entry->transfer_id;
-		logln(INFO, "Got report: \"%s\", sending...", N(send_msg));
+		send_transfer_id = _data->entry->transfer_id;
+		logln(INFO, "Got report: \"%s\", sending...", send_msg);
 		Scene* scene = getLoadingScene(0, lambda(void, (void) {
 			CecMessageHeader msg;
-			Result res = _e(reportGetSomeMsgHeader(&msg, N(send_transfer_id)));
+			Result res = _e(reportGetSomeMsgHeader(&msg, send_transfer_id));
 			if (R_FAILED(res)) {
 				logln(ERROR, "%lx", res);
 				goto exit;
@@ -111,7 +111,7 @@ SceneResult N(report)(Scene* sc) {
 			data->version = 1;
 			memcpy(data->message_id, msg.message_id, sizeof(CecMessageId));
 			memcpy(&data->hash, &hash, sizeof(SHA256_HASH));
-			memcpy(data->msg, N(send_msg), sizeof(data->msg));
+			memcpy(data->msg, send_msg, sizeof(data->msg));
 
 			char url[50];
 			snprintf(url, 50, "%s/report/new", BASE_URL);
@@ -124,20 +124,20 @@ SceneResult N(report)(Scene* sc) {
 
 			logln(INFO, "report sent\n");
 		exit:
-			free(N(send_msg));
+			free(send_msg);
 		}));
 		scene->pop_scene = sc->pop_scene;
 		sc->next_scene = scene;
 		return scene_switch;
 	}
-	free(N(send_msg));
+	free(send_msg);
 	return scene_pop;
 }
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	memset(sc->d, 0, sizeof(N(DataStruct)));
+	memset(sc->d, 0, sizeof(DataStruct));
 	_data->entry = (ReportListEntry*)sc->data;
 
 	_data->msgs = malloc(sizeof(ReportMessages));
@@ -262,7 +262,7 @@ void N(init)(Scene* sc) {
 	}
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) {
 		return;
 	}
@@ -324,14 +324,14 @@ void N(render)(Scene* sc) {
 	}
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		for (int i = 0; i < 12; i++) {
 			if (!_data->extra_data[i]) continue;
 			ReportMessagesEntry* entry = &_data->msgs->entries[i];
 			switch (entry->title_id) {
 				case TITLE_LETTER_BOX: {
-					N(ExtraDataLetterbox)* ex_data = _data->extra_data[i];
+					ExtraDataLetterbox* ex_data = _data->extra_data[i];
 					for (int j = 0; j < 4; j++) {
 						if (!ex_data->pane[j].tex) continue;
 						C2D_ImageDelete(&ex_data->pane[j]);
@@ -349,13 +349,13 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
 	if (kDown & KEY_A) {
 		if (_data->msgs->source_id == 0x504E) { // "NP"
-			return N(report)(sc);
+			return report(sc);
 		} else {
 			sc->next_scene = getInfoScene(str_report_integration);
 			return scene_push;
@@ -371,10 +371,10 @@ Scene* getReportEntryScene(ReportListEntry* entry) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
 	memset(scene, 0, sizeof(Scene));
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	scene->data = (u32)(void*)entry;
 	return scene;
 }

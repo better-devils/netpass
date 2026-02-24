@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024, 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +22,7 @@
 #include "../music.h"
 #include "misc_settings.h"
 #include <stdlib.h>
-#define N(x) scenes_settings_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN + STR_BG_MUSIC_LEN + STR_TOGGLE_TITLES_ON_LEN + STR_TOGGLE_TITLES_OFF_LEN)
 
 #define NUM_ENTRIES 8
@@ -38,12 +38,12 @@ typedef struct {
 	float lang_width;
 	float bg_music_width;
 	char prev_music[20];
-} N(DataStruct);
+} DataStruct;
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	memset(_data, 0, sizeof(N(DataStruct)));
+	memset(_data, 0, sizeof(DataStruct));
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
 	
@@ -77,7 +77,7 @@ void N(init)(Scene* sc) {
 	get_text_dimensions(&_data->g_entries[3], 1, 1, &_data->bg_music_width, 0);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
@@ -108,7 +108,7 @@ void N(render)(Scene* sc) {
 	C2D_DrawRectSolid(400 - 180, 240 - 10, 0, 90, 10, C2D_Color32(0x77, 0x00, 0x88, 0xFF));
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		playMusic(_data->prev_music);
 		C2D_TextBufDelete(_data->g_staticBuf);
@@ -116,7 +116,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (_data) {
@@ -183,9 +183,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getSettingsScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-IntegrationList* g_list = 0;
+static IntegrationList* g_list = 0;
 
-Result lazy_init(void) {
+static Result lazy_init(void) {
 	Result res;
 	CurlReply* reply;
 	char url[80];

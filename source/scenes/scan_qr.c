@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +27,7 @@
 #include "prompt.h"
 #include <stdlib.h>
 #include <malloc.h>
-#define N(x) scenes_scan_qr_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_B_GO_BACK_LEN + STR_X_SWITCH_CAMERA_LEN)
 
 typedef struct {
@@ -46,13 +46,13 @@ typedef struct {
 	Handle cancel_event;
 	Thread cam_thread;
 	char prev_music[20];
-} N(DataStruct);
+} DataStruct;
 
-QrBuffer* N(qr_buffer) = 0;
-void* N(qr_payload) = 0;
+static QrBuffer* qr_buffer = 0;
+static void* qr_payload = 0;
 
-void N(captureCamThread)(void* arg) {
-	N(DataStruct)* data = (N(DataStruct)*)arg;
+static void captureCamThread(void* arg) {
+	DataStruct* data = (DataStruct*)arg;
 	u32 transfer_unit;
 	size_t buffer_size = SCREEN_TOP_WIDTH * SCREEN_TOP_HEIGHT * sizeof(u16);
 	u16* buffer = linearAlloc(buffer_size);
@@ -126,7 +126,7 @@ void N(captureCamThread)(void* arg) {
 	}
 }
 
-void N(stopCamera)(Scene* sc) {
+static void stopCamera(Scene* sc) {
 	svcSignalEvent(_data->cancel_event);
 	threadJoin(_data->cam_thread, U64_MAX);
 	threadFree(_data->cam_thread);
@@ -134,19 +134,19 @@ void N(stopCamera)(Scene* sc) {
 	_data->cam_thread = 0;
 }
 
-bool N(startCamera)(Scene* sc) {
-	if (_data->cam_thread) N(stopCamera)(sc);
-	_data->cam_thread = threadCreate(N(captureCamThread), _data, 0x10000, main_thread_prio() - 1, -2, false);
+static bool startCamera(Scene* sc) {
+	if (_data->cam_thread) stopCamera(sc);
+	_data->cam_thread = threadCreate(captureCamThread, _data, 0x10000, main_thread_prio() - 1, -2, false);
 	return _data->cam_thread != 0;
 }
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	memset(_data, 0, sizeof(N(DataStruct)));
-	if (!N(qr_buffer)) {
-		N(qr_buffer) = malloc(sizeof(QrBuffer));
-		if (!N(qr_buffer)) {
+	memset(_data, 0, sizeof(DataStruct));
+	if (!qr_buffer) {
+		qr_buffer = malloc(sizeof(QrBuffer));
+		if (!qr_buffer) {
 			free(_data);
 			sc->d = NULL;
 			return;
@@ -186,7 +186,7 @@ void N(init)(Scene* sc) {
 	svcCreateMutex(&_data->mutex, false);
 	svcCreateEvent(&_data->cancel_event, RESET_STICKY);
 	_data->is_inner_cam = false;
-	if (!N(startCamera)(sc)) {
+	if (!startCamera(sc)) {
 		C3D_TexDelete(&_data->tex);
 		svcCloseHandle(_data->cancel_event);
 		svcCloseHandle(_data->mutex);
@@ -199,7 +199,7 @@ void N(init)(Scene* sc) {
 	}
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	svcWaitSynchronization(_data->mutex, U64_MAX);
 	if (_data->buffer_updated_ui) {
@@ -221,9 +221,9 @@ void N(render)(Scene* sc) {
 	C2D_DrawText(&_data->g_x_switch_camera, C2D_AlignCenter | C2D_WithColor, SCREEN_TOP_WIDTH / 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_white);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
-		N(stopCamera)(sc);
+		stopCamera(sc);
 		C3D_TexDelete(&_data->tex);
 		
 		svcCloseHandle(_data->cancel_event);
@@ -234,13 +234,13 @@ void N(exit)(Scene* sc) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}
-	if (N(qr_payload)) {
-		free(N(qr_payload));
-		N(qr_payload) = NULL;
+	if (qr_payload) {
+		free(qr_payload);
+		qr_payload = NULL;
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	if (!_data) return scene_pop;
 	svcWaitSynchronization(_data->mutex, U64_MAX);
 	if (_data->buffer_updated_processing) {
@@ -264,17 +264,17 @@ SceneResult N(process)(Scene* sc) {
 			quirc_extract(_data->qr_context, i, &code);
 			struct quirc_data qr_data;
 			if (quirc_decode(&code, &qr_data) == 0) {
-				qr_buffer_from_quirc_data(N(qr_buffer), &qr_data);
-				if (!qr_buf_equal(N(qr_buffer), (u8*)"NPQR", 4)) {
+				qr_buffer_from_quirc_data(qr_buffer, &qr_data);
+				if (!qr_buf_equal(qr_buffer, (u8*)"NPQR", 4)) {
 					logln(ERROR, "Invalid netpass qr code!");
 					continue;
 				}
-				u32 method = qr_read_u32(N(qr_buffer));
+				u32 method = qr_read_u32(qr_buffer);
 				logln(INFO, "Method: %ld", method);
 				switch (method) {
 					case QR_METHOD_VERIFY: {
 						sc->next_scene = getPromptScene(str_prompt_verify, getLoadingScene(NULL, lambda(void, (void) {
-							Result res = qr_verify(N(qr_buffer));
+							Result res = qr_verify(qr_buffer);
 							if (R_FAILED(res)) {
 								_e(res);
 								logln(ERROR, "Verification failed: %lx", res);
@@ -285,23 +285,23 @@ SceneResult N(process)(Scene* sc) {
 						return scene_push;
 					};
 					case QR_METHOD_JOIN_EVENT_ROOM: {
-						N(qr_payload) = malloc(sizeof(QrJoinEventRoomPayload));
-						if (!N(qr_payload)) {
+						qr_payload = malloc(sizeof(QrJoinEventRoomPayload));
+						if (!qr_payload) {
 							_e(ERROR_OUT_OF_MEMORY);
 							break;
 						}
-						qr_parse_join_event_room(N(qr_buffer), N(qr_payload));
+						qr_parse_join_event_room(qr_buffer, qr_payload);
 						char* message = malloc(1000);
 						if (!message) {
-							free(N(qr_payload));
-							N(qr_payload) = 0;
+							free(qr_payload);
+							qr_payload = 0;
 							_e(ERROR_OUT_OF_MEMORY);
 							break;
 						}
-						snprintf(message, 1000, _s(str_enter_event_location), ((QrJoinEventRoomPayload*)N(qr_payload))->name);
+						snprintf(message, 1000, _s(str_enter_event_location), ((QrJoinEventRoomPayload*)qr_payload)->name);
 						C2D_Font font = _font(str_enter_event_location);
 						sc->next_scene = getPromptSceneStr(message, font, getLoadingScene(NULL, lambda(void, (void) {
-							Result res = setEventLocation(((QrJoinEventRoomPayload*)N(qr_payload))->uuid);
+							Result res = setEventLocation(((QrJoinEventRoomPayload*)qr_payload)->uuid);
 							if (R_FAILED(res)) {
 								_e(res);
 								logln(ERROR, "Failed to join event location: %lx", res);
@@ -315,7 +315,7 @@ SceneResult N(process)(Scene* sc) {
 					};
 					case QR_METHOD_DL_PASS: {
 						sc->next_scene = getPromptScene(str_prompt_dl_pass, getLoadingScene(NULL, lambda(void, (void) {
-							Result res = qr_dl_pass(N(qr_buffer));
+							Result res = qr_dl_pass(qr_buffer);
 							if (R_FAILED(res)) {
 								_e(res);
 							        logln(INFO, "Pass DL failed: %lx", res);
@@ -338,9 +338,9 @@ SceneResult N(process)(Scene* sc) {
 	u32 kDown = hidKeysDown();
 	
 	if (kDown & KEY_X) {
-		N(stopCamera)(sc);
+		stopCamera(sc);
 		_data->is_inner_cam = !_data->is_inner_cam;
-		N(startCamera)(sc);
+		startCamera(sc);
 	}
 	
 	if (kDown & KEY_B) return scene_pop;
@@ -351,9 +351,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getScanQrScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

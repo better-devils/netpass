@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024-2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +22,7 @@
 #include "info.h"
 #include <stdlib.h>
 #include <malloc.h>
-#define N(x) scenes_report_list_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -30,13 +30,10 @@ typedef struct {
 	C2D_Text* g_entries;
 	int cursor;
 	int offset;
-} N(DataStruct);
+} DataStruct;
 
-char* N(send_msg);
-u32 N(send_transfer_id);
-
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 
 	_data->list = loadReportList();
@@ -72,7 +69,7 @@ void N(init)(Scene* sc) {
 	}
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) {
 		return;
 	}
@@ -89,7 +86,7 @@ void N(render)(Scene* sc) {
 	C2D_DrawTriangle(x, y, clr, x, y +10, clr, x + 8, y + 5, clr, 0);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data->g_entries);
@@ -98,7 +95,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (!_data) return scene_pop;
@@ -130,9 +127,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getReportListScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

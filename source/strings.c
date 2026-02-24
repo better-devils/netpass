@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024, 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +22,10 @@
 
 static u8 _language;
 
-C2D_Font font_default;
+static C2D_Font font_default;
 
-C2D_Font _cache_fonts_loaded[4] = {0};
-const int fontLoadArr[4] = {CFG_REGION_USA, CFG_REGION_CHN, CFG_REGION_KOR, CFG_REGION_TWN};
+static C2D_Font _cache_fonts_loaded[4] = {0};
+static const int fontLoadArr[4] = {CFG_REGION_USA, CFG_REGION_CHN, CFG_REGION_KOR, CFG_REGION_TWN};
 
 C2D_Font getFontIndex(int i) {
 	if (_cache_fonts_loaded[i]) {
@@ -34,7 +35,7 @@ C2D_Font getFontIndex(int i) {
 	return _cache_fonts_loaded[i];
 }
 
-C2D_Font _get_local_font(int lang) {
+static C2D_Font _get_local_font(int lang) {
 	C2D_Font font;
 	if (lang == CFG_LANGUAGE_ZH) {
 		font = getFontIndex(1);

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +20,12 @@
 #include "scene.h"
 #include <malloc.h>
 
-void initScene(Scene* scene) {
+static void initScene(Scene* scene) {
 	if (scene->d && !((u32)scene->d & 1)) return;
 	scene->init(scene);
 }
 
-void exitScene(Scene* scene) {
+static void exitScene(Scene* scene) {
 	scene->exit(scene);
 	scene->d = 0;
 	if (scene->need_free) {

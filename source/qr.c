@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +24,7 @@
 #include "curl-handler.h"
 #include "utils.h"
 
-bool qr_buffer_consume(QrBuffer* buffer, u32 length) {
+static bool qr_buffer_consume(QrBuffer* buffer, u32 length) {
 	if (buffer->cur + length > buffer->end) return false;
 	buffer->cur += length;
 	return true;

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +20,14 @@
 #include "download_progress.h"
 #include <stdlib.h>
 #include "../render.h"
-#define N(x) scenes_download_progress_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
-#define _initdata ((N(InitData)*)sc->data)
+#define _data ((DataStruct*)sc->d)
+#define _initdata ((InitData*)sc->data)
 #define _reply (*(_initdata->reply))
 
 typedef struct {
 	CurlReply** reply;
 	void(*func)(void);
-} N(InitData);
+} InitData;
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -38,15 +38,15 @@ typedef struct {
 	float text_width;
 	Thread thread;
 	bool thread_done;
-} N(DataStruct);
+} DataStruct;
 
-void N(threadFn)(Scene* sc) {
+static void threadFn(Scene* sc) {
 	_initdata->func();
 	_data->thread_done = true;
 }
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	_data->g_staticBuf = C2D_TextBufNew(STR_DOWNLOADING_LEN);
 	TextLangParse(&_data->g_loading, _data->g_staticBuf, str_downloading);
@@ -58,10 +58,10 @@ void N(init)(Scene* sc) {
 	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
 
 	_data->thread_done = false;
-	_data->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, main_thread_prio()-1, -2, false);
+	_data->thread = threadCreate((void(*)(void*))threadFn, sc, 8*1024, main_thread_prio()-1, -2, false);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
 	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
@@ -72,7 +72,7 @@ void N(render)(Scene* sc) {
 }
 
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		if (_data->spr) C2D_SpriteSheetFree(_data->spr);
@@ -83,7 +83,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	if (_data && _data->thread_done) {
 		if (sc->next_scene) return scene_switch;
 		return scene_pop;
@@ -92,14 +92,14 @@ SceneResult N(process)(Scene* sc) {
 }
 
 Scene* getDownloadProgressScene(CurlReply** reply, Scene* next_scene, void(*func)(void)) {
-	Scene* scene = createScene(sizeof(N(InitData)));
+	Scene* scene = createScene(sizeof(InitData));
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	scene->next_scene = next_scene;
-	((N(InitData)*)scene->data)->func = func;
-	((N(InitData)*)scene->data)->reply = reply;
+	((InitData*)scene->data)->func = func;
+	((InitData*)scene->data)->reply = reply;
 	return scene;
 }

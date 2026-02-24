@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024-2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,7 +119,7 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 }
 
 // from https://nachtimwald.com/2017/11/18/base64-encode-and-decode-in-c/
-size_t b64_encoded_size(size_t inlen) {
+static size_t b64_encoded_size(size_t inlen) {
 	size_t ret;
 
 	ret = inlen;
@@ -369,7 +370,7 @@ u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len) {
 }
 
 // from https://github.com/joel16/3DShell/blob/b0c6c9e6a779957b5fb9caf4d6d9cfe3acb4ff92/source/textures.cpp#L150
-u32 GetNextPowerOf2(u32 v) {
+static u32 GetNextPowerOf2(u32 v) {
 	v--;
 	v |= v >> 1;
 	v |= v >> 2;
@@ -379,7 +380,7 @@ u32 GetNextPowerOf2(u32 v) {
 	v++;
 	return (v >= 64 ? v : 64);
 }
-bool rgbToImage(C2D_Image* img, u32 width, u32 height, u8* buf) {
+static bool rgbToImage(C2D_Image* img, u32 width, u32 height, u8* buf) {
 	if (width >= 1024 || height >= 1024) return false;
 
 	C3D_Tex* tex = malloc(sizeof(C3D_Tex));
@@ -606,7 +607,7 @@ Result get_os_version(OS_VersionBin* ver) {
 	return res;
 }
 
-ErrorData current_errdata = {0};
+static ErrorData current_errdata = {0};
 
 Result __e(Result error, const char* func, const char* file, const int line) {
 	if (R_FAILED(current_errdata.error)) {
@@ -649,7 +650,7 @@ Scene* get_new_error_scene(void) {
 	return NULL;
 }
 
-const char* error_desc_str_map[] = {
+static const char* const error_desc_str_map[] = {
 	"NoTitleId",
 	"MissingSlotMeta",
 	"UnkTitleId",
@@ -672,7 +673,7 @@ const char* error_desc_str_map[] = {
 	"MusicNotInited",
 };
 
-const char* error_desc_desc_map[] = {
+static const char* const error_desc_desc_map[] = {
 	"The specified title id is 0, making it invalid.",
 	"No metadata for the slot to be processed was provided.",
 	"The provided title id is not known to this system.",
@@ -778,7 +779,7 @@ bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 de
 /* Code borrowed from GodMode9i:
 	https://github.com/DS-Homebrew/GodMode9i/blob/d68ac105e68b4a1fc2c706a08c7a394255c325c2/arm9/source/driveOperations.cpp#L166-L170
 */
-u64 getAvailableSpace(void) {
+static u64 getAvailableSpace(void) {
 	struct statvfs st;
 	statvfs("sdmc:/", &st);
 	return (u64)st.f_bsize * (u64)st.f_bavail;

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +33,7 @@ static Handle cecdHandle;
 static int cecdRefCount;
 static bool in_spr_mode = false;
 
-void waitForNoSpr(void) {
+static void waitForNoSpr(void) {
 	while (in_spr_mode) svcSleepThread((u64)1000000 * 100);
 }
 
@@ -59,7 +60,7 @@ Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
 	return res;
 }
 
-void getCurrentTime(CecTimestamp* cts) {
+static void getCurrentTime(CecTimestamp* cts) {
 	time_t unix_time = time(NULL);
 	struct tm* ts = gmtime((const time_t*)&unix_time);
 	cts->hour = ts->tm_hour;

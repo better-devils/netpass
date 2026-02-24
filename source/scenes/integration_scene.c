@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +19,7 @@
 
 #include "integration_scene.h"
 #include "../integration.h"
-#define N(x) scenes_integration_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_INTEGRATIONS_LEN + STR_INTEGRATIONS_MESSAGE_LEN + STR_BACK_LEN + STR_TOGGLE_TITLES_OFF_LEN + STR_TOGGLE_TITLES_ON_LEN)
 
 typedef struct {
@@ -31,10 +31,10 @@ typedef struct {
 	C2D_Text g_back;
 	C2D_Text g_on_off[2];
 	C2D_Text* integration_names;
-} N(DataStruct);
+} DataStruct;
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	_data->cursor = 0;
 	_data->list = get_integration_list();
@@ -61,7 +61,7 @@ void N(init)(Scene* sc) {
 	}
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
@@ -82,14 +82,14 @@ void N(render)(Scene* sc) {
 	C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 0);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (_data) {
@@ -114,9 +114,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getIntegrationScene(void) {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024-2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +26,7 @@
 #include "../image_cache.h"
 #include <stdlib.h>
 #include <time.h>
-#define N(x) scenes_back_alley_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_BACK_ALLEY_PAY_LEN + STR_BACK_ALLEY_LEN + STR_BACK_ALLEY_MESSAGE_LEN + STR_BACK_LEN)
 #define MAX_PRICE 10
 
@@ -46,43 +46,43 @@ typedef struct {
 	C2D_Image background;
 	C2D_SpriteSheet spr;
 	bool view_bg_only;
-} N(DataStruct);
+} DataStruct;
 
-Scene* N(current_scene);
-PlayCoins* N(play_coins);
-u32 N(buy_title_id);
+static Scene* current_scene;
+static PlayCoins* play_coins;
+static u32 buy_title_id;
 
-bool N(init_playcoins)(Scene* sc);
-void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amount);
+static bool init_playcoins(Scene* sc);
+static void load_paytext(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amount);
 
-void N(refresh)(Scene* sc) {
+static void refresh(Scene* sc) {
 	if (_data->play_coins) free(_data->play_coins);
-	if (!N(init_playcoins)(sc)) return;
-	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
+	if (!init_playcoins(sc)) return;
+	load_paytext(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
 }
 
-SceneResult N(buy_pass)(Scene* sc, int i) {
-	N(buy_title_id) = _data->title_ids[i];
-	N(play_coins) = malloc(sizeof(PlayCoins));
-	if (!N(play_coins)) {
+static SceneResult buy_pass(Scene* sc, int i) {
+	buy_title_id = _data->title_ids[i];
+	play_coins = malloc(sizeof(PlayCoins));
+	if (!play_coins) {
 		return scene_continue;
 	}
-	N(current_scene) = sc;
-	memcpy(N(play_coins), _data->play_coins, sizeof(PlayCoins));
+	current_scene = sc;
+	memcpy(play_coins, _data->play_coins, sizeof(PlayCoins));
 
 	Scene* scene = getLoadingScene(0, lambda(void, (void) {
 		char url[80];
-		snprintf(url, 80, "%s/pass/title_id/%lx", BASE_URL, N(buy_title_id));
+		snprintf(url, 80, "%s/pass/title_id/%lx", BASE_URL, buy_title_id);
 		Result res = httpRequest("PUT", url, 0, 0, 0, 0);
 		if (R_FAILED(res)) {
 			if (res == -404) {
 				logln(ERROR, "No fitting pass found!");
-				free(N(play_coins));
+				free(play_coins);
 				return;
 			}
 			goto error;
 		}
-		N(play_coins)->total_coins -= config.price;
+		play_coins->total_coins -= config.price;
 		config.price += 2;
 		configWrite();
 		if (config.price > 2) {
@@ -90,24 +90,24 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 			res = _e(FSUSER_OpenFile(&handle, sharedextdata_b, fsMakePath(PATH_ASCII, "/gamecoin.dat"), FS_OPEN_WRITE, 0));
 			if (R_FAILED(res)) goto error;
 			u32 tmpval=0;
-			res = _e(FSFILE_Write(handle, &tmpval, 0, N(play_coins), sizeof(PlayCoins), FS_WRITE_FLUSH));
+			res = _e(FSFILE_Write(handle, &tmpval, 0, play_coins, sizeof(PlayCoins), FS_WRITE_FLUSH));
 			FSFILE_Close(handle);
 			if (R_FAILED(res)) goto error;
-			free(N(play_coins));
+			free(play_coins);
 		}
 		triggerDownloadInboxes();
-		N(refresh)(N(current_scene));
+		refresh(current_scene);
 		return;
 	error:
 		_e(res);
 		logln(ERROR, "failed processing pass: %lx", res);
-		free(N(play_coins));
+		free(play_coins);
 	}));
 	sc->next_scene = scene;
 	return scene_push;
 }
 
-void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amount) {
+static void load_paytext(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amount) {
 	const char* s = _s(str_back_alley_pay);
 	C2D_Font font = _font(str_back_alley_pay);
 	char text[50];
@@ -116,7 +116,7 @@ void N(load_paytext)(C2D_Text* staticText, C2D_TextBuf staticBuf, int cost_amoun
 	C2D_TextOptimize(staticText);
 }
 
-bool N(init_playcoins)(Scene* sc) {
+static bool init_playcoins(Scene* sc) {
 	_data->play_coins = malloc(sizeof(PlayCoins));
 	if (!_data->play_coins) {
 		_e(ERROR_OUT_OF_MEMORY);
@@ -155,7 +155,7 @@ bool N(init_playcoins)(Scene* sc) {
 	return true;
 }
 
-void N(init_gamelist)(Scene* sc) {
+static void init_gamelist(Scene* sc) {
 	_data->number_games = 0;
 	NetpassTitleData* title_data = getTitleData();
 	for (int i = 0; i < title_data->num_titles; i++) {
@@ -167,15 +167,15 @@ void N(init_gamelist)(Scene* sc) {
 	}
 }
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	memset(sc->d, 0, sizeof(N(DataStruct)));
+	memset(sc->d, 0, sizeof(DataStruct));
 	
-	if (!N(init_playcoins)(sc)) return;
+	if (!init_playcoins(sc)) return;
 	get_background_image("back_alley", &_data->spr, &_data->background, false);
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 12*24);
-	N(init_gamelist)(sc);
+	init_gamelist(sc);
 	
 	getCurMusic(_data->prev_music);
 	playMusic("back_alley");
@@ -185,11 +185,11 @@ void N(init)(Scene* sc) {
 	_data->show_games = false;
 	TextLangParse(&_data->g_header, _data->g_staticBuf, str_back_alley);
 	TextLangParse(&_data->g_subtext, _data->g_staticBuf, str_back_alley_message);
-	N(load_paytext)(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
+	load_paytext(&_data->g_paytext, _data->g_staticBuf, config.price > MAX_PRICE ? 0 : config.price);
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	if (_data->spr) {
 		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
@@ -218,7 +218,7 @@ void N(render)(Scene* sc) {
 	}
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		if (_data->spr) C2D_SpriteSheetFree(_data->spr);
 		playMusic(_data->prev_music);
@@ -228,7 +228,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
@@ -246,7 +246,7 @@ SceneResult N(process)(Scene* sc) {
 					return scene_continue;
 				} else {
 					// picked a game
-					SceneResult result = N(buy_pass)(sc, _data->cursor);
+					SceneResult result = buy_pass(sc, _data->cursor);
 					if (result == scene_push) {
 						_data->cursor = 0;
 						_data->show_games = false;
@@ -281,9 +281,9 @@ SceneResult N(process)(Scene* sc) {
 Scene* getBackAlleyScene() {
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	return scene;
 }

@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2025 Sorunome
+ *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +21,7 @@
 #include "../ctr_results.h"
 #include <curl/curl.h>
 
-#define N(x) scenes_error_namespace_##x
-#define _data ((N(DataStruct)*)sc->d)
+#define _data ((DataStruct*)sc->d)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -30,7 +30,7 @@ typedef struct {
 	C2D_Text g_subtext;
 	C2D_Text g_a_ok;
 	ErrorData* err;
-} N(DataStruct);
+} DataStruct;
 
 #define WIDTH_SCR 400
 #define HEIGHT_SCR 240
@@ -38,8 +38,8 @@ typedef struct {
 #define WIDTH (WIDTH_SCR - 2*MARGIN)
 #define HEIGHT (HEIGHT_SCR - 2*MARGIN)
 
-void N(init)(Scene* sc) {
-	sc->d = malloc(sizeof(N(DataStruct)));
+static void init(Scene* sc) {
+	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	_data->g_staticBuf = C2D_TextBufNew(1500);
 	_data->err = (ErrorData*)sc->data;
@@ -96,7 +96,7 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
 }
 
-void N(render)(Scene* sc) {
+static void render(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
 	C2D_DrawText(&_data->g_origin, C2D_AlignLeft, MARGIN + 5, MARGIN + 5, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
@@ -105,7 +105,7 @@ void N(render)(Scene* sc) {
 	C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 }
 
-void N(exit)(Scene* sc) {
+static void exit_scene(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
@@ -113,7 +113,7 @@ void N(exit)(Scene* sc) {
 	}
 }
 
-SceneResult N(process)(Scene* sc) {
+static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (kDown & (KEY_A | KEY_B)) {
@@ -126,10 +126,10 @@ SceneResult N(process)(Scene* sc) {
 Scene* getErrorScene(ErrorData* error) {
 	Scene* scene = createScene(sizeof(ErrorData));
 	if (!scene) return NULL;
-	scene->init = N(init);
-	scene->render_top = N(render);
-	scene->exit = N(exit);
-	scene->process = N(process);
+	scene->init = init;
+	scene->render_top = render;
+	scene->exit = exit_scene;
+	scene->process = process;
 	memcpy((void*)scene->data, error, sizeof(ErrorData));
 	scene->is_popup = true;
 	return scene;
