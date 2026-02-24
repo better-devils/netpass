@@ -23,6 +23,7 @@
 #include "utils.h"
 
 #include <opus/opusfile.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,10 +32,20 @@
 #define OPUS_CHANNELS ((size_t)2)
 #define NUM_BUFFERS 4
 #define OPUS_BUFFERSIZE ((size_t)(16 * 1024))
+#define MAX_FILENAME_LEN 20
+#define NUM_FILECACHES 2
+
+typedef struct FileCacheEntry {
+	unsigned char * data;
+	size_t size;
+	char name[MAX_FILENAME_LEN];
+} FileCacheEntry;
 
 static bool stop_playing = false;
 static Thread music_thread = 0;
-static char curfilename[20] = {0};
+static char curfilename[MAX_FILENAME_LEN] = {0};
+static FileCacheEntry file_cache[NUM_FILECACHES] = {0};
+static size_t next_filecache = 0;
 
 static void wait_for_state(bool playing) {
 	int count = 0;
@@ -147,7 +158,58 @@ Result playMusic(const char* filename) {
 	// first open the file
 	char f[50];
 	snprintf(f, 50, "romfs:/music/%s.opus", filename);
-	OggOpusFile* opus_file = op_open_file(f, (int*)&res);
+	int cache_slot = -1;
+	for(int i = 0; i < NUM_FILECACHES; ++i)
+	{
+		if(file_cache[i].data && 0 == strncmp(filename, file_cache[i].name, MAX_FILENAME_LEN)) {
+			cache_slot = i;
+			logln(DEBUG, "found music cache slot %d", cache_slot);
+			break;
+		}
+	}
+	if(-1 == cache_slot) {
+		logln(DEBUG, "adding music to cache slot %zu", next_filecache);
+		FileCacheEntry * entry = &file_cache[next_filecache];
+		if(entry->data) {
+			logln(DEBUG, "clearing existing cache slot");
+			free(entry->data);
+			entry->data = NULL;
+			entry->size = 0;
+			entry->name[0] = '\0';
+		}
+		struct stat statbuf;
+		if (0 != stat(f, &statbuf) || S_ISDIR(statbuf.st_mode)) {
+			logln(ERROR, "failed to get file information for %s", f);
+			return _e_errno();
+		}
+		FILE* file = fopen(f, "rb");
+		if(!file) {
+			logln(ERROR, "failed to open %s", f);
+			return _e_errno();
+		}
+		entry->data = malloc(statbuf.st_size);
+		if(!entry->data) {
+			logln(ERROR, "failed to allocate buffer with size %jd", (intmax_t)statbuf.st_size);
+			fclose(file);
+			return _e_errno();
+		}
+		size_t len = fread(entry->data, 1, statbuf.st_size, file);
+		if(len != statbuf.st_size) {
+			logln(ERROR, "read length mismatch %zu != %jd", len, (intmax_t)statbuf.st_size);
+			free(entry->data);
+			entry->data = NULL;
+			fclose(file);
+			return _e_errno();
+		}
+		fclose(file);
+		entry->size = len;
+		strncpy(entry->name, filename, MAX_FILENAME_LEN - 1);
+		entry->name[MAX_FILENAME_LEN - 1] = '\0';
+		cache_slot = next_filecache;
+		next_filecache = (next_filecache + 1) % NUM_FILECACHES;
+	}
+	logln(DEBUG, "playing music cache slot %d", cache_slot);
+	OggOpusFile* opus_file = op_open_memory(file_cache[cache_slot].data, file_cache[cache_slot].size, (int*)&res);
 	if (!opus_file) {
 		return _e_errno();
 	}
@@ -285,6 +347,12 @@ void musicExit(void) {
 	if (dsp_buf) {
 		free(dsp_buf);
 		dsp_buf = 0;
+	}
+	for(int i = 0; i < NUM_FILECACHES; ++i) {
+		if(file_cache[i].data) {
+			free(file_cache[i].data);
+			file_cache[i].data = NULL;
+		}
 	}
 	music_inited = false;
 }
