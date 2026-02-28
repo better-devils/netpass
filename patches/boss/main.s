@@ -32,6 +32,9 @@ s_handle_fsuser_2 equ 0x14b1a8
 FsUserCloseArchive equ 0x126d30
 CreateFileBuffers equ 0x13d7d8
 
+CfgsGetLocalFriendCodeSeed equ 0x10d260
+CecdsGetBossUserId equ 0x10a8b0
+memclr equ 0x126ef0
 
 .org spr_url_addr
 ;  .asciiz "https://devapi.netpass.cafe/spr"
@@ -54,6 +57,48 @@ CreateFileBuffers equ 0x13d7d8
 
 .org reports_url_addr
   .asciiz "https://api.netpass.cafe/npvk/reports"
+
+; We overwrite FrduGetMyPassword to instead return the lfcs
+.org 0x13a8bc ; FrduGetMyPassword
+.area 92
+; buffer is in r0, size is in r1
+  push {r4, r5, lr}
+  ; r4 will hold our result buffer
+  mov r4, r0
+  ; r5 will hold our result size
+  mov r5, r1
+  
+  sub sp, 0x10
+  ; fetch the local friend code seed
+  add r0, sp, 0
+  bl CfgsGetLocalFriendCodeSeed
+  ; fetch the boss user id
+  add r0, sp, 8
+  bl CecdsGetBossUserId
+  
+  ; got the u64 in r0, r1 now
+  ldr r0, [sp, 0x0]
+  ldr r1, [sp, 0x4]
+  ldr r2, [sp, 0x8]
+  ldr r3, [sp, 0xC]
+
+  eor r0, r2
+  eor r1, r3
+  
+  str r1, [sp]
+  mov r3, r0
+  ldr r2, [pattern_get_my_password_ptr]
+  mov r1, r5
+  mov r0, r4
+  bl snprintf
+  add sp, 0x10 ; restore stack pointer
+  pop {r4, r5, pc}
+.align 4
+pattern_get_my_password_ptr:
+  .word pattern_get_my_password
+pattern_get_my_password:
+  .asciiz "%016llx"
+.endarea
 
 .org trampoline_entry
   bl SaveSlotData

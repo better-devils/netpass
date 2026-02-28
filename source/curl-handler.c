@@ -346,17 +346,6 @@ static void curl_multi_loop_request_setup(int i) {
 		}
 	}
 	{
-		char nex_password[0x11];
-		res = FRD_GetMyPassword(nex_password, sizeof(nex_password));
-		if (R_SUCCEEDED(res)) {
-			char* nex_pwd = b64encode((u8*)nex_password, strlen(nex_password));
-			char header_nex_pwd[100];
-			snprintf(header_nex_pwd, sizeof(header_nex_pwd), "3ds-nex-pwd: %s", nex_pwd);
-			headers = curl_slist_append(headers, header_nex_pwd);
-			free(nex_pwd);
-		}
-	}
-	{
 		u64 seed;
 		res = CFGI_GetLocalFriendCodeSeed(&seed);
 		if (R_SUCCEEDED(res)) {
