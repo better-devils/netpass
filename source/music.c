@@ -64,7 +64,7 @@ static u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples
 
 		if (samples_just_read < 0) {
 			return samples_just_read;
-		} else if(samples_just_read == 0) {
+		} else if (samples_just_read == 0) {
 			// EOF, loop file
 			op_pcm_seek(opus_file, 0);
 		}
@@ -159,17 +159,17 @@ Result playMusic(const char* filename) {
 	char f[50];
 	snprintf(f, 50, "romfs:/music/%s.opus", filename);
 	int cache_slot = -1;
-	for(int i = 0; i < NUM_FILECACHES; ++i) {
-		if(file_cache[i].data && 0 == strncmp(filename, file_cache[i].name, MAX_FILENAME_LEN)) {
+	for (int i = 0; i < NUM_FILECACHES; ++i) {
+		if (file_cache[i].data && 0 == strncmp(filename, file_cache[i].name, MAX_FILENAME_LEN)) {
 			cache_slot = i;
 			logln(DEBUG, "found music cache slot %d", cache_slot);
 			break;
 		}
 	}
-	if(-1 == cache_slot) {
+	if (-1 == cache_slot) {
 		logln(DEBUG, "adding music to cache slot %zu", next_filecache);
 		FileCacheEntry * entry = &file_cache[next_filecache];
-		if(entry->data) {
+		if (entry->data) {
 			logln(DEBUG, "clearing existing cache slot");
 			free(entry->data);
 			entry->data = NULL;
@@ -183,20 +183,20 @@ Result playMusic(const char* filename) {
 			return res;
 		}
 		FILE* file = fopen(f, "rb");
-		if(!file) {
+		if (!file) {
 			Result res = _e_errno();
 			logln(ERROR, "failed to open %s", f);
 			return res;
 		}
 		entry->data = malloc(statbuf.st_size);
-		if(!entry->data) {
+		if (!entry->data) {
 			Result res = _e_errno();
 			logln(ERROR, "failed to allocate buffer with size %jd", (intmax_t)statbuf.st_size);
 			fclose(file);
 			return res;
 		}
 		size_t len = fread(entry->data, 1, statbuf.st_size, file);
-		if(len != statbuf.st_size) {
+		if (len != statbuf.st_size) {
 			Result res = _e_errno();
 			logln(ERROR, "read length mismatch %zu != %jd", len, (intmax_t)statbuf.st_size);
 			free(entry->data);
@@ -351,8 +351,8 @@ void musicExit(void) {
 		free(dsp_buf);
 		dsp_buf = 0;
 	}
-	for(int i = 0; i < NUM_FILECACHES; ++i) {
-		if(file_cache[i].data) {
+	for (int i = 0; i < NUM_FILECACHES; ++i) {
+		if (file_cache[i].data) {
 			free(file_cache[i].data);
 			file_cache[i].data = NULL;
 		}
