@@ -44,7 +44,8 @@ void renderInit(void) {
 	
 	char version[20];
 #ifdef _VERSION_GIT_SHA_
-	snprintf(version, 20, "v%d.%d.%d+%s", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, (char*)_VERSION_GIT_SHA_);
+	// cppcheck-suppress invalidPrintfArgType_s
+	snprintf(version, 20, "v%d.%d.%d+%s", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, _VERSION_GIT_SHA_);
 #else
 	snprintf(version, 20, "v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #endif
