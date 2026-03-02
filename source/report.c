@@ -54,7 +54,7 @@ static FILE* openLogIndex(void) {
 		fseek(f, 0, SEEK_SET);
 		if (is_size >= sizeof(ReportListHeader)) {
 			ReportListHeader header = {0};
-			fread_blk(&header, sizeof(ReportListHeader), 1, f);
+			fread(&header, sizeof(ReportListHeader), 1, f);
 			if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
 				goto is_corrupt;
 			}
@@ -97,7 +97,7 @@ is_corrupt:
 		list->header.version = 1;
 		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
 		list->header.cur_size = 0;
-		fwrite_blk(list, sizeof(ReportList), 1, f);
+		fwrite(list, sizeof(ReportList), 1, f);
 		free(list);
 		fclose(f);
 		f = fopen(LOG_INDEX, "rb");
@@ -119,7 +119,7 @@ ReportList* loadReportList(void) {
 	}
 
 	ReportListHeader header;
-	fread_blk(&header, sizeof(ReportListHeader), 1, f);
+	fread(&header, sizeof(ReportListHeader), 1, f);
 	fseek(f, 0, SEEK_SET);
 	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 	
@@ -128,7 +128,7 @@ ReportList* loadReportList(void) {
 		_e(ERROR_OUT_OF_MEMORY);
 		return NULL;
 	}
-	fread_blk(list, list_file_size, 1, f);
+	fread(list, list_file_size, 1, f);
 	fclose(f);
 	return list;
 }
@@ -164,7 +164,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 		// we found a file
 		FILE* f = fopen(fname, "rb");
 		if (!f) goto cont_loop;
-		fread_blk(buf, MAX_MESSAGE_SIZE, 1, f);
+		fread(buf, MAX_MESSAGE_SIZE, 1, f);
 		if (buf->magic != 0x6060) {
 			_e(ERROR_INVALID_MESSAGE);
 			fclose(f);
@@ -313,7 +313,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	size_t list_file_size;
 	{
 		ReportListHeader header = {0};
-		fread_blk(&header, sizeof(ReportListHeader), 1, f);
+		fread(&header, sizeof(ReportListHeader), 1, f);
 		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 		list = memalign(4, list_file_size);
 		if (!list) {
@@ -322,7 +322,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			return;
 		}
 		fseek(f, 0, SEEK_SET);
-		fread_blk(list, list_file_size, 1, f);
+		fread(list, list_file_size, 1, f);
 		fclose(f);
 	}
 	int found_i = -1;
@@ -394,7 +394,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			_e_errno();
 			goto error;
 		}
-		fwrite_blk(list, list_file_size, 1, f);
+		fwrite(list, list_file_size, 1, f);
 		fclose(f);
 	}
 	mkdir_p(filename);
@@ -403,7 +403,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		_e_errno();
 		goto error;
 	}
-	fwrite_blk(msg, msg->message_size, 1, f);
+	fwrite(msg, msg->message_size, 1, f);
 	fclose(f);
 
 error:
@@ -436,7 +436,7 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 		// we found a file
 		FILE* f = fopen(fname, "rb");
 		if (f) {
-			fread_blk(msg, sizeof(CecMessageHeader), 1, f);
+			fread(msg, sizeof(CecMessageHeader), 1, f);
 			fclose(f);
 			if (msg->magic == 0x6060 && msg->transfer_id == transfer_id) {
 				free(fname);
@@ -484,7 +484,7 @@ void reportInit(void) {
 			continue;
 		}
 		CecSlotHeader slot;
-		fread_blk(&slot, sizeof(CecSlotHeader), 1, f);
+		fread(&slot, sizeof(CecSlotHeader), 1, f);
 		if (slot.size > MAX_SLOT_SIZE) {
 			fclose(f);
 			log_line_continue("S");
@@ -499,7 +499,7 @@ void reportInit(void) {
 			continue;
 		}
 		rewind(f);
-		fread_blk(buf_slot, slot.size, 1, f);
+		fread(buf_slot, slot.size, 1, f);
 		fclose(f);
 		log_line_continue("=");
 		saveSlotInLog(buf_slot);

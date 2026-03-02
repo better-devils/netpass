@@ -249,8 +249,8 @@ int cp(const char* from_path, const char* to_path) {
 	while (file_size > 0) {
 		size_t write_size = file_size < 1000 ? file_size : 1000;
 		
-		fread_blk(buf, write_size, 1, from);
-		fwrite_blk(buf, write_size, 1, to);
+		fread(buf, write_size, 1, from);
+		fwrite(buf, write_size, 1, to);
 		
 		file_size -= write_size;
 	}
@@ -466,7 +466,7 @@ bool loadFileJpeg(C2D_Image* img, const char* filename) {
 		_e(ERROR_OUT_OF_MEMORY);
 		return false;
 	}
-	fread_blk(buf, size, 1, f);
+	fread(buf, size, 1, f);
 	bool success = loadJpeg(img, buf, size);
 	free(buf);
 	fclose(f);
@@ -483,57 +483,6 @@ bool loadFilePng(C2D_Image* img, const char* filename) {
 	bool success = rgbToImage(img, width, height, buf);
 	free(buf);
 	return success;
-}
-
-size_t fread_blk(void* buffer, size_t size, size_t count, FILE* stream) {
-	size_t total_read = 0;
-	u8* buf = (u8*)buffer;
-	for (size_t i = 0; i < count; i++) {
-		size_t want_read = size;
-		while (want_read > 0) {
-			svcSleepThread(100);
-			size_t read_size = want_read > 512 ? 512 : want_read;
-			if (!fread(buf, read_size, 1, stream)) break;
-			want_read -= read_size;
-			total_read += read_size;
-			buf += read_size;
-		}
-	}
-	return total_read / size;
-}
-
-size_t fwrite_blk(void* buffer, size_t size, size_t nmemb, FILE* stream) {
-	size_t total_write = 0;
-	u8* buf = (u8*)buffer;
-	for (size_t i = 0; i < nmemb; i++) {
-		size_t want_write = size;
-		while (want_write > 0) {
-			svcSleepThread(100);
-			size_t write_size = want_write > 512 ? 512 : want_write;
-			if (!fwrite(buf, write_size, 1, stream)) break;
-			want_write -= write_size;
-			total_write += write_size;
-			buf += write_size;
-		}
-	}
-	return total_write / size;
-}
-
-char* fgets_blk(char* str, int num, FILE* stream) {
-	char* buf = str;
-	int want_size = num;
-	while (want_size > 0) {
-		svcSleepThread(100);
-		int read_size = want_size > 512 ? 512 : want_size;
-		if (!fgets(buf, read_size, stream)) return NULL;
-		want_size -= read_size;
-		buf += read_size;
-	}
-	return str;
-}
-
-int fputs_blk(const char* str, FILE* stream) {
-	return fwrite_blk((void*)str, strlen(str), 1, stream);
 }
 
 void open_url(char* url) {

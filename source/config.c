@@ -89,7 +89,7 @@ static void load(void) {
 	// no need to catch the load error as that means we just keep having defaults
 	if (!f) return;
 	char line[200];
-	while (fgets_blk(line, sizeof(line), f)) {
+	while (fgets(line, sizeof(line), f)) {
 		char* separator = strchr(line, '=');
 		if (!separator) continue;
 		char* key = line;
@@ -189,28 +189,28 @@ void configWrite(void) {
 	}
 	char line[250];
 	snprintf(line, 250, "last_location=%d\n", config.last_location);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "year=%d\n", config.year);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "month=%d\n", config.month);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "day=%d\n", config.day);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "price=%ld\n", config.price);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "welcome_version=%d\n", config.welcome_version);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "patches_version=%d\n", config.patches_version);
-	fputs_blk(line, f);
+	fputs(line, f);
 	snprintf(line, 250, "bg_music=%s\n", config.bg_music ? "true" : "false");
-	fputs_blk(line, f);
+	fputs(line, f);
 	if (config.language == -1) {
-		fputs_blk("language=system\n", f);
+		fputs("language=system\n", f);
 	} else {
 		for (int i = 0; i < NUM_LANGUAGES; i++) {
 			if (config.language == all_languages[i]) {
 				snprintf(line, 250, "language=%s\n", all_languages_str[i]);
-				fputs_blk(line, f);
+				fputs(line, f);
 				break;
 			}
 		}
@@ -226,7 +226,7 @@ void configWrite(void) {
 			snprintf(line, 250, "log_output=file\n");
 			break;
 	}
-	fputs_blk(line, f);
+	fputs(line, f);
 	switch (config.log_level) {
 		case ERROR:
 			snprintf(line, 250, "log_level=error\n");
@@ -241,14 +241,14 @@ void configWrite(void) {
 			snprintf(line, 250, "log_level=debug\n");
 			break;
 	}
-	fputs_blk(line, f);
+	fputs(line, f);
 	
 	snprintf(line, 250, "title_ids_ignored=");
 	for (size_t i = 0; i < 24; i++) {
 		snprintf(line + 18 + (9*i), 250 - (18 + (9*i)), "%08lx,", config.title_ids_ignored[i]);
 	}
 	snprintf(line + 18 + (9*24), 250 - (18 + (9*24)), "\n");
-	fputs_blk(line, f);
+	fputs(line, f);
 	
 	fclose(f);
 }
