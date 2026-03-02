@@ -159,8 +159,7 @@ Result playMusic(const char* filename) {
 	char f[50];
 	snprintf(f, 50, "romfs:/music/%s.opus", filename);
 	int cache_slot = -1;
-	for(int i = 0; i < NUM_FILECACHES; ++i)
-	{
+	for(int i = 0; i < NUM_FILECACHES; ++i) {
 		if(file_cache[i].data && 0 == strncmp(filename, file_cache[i].name, MAX_FILENAME_LEN)) {
 			cache_slot = i;
 			logln(DEBUG, "found music cache slot %d", cache_slot);
@@ -179,27 +178,31 @@ Result playMusic(const char* filename) {
 		}
 		struct stat statbuf;
 		if (0 != stat(f, &statbuf) || S_ISDIR(statbuf.st_mode)) {
+			Result res = _e_errno();
 			logln(ERROR, "failed to get file information for %s", f);
-			return _e_errno();
+			return res;
 		}
 		FILE* file = fopen(f, "rb");
 		if(!file) {
+			Result res = _e_errno();
 			logln(ERROR, "failed to open %s", f);
-			return _e_errno();
+			return res;
 		}
 		entry->data = malloc(statbuf.st_size);
 		if(!entry->data) {
+			Result res = _e_errno();
 			logln(ERROR, "failed to allocate buffer with size %jd", (intmax_t)statbuf.st_size);
 			fclose(file);
-			return _e_errno();
+			return res;
 		}
 		size_t len = fread(entry->data, 1, statbuf.st_size, file);
 		if(len != statbuf.st_size) {
+			Result res = _e_errno();
 			logln(ERROR, "read length mismatch %zu != %jd", len, (intmax_t)statbuf.st_size);
 			free(entry->data);
 			entry->data = NULL;
 			fclose(file);
-			return _e_errno();
+			return res;
 		}
 		fclose(file);
 		entry->size = len;
