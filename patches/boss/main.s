@@ -58,7 +58,7 @@ memclr equ 0x126ef0
 .org reports_url_addr
   .asciiz "https://api.netpass.cafe/npvk/reports"
 
-; We overwrite FrduGetMyPassword to instead return the lfcs
+; We overwrite FrduGetMyPassword to instead return the lfcs xor boss user id
 .org 0x13a8bc ; FrduGetMyPassword
 .area 92
 ; buffer is in r0, size is in r1
