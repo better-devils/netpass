@@ -206,17 +206,19 @@ static void init(Scene* sc) {
 		}
 		switch (entry->title_id) {
 			case TITLE_LETTER_BOX: {
-				SETUP_EXDATA_INIT(u8, ExtraDataLetterbox);
+				SETUP_EXDATA_INIT(ReportMessageEntryLetterBox, ExtraDataLetterbox);
+				u8* jpegs = entry_data->jpegs;
 				for (int j = 0; j < 4; j++) {
-					u32 size = *((u32*)entry_data);
-					entry_data += 4;
+					u32 size = *(u32*)jpegs;
+					jpegs += 4;
 					if (size < 5000) { // protective measure
-						if (!loadJpeg(&ex_data->pane[j], entry_data, size)) {
+						if (!loadJpeg(&ex_data->pane[j], jpegs, size)) {
 							ex_data->pane[j].tex = 0;
 						}
 					}
-					entry_data += size;
-					if (size % 4) entry_data += 4 - (size % 4);
+					jpegs += size;
+					if (size % 4) jpegs += 4 - (size % 4);
+					if (jpegs - entry_data->jpegs >= entry_data->jpeg_size) break;
 				}
 				break;
 			}
@@ -350,6 +352,7 @@ static void exit_scene(Scene* sc) {
 					if (!ex_data->pane[j].tex) continue;
 					C2D_ImageDelete(&ex_data->pane[j]);
 				}
+				break;
 			}
 			case TITLE_SWAPDOODLE: {
 				ExtraDataSwapdoodle* ex_data = _data->extra_data[i];
@@ -357,6 +360,7 @@ static void exit_scene(Scene* sc) {
 					if (!ex_data->thumbs[j].tex) continue;
 					C2D_ImageDelete(&ex_data->thumbs[j]);
 				}
+				break;
 			}
 		}
 		free(_data->extra_data[i]);

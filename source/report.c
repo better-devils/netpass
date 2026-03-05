@@ -79,6 +79,45 @@ Result loadReportList(FILE** file) {
 	return 0;
 }
 
+Result getGameName(u32 title_id, char** name) {
+	u8* buf = malloc(300);
+	// first try cecd
+	if (!buf) return _e_errno();
+	memset(buf, 0, 300);
+	Result res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 198, (u8*)buf);
+	if (R_SUCCEEDED(res)) {
+		char* game_name = ((char*)buf) + 200;
+		memset(game_name, 0, 100);
+		// SAFETY: utf16_to_utf8 does not write a zero terminator, so we memset above
+		int len = utf16_to_utf8((u8*)game_name, (u16*)buf, 100 - 1);
+		if (len > -1) {
+			*name = malloc(len+1);
+			if (!*name) goto fail_errno;
+			memcpy(*name, game_name, len+1);
+			free(buf);
+			return 0;
+		}
+	}
+	
+	// next try some known thingies
+	switch (title_id) {
+		case TITLE_SWAPDOODLE: {
+			const char title_name[] = "Swapdoodle";
+			*name = malloc(sizeof(title_name));
+			if (!*name) goto fail_errno;
+			memcpy(*name, title_name, sizeof(title_name));
+			return 0;
+		}
+	}
+	
+	// we weren't able to fetch the game name
+	res = ERROR_UNKNOWN;
+fail_errno:
+	res = _e_errno();
+	if (buf) free(buf);
+	return res;
+}
+
 Result loadReportMessagesBoss(ReportMessages** msgs_out, u64 data_id, u32 title_id) {
 	char url[100];
 	Result res;
@@ -170,8 +209,43 @@ Result loadReportMessagesBoss(ReportMessages** msgs_out, u64 data_id, u32 title_
 					thumb_counter++;
 				}
 			}
+			break;
+		}
+		case TITLE_LETTER_BOX: {
+			buf = malloc(0x1000);
+			if (!buf) goto fail_errno;
+			if (fread(buf, 0x1000, 1, f) != 1) goto fail_errno;
+			u8 needle[2] = {0xFF, 0xD8};
+			u8* ptr = memsearch(buf, 0x1000, needle, 2);
+			if (!ptr) goto fail;
+			u32 offset = ptr - buf - 4;
+			ptr -= 0x68;
+			u32 size = *(u32*)ptr;
+			
+			entry->data = malloc(sizeof(ReportMessageEntryLetterBox));
+			if (!entry->data) goto fail_errno;
+			ReportMessageEntryLetterBox* data = (ReportMessageEntryLetterBox*)entry->data;
+			data->jpeg_size = size;
+			data->jpegs = malloc(size);
+			if (!data->jpegs) {
+				res = _e_errno();
+				free(entry->data);
+				entry->data = 0;
+				goto fail;
+			}
+			fseek(f, offset, SEEK_SET);
+			if (fread(data->jpegs, size, 1, f) != 1) {
+				res = _e_errno();
+				free(data->jpegs);
+				free(entry->data);
+				entry->data = 0;
+				goto fail;
+			}
+			break;
 		}
 	}
+	
+	getGameName(entry->title_id, &entry->name);
 	
 	if (buf) free(buf);
 	if (f) fclose(f);
@@ -263,11 +337,19 @@ Result loadReportMessagesCec(ReportMessages** msgs_out, u64 mac, u32 transfer_id
 				u8* ptr = memsearch(buf + msg->total_header_size, msg->message_size, needle, 2);
 				if (!ptr) break;
 				ptr -= 0x68 + 4;
-				u32 size = ((ReportMessagesEntryLetterBox*)ptr)->jpeg_size;
+				u32 size = ((CecMessagesEntryLetterBox*)ptr)->jpeg_size;
 
-				entry->data = malloc(size);
+				entry->data = malloc(sizeof(ReportMessageEntryLetterBox));
 				if (!entry->data) break;
-				memcpy(entry->data, &((ReportMessagesEntryLetterBox*)ptr)->jpegs, size);
+				ReportMessageEntryLetterBox* data = (ReportMessageEntryLetterBox*)entry->data;
+				data->jpeg_size = size;
+				data->jpegs = malloc(size);
+				if (!data->jpegs) {
+					free(entry->data);
+					entry->data = 0;
+					break;
+				}
+				memcpy(data->jpegs, &((CecMessagesEntryLetterBox*)ptr)->jpegs, size);
 				break;
 			}
 			case TITLE_MARIO_KART_7: {
@@ -298,22 +380,7 @@ Result loadReportMessagesCec(ReportMessages** msgs_out, u64 mac, u32 transfer_id
 			};
 		}
 
-		// we don't need buf anymore so we can use it now to fetch the game name
-		memset(buf, 0, 300);
-		Result res = cecdOpenAndRead(entry->title_id, CECMESSAGE_BOX_TITLE, 198, (u8*)buf);
-		if (R_FAILED(res)) goto fail;
-		char* game_name = ((char*)buf) + 200;
-		memset(game_name, 0, 100);
-		// SAFETY: utf16_to_utf8 does not write a zero terminator, so we memset above
-		int len = utf16_to_utf8((u8*)game_name, (u16*)buf, 100 - 1);
-		if (len > -1) {
-			entry->name = malloc(len+1);
-			memcpy(entry->name, game_name, len+1);
-		} else {
-			// Allocate an empty string for cleanup code
-			entry->name = malloc(1);
-			*entry->name = 0;
-		}
+		getGameName(entry->title_id, &entry->name);
 	}
 	fclose(f);
 	free(buf);
@@ -370,10 +437,19 @@ void freeReportMessages(ReportMessages* msgs) {
 			entry->mii = 0;
 		}
 		if (entry->data) {
-			if (entry->title_id == TITLE_SWAPDOODLE) {
-				ReportMessageEntrySwapdoodle* data = (ReportMessageEntrySwapdoodle*)entry->data;
-				for (int i = 0; i < data->count; i++) {
-					if (data->thumbs[i].data) free(data->thumbs[i].data);
+			switch (entry->title_id) {
+				case TITLE_LETTER_BOX: {
+					ReportMessageEntryLetterBox* data = (ReportMessageEntryLetterBox*)entry->data;
+					logln(INFO, "pointer %p", data->jpegs);
+					free(data->jpegs);
+					break;
+				}
+				case TITLE_SWAPDOODLE: {
+					ReportMessageEntrySwapdoodle* data = (ReportMessageEntrySwapdoodle*)entry->data;
+					for (int i = 0; i < data->count; i++) {
+						if (data->thumbs[i].data) free(data->thumbs[i].data);
+					}
+					break;
 				}
 			}
 			free(entry->data);

@@ -48,11 +48,16 @@ typedef struct {
 } ReportMessageEntrySwapdoodle;
 
 typedef struct {
+	u32 jpeg_size;
+	u8* jpegs;
+} ReportMessageEntryLetterBox;
+
+typedef struct {
 	u32 total_size;
 	u32 jpeg_size;
 	u8 pad[0x60];
 	u8* jpegs;
-} ReportMessagesEntryLetterBox;
+} CecMessagesEntryLetterBox;
 
 typedef struct {
 	char greeting[17];

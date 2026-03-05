@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <3ds.h>
+
 typedef struct BossHTTPHeader {
 	char name[0x20];
 	char value[0x100];
