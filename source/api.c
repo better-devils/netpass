@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
@@ -399,7 +399,6 @@ static Result doSlotExchange(void) {
 		}
 		slot_new_data_num++;
 		res = _e_cec(cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]));
-		saveSlotInLog(slotinfo.slots[i]);
 		if (R_FAILED(res)) {
 			log_line_continue("-");
 			goto fail;

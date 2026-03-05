@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,8 @@ void renderTopScene(Scene* scene);
 void renderBottomScene(Scene* scene);
 
 #include "api.h"
+#include "cecd.h"
+#include "boss.h"
 #include "strings.h"
 #include "config.h"
 #include "utils.h"

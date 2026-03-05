@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,17 @@ typedef struct {
 #define MAX7(a, b, c, d, e, f, g) MAX2(a, MAX6(b, c, d, e, f, g))
 #define MAX8(a, b, c, d, e, f, g, h) MAX2(a, MAX7(b, c, d, e, f, g, h))
 
+#define _GET_MACRO_MIN_(_1, _2, _3, _4, _5, _6, _7, _8, NAME, ...) NAME
+#define MIN(...) _GET_MACRO_MIN_(__VA_ARGS__, MIN8, MIN7, MIN6, MIN5, MIN4, MIN3, MIN2, MIN1)(__VA_ARGS__)
+#define MIN1(a) (a)
+#define MIN2(a, b) ((a) < (b) ? (a) : (b))
+#define MIN3(a, b, c) MIN2(a, MIN2(b, c))
+#define MIN4(a, b, c, d) MIN2(a, MIN3(b, c, d))
+#define MIN5(a, b, c, d, e) MIN2(a, MIN4(b, c, d, e))
+#define MIN6(a, b, c, d, e, f) MIN2(a, MIN5(b, c, d, e, f))
+#define MIN7(a, b, c, d, e, f, g) MIN2(a, MIN6(b, c, d, e, f, g))
+#define MIN8(a, b, c, d, e, f, g, h) MIN2(a, MIN7(b, c, d, e, f, g, h))
+
 #define ERROR_IS_CURL(e) (e < 0 && e > -100)
 #define ERROR_IS_HTTP(e) (e <= -100 && e > -599)
 
@@ -81,6 +92,7 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 int format_uuid(char str[37], u8 uuid[16]);
 u32 blz_decompress_size(u8* compressed, u32 compressedsize);
 bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 decompressedsize);
+bool blz_decompress_file(FILE* in, FILE* out);
 Result get_cia_info(const char* cia_filename, AM_TitleEntry* info);
 FS_MediaType get_title_destination(u64 title_id);
 Result install_cia(const char* cia_filename);

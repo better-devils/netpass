@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -315,6 +315,6 @@ typedef struct CecMessageBodyMiiPlaza {
 } CecMessageBodyMiiPlaza;
 
 typedef struct CecMessageBodyTomodachiLife {
-	u8 pad[52];
+	u8 pad[56];
 	u16 island_name[17];
 } CecMessageBodyTomodachiLife;

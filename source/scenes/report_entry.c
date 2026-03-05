@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2025 Sorunome
+ * Copyright (C) 2025-2026 Sorunome
  *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,13 @@
 #include <stdlib.h>
 #include <malloc.h>
 #define _data ((DataStruct*)sc->d)
+#define _initdata ((InitData*)sc->data)
+#define SETUP_EXDATA_ARR_INIT(a, x, y) if (!entry->data) break; \
+	a* entry_data = (a*)entry->data; \
+	_data->extra_data[i] = malloc(sizeof(x) + (sizeof(y) * entry_data->count)); \
+	if (!_data->extra_data[i]) break; \
+	x* ex_data = _data->extra_data[i]; \
+	memset(ex_data, 0, sizeof(x) + (sizeof(y) * entry_data->count));
 #define SETUP_EXDATA_INIT(a, x) if (!entry->data) break; \
 	a* entry_data = (a*)entry->data; \
 	_data->extra_data[i] = malloc(sizeof(x)); \
@@ -31,6 +38,11 @@
 	memset(ex_data, 0, sizeof(x));
 #define SETUP_EXDATA_RENDER(x) x* ex_data = _data->extra_data[i]; \
 	if (!ex_data) break;
+
+typedef struct {
+	u32 num_thumbs;
+	C2D_Image thumbs[];
+} ExtraDataSwapdoodle;
 
 typedef struct {
 	C2D_Image pane[4];
@@ -53,8 +65,14 @@ typedef struct {
 } ExtraDataTomodachiLife;
 
 typedef struct {
+	u64 id;
+	u32 misc_id;
+	ReportType report_type;
+	char name[25];
+} InitData;
+
+typedef struct {
 	C2D_TextBuf g_staticBuf;
-	ReportListEntry* entry;
 	C2D_Text g_title;
 	u32 title_ids[12];
 	C2D_Text* g_game_names;
@@ -67,7 +85,9 @@ typedef struct {
 } DataStruct;
 
 static char* send_msg;
-static u32 send_transfer_id;
+static u64 send_id;
+static u32 send_misc_id;
+static ReportType send_report_type;
 
 static SceneResult report(Scene* sc) {
 	static const int msgmaxlen = 200;
@@ -75,9 +95,7 @@ static SceneResult report(Scene* sc) {
 	SwkbdResult button;
 	{
 		char hint_text[STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN];
-		u8 mii_name[MII_UTF8_NAME_LEN];
-		get_mii_name(mii_name, &_data->entry->mii);
-		snprintf(hint_text, STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN, _s(str_report_user_hint), mii_name);
+		snprintf(hint_text, STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN, _s(str_report_user_hint), _initdata->name);
 		SwkbdState swkbd;
 		memset(send_msg, 0, msgmaxlen + 1);
 		swkbdInit(&swkbd, SWKBD_TYPE_NORMAL, 2, msgmaxlen);
@@ -90,17 +108,11 @@ static SceneResult report(Scene* sc) {
 	}
 	if (button == SWKBD_D1_CLICK1) {
 		// successfully submitted the input
-		send_transfer_id = _data->entry->transfer_id;
+		send_id = _initdata->id;
+		send_misc_id = _initdata->misc_id;
+		send_report_type = _initdata->report_type;
 		logln(INFO, "Got report: \"%s\", sending...", send_msg);
 		Scene* scene = getLoadingScene(0, lambda(void, (void) {
-			CecMessageHeader msg;
-			Result res = _e(reportGetSomeMsgHeader(&msg, send_transfer_id));
-			if (R_FAILED(res)) {
-				logln(ERROR, "%lx", res);
-				goto exit;
-			}
-			SHA256_HASH hash;
-			Sha256Calculate(&msg, 0x28, &hash);
 			ReportSendPayload* data = malloc(sizeof(ReportSendPayload));
 			if (!data) {
 				_e(ERROR_OUT_OF_MEMORY);
@@ -108,14 +120,15 @@ static SceneResult report(Scene* sc) {
 			}
 			
 			data->magic = 0x5053524e;
-			data->version = 1;
-			memcpy(data->message_id, msg.message_id, sizeof(CecMessageId));
-			memcpy(&data->hash, &hash, sizeof(SHA256_HASH));
+			data->version = 2;
+			data->id = send_id;
+			data->misc_id = send_misc_id;
+			data->report_type = send_report_type;
 			memcpy(data->msg, send_msg, sizeof(data->msg));
 
 			char url[50];
-			snprintf(url, 50, "%s/report/new", BASE_URL);
-			res = _e(httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0));
+			snprintf(url, 50, "%s/report/new2", BASE_URL);
+			Result res = _e(httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0));
 			free(data);
 			if (R_FAILED(res)) {
 				logln(ERROR, "Error sending report: %ld", res);
@@ -134,44 +147,26 @@ static SceneResult report(Scene* sc) {
 	return scene_pop;
 }
 
+static void exit_scene(Scene* sc);
+
 static void init(Scene* sc) {
 	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	memset(sc->d, 0, sizeof(DataStruct));
-	_data->entry = (ReportListEntry*)sc->data;
-
-	_data->msgs = malloc(sizeof(ReportMessages));
-	if (!_data->msgs) {
-		free(_data);
-		sc->d = NULL;
-		return;
-	}
-
-	if (!loadReportMessages(_data->msgs, _data->entry->transfer_id)) {
-		freeReportMessages(_data->msgs);
-		free(_data->msgs);
-		free(_data);
-		sc->d = NULL;
-		return;
+	if (R_FAILED(_e(loadReportMessages(&_data->msgs, _initdata->id, _initdata->misc_id, _initdata->report_type)))) {
+		return exit_scene(sc);
 	}
 
 	_data->g_game_names = malloc(sizeof(C2D_Text) * _data->msgs->count);
 	if (!_data->g_game_names) {
-		freeReportMessages(_data->msgs);
-		free(_data->msgs);
-		free(_data);
-		sc->d = NULL;
-		return;
+		_e_errno();
+		return exit_scene(sc);
 	}
 
 	_data->g_mii_names = malloc(sizeof(C2D_Text) * _data->msgs->count);
 	if (!_data->g_mii_names) {
-		free(_data->g_game_names);
-		freeReportMessages(_data->msgs);
-		free(_data->msgs);
-		free(_data);
-		sc->d = NULL;
-		return;
+		_e_errno();
+		return exit_scene(sc);
 	}
 
 	_data->g_staticBuf = C2D_TextBufNew(300 * (_data->msgs->count + 1));
@@ -179,9 +174,7 @@ static void init(Scene* sc) {
 	// first create the heading
 	{
 		char render_text[STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN];
-		u8 mii_name[MII_UTF8_NAME_LEN];
-		get_mii_name(mii_name, &_data->entry->mii);
-		snprintf(render_text, STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN, _s(str_report_user_hint), mii_name);
+		snprintf(render_text, STR_REPORT_USER_HINT_LEN + MII_UTF8_NAME_LEN, _s(str_report_user_hint), _initdata->name);
 		C2D_TextFontParse(&_data->g_title, _font(str_report_user_hint), _data->g_staticBuf, render_text);
 	}
 	_data->y_offset = 0;
@@ -258,6 +251,18 @@ static void init(Scene* sc) {
 				C2D_TextFontParse(&ex_data->island_name, _font(str_report_tomodachi_life_island_name), _data->g_staticBuf, render_text);
 				break;
 			}
+			case TITLE_SWAPDOODLE: {
+				SETUP_EXDATA_ARR_INIT(ReportMessageEntrySwapdoodle, ExtraDataSwapdoodle, C2D_Image);
+				ex_data->num_thumbs = entry_data->count;
+				for (int j = 0; j < entry_data->count; j++) {
+					if (entry_data->thumbs[j].size < 5000) {
+						if (!loadJpeg(&ex_data->thumbs[j], entry_data->thumbs[j].data, entry_data->thumbs[j].size)) {
+							ex_data->thumbs[j].tex = 0;
+						}
+					}
+				}
+				break;
+			}
 		}
 	}
 }
@@ -319,37 +324,56 @@ static void render(Scene* sc) {
 				ycursor += 14;
 				break;
 			}
+			case TITLE_SWAPDOODLE: {
+				SETUP_EXDATA_RENDER(ExtraDataSwapdoodle);
+				for (int j = 0; j < ex_data->num_thumbs; j++) {
+					if (!ex_data->thumbs[j].tex) continue;
+					C2D_DrawImageAt(ex_data->thumbs[j], 40 + (82 * j), ycursor, 0, NULL, 1, 1);
+				}
+				ycursor += 50;
+				break;
+			}
 		}
 		ycursor += 3; // bottom padding
 	}
 }
 
 static void exit_scene(Scene* sc) {
-	if (_data) {
-		for (int i = 0; i < 12; i++) {
-			if (!_data->extra_data[i]) continue;
-			ReportMessagesEntry* entry = &_data->msgs->entries[i];
-			switch (entry->title_id) {
-				case TITLE_LETTER_BOX: {
-					ExtraDataLetterbox* ex_data = _data->extra_data[i];
-					for (int j = 0; j < 4; j++) {
-						if (!ex_data->pane[j].tex) continue;
-						C2D_ImageDelete(&ex_data->pane[j]);
-					}
+	if (!_data) return;
+	for (int i = 0; i < 12; i++) {
+		if (!_data->extra_data[i]) continue;
+		ReportMessagesEntry* entry = &_data->msgs->entries[i];
+		switch (entry->title_id) {
+			case TITLE_LETTER_BOX: {
+				ExtraDataLetterbox* ex_data = _data->extra_data[i];
+				for (int j = 0; j < 4; j++) {
+					if (!ex_data->pane[j].tex) continue;
+					C2D_ImageDelete(&ex_data->pane[j]);
 				}
 			}
-			free(_data->extra_data[i]);
+			case TITLE_SWAPDOODLE: {
+				ExtraDataSwapdoodle* ex_data = _data->extra_data[i];
+				for (int j = 0; j < ex_data->num_thumbs; j++) {
+					if (!ex_data->thumbs[j].tex) continue;
+					C2D_ImageDelete(&ex_data->thumbs[j]);
+				}
+			}
 		}
-		C2D_TextBufDelete(_data->g_staticBuf);
-		free(_data->g_mii_names);
-		free(_data->g_game_names);
+		free(_data->extra_data[i]);
+	}
+	if (_data->g_staticBuf) C2D_TextBufDelete(_data->g_staticBuf);
+	if (_data->g_mii_names) free(_data->g_mii_names);
+	if (_data->g_game_names) free(_data->g_game_names);
+	if (_data->msgs) {
 		freeReportMessages(_data->msgs);
 		free(_data->msgs);
-		free(_data);
 	}
+	free(_data);
+	sc->d = 0;
 }
 
 static SceneResult process(Scene* sc) {
+	if (!_data) return scene_pop;
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
@@ -361,20 +385,22 @@ static SceneResult process(Scene* sc) {
 			return scene_push;
 		}
 	}
+	_data->y_offset += ((kHeld & KEY_UP || kHeld & KEY_CPAD_UP) - ((kHeld & KEY_DOWN || kHeld & KEY_CPAD_DOWN) && 1))*2;
 	if (kDown & KEY_B) return scene_pop;
 	if (kDown & KEY_START) return scene_stop;
-	_data->y_offset += ((kHeld & KEY_UP || kHeld & KEY_CPAD_UP) - ((kHeld & KEY_DOWN || kHeld & KEY_CPAD_DOWN) && 1))*2;
 	return scene_continue;
 }
 
-Scene* getReportEntryScene(ReportListEntry* entry) {
-	Scene* scene = createScene(0);
+Scene* getReportEntryScene(u64 mac, u32 transfer_id, char name[25], ReportType report_type) {
+	Scene* scene = createScene(sizeof(InitData));
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = init;
 	scene->render_top = render;
 	scene->exit = exit_scene;
 	scene->process = process;
-	scene->data = (u32)(void*)entry;
+	((InitData*)scene->data)->id = mac;
+	((InitData*)scene->data)->misc_id = transfer_id;
+	((InitData*)scene->data)->report_type = report_type;
+	memcpy(((InitData*)scene->data)->name, name, 25);
 	return scene;
 }

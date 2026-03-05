@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,31 +23,29 @@
 #include "cecd.h"
 #include "hmac_sha256/sha256.h"
 
+typedef enum : u8 {
+	REPORT_TYPE_CEC = 0,
+	REPORT_TYPE_BOSS,
+} ReportType;
+
 typedef struct {
 	u32 magic; // 0x5053524e "NRSP"
-	int version; // 1
-	CecMessageId message_id;
-	SHA256_HASH hash;
+	int version; // 2
+	u64 id;
+	u32 misc_id;
+	ReportType report_type;
 	char msg[201];
 } ReportSendPayload;
 
 typedef struct {
-	MiiData mii;
-	u32 transfer_id;
-	CecTimestamp received;
-} ReportListEntry;
+	u32 size;
+	u8* data;
+} ReportMessageEntrySwapdoodleThumb;
 
 typedef struct {
-	u32 magic; // 0x454C524e "NRLE"
-	int version; // 1
-	size_t max_size;
-	size_t cur_size;
-} ReportListHeader;
-
-typedef struct {
-	ReportListHeader header;
-	ReportListEntry entries[];
-} ReportList;
+	u32 count;
+	ReportMessageEntrySwapdoodleThumb thumbs[];
+} ReportMessageEntrySwapdoodle;
 
 typedef struct {
 	u32 total_size;
@@ -81,20 +79,31 @@ typedef struct {
 } ReportMessagesEntry;
 
 typedef struct {
-	char* source_name;
-	u16 source_id;
 	int count;
-	ReportMessagesEntry entries[12];
+	int source_id;
+	const char* source_name;
+	ReportMessagesEntry entries[];
 } ReportMessages;
 
-void saveSlotInLog(CecSlotHeader* slot);
-void saveMsgInLog(CecMessageHeader* msg);
-ReportList* loadReportList(void);
-bool loadReportMessages(ReportMessages* msgs, u32 transfer_id);
+typedef struct {
+	u64 id;
+	s64 time;
+	u32 misc_id;
+	ReportType type;
+	char name[25];
+} ReportListEntry;
+
+typedef struct {
+	u32 num_entries;
+	ReportListEntry entries[];
+} ReportList;
+
+Result loadReportList(FILE** f);
+Result loadReportMessages(ReportMessages** msgs, u64 id, u32 misc_id, ReportType report_type);
 void freeReportMessages(ReportMessages* msgs);
-Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id);
 
 void reportInit(void);
+void reportExit(void);
 
 // This number is NOT including the 11th code unit, which is mandated to be a
 // null terminator.

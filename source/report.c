@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,14 @@
  */
 
 #include "report.h"
+#include "api.h"
+#include "boss.h"
 #include "cecd.h"
 #include "config.h"
 #include "utils.h"
 #include "strings.h"
 #include "curl-handler.h"
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -33,152 +36,211 @@
 #include <unistd.h>
 #include "integration.h"
 
-#define LOG_DIR "sdmc:/config/netpass/log/"
-#define LOG_INDEX "sdmc:/config/netpass/log/index.nrle"
-#define LOG_SPR_DIR "sdmc:/config/netpass/log_spr/"
+#include <errno.h>
+
+#define LOG_DIR "sdmc:/config/netpass/log"
+#define LOG_SPR_DIR "sdmc:/config/netpass/log_spr"
+#define LOG_LIST_TMP "sdmc:/config/netpass/log_list.tmp"
+#define LOG_ENTRY_TMP "sdmc:/config/netpass/log_entry.tmp"
+#define LOG_ENTRY_DEC_TMP "sdmc:/config/netpass/log_entry_dec.tmp"
+
 
 #define MAX_REPORT_ENTRIES_LEN 128
 #define REPORT_LIST_MAGIC 0x454C524e
 
-#define SETUP_ENTRY(a, x) a* body = (a*)(((u8*)buf) + buf->total_header_size); \
+#define SETUP_ENTRY(a, x) a* body = (a*)(buf + msg->total_header_size); \
 	entry->data = malloc(sizeof(x)); \
 	if (!entry->data) break; \
 	x* data = (x*)entry->data; \
 	memset(data, 0, sizeof(x));
 
-static FILE* openLogIndex(void) {
-	FILE* f = fopen(LOG_INDEX, "rb");
-	if (f) {
-		fseek(f, 0, SEEK_END);
-		size_t is_size = ftell(f);
-		fseek(f, 0, SEEK_SET);
-		if (is_size >= sizeof(ReportListHeader)) {
-			ReportListHeader header = {0};
-			fread(&header, sizeof(ReportListHeader), 1, f);
-			if (header.magic != REPORT_LIST_MAGIC || header.version != 1) {
-				goto is_corrupt;
-			}
-			fseek(f, 0, SEEK_END);
-			size_t is_size = ftell(f);
-			fseek(f, 0, SEEK_SET);
-			size_t list_file_cur_size = sizeof(ReportListHeader) + header.cur_size * sizeof(ReportSendPayload);
-			if (is_size < list_file_cur_size || header.cur_size > header.max_size) {
-				goto is_corrupt;
-			}
+typedef struct {
+		u32 offset;
+		u32 size;
+		u32 checksum;
+		char name[8];
+} BPK1BlockHeader;
 
-		}
-		if (is_size < sizeof(ReportListHeader)) {
-is_corrupt:
-			// file is really corrupt, let's just yeet everything and start over
-			// TODO: maybe it is a better idea to manually try to re-create the index from the folders on the card?
-			// though that would be very hard and not sure if worth it
-			fclose(f);
-			f = NULL;
-			rmdir_r(LOG_DIR);
-			mkdir_p(LOG_DIR);
-		}
-	}
-	if (!f) {
-		// ok, file is empty, we have to create it
-		f = fopen(LOG_INDEX, "wb");
-		if (!f) {
-			_e_errno();
-			return NULL;
-		}
-		ReportList* list = memalign(4, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
-		if (!list) {
-			_e(ERROR_OUT_OF_MEMORY);
-			fclose(f);
-			unlink(LOG_INDEX);
-			return NULL;
-		}
-		memset(list, 0, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
-		list->header.magic = REPORT_LIST_MAGIC;
-		list->header.version = 1;
-		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
-		list->header.cur_size = 0;
-		fwrite(list, sizeof(ReportList), 1, f);
-		free(list);
-		fclose(f);
-		f = fopen(LOG_INDEX, "rb");
-		if (!f) {
-			_e_errno();
-			unlink(LOG_INDEX);
-			return NULL;
-		}
-	}
-	fseek(f, 0, SEEK_SET);
-	return f;
+typedef struct {
+		u32 magic; // "BPK1"
+		u32 num_blocks;
+} BPK1Header;
+
+Result loadReportList(FILE** file) {
+	char url[100];
+	Result res;
+	snprintf(url, 100, "%s/report/list", BASE_URL);
+	res = httpRequest("GET", url, 0, NULL, NULL, LOG_LIST_TMP);
+	if (R_FAILED(res)) return res;
+	FILE* f;
+	f = fopen(LOG_LIST_TMP, "r");
+	if (!f) return _e_errno();
+	*file = f;
+	return 0;
 }
 
-
-ReportList* loadReportList(void) {
-	FILE* f = openLogIndex();
-	if (!f) {
-		return NULL;
-	}
-
-	ReportListHeader header;
-	fread(&header, sizeof(ReportListHeader), 1, f);
-	fseek(f, 0, SEEK_SET);
-	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
+Result loadReportMessagesBoss(ReportMessages** msgs_out, u64 data_id, u32 title_id) {
+	char url[100];
+	Result res;
+	ReportMessages* msgs = 0;
+	u8* buf = 0;
+	FILE* f = 0;
+	FILE* fd = 0;
 	
-	ReportList* list = memalign(4, list_file_size);
-	if (!list) {
-		_e(ERROR_OUT_OF_MEMORY);
-		return NULL;
+	snprintf(url, 100, "%s/report/get_boss/%08lx/%llu", BASE_URL, title_id, data_id);
+	res = httpRequest("GET", url, 0, NULL, NULL, LOG_ENTRY_TMP);
+	if (R_FAILED(res)) return res;
+	logln(INFO, "title id: %08lx", title_id);
+	
+	f = fopen(LOG_ENTRY_TMP, "r");
+	if (!f) goto fail_errno;
+	
+	size_t msgs_size = sizeof(ReportMessages) + sizeof(ReportMessagesEntry);
+	msgs = malloc(msgs_size);
+	if (!msgs) goto fail_errno;
+	memset(msgs, 0, msgs_size);
+	msgs->count = 1;
+	msgs->source_id = 0x504E; // "NP"
+	msgs->source_name = "NetPass";
+	
+	ReportMessagesEntry* entry = &msgs->entries[0];
+	entry->title_id = title_id;
+	
+	switch (title_id) {
+		case TITLE_SWAPDOODLE: {
+			fd = fopen(LOG_ENTRY_DEC_TMP, "w+");
+			if (!fd) goto fail_errno;
+			if (!blz_decompress_file(f, fd)) goto fail_errno;
+
+			fseek(fd, 0, SEEK_SET);
+			char magic[5];
+			fread(magic, 4, 1, fd);
+			magic[4] = 0;
+			u32 num_blocks = 0;
+			if (fread(&num_blocks, sizeof(num_blocks), 1, fd) != 1) goto fail_errno;
+			fseek(fd, 0x38, SEEK_CUR);
+			size_t curseek = ftell(fd);
+			size_t startseek = curseek;
+			u32 num_thumbs = 0;
+			for (int i = 0; i < num_blocks; i++) {
+				BPK1BlockHeader block_header;
+				fseek(fd, curseek, SEEK_SET);
+				if (fread(&block_header, sizeof(block_header), 1, fd) != 1) goto fail_errno;
+				curseek = ftell(fd);
+				if (strcmp(block_header.name, "MIISTD1") == 0) {
+					fseek(fd, block_header.offset, SEEK_SET);
+					entry->mii = malloc(sizeof(MiiData));
+					if (entry->mii) {
+						int reads = 0;
+						if ((reads = fread(entry->mii, 1, sizeof(MiiData), fd)) != sizeof(MiiData)) {
+							free(entry->mii);
+							entry->mii = NULL;
+						}
+					} else {
+						res = ERROR_OUT_OF_MEMORY;
+						goto fail;
+					}
+				} else if (strcmp(block_header.name, "THUMB2") == 0) {
+					num_thumbs++;
+				}
+			}
+			curseek = startseek;
+			
+			size_t data_size = sizeof(ReportMessageEntrySwapdoodle) + (sizeof(ReportMessageEntrySwapdoodleThumb) * num_thumbs);
+			entry->data = malloc(data_size);
+			if (!entry->data) goto fail_errno;
+			ReportMessageEntrySwapdoodle* data = (ReportMessageEntrySwapdoodle*)entry->data;
+			memset(data, 0, data_size);
+			
+			data->count = num_thumbs;
+			
+			int thumb_counter = 0;
+			for (int i = 0; i < num_blocks; i++) {
+				BPK1BlockHeader block_header;
+				fseek(fd, curseek, SEEK_SET);
+				if (fread(&block_header, sizeof(block_header), 1, fd) != 1) goto fail_errno;
+				curseek = ftell(fd);
+				if (strcmp(block_header.name, "THUMB2") == 0) {
+					fseek(fd, block_header.offset, SEEK_SET);
+					u8* buf = malloc(block_header.size);
+					if (!buf) goto thumb_fail;
+					if (fread(buf, block_header.size, 1, fd) != 1) goto thumb_fail;
+					data->thumbs[thumb_counter].size = block_header.size;
+					data->thumbs[thumb_counter].data = buf;
+					thumb_counter++;
+				}
+			}
+		}
 	}
-	fread(list, list_file_size, 1, f);
-	fclose(f);
-	return list;
+	
+	if (buf) free(buf);
+	if (f) fclose(f);
+	if (fd) fclose(fd);
+	*msgs_out = msgs;
+	return 0;
+thumb_fail:
+	res = ERROR_OUT_OF_MEMORY;
+	ReportMessageEntrySwapdoodle* data = (ReportMessageEntrySwapdoodle*)entry->data;
+	for (int i = 0; i < data->count; i++) {
+		if (data->thumbs[i].data) free(data->thumbs[i].data);
+	}
+	goto fail;
+fail_errno:
+	res = _e_errno();
+fail:
+	if (buf) free(buf);
+	if (msgs) free(msgs);
+	if (f) fclose(f);
+	if (fd) fclose(fd);
+	if (!R_FAILED(res)) res = ERROR_UNKNOWN;
+	return res;
 }
 
-bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
-	memset(msgs, 0, sizeof(ReportMessages));
-
-	char dirname[100];
-	snprintf(dirname, 100, "%s%lx", LOG_DIR, transfer_id);
-	size_t path_len = strlen(dirname);
-
-	DIR* d = opendir(dirname);
-	if (!d) {
-		_e_errno();
-		return false;
-	}
-	struct dirent *p;
-	CecMessageHeader* buf = malloc(MAX_MESSAGE_SIZE);
-	if (!buf) {
-		_e(ERROR_OUT_OF_MEMORY);
-		return false;
-	}
+Result loadReportMessagesCec(ReportMessages** msgs_out, u64 mac, u32 transfer_id) {
+	char url[100];
+	Result res;
+	u8* buf = 0;
+	ReportMessages* msgs = 0;
+	
+	snprintf(url, 100, "%s/report/get_cec/%012llx/%08lx", BASE_URL, mac, transfer_id);
+	res = httpRequest("GET", url, 0, NULL, NULL, LOG_ENTRY_TMP);
+	if (R_FAILED(res)) return res;
+	FILE* f;
+	f = fopen(LOG_ENTRY_TMP, "r");
+	if (!f) return _e_errno();
+	u32 num_messages;
+	if (fread(&num_messages, sizeof(num_messages), 1, f) != 1) goto fail_errno;
+	
+	buf = malloc(MAX_MESSAGE_SIZE);
+	if (!buf) goto fail_errno;
+	size_t msgs_size = sizeof(ReportMessages) + (sizeof(ReportMessagesEntry) * num_messages);
+	msgs = malloc(msgs_size);
+	if (!msgs) goto fail_errno;
+	memset(msgs, 0, msgs_size);
+	
+	msgs->count = num_messages;
+	msgs->source_id = 0;
+	msgs->source_name = 0;
+	
 	u16 source_ident = 0;
-	while ((p=readdir(d)) && msgs->count < 12) {
-		int fname_len = path_len + strlen(p->d_name) + 2;
-		char* fname = malloc(fname_len);
-		if (!fname) {
-			_e(ERROR_OUT_OF_MEMORY);
-			free(buf);
-			return false;
+	for (int i = 0; i < num_messages; i++) {
+		if (fread(buf, sizeof(CecMessageHeader), 1, f) != 1) goto fail_errno;
+		
+		CecMessageHeader* msg = (CecMessageHeader*)buf;
+		if (msg->magic != 0x6060) {
+			res = ERROR_INVALID_MESSAGE;
+			goto fail;
 		}
-		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
-		// we found a file
-		FILE* f = fopen(fname, "rb");
-		if (!f) goto cont_loop;
-		fread(buf, MAX_MESSAGE_SIZE, 1, f);
-		if (buf->magic != 0x6060) {
-			_e(ERROR_INVALID_MESSAGE);
-			fclose(f);
-			goto cont_loop;
-		}
+		if (fread(buf + sizeof(CecMessageHeader), msg->message_size - sizeof(CecMessageHeader), 1, f) != 1) goto fail_errno;
+		// we have the full message loaded into buf now
 		if (!source_ident) {
-			source_ident = buf->padding_sourceident;
+			source_ident = msg->padding_sourceident;
 		}
-		fclose(f);
 		// we have the file now in buf, time to populate the specific entry
-		ReportMessagesEntry* entry = &msgs->entries[msgs->count];
-		entry->title_id = buf->title_id;
+		ReportMessagesEntry* entry = &msgs->entries[i];
+		entry->title_id = msg->title_id;
 		// fetch the mii name, if any
-		CFPB* cfpb = (CFPB*)memsearch(((u8*)buf) + buf->total_header_size, buf->message_size, (u8*)"CFPB", 4);
+		CFPB* cfpb = (CFPB*)memsearch(buf + msg->total_header_size, msg->message_size, (u8*)"CFPB", 4);
 		if (cfpb) {
 			entry->mii = malloc(sizeof(MiiData));
 			if (entry->mii) {
@@ -190,14 +252,15 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 					entry->mii = 0;
 				}
 			} else {
-				_e(ERROR_OUT_OF_MEMORY);
+				res = ERROR_OUT_OF_MEMORY;
+				goto fail;
 			}
 		}
 
 		switch (entry->title_id) {
 			case TITLE_LETTER_BOX: {
 				u8 needle[2] = {0xFF, 0xD8};
-				u8* ptr = memsearch(((u8*)buf) + buf->total_header_size, buf->message_size, needle, 2);
+				u8* ptr = memsearch(buf + msg->total_header_size, msg->message_size, needle, 2);
 				if (!ptr) break;
 				ptr -= 0x68 + 4;
 				u32 size = ((ReportMessagesEntryLetterBox*)ptr)->jpeg_size;
@@ -238,7 +301,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 		// we don't need buf anymore so we can use it now to fetch the game name
 		memset(buf, 0, 300);
 		Result res = cecdOpenAndRead(entry->title_id, CECMESSAGE_BOX_TITLE, 198, (u8*)buf);
-		if (R_FAILED(res)) goto cont_loop;
+		if (R_FAILED(res)) goto fail;
 		char* game_name = ((char*)buf) + 200;
 		memset(game_name, 0, 100);
 		// SAFETY: utf16_to_utf8 does not write a zero terminator, so we memset above
@@ -251,12 +314,9 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 			entry->name = malloc(1);
 			*entry->name = 0;
 		}
-		msgs->count++;
-	cont_loop:
-		free(fname);
 	}
+	fclose(f);
 	free(buf);
-	closedir(d);
 	
 	msgs->source_name = 0;
 	msgs->source_id = source_ident;
@@ -274,8 +334,27 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 		}
 	}
 	
+	*msgs_out = msgs;
 
-	return true;
+	return 0;
+fail_errno:
+	res = _e_errno();
+fail:
+	if (buf) free(buf);
+	if (msgs) free(msgs);
+	fclose(f);
+	if (!R_FAILED(res)) res = ERROR_UNKNOWN;
+	return res;
+}
+
+Result loadReportMessages(ReportMessages **msgs, u64 id, u32 misc_id, ReportType report_type) {
+	switch (report_type) {
+		case REPORT_TYPE_CEC:
+			return loadReportMessagesCec(msgs, id, misc_id);
+		case REPORT_TYPE_BOSS:
+			return loadReportMessagesBoss(msgs, id, misc_id);
+	}
+	return ERROR_UNKNOWN;
 }
 
 void freeReportMessages(ReportMessages* msgs) {
@@ -291,221 +370,26 @@ void freeReportMessages(ReportMessages* msgs) {
 			entry->mii = 0;
 		}
 		if (entry->data) {
+			if (entry->title_id == TITLE_SWAPDOODLE) {
+				ReportMessageEntrySwapdoodle* data = (ReportMessageEntrySwapdoodle*)entry->data;
+				for (int i = 0; i < data->count; i++) {
+					if (data->thumbs[i].data) free(data->thumbs[i].data);
+				}
+			}
 			free(entry->data);
 			entry->data = 0;
 		}
 	}
 }
 
-void saveSlotInLog(CecSlotHeader* slot) {
-	u8* ptr = ((u8*)slot) + sizeof(CecSlotHeader);
-	for (int i = 0; i < slot->message_count; i++) {
-		CecMessageHeader* msg = (CecMessageHeader*)ptr;
-		saveMsgInLog(msg);
-		ptr += msg->message_size;
-	}
-}
-
-void saveMsgInLog(CecMessageHeader* msg) {
-	ReportList* list;
-	FILE* f = openLogIndex();
-	if (!f) return;
-	size_t list_file_size;
-	{
-		ReportListHeader header = {0};
-		fread(&header, sizeof(ReportListHeader), 1, f);
-		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
-		list = memalign(4, list_file_size);
-		if (!list) {
-			_e(ERROR_OUT_OF_MEMORY);
-			fclose(f);
-			return;
-		}
-		fseek(f, 0, SEEK_SET);
-		fread(list, list_file_size, 1, f);
-		fclose(f);
-	}
-	int found_i = -1;
-	// find if the transfer id already exists
-	for (int i = 0; i < list->header.cur_size; i++) {
-		if (list->entries[i].transfer_id == msg->transfer_id) {
-			found_i = i;
-			break;
-		}
-	}
-	char* b64name = b64encode(msg->message_id, 8);
-	char filename[100];
-	snprintf(filename, 100, "%s%lx/_%s", LOG_DIR, msg->transfer_id, b64name);
-	free(b64name);
-	bool edited = false;
-	if (found_i < 0) {
-		// we have to add a new entry!
-		if (list->header.max_size == list->header.cur_size) {
-			// uho, all is full, gotta the first half of the list
-			int i = 0;
-			for (; i < list->header.max_size / 2; i++) {
-				u32 rm_batch = list->entries[i].transfer_id;
-				char rm_dirname[100];
-				snprintf(rm_dirname, 100, "%s%lx", LOG_DIR, rm_batch);
-				rmdir_r(rm_dirname);
-				list->header.cur_size--;
-			}
-			memmove(list->entries, ((u8*)list->entries) + sizeof(ReportListEntry)*i, list->header.cur_size * sizeof(ReportListEntry));
-		}
-		ReportListEntry* e = &list->entries[list->header.cur_size];
-		e->transfer_id = msg->transfer_id;
-		memcpy(&e->received, &msg->received, sizeof(CecTimestamp));
-		found_i = list->header.cur_size;
-		list->header.cur_size++;
-		edited = true;
-	}
-	ReportListEntry* e = &list->entries[found_i];
-	if (msg->title_id == TITLE_MII_PLAZA) {
-		CecMessageBodyMiiPlaza* body = (CecMessageBodyMiiPlaza*)(((u8*)msg) + msg->total_header_size);
-		static const int cfpb_offset = 0x36bc;
-		static const int cfpb_size = 0x88;
-		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
-			if (body->cfpb.magic == 0x42504643) {
-				int prev_mii_id = e->mii.version == 3 ? e->mii.mii_id : 0;
-				Result r = decryptMii(&body->cfpb.nonce, &e->mii);
-				if (R_FAILED(r)) {
-					_e(r);
-				} else if (prev_mii_id != e->mii.mii_id) {
-					edited = true;
-				}
-			}
-		}
-	} else if (e->mii.version != 3) {
-		// search if there is a mii in this payload
-		CFPB* cfpb = (CFPB*)memsearch(((u8*)msg) + msg->total_header_size, msg->message_size, (u8*)"CFPB", 4);
-		if (cfpb) {
-			Result r = decryptMii(&cfpb->nonce, &e->mii);
-			// since we are just scanning payloads for a mii
-			// we do not trigger an error if a mii fails to decrypt here
-			if (!R_FAILED(r)) {
-				edited = true;
-			}
-		}
-	}
-
-	if (edited) {
-		f = fopen(LOG_INDEX, "wb");
-		if (!f) {
-			_e_errno();
-			goto error;
-		}
-		fwrite(list, list_file_size, 1, f);
-		fclose(f);
-	}
-	mkdir_p(filename);
-	f = fopen(filename, "wb");
-	if (!f) {
-		_e_errno();
-		goto error;
-	}
-	fwrite(msg, msg->message_size, 1, f);
-	fclose(f);
-
-error:
-	free(list);
-}
-
-Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
-	msg->magic = 0;
-
-	char dirname[100];
-	snprintf(dirname, 100, "%s%lx", LOG_DIR, transfer_id);
-	size_t path_len = strlen(dirname);
-
-	DIR* d = opendir(dirname);
-	if (!d) {
-		_e_errno();
-		return ERROR_ERRNO;
-	}
-
-	struct dirent *p;
-	while ((p=readdir(d))) {
-		int fname_len = path_len + strlen(p->d_name) + 2;
-		char* fname = malloc(fname_len);
-		if (!fname) {
-			_e_errno();
-			closedir(d);
-			return ERROR_ERRNO;
-		}
-		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
-		// we found a file
-		FILE* f = fopen(fname, "rb");
-		if (f) {
-			fread(msg, sizeof(CecMessageHeader), 1, f);
-			fclose(f);
-			if (msg->magic == 0x6060 && msg->transfer_id == transfer_id) {
-				free(fname);
-				break;
-			} else {
-				msg->magic = 0;
-			}
-		}
-		free(fname);
-	}
-	closedir(d);
-
-	if (!msg->magic) return -2; // nothing in directory
-
-	return 0;
-}
-
 void reportInit(void) {
-	mkdir_p(LOG_DIR);
-	mkdir_p(LOG_SPR_DIR);
+	rmdir_r(LOG_DIR);
+	rmdir_r(LOG_SPR_DIR);
+	mkdir_p(LOG_LIST_TMP);
+}
 
-	DIR* d = opendir(LOG_SPR_DIR);
-	if (!d) return;
-	struct dirent* p;
-	char filename[200];
-	bool has_spr_passes = false;
-	while ((p = readdir(d))) {
-		size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 1;
-		struct stat statbuf;
-		snprintf(filename, len, "%s%s", LOG_SPR_DIR, p->d_name);
-		if (stat(filename, &statbuf) && !S_ISDIR(statbuf.st_mode)) continue;
-		if (!has_spr_passes) {
-			has_spr_passes = true;
-			log_line_start(INFO, "Add SPR passes ");
-		}
-		FILE* f = fopen(filename, "rb");
-		if (!f) continue;
-		fseek(f, 0, SEEK_END);
-		size_t filesize = ftell(f);
-		rewind(f);
-		if (filesize < sizeof(CecSlotHeader)) {
-			fclose(f);
-			log_line_continue("/");
-			unlink(filename);
-			continue;
-		}
-		CecSlotHeader slot;
-		fread(&slot, sizeof(CecSlotHeader), 1, f);
-		if (slot.size > MAX_SLOT_SIZE) {
-			fclose(f);
-			log_line_continue("S");
-			unlink(filename);
-			continue;
-		}
-		CecSlotHeader* buf_slot = malloc(slot.size);
-		if (!buf_slot) {
-			log_line_continue("B");
-			fclose(f);
-			unlink(filename);
-			continue;
-		}
-		rewind(f);
-		fread(buf_slot, slot.size, 1, f);
-		fclose(f);
-		log_line_continue("=");
-		saveSlotInLog(buf_slot);
-		free(buf_slot);
-		unlink(filename);
-	}
-	closedir(d);
-	if (has_spr_passes) log_line_finish("Done");
+void reportExit(void) {
+	//unlink(LOG_LIST_TMP);
+	//unlink(LOG_ENTRY_TMP);
+	//unlink(LOG_ENTRY_DEC_TMP);
 }

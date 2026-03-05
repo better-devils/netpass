@@ -69,6 +69,7 @@ You will also have to manually dump the decrypted code of each of the sysmodules
   - Find its TitleID in the list
     - BOSS: ``0004013000003402``
     - CECD: ``0004013000002602``
+    - NS: ``0004013000008002``
     - SSL: ``0004013000002F02``
   - Select it and press A
   - Select ``Open title folder`` and press A

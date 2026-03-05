@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2025 Sorunome
+ * Copyright (C) 2025-2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,4 +21,4 @@
 #include "../scene.h"
 #include "../report.h"
 
-Scene* getReportEntryScene(ReportListEntry* entry);
+Scene* getReportEntryScene(u64 id, u32 misc_id, char name[25], ReportType report_type);

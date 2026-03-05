@@ -158,7 +158,7 @@ static Scene* initial_scene(void) {
 }
 
 static void initial_load(void) {
-	// first, we import the locally stored passes for reports to work
+	// first, we init the report stuffs
 	reportInit();
 	// next, we gotta wait for having internet
 	logln(DEBUG, "Waiting internet\n");
@@ -338,6 +338,7 @@ int main(int nargs, char** argv) {
 		svcSleepThread(1);
 	}
 	logln(INFO, "Exiting...");
+	reportExit();
 	renderExit();
 	integrationExit();
 	bgLoopExit();

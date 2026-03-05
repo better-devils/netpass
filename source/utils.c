@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 
 #include "utils.h"
 #include "strings.h"
+#include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <ctype.h>
@@ -722,6 +723,194 @@ bool blz_decompress(u8* compressed, u32 compressedsize, u8* decompressed, u32 de
 	return true;
 	
 	clean:
+	return false;
+}
+
+// copied from https://gitlab.com/DarkKirb/nintendo-lz/-/blob/master/src/lib.rs?ref_type=heads
+bool blz_decompress_file(FILE *in, FILE *out) {
+	u32 length;
+	if (fread(&length, sizeof(length), 1, in) != 1) return false;
+	u8 ver = length & 0xFF;
+	if (ver != 0x10 && ver != 0x11) return false;
+	ver &= 1;
+	length >>= 8;
+	if (length == 0 && ver == 1) {
+		if (fread(&length, sizeof(length), 1, in) != 1) return false;
+	}
+	
+	u32 length_written = 0;
+	
+	u32 buf_size = 0x80000;
+	u32 buf_cursor = 0;
+	u32 buf_offset = 0;
+	u8* buf = 0;
+	u32 write_buf_size = 0x80000;
+	u32 write_buf_cursor = 0;
+	u8* write_buf = 0;
+	
+	do {
+		if (!write_buf) {
+			write_buf_size >>= 2;
+			if (write_buf_size < 0x100) break;
+			write_buf = malloc(write_buf_size);
+		}
+		if (!buf) {
+			buf_size >>= 2;
+			if (buf_size < 0x100) break;
+			buf = malloc(buf_size);
+		}
+	} while (!buf && !write_buf);
+	if (!buf || !write_buf) goto fail;
+	
+
+	while (length_written < length) {
+		u8 byte;
+		if (fread(&byte, sizeof(byte), 1, in) != 1) goto fail;
+		for (int i = 0; i < 8; i++) {
+			if (length_written >= length) break;
+			if ((byte & 0x80) == 0) {
+				u8 data;
+				if (fread(&data, sizeof(data), 1, in) != 1) goto fail;
+				if (write_buf_cursor >= write_buf_size) {
+					if (fwrite(write_buf, write_buf_cursor, 1, out) != 1) goto fail;
+					write_buf_cursor = 0;
+				}
+				write_buf[write_buf_cursor++] = data;
+				if (buf_cursor >= buf_size) {
+					buf_cursor = 0;
+					buf_offset = length_written;
+				}
+				buf[buf_cursor++] = data;
+				length_written++;
+			} else {
+				u8 lenmsb;
+				u8 lsb;
+				if (fread(&lenmsb, sizeof(lenmsb), 1, in) != 1) goto fail;
+				if (fread(&lsb, sizeof(lsb), 1, in) != 1) goto fail;
+				u32 copylen = lenmsb >> 4;
+				u32 disp = (((u32)lenmsb & 0xF) << 8) + lsb;
+				if (ver == 0) {
+					copylen += 3;
+				} else if (copylen > 1) {
+					copylen += 1;
+				} else if (copylen == 0) {
+					copylen = (lenmsb & 0xF) << 4;
+					copylen += lsb >> 4;
+					copylen += 0x11;
+					u8 msb;
+					if (fread(&msb, sizeof(msb), 1, in) != 1) goto fail;
+					disp = (((u32)lsb & 0xF) << 8) + msb;
+				} else {
+					copylen = ((u32)lenmsb & 0xF) << 12;
+					copylen += lsb << 4;
+					u8 byte1;
+					u8 byte2;
+					if (fread(&byte1, sizeof(byte1), 1, in) != 1) goto fail;
+					if (fread(&byte2, sizeof(byte2), 1, in) != 1) goto fail;
+					copylen += byte1 >> 4;
+					copylen += 0x111;
+					disp = (((u32)byte1 & 0xF) << 8) + byte2;
+				}
+				u32 start = length_written - disp - 1;
+				
+				if (start + copylen > length_written) {
+					if (write_buf_cursor) {
+						if (fwrite(write_buf, write_buf_cursor, 1, out) != 1) goto fail;
+					}
+					write_buf_cursor = 0;
+					for (u32 i = 0; i < copylen; i++) {
+						u8 data;
+						fseek(out, start, SEEK_SET);
+						if (fread(&data, sizeof(data), 1, out) != 1) goto fail;
+						fseek(out, 0, SEEK_END);
+						if (fwrite(&data, sizeof(data), 1, out) != 1) goto fail;
+						
+						if (buf_cursor >= buf_size) {
+							buf_cursor = 0;
+							buf_offset = length_written;
+						}
+						buf[buf_cursor++] = data;
+						
+						length_written++;
+						start++;
+					}
+				} else if (start >= buf_offset && start + copylen < buf_offset + buf_cursor) {
+					if (write_buf_cursor + copylen >= write_buf_size) {
+						if (fwrite(write_buf, write_buf_cursor, 1, out) != 1) goto fail;
+						write_buf_cursor = 0;
+					}
+					if (copylen > write_buf_size) {
+						if (fwrite(buf + start - buf_offset, copylen, 1, out) != 1) goto fail;
+					} else {
+						memcpy(write_buf + write_buf_cursor, buf + start - buf_offset, copylen);
+						write_buf_cursor += copylen;
+					}
+					if (buf_cursor + copylen >= buf_size) {
+						buf_cursor = 0;
+						buf_offset = length_written + copylen;
+					} else if (copylen < buf_size) {
+						memcpy(buf + buf_cursor, buf + start - buf_offset, copylen);
+						buf_cursor += copylen;
+					}
+					length_written += copylen;
+				} else {
+					u8* blkbuf = malloc(copylen);
+					if (!blkbuf) goto fail;
+					u32 curseek = ftell(out);
+					if (start + copylen < curseek) {
+						fseek(out, start, SEEK_SET);
+						if (fread(blkbuf, copylen, 1, out) != 1) {
+							free(blkbuf);
+							goto fail;
+						}
+						fseek(out, 0, SEEK_END);
+					} else if (start > curseek) {
+						memcpy(blkbuf, write_buf + (start - curseek), copylen);
+					} else {
+						if (write_buf_cursor) {
+							if (fwrite(write_buf, write_buf_cursor, 1, out) != 1) goto fail;
+						}
+						write_buf_cursor = 0;
+					}
+					
+					if (write_buf_cursor + copylen >= write_buf_size) {
+						if (fwrite(write_buf, write_buf_cursor, 1, out) != 1) {
+							free(blkbuf);
+							goto fail;
+						}
+						write_buf_cursor = 0;
+					}
+					if (copylen > write_buf_size) {
+						if (fwrite(blkbuf, copylen, 1, out) != 1) {
+							free(blkbuf);
+							goto fail;
+						}
+					} else {
+						memcpy(write_buf + write_buf_cursor, blkbuf, copylen);
+						write_buf_cursor += copylen;
+					}
+					if (buf_cursor + copylen >= buf_size) {
+						buf_cursor = 0;
+						buf_offset = length_written;
+					}
+					if (copylen < buf_size) {
+						memcpy(buf + buf_cursor, blkbuf, copylen);
+						buf_cursor += copylen;
+					}
+					free(blkbuf);
+					length_written += copylen;
+				}
+			}
+			byte <<= 1;
+		}
+	}
+	if (write_buf_cursor) {
+		if (fwrite(write_buf, write_buf_cursor, 1, out) != 1) goto fail;
+	}
+	return true;
+fail:
+	if (buf) free(buf);
+	if (write_buf) free(write_buf);
 	return false;
 }
 

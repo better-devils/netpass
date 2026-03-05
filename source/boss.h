@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,10 @@ typedef struct BossHTTPHeader {
 	char name[0x20];
 	char value[0x100];
 } BossHTTPHeader;
+
+typedef enum {
+	TITLE_SWAPDOODLE     = 0x001a2c00,
+} BossTitles;
 
 typedef enum BossPropertyId {
 	BOSSPROPERTY_DURATION = 0x04,
