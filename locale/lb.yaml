@@ -103,7 +103,7 @@ str_banned: "Dir sidd vum Netpass verbitt. Grond:\n%s\n\nUfank vum Verbuet: %s\n
 str_new_version_failed: D'Installatioun vun der neier Versioun ass gescheitert. 
   Dir kënnt se nach ëmmer iwwer Universal Updater oder mam QR-Code 
   installéieren.
-str_new_version: "Nei NetPass Versioun verfügbar:\n\nv%d.%d.%d!\n\nWëllt Dir NetPass
+str_new_version: "Nei NetPass Versioun verfügbar:\nv%d.%d.%d!\n\nWëllt Dir NetPass
   elo aktualiséieren?"
 str_enter_event_location: Bass du sécher, datt du un der Veranstaltung "%s" 
   deelhuele wëlls?
