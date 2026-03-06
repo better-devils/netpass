@@ -110,7 +110,7 @@ size_t n_strftime(char* str, size_t count, const char* format, const struct tm* 
 	if (lc_time_all.ampm[lang][0] && 0 != (pos = strstr(tmpstr, "%p"))) {
 		*pos = 0;
 		pos += 2;
-		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.ampm[lang][tp->tm_hour >= 1 && tp->tm_hour <= 12], pos);
+		snprintf(str, count, "%s%s%s", tmpstr, lc_time_all.ampm[lang][tp->tm_hour >= 12], pos);
 		strncpy(tmpstr, str, count);
 	}
 	
