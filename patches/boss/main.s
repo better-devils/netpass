@@ -26,7 +26,7 @@ CecdsSprAddSlot equ 0x10f438
 getFsUserHandle equ 0x126fa8
 FsUserOpenArchive equ 0x126da0
 FsUserOpenFile equ 0x118bf0
-newFullFileFromHandle equ 0x126d6c
+newArchiveFromHandle equ 0x126d6c
 s_handle_fsuser_2 equ 0x14b1a8
 FsUserCloseArchive equ 0x126d30
 CreateFileBuffers equ 0x13d7d8
@@ -57,53 +57,150 @@ memclr equ 0x126ef0
 .org reports_url_addr
   .asciiz "https://api.netpass.cafe/npvk/reports"
 
-; We overwrite FrduGetMyPassword to instead return the lfcs xor boss user id
+CallArg1 equ 0
+CallArg2 equ CallArg1 + 0x4
+CallArg3 equ CallArg2 + 0x4
+FullFilePtr equ CallArg3 + 0x4
+FsFilePtr equ FullFilePtr + 0x4
+ArchiveHandle equ FsFilePtr + 0x4
+PathArgs equ ArchiveHandle + 0x8
+TempVar equ PathArgs + 0xC
+StackArgsSize equ TempVar + 0x4
+
+; We overwrite FrduGetMyPassword to instead read from a file in nand
 .org 0x13a8bc ; FrduGetMyPassword
 .area 92
 ; buffer is in r0, size is in r1
-  push {r4, r5, lr}
-  ; r4 will hold our result buffer
-  mov r4, r0
-  ; r5 will hold our result size
-  mov r5, r1
+  push {r4, r5, r6, lr}
+  ; r5 will hold our result buffer
+  mov r5, r0
+  ; r6 will hold our result size
+  mov r6, r1
   
-  sub sp, 0x10
-  ; fetch the local friend code seed
-  add r0, sp, 0
-  bl CfgsGetLocalFriendCodeSeed
-  ; fetch the boss user id
-  add r0, sp, 8
-  bl CecdsGetBossUserId
-  
-  ; got the u64 in r0, r1 now
-  ldr r0, [sp, 0x0]
-  ldr r1, [sp, 0x4]
-  ldr r2, [sp, 0x8]
-  ldr r3, [sp, 0xC]
+  ; clear the input buffer
+  blx memclr
 
-  eor r0, r2
-  eor r1, r3
+  sub sp, StackArgsSize
   
-  str r1, [sp]
-  mov r3, r0
-  ldr r2, [pattern_get_my_password_ptr]
-  mov r1, r5
-  mov r0, r4
-  bl snprintf
-  add sp, 0x10 ; restore stack pointer
-  pop {r4, r5, pc}
+  ; clear the stack
+  mov r1, StackArgsSize
+  add r0, sp, 0
+  blx memclr
+  
+  ; first open the nand ArchiveHandle
+  bl getFsUserHandle ; user handle is in r0 now
+  str r0, [sp, PathArgs + 8] ; we need in r0 a pointer to the handle
+  add r0, sp, PathArgs + 8
+  add r1, sp, ArchiveHandle
+  ldr r2, [nandFileType] ; nand_rw archive
+  mov r3, 1 ; empty path type
+  mov r4, 0
+  str r4, [sp, CallArg3] ; this will be our empty string
+  add r4, sp, CallArg3
+  str r4, [sp, CallArg1] ; pointer to 0 for path
+  mov r4, 1
+  str r4, [sp, CallArg2] ; size=1 for path
+  bl FsUserOpenArchive
+  cmp r0, 0
+  blt fail_get_nex_pwd0
+
+  ; now we store the archive into the full handle
+  ldr r3, [sp, ArchiveHandle + 4]
+  ldr r2, [sp, ArchiveHandle]
+  ldr r4, [FSUserHandlePtr]
+  ldr r1, [r4]
+  add r0, sp, FullFilePtr
+  bl newArchiveFromHandle
+  cmp r0, 0
+  blt fail_get_nex_pwd0
+  
+  ; build the path args for the file
+  ldr r0, [nidPwdPathPtr] ; file path
+  str r0, [sp, PathArgs + 4]
+
+  b get_nex_cont
+fail_get_nex_pwd0:
+  b fail_get_nex_pwd
 .align 4
-pattern_get_my_password_ptr:
-  .word pattern_get_my_password
-pattern_get_my_password:
-  .asciiz "%016llx"
+nidPwdPathPtr:
+  .word nidPwdPath
+FSUserHandlePtr:
+  .word s_handle_fsuser_2
+nandFileType:
+  .word 0x1234567D
 .endarea
 
 
 .org 0x13ADE0
 .area 0x98
 .align 2
-; empty area to use
+get_nex_cont:
+  mov r0, 3 ; path type ascii string
+  str r0, [sp, PathArgs]
+  mov r0, nidPwdPathEnd - nidPwdPath ; the file length
+  str r0, [sp, PathArgs + 8]
+; open the file for reading
+  mov r3, 0b1 ; open flags
+  add r2, sp, PathArgs
+  add r1, sp, FsFilePtr
+  ldr r0, [sp, FullFilePtr]
+  ;cmp r0, 0
+  ;beq fail_get_nex_pwd
+  ldr r4, [r0] ; the pointer to the open file method is in the
+  ldr r4, [r4] ; first four bytes of FsFullFile
+  blx r4
+  cmp r0, 0
+  blt fail_get_nex_pwd
+; read from the file
+  mov r4, r6 ; read buffer length
+  str r4, [sp, CallArg2]
+  mov r4, r5 ; read buffer
+  str r4, [sp, CallArg1]
+  mov r3, 0 ; file offset
+  mov r2, 0
+  add r1, sp, TempVar ; we don't care about how much we actually read
+  ldr r0, [sp, FsFilePtr]
+  ;cmp r0, 0
+  ;beq fail_get_nex_pwd
+  ldr r4, [r0] ; the first entry in the LUT at the top is
+  ldr r4, [r4] ; the file read method
+  blx r4
+  
+  ; we fall through to fail to close the resorces
+fail_get_nex_pwd:
+  str r0, [sp, TempVar] ; save the result for function return
+  ; close file
+  ldr r0, [sp, FsFilePtr]
+  cmp r0, 0 ; check for null pointer
+  beq fail_get_nex_pwd_no_close_fsfileptr
+  ; close up the file
+  ldr r4, [r0] ; the 12th entry in the LUT at the top is
+  add r4, 12*4 ; the file close method
+  ldr r4, [r4]
+  blx r4
+
+  ldr r0, [sp, TempVar]
+fail_get_nex_pwd_no_close_fsfileptr:
+  str r0, [sp, TempVar]
+  
+  ldr r0, [sp, ArchiveHandle]
+  ldr r1, [sp, ArchiveHandle+4]
+  orr r0, r1
+  cmp r0, 0
+  beq fail_get_nex_pwd_no_close_archivehandle
+  
+  ldr r2, [sp, ArchiveHandle]
+  ldr r3, [sp, ArchiveHandle+4]
+  mov r1, 0
+  add r0, sp, PathArgs + 8 ; user handle is in r0 now
+  bl FsUserCloseArchive
+
+fail_get_nex_pwd_no_close_archivehandle:
+  ldr r0, [sp, TempVar] ; restore our result
+  
+  add sp, StackArgsSize ; restore stack pointer
+  pop {r4, r5, r6, pc}
+.align 4
 .endarea
 
 .org 0x10D6C4
@@ -460,6 +557,10 @@ newSpotpassUrl:
   .align 4
 newSpotpassUrlPattern:
   .asciiz "%s%s%s"
+  .align 4
+nidPwdPath:
+  .asciiz "/netpass/nid_pwd.bin"
+nidPwdPathEnd:
   .align 4
 .endarea
 

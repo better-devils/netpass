@@ -36,6 +36,8 @@ static Thread curl_multi_thread;
 static bool running = false;
 static u8 mac[6] = {0};
 static char* netpass_id;
+static char nid_password[16] = {0};
+static bool sent_extra_ident = false;
 
 #define CURL_HANDLE_STATUS_FREE 0
 #define CURL_HANDLE_STATUS_RESERVED 1
@@ -288,6 +290,17 @@ static void curl_multi_loop_request_setup(int i) {
 	}
 	curl_add_proxy(h->handle);
 	struct curl_slist* headers = NULL;
+	
+	if (!nid_password[0]) {
+		// attempt to load the nid password
+		FILE* f = fopen(PATH_NID_PWD, "r");
+		if (f) {
+			if (fread(nid_password, sizeof(nid_password), 1, f) != 1) {
+				nid_password[0] = 0;
+			}
+			fclose(f);
+		}
+	}
 
 	// add mac header
 	{
@@ -331,36 +344,39 @@ static void curl_multi_loop_request_setup(int i) {
 		headers = curl_slist_append(headers, header_time);
 	}
 	
-	Result res;
-	{
-		FriendKey friend_key;
-		res = FRD_GetMyFriendKey(&friend_key);
-		if (R_SUCCEEDED(res)) {
-			char header_fc[100];
-			snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", friend_key.localFriendCode);
-			headers = curl_slist_append(headers, header_fc);
-			
-			char header_pid[100];
-			snprintf(header_pid, sizeof(header_pid), "3ds-pid: %ld", friend_key.principalId);
-			headers = curl_slist_append(headers, header_pid);
+	if (nid_password[0] && !sent_extra_ident) {
+		// add extra ident headers
+		Result res;
+		{
+			FriendKey friend_key;
+			res = FRD_GetMyFriendKey(&friend_key);
+			if (R_SUCCEEDED(res)) {
+				char header_fc[100];
+				snprintf(header_fc, sizeof(header_fc), "3ds-fc: %016llX", friend_key.localFriendCode);
+				headers = curl_slist_append(headers, header_fc);
+				
+				char header_pid[100];
+				snprintf(header_pid, sizeof(header_pid), "3ds-pid: %ld", friend_key.principalId);
+				headers = curl_slist_append(headers, header_pid);
+			}
 		}
-	}
-	{
-		u64 seed;
-		res = CFGI_GetLocalFriendCodeSeed(&seed);
-		if (R_SUCCEEDED(res)) {
-			char header_lfcs[100];
-			snprintf(header_lfcs, sizeof(header_lfcs), "3ds-lfcs: %016llX", seed);
-			headers = curl_slist_append(headers, header_lfcs);
+		{
+			u64 seed;
+			res = CFGI_GetLocalFriendCodeSeed(&seed);
+			if (R_SUCCEEDED(res)) {
+				char header_lfcs[100];
+				snprintf(header_lfcs, sizeof(header_lfcs), "3ds-lfcs: %016llX", seed);
+				headers = curl_slist_append(headers, header_lfcs);
+			}
 		}
-	}
-	{
-		u64 boss_userid;
-		res = cecdGetBossUserid(&boss_userid);
-		if (R_SUCCEEDED(res)) {
-			char header_bossuid[100];
-			snprintf(header_bossuid, sizeof(header_bossuid), "3ds-boss-userid: %016llX", boss_userid);
-			headers = curl_slist_append(headers, header_bossuid);
+		{
+			u64 boss_userid;
+			res = cecdGetBossUserid(&boss_userid);
+			if (R_SUCCEEDED(res)) {
+				char header_bossuid[100];
+				snprintf(header_bossuid, sizeof(header_bossuid), "3ds-boss-userid: %016llX", boss_userid);
+				headers = curl_slist_append(headers, header_bossuid);
+			}
 		}
 	}
 
@@ -438,6 +454,9 @@ static void curl_multi_loop(void* p) {
 		}
 		for (int i = 0; i < MAX_CONNECTIONS; i++) {
 			if (handles[i].status == CURL_HANDLE_STATUS_RESET) {
+				if (R_SUCCEEDED(handles[i].result) && nid_password[0]) {
+					sent_extra_ident = true;
+				}
 				handles[i].handle = 0;
 				handles[i].result = 0;
 				handles[i].status = CURL_HANDLE_STATUS_FREE;

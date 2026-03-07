@@ -20,6 +20,7 @@
 
 #include <3ds.h>
 #include <citro2d.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> // TODO: check if needed
 #include "log.h"
@@ -33,8 +34,8 @@
 #include "scenes/download_progress.h"
 #include "scenes/switch.h"
 #include "render.h"
+#include "utils.h"
 
-static CurlReply* ping_reply = 0;
 static Result ping_res = 0;
 static PingResponse ping_response = {0};
 static char* filename_3dsx = 0;
@@ -157,32 +158,67 @@ static Scene* initial_scene(void) {
 	return scene;
 }
 
-static void initial_load(void) {
-	// first, we init the report stuffs
-	reportInit();
-	// next, we gotta wait for having internet
-	logln(DEBUG, "Waiting internet\n");
-	char url[50];
-	snprintf(url, 50, "%s/ping2", BASE_URL);
+static Result check_initernet_call(char* url, CurlReply** reply) {
 	int check_count = 0;
 	int max_count = 100;
 	while (true) {
-		ping_res = httpRequest("GET", url, 0, 0, &ping_reply, 0);
-		if (R_SUCCEEDED(ping_res)) break;
+		Result res = httpRequest("GET", url, 0, 0, reply, 0);
+		if (R_SUCCEEDED(res)) break;
 		check_count++;
-		curlFreeHandler(ping_reply->offset);
-		if (ERROR_IS_HTTP(ping_res)) return;
-		if (ERROR_IS_CURL(ping_res) && ping_res == -CURLE_PEER_FAILED_VERIFICATION) return;
+		curlFreeHandler((*reply)->offset);
+		if (ERROR_IS_HTTP(res)) return res;
+		if (ERROR_IS_CURL(res) && res == -CURLE_PEER_FAILED_VERIFICATION) return res;
 		if (check_count > max_count) {
-			if (ping_res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
+			if (res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 				max_count += 100;
 				continue;
 			}
-			return;
+			return res;
 		}
 	}
-	readPingResponse(&ping_response, ping_reply->ptr, ping_reply->len);
-	curlFreeHandler(ping_reply->offset);
+	return 0;
+}
+
+static void initial_load(void) {
+	// first, we init the report stuffs
+	reportInit();
+	char url[50];
+	CurlReply* reply;
+	logln(DEBUG, "Waiting internet\n");
+	if (access(PATH_NID_PWD, F_OK) != 0) {
+		// we gotta register
+		logln(INFO, "First time opening NetPass, registering console...");
+		snprintf(url, 50, "%s/register", BASE_URL);
+		ping_res = _e(check_initernet_call(url, &reply));
+		if (R_FAILED(ping_res)) {
+			logln(INFO, "Failed to register: %08lx", ping_res);
+			return;
+		}
+		mkdir_p(PATH_NID_PWD);
+		FILE* f = fopen(PATH_NID_PWD, "wb");
+		if (!f) {
+			ping_res = _e_errno();
+			logln(INFO, "Failed to open password file");
+			curlFreeHandler(reply->offset);
+			return;
+		}
+		if (fwrite(reply->ptr, reply->len, 1, f) != 1) {
+			ping_res = _e_errno();
+			fclose(f);
+			logln(INFO, "Failed to write to password file");
+			curlFreeHandler(reply->offset);
+			return;
+		}
+		fclose(f);
+		curlFreeHandler(reply->offset);
+		logln(INFO, "Console registered successfully!");
+	}
+	// next, we gotta wait for having internet
+	snprintf(url, 50, "%s/ping2", BASE_URL);
+	ping_res = _e(check_initernet_call(url, &reply));
+	if (R_FAILED(ping_res)) return;
+	readPingResponse(&ping_response, reply->ptr, reply->len);
+	curlFreeHandler(reply->offset);
 	if (ping_response.ban.is_banned) return;
 	_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
 	initTitleData();
@@ -259,6 +295,10 @@ int main(int nargs, char** argv) {
 		};
 		_e(archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b"));
 		_e(FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path));
+	}
+	// mount nand so that we can use it for nid_password
+	{
+		_e(archiveMount(ARCHIVE_NAND_RW, fsMakePath(PATH_EMPTY, ""), "nand"));
 	}
 	
 	_e(playMusic("home")); // start the default music

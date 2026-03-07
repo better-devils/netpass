@@ -28,6 +28,8 @@
 #define RULES_URL "http://netpass.cafe/rules.html"
 #define PRIVACY_URL "http://netpass.cafe/privacy.html"
 
+#define PATH_NID_PWD "nand:/netpass/nid_pwd.bin"
+
 #ifndef __GNUC__
 // workaround only for non-gnuc diagnostics
 #define lambda(return_type, function_body) ((void*) 0)
