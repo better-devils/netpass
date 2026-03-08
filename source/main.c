@@ -276,6 +276,12 @@ int main(int nargs, char** argv) {
 
 	logln(DEBUG, "DEBUG ON");
 
+	
+	// mount nand so that we can use it for some things
+	{
+		_e(archiveMount(ARCHIVE_NAND_RW, fsMakePath(PATH_EMPTY, ""), "nand"));
+	}
+	
 	_e(curlInit());
 	srand(time(NULL));
 
@@ -295,10 +301,6 @@ int main(int nargs, char** argv) {
 		};
 		_e(archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b"));
 		_e(FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path));
-	}
-	// mount nand so that we can use it for nid_password
-	{
-		_e(archiveMount(ARCHIVE_NAND_RW, fsMakePath(PATH_EMPTY, ""), "nand"));
 	}
 	
 	_e(playMusic("home")); // start the default music

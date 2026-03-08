@@ -24,6 +24,7 @@
 #include "log.h"
 #include "utils.h"
 #include <malloc.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #define MAX_CONNECTIONS 3
@@ -63,6 +64,12 @@ static struct CurlHandle handles[MAX_CONNECTIONS] = {0};
 
 static Result getMac(u8 mac[6]) {
 	Result res = 0;
+	FILE* f = fopen(PATH_MAC, "r");
+	if (f) {
+		if (fread(mac, 6, 1, f) != 1) res = _e_errno();
+		fclose(f);
+		return res;
+	}
 	Handle handle;
 	res = srvGetServiceHandle(&handle, "nwm::SOC");
 	if (R_FAILED(res)) return res;
@@ -84,6 +91,15 @@ static Result getMac(u8 mac[6]) {
 	if (R_FAILED(res)) return res;
 	res = (Result)cmdbuf[1];
 	memcpy(mac, (u8*)cmdbuf[3], 6);
+	
+	mkdir_p(PATH_MAC);
+	f = fopen(PATH_MAC, "w");
+	if (!f) {
+		res = _e_errno();
+		return res;
+	}
+	if (fwrite(mac, 6, 1, f) != 1) res = _e_errno();
+	fclose(f);
 	return res;
 }
 
@@ -344,7 +360,7 @@ static void curl_multi_loop_request_setup(int i) {
 		headers = curl_slist_append(headers, header_time);
 	}
 	
-	if (nid_password[0] && !sent_extra_ident) {
+	if (!sent_extra_ident) {
 		// add extra ident headers
 		Result res;
 		{

@@ -29,6 +29,7 @@
 #define PRIVACY_URL "http://netpass.cafe/privacy.html"
 
 #define PATH_NID_PWD "nand:/netpass/nid_pwd.bin"
+#define PATH_MAC "nand:/netpass/mac.bin"
 
 #ifndef __GNUC__
 // workaround only for non-gnuc diagnostics
