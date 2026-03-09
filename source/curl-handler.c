@@ -360,6 +360,25 @@ static void curl_multi_loop_request_setup(int i) {
 		headers = curl_slist_append(headers, header_time);
 	}
 	
+	// add nid token header
+	if (nid_password[0] != 0) {
+		char header_nid_token[100];
+		char otp_str[11];
+		time_t unixTime = time(NULL);
+		struct tm* ts = gmtime((const time_t *)&unixTime);
+		snprintf(otp_str, sizeof(otp_str), "%04i-%02i-%02i", ts->tm_year + 1900, ts->tm_mon + 1, ts->tm_mday);
+		
+		u8 hash[32];
+		hmac_sha256(nid_password, 16, otp_str, strlen(otp_str), hash, 32);
+		u32 offset = snprintf(header_nid_token, sizeof(header_nid_token), "3ds-nid-token: ");
+		char* s = header_nid_token + offset;
+		for (int i = 0; i < 32; i++) {
+			sprintf(s, "%02x", hash[i]);
+			s += 2;
+		}
+		headers = curl_slist_append(headers, header_nid_token);
+	}
+	
 	if (!sent_extra_ident) {
 		// add extra ident headers
 		Result res;
