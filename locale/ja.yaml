@@ -106,3 +106,5 @@ str_logging_none: 無し
 str_logging_screen: 画面
 str_logging_file: ファイル
 str_downloading: ダウンロード中...
+str_failed_to_authenticate: 認証に失敗しました！後でもう一度お試しください。問題が解決しない場合は、こちらまでご連絡ください： 
+  https://netpass.cafe
