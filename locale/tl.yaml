@@ -119,3 +119,6 @@ str_logging_none: Wala
 str_logging_screen: Screen
 str_logging_file: File
 str_downloading: Dina-download...
+str_failed_to_authenticate: Nabigo ang pagpapatunay! Mangyaring subukan muli 
+  mamaya. Kung magpatuloy ang problema, manyaring makipag-ugnay sa amin! 
+  https://netpass.cafe
