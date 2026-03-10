@@ -113,11 +113,11 @@ str_new_version_failed: Не вдалося установити нову вер
 str_banned: "Ви забаненi у NetPass. Причина:\n%s\n\nПочаток бану: %s\nКiнець бану:
   %s"
 str_at_event_location: Ви на спецiальнiй подiï.
-str_report_list_empty: Список скарг порожній.
+str_report_list_empty: Список скарг порожнiй.
 str_logging: 'Лоґи:'
-str_logging_none: Нічого
+str_logging_none: Нiчого
 str_logging_screen: Екран
 str_logging_file: Файл
 str_downloading: Завантаження...
-str_failed_to_authenticate: Не вдалося увійти! Будь ласка, спробуйте пізніше. 
-  Якщо проблема повториться, будь ласка, напишіть нам! https://netpass.cafe
+str_failed_to_authenticate: Не вдалося увiйти! Будь ласка, спробуйте пiзнiше. 
+  Якщо проблема повториться, будь ласка, напишiть нам! https://netpass.cafe
