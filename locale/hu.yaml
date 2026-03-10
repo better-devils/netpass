@@ -120,3 +120,6 @@ str_logging_none: Nincs
 str_logging_screen: Képernyőre
 str_logging_file: Fájlba
 str_downloading: Letöltés...
+str_failed_to_authenticate: Sikertelen autentikáció! Kérjük próbáld újra később.
+  Ha a probléma tartósan fenn áll, vedd fel velünk a kapcsolatot! 
+  https://netpass.cafe
