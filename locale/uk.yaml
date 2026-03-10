@@ -119,3 +119,5 @@ str_logging_none: Нічого
 str_logging_screen: Екран
 str_logging_file: Файл
 str_downloading: Завантаження...
+str_failed_to_authenticate: Не вдалося увійти! Будь ласка, спробуйте пізніше. 
+  Якщо проблема повториться, будь ласка, напишіть нам! https://netpass.cafe
