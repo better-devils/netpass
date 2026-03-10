@@ -121,3 +121,5 @@ str_logging_none: Nessuno
 str_logging_screen: Schermata
 str_logging_file: File
 str_downloading: Download in corso...
+str_failed_to_authenticate: Autenticazione fallita! Riprova più tardi. Se il 
+  problema persiste, contattaci su https://netpass.cafe
