@@ -119,3 +119,5 @@ str_logging_none: Brak
 str_logging_screen: Ekran
 str_logging_file: Plik
 str_downloading: Pobieranie...
+str_failed_to_authenticate: Autoryzacja nieudana! Proszę spróbuj ponownie 
+  później. Jeżeli problem się powtarza, proszę daj znać! https://netpass.cafe
