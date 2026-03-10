@@ -63,6 +63,8 @@ Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 		resp->ban.reason = banmsg;
 		qr_read_align(&buffer, 4);
 	} else {
+		// we need to consume the length
+		qr_read_u32(&buffer);
 		resp->ban.reason = 0;
 	}
 	u32 message_len = qr_peek_u32(&buffer);
@@ -76,8 +78,11 @@ Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 		resp->message.message = msg;
 		qr_read_align(&buffer, 4);
 	} else {
+		// we need to consume the length
+		qr_read_u32(&buffer);
 		resp->message.message = 0;
 	}
+	resp->is_authenticated = qr_read_bool(&buffer);
 	return 0;
 }
 

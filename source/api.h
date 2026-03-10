@@ -74,6 +74,7 @@ typedef struct {
 	PingResponseVersion version;
 	PingResponseBan ban;
 	PingResponseMessage message;
+	bool is_authenticated;
 } PingResponse;
 
 typedef struct {

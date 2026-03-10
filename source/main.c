@@ -32,6 +32,7 @@
 #include "music.h"
 #include "integration.h"
 #include "scenes/download_progress.h"
+#include "scenes/info.h"
 #include "scenes/switch.h"
 #include "render.h"
 #include "utils.h"
@@ -39,6 +40,13 @@
 static Result ping_res = 0;
 static PingResponse ping_response = {0};
 static char* filename_3dsx = 0;
+
+static Scene* load_not_authenticated(void) {
+	Scene* scene = getSettingsScene();
+	Scene* info_scene = getInfoScene(str_failed_to_authenticate);
+	info_scene->pop_scene = scene;
+	return info_scene;
+}
 
 static Scene* load_is_banned(void) {
 	char ban_start[40];
@@ -136,6 +144,10 @@ static Scene* initial_scene(void) {
 		_e(ping_res);
 		return getSettingsScene();
 	}
+	if (!ping_response.is_authenticated) {
+		// we aren't authenticated
+		return load_not_authenticated();
+	}
 	if (ping_response.ban.is_banned) {
 		// we are banned
 		return load_is_banned();
@@ -219,7 +231,7 @@ static void initial_load(void) {
 	if (R_FAILED(ping_res)) return;
 	readPingResponse(&ping_response, reply->ptr, reply->len);
 	curlFreeHandler(reply->offset);
-	if (ping_response.ban.is_banned) return;
+	if (ping_response.ban.is_banned || !ping_response.is_authenticated) return;
 	_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
 	initTitleData();
 	doSlotExchangeRetry(true);
