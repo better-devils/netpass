@@ -121,3 +121,5 @@ str_logging_none: Aucun
 str_logging_screen: Écran
 str_logging_file: Fichier
 str_downloading: Téléchargement...
+str_failed_to_authenticate: Erreur d'authentification ! Essayez encore plus 
+  tard. Si la problème persiste, laissez-nous un message ! https://netpass.cafe
