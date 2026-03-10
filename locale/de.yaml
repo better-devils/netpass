@@ -123,3 +123,6 @@ str_logging_none: Keine
 str_logging_screen: Bildschirm
 str_logging_file: Datei
 str_downloading: Lädt herunter ...
+str_failed_to_authenticate: Authentifizierung fehlgeschlagen! Bitte versuche es 
+  später noch einmal! Falls das Problem bestehen bleibt, melde dich bitte! 
+  https://netpass.cafe
