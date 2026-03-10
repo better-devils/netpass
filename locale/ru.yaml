@@ -117,3 +117,6 @@ str_logging: 'Логи:'
 str_report_list_empty: Список для жалоб пуст.
 str_logging_none: Ничего
 str_downloading: Загрузка...
+str_failed_to_authenticate: Попытка входа провалилась! Пожалуйста, попробуйте 
+  позже. Если проблема повторится, пожалуйста, напишите нам! 
+  https://netpass.cafe
