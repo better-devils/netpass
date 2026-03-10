@@ -119,3 +119,5 @@ str_logging_none: Nic
 str_logging_screen: Obrazovka
 str_logging_file: Soubor
 str_downloading: Stahování...
+str_failed_to_authenticate: Autentizace se nezdařila! Prosím, zkuste to znovu 
+  později. Pokud problém přetrvává, kontaktujte nás! https://netpass.cafe
