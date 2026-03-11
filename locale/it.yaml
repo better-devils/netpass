@@ -1,12 +1,12 @@
 str_loading: "Caricamento    "
-str_libcurl_error: "Errore di libCURL (%d): %s"
+str_libcurl_error: "Errore libCURL (%d): %s"
 str_libcurl_date_and_time: 'Assicurati che la data e l''ora della tua console siano
   impostate correttamente!'
 str_httpstatus_error: 'Codice stato HTTP %d'
 str_3ds_error: 'Codice errore 3DS %08lx'
-str_at_home: 'Sei a casa.'
+str_at_home: 'Sei a Casa.'
 str_goto_train_station: 'Vai alla Stazione'
-str_at_train_station: 'Sei in Stazione.'
+str_at_train_station: 'Sei alla Stazione.'
 str_goto_plaza: 'Vai in Piazza'
 str_at_plaza: 'Sei in Piazza.'
 str_goto_mall: 'Vai al Centro Commerciale'
@@ -21,21 +21,21 @@ str_goto_beach: 'Vai in Spiaggia'
 str_at_beach: 'Sei in Spiaggia.'
 str_goto_arcade: 'Vai alla Sala Giochi'
 str_at_arcade: 'Sei alla Sala Giochi.'
-str_goto_catcafe: 'Vai al Bar dei Gatti'
-str_at_catcafe: 'Sei al Bar dei Gatti.'
+str_goto_catcafe: 'Vai al Cat Café'
+str_at_catcafe: 'Sei al Cat Café.'
 str_system_language: Lingua di sistema
 str_language_pick: 'Lingua:'
-str_no_location_twice: Non puoi entrare nello stesso luogo due volte di fila!
+str_no_location_twice: Non puoi andare nello stesso luogo due volte di fila!
 str_report_user: Segnala un utente
 str_report_user_hint: Segnala "%s"
 str_cancel: Annulla
 str_submit: Invia
 str_back_alley: Vicolo
 str_back_alley_pay: Compra un pass {playcoin}%d
-str_back_alley_message: Cerca altri pass!
+str_back_alley_message: Prendi altri pass!
 str_toggle_titles_message: Premi {a_button} per iniziare o smettere di scambiare
   pass.
-str_check_inboxes: Controlla la posta in arrivo
+str_check_inboxes: Controlla i pass in arrivo
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_toggle_titles: Attiva giochi
@@ -44,13 +44,13 @@ str_clear_spr_cache: Pulisci cache spr
 str_report_mii_name: 'Nome Mii: %s'
 str_report_mario_kart_7_greeting: 'Saluto: %s'
 str_report_mii_plaza_last_game: 'Ultimo gioco: %s'
-str_report_mii_plaza_country: 'Nazione: %s - %s'
+str_report_mii_plaza_country: 'Nazionalità: %s - %s'
 str_report_mii_plaza_greeting: 'Saluto: %s'
 str_report_mii_plaza_custom_message: 'Il tuo messaggio: %s'
 str_report_mii_plaza_custom_reply: 'La loro risposta: %s'
 str_report_tomodachi_life_island_name: 'Nome dell''isola: %s'
-str_b_go_back: '{b_button} Torna indietro'
-str_b_cancel: '{b_button} Indietro'
+str_b_go_back: '{b_button} Indietro'
+str_b_cancel: '{b_button} Annulla'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Aggiorna patch
 str_update_patches_desc: Per installare correttamente NetPass verranno create 
@@ -70,16 +70,16 @@ str_integrations_message: Le integrazioni di terze parti non vengono moderate da
 str_report_source: 'Fonte: %s'
 str_report_source_unknown: Fonte sconosciuta
 str_settings_misc: Varie
-str_about_graphics: Arte e grafica
-str_settings_about: Info
-str_about_lead_dev: Sviluppatore principale
+str_about_graphics: Disegni e grafiche
+str_settings_about: Riconoscimenti
+str_about_lead_dev: Sviluppatrice principale
 str_about_reports: Sistema di segnalazioni
 str_about_music: Musica
 str_about_localisation: Traduzioni
 str_about_netpass_community: La community di NetPass
 str_about_special_thanks: Ringraziamenti speciali
 str_about_production_cat: Gatto di produzione
-str_about_special_thanks_txt: La community homebrew 3DS per la documentazione e 
+str_about_special_thanks_txt: La community homebrew 3DS, per la documentazione e
   il reverse-engineering
 str_scan_qr: Scansiona codice QR
 str_x_switch_camera: '{x_button} Cambia fotocamera'
@@ -96,14 +96,14 @@ str_update_patches_poweroff_clear_desc: Patch rimosse con successo! La console
 str_skip: Salta
 str_install: Installa
 str_remove: Rimuovi
-str_prompt_dl_pass: Sei sicuro di voler scaricare questo pass?
+str_prompt_dl_pass: Sei sicuro di voler scaricare questo streetpass?
 str_report_integration: Questo messaggio proviene da un'integrazione. Per 
   segnalarlo, invia un messaggio al team di moderazione dell'integrazione in 
   questione.
-str_bad_os_version: "NetPass richiede un sistema operativo 3DS di versione 11.15.0
-  o superiore per funzionare correttamente. Sembra che tu stia usando una versione
-  più vecchia. Aggiorna il sistema e avvia nuovamente NetPass.\n\nPremi un tasto qualsiasi
-  per uscire"
+str_bad_os_version: "NetPass richiede una versione di sistema pari a 11.15.0 o superiore
+  per funzionare correttamente. Sembra che tu stia usando una versione più vecchia.
+  Aggiorna il sistema e avvia nuovamente NetPass.\n\nPremi un tasto qualsiasi per
+  uscire"
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_at_event_location: Sei ad un evento speciale.
@@ -122,4 +122,4 @@ str_logging_screen: Schermata
 str_logging_file: File
 str_downloading: Download in corso...
 str_failed_to_authenticate: Autenticazione fallita! Riprova più tardi. Se il 
-  problema persiste, contattaci su https://netpass.cafe
+  problema persiste, contattaci! https://netpass.cafe
