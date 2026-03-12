@@ -58,7 +58,7 @@ str_a_ok: '{a_button} 确定'
 str_update_patches: 更新补丁
 str_update_patches_poweroff_desc: 更新补丁成功！主机将会重启。
 str_about_special_thanks_txt: 3DS Homebrew社区对所有逆向工程及文档作出的贡献
-str_about_production_cat: 生产猫猫
+str_about_production_cat: 伴工猫
 str_about_lead_dev: 首席开发者
 str_settings_misc: 杂项
 str_settings_about: 关于
