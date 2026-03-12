@@ -104,3 +104,4 @@ str_logging_none: 无
 str_logging_screen: 屏幕
 str_logging_file: 文件
 str_downloading: 下载中...
+str_failed_to_authenticate: 验证失败！请稍后重试。如果问题持续出现，请于 https://netpass.cafe 寻求帮助！
