@@ -194,10 +194,45 @@ static Result check_initernet_call(char* url, CurlReply** reply) {
 static void initial_load(void) {
 	// first, we init the report stuffs
 	reportInit();
+	ping_res = 0;
 	char url[50];
 	CurlReply* reply;
 	logln(DEBUG, "Waiting internet\n");
-	if (access(PATH_NID_PWD, F_OK) != 0) {
+	bool have_nid_pwd = access(PATH_NID_PWD, F_OK) == 0;
+	bool have_nid_pwd_bak = access(PATH_NID_PWD_BAK, F_OK) == 0;
+	bool have_mac = access(PATH_MAC, F_OK) == 0;
+	bool have_mac_bak = access(PATH_MAC_BAK, F_OK) == 0;
+	if (have_mac_bak && !have_mac) {
+		u8 mac[6];
+		u8 mac_cmp[6];
+		ping_res = _e(getMac(mac));
+		if (R_FAILED(ping_res)) return;
+		FILE* f = fopen(PATH_MAC_BAK, "wb");
+		if (!f) {
+			ping_res = _e_errno();
+			return;
+		}
+		if (fread(mac_cmp, 6, 1, f) != 1) {
+			ping_res = _e_errno();
+			fclose(f);
+			return;
+		}
+		fclose(f);
+		if (memcmp(mac, mac_cmp, 6) != 0) {
+			logln(INFO, "Bad mac backup, pretending the backup files don't exist");
+			remove(PATH_MAC_BAK);
+			remove(PATH_NID_PWD_BAK);
+			have_nid_pwd_bak = false;
+			have_mac_bak = false;
+		}
+	}
+	if (have_mac && !have_mac_bak) {
+		ping_res = _e(cp(PATH_MAC, PATH_MAC_BAK));
+		if (R_FAILED(ping_res)) return;
+		have_mac_bak = true;
+	}
+	
+	if (!have_nid_pwd && !have_nid_pwd_bak) {
 		// we gotta register
 		logln(INFO, "First time opening NetPass, registering console...");
 		snprintf(url, 50, "%s/register", BASE_URL);
@@ -223,7 +258,18 @@ static void initial_load(void) {
 		}
 		fclose(f);
 		curlFreeHandler(reply->offset);
+		have_nid_pwd = true;
+		have_nid_pwd_bak = false;
 		logln(INFO, "Console registered successfully!");
+	} else if (!have_nid_pwd && have_nid_pwd_bak) {
+		ping_res = _e(cp(PATH_NID_PWD_BAK, PATH_NID_PWD));
+		if (R_FAILED(ping_res)) return;
+		have_nid_pwd = true;
+	}
+	// potentially copy from real to backup
+	if (have_nid_pwd && !have_nid_pwd_bak) {
+		ping_res = _e(cp(PATH_NID_PWD, PATH_NID_PWD_BAK));
+		if (R_FAILED(ping_res)) return;
 	}
 	// next, we gotta wait for having internet
 	snprintf(url, 50, "%s/ping2", BASE_URL);

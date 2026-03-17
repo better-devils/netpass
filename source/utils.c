@@ -234,7 +234,7 @@ void mkdir_p(const char* orig_path) {
 	} while(pos < maxlen);
 }
 
-int cp(const char* from_path, const char* to_path) {
+Result cp(const char* from_path, const char* to_path) {
 	FILE* from = 0;
 	FILE* to = 0;
 	void* buf = 0;
@@ -250,8 +250,8 @@ int cp(const char* from_path, const char* to_path) {
 	while (file_size > 0) {
 		size_t write_size = file_size < 1000 ? file_size : 1000;
 		
-		fread(buf, write_size, 1, from);
-		fwrite(buf, write_size, 1, to);
+		if (fread(buf, write_size, 1, from) != 1) goto fail;
+		if (fwrite(buf, write_size, 1, to) != 1) goto fail;
 		
 		file_size -= write_size;
 	}
@@ -265,7 +265,7 @@ fail:;
 	if (from) fclose(from);
 	if (to) fclose(to);
 	errno = saved_errno;
-	return -1;
+	return ERROR_ERRNO;
 }
 
 // cppcheck-suppress unusedFunction
@@ -1027,5 +1027,31 @@ Result install_cia(const char* cia_filename) {
 	res = _e(AM_FinishCiaInstall(cia_handle));
 	if (R_FAILED(res)) return res;
 
+	return res;
+}
+
+Result getMac(u8 mac[6]) {
+	Result res = 0;
+	Handle handle;
+	res = srvGetServiceHandle(&handle, "nwm::SOC");
+	if (R_FAILED(res)) return res;
+
+	u32 *cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(8, 1, 0);
+	cmdbuf[1] = 6;
+
+	u32 saved_threadstorage[2];
+
+	u32 *staticbufs = getThreadStaticBuffers();
+	saved_threadstorage[0] = staticbufs[0];
+	saved_threadstorage[1] = staticbufs[1];
+	staticbufs[0] = IPC_Desc_StaticBuffer(6, 0);
+	staticbufs[1] = (u32)mac;
+	res = svcSendSyncRequest(handle);
+	staticbufs[0] = saved_threadstorage[0];
+	staticbufs[1] = saved_threadstorage[1];
+	if (R_FAILED(res)) return res;
+	res = (Result)cmdbuf[1];
+	memcpy(mac, (u8*)cmdbuf[3], 6);
 	return res;
 }

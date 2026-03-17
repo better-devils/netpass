@@ -62,7 +62,7 @@ struct CurlHandle {
 
 static struct CurlHandle handles[MAX_CONNECTIONS] = {0};
 
-static Result getMac(u8 mac[6]) {
+static Result getEffectiveMac(u8 mac[6]) {
 	Result res = 0;
 	FILE* f = fopen(PATH_MAC, "r");
 	if (f) {
@@ -70,30 +70,21 @@ static Result getMac(u8 mac[6]) {
 		fclose(f);
 		return res;
 	}
-	Handle handle;
-	res = srvGetServiceHandle(&handle, "nwm::SOC");
+	res = getMac(mac);
 	if (R_FAILED(res)) return res;
-
-	u32 *cmdbuf = getThreadCommandBuffer();
-	cmdbuf[0] = IPC_MakeHeader(8, 1, 0);
-	cmdbuf[1] = 6;
-
-	u32 saved_threadstorage[2];
-
-	u32 *staticbufs = getThreadStaticBuffers();
-	saved_threadstorage[0] = staticbufs[0];
-	saved_threadstorage[1] = staticbufs[1];
-	staticbufs[0] = IPC_Desc_StaticBuffer(6, 0);
-	staticbufs[1] = (u32)mac;
-	res = svcSendSyncRequest(handle);
-	staticbufs[0] = saved_threadstorage[0];
-	staticbufs[1] = saved_threadstorage[1];
-	if (R_FAILED(res)) return res;
-	res = (Result)cmdbuf[1];
-	memcpy(mac, (u8*)cmdbuf[3], 6);
 	
 	mkdir_p(PATH_MAC);
 	f = fopen(PATH_MAC, "w");
+	if (!f) {
+		res = _e_errno();
+		return res;
+	}
+	if (fwrite(mac, 6, 1, f) != 1) res = _e_errno();
+	fclose(f);
+	if (R_FAILED(res)) return res;
+	
+	mkdir_p(PATH_MAC_BAK);
+	f = fopen(PATH_MAC_BAK, "w");
 	if (!f) {
 		res = _e_errno();
 		return res;
@@ -522,7 +513,7 @@ Result curlInit(void) {
 	u32 device_id;
 	res = AM_GetDeviceId(0, &device_id);
 	if (R_FAILED(res)) return res;
-	res = getMac(mac);
+	res = getEffectiveMac(mac);
 	if (R_FAILED(res)) return res;
 
 	u8 netpass_id_buf[32];

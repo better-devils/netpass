@@ -30,6 +30,8 @@
 
 #define PATH_NID_PWD "nand:/netpass/nid_pwd.bin"
 #define PATH_MAC "nand:/netpass/mac.bin"
+#define PATH_NID_PWD_BAK "sdmc:/config/netpass/nid_pwd.bin"
+#define PATH_MAC_BAK "sdmc:/config/netpass/mac.bin"
 
 #ifndef __GNUC__
 // workaround only for non-gnuc diagnostics
