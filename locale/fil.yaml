@@ -1,42 +1,127 @@
 str_loading: "Naglo-load    "
-str_libcurl_error: "libCURL pagkakamali (%d): %s"
-str_libcurl_date_and_time: 'Tiyaking nakatakda nang tama ang petsa at oras ng iyong
-  sistema!'
-str_httpstatus_error: 'HTTP code ng katayuan %d'
-str_3ds_error: '3DS pagkakamali code %08lx'
-str_at_home: 'Nasa bahay ka.'
+str_libcurl_error: "Error ng libCURL (%d): %s"
+str_libcurl_date_and_time: 'Tiyakin na tama ang petsa at oras ng iyong sistema!'
+str_httpstatus_error: 'HTTP status code %d'
+str_3ds_error: '3DS error code %08lx'
+str_at_home: 'Nasa tahanan ka.'
 str_goto_train_station: 'Pumunta sa Istasyon ng Tren'
-str_at_train_station: 'Ikaw ay nasa Istasyon ng Tren.'
+str_at_train_station: 'Nasa Istasyon ng Tren ka.'
 str_goto_plaza: 'Pumunta sa Plaza'
-str_at_plaza: 'Ikaw ay nasa Plaza.'
-str_goto_mall: 'Pumunta sa Pamilihan'
-str_at_mall: 'Ikaw ay nasa Pamilihan.'
+str_at_plaza: 'Nasa Plaza ka.'
+str_goto_mall: 'Pumunta sa Mall'
+str_at_mall: 'Nasa Mall ka.'
 str_exit: 'Lumabas'
-str_settings: 'Umayos'
-str_download_data: 'Mag-download ng personal na datos'
-str_delete_data: 'Mag-tanggalin ng personal na datos'
-str_back: ''
+str_settings: 'Mga Setting'
+str_download_data: 'I-download ang personal na data'
+str_delete_data: 'Tanggalin ang personal na data'
+str_back: 'Bumalik'
 str_language: 'Filipino'
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
+str_goto_beach: 'Pumunta sa Dalampasigan'
+str_at_beach: 'Nasa Dalampasigan ka.'
+str_goto_arcade: 'Pumunta sa Arcade'
+str_at_arcade: 'Nasa Arcade ka.'
+str_goto_catcafe: 'Pumunta sa Cat Café'
+str_at_catcafe: 'Nasa Cat Café ka.'
+str_system_language: 'Wika ng Sistema'
+str_language_pick: 'Wika:'
+str_no_location_twice: 'Hindi ka maaaring pumasok sa parehong lokasyon nang dalawang
+  beses sunod-sunod!'
+str_report_user: 'I-report ang user'
+str_report_user_hint: 'I-report ang "%s"'
+str_cancel: 'Kanselahin'
+str_submit: 'Isumite'
+str_back_alley: 'Pasilyo sa Likuran'
+str_back_alley_message: 'Magpursigi pa tayo para sa mas maraming pass!'
+str_back_alley_pay: "Bumili ng pass {playcoin}%d"
+str_check_inboxes: 'Suriin ang mga Inbox'
+str_toggle_titles: 'I-toggle ang mga Laro'
+str_toggle_titles_message: "Pindutin ang {a_button} upang simulan o ihinto ang pagpapalitan
+  ng mga pass."
+str_toggle_titles_on: "(BUKAS)"
+str_toggle_titles_off: "(SARADO)"
 str_write_patches: ""
 str_clear_spr_cache: ""
+str_report_mii_name: 'Pangalan ng Mii: %s'
+str_report_mario_kart_7_greeting: 'Pagbati: %s'
+str_report_mii_plaza_last_game: 'Huling Laro: %s'
+str_report_mii_plaza_country: 'Bansa: %s - %s'
+str_report_mii_plaza_greeting: 'Pagbati: %s'
+str_report_mii_plaza_custom_message: 'Iyong custom na mensahe: %s'
+str_report_mii_plaza_custom_reply: 'Ang kanilang custom na tugon: %s'
+str_report_tomodachi_life_island_name: 'Pangalan ng Isla: %s'
+str_b_go_back: '{b_button} Bumalik'
+str_b_cancel: '{b_button} Kanselahin'
+str_a_ok: '{a_button} OK'
+str_update_patches: I-update ang mga patch
+str_update_patches_desc: Upang maayos na ma-install ang NetPass, gagawa ngayon 
+  ng ilang sysmodule patch. Para gumana ang mga ito, kailangan mong i-enable ang
+  "Enable loading external FIRMs and modules" sa mga setting ng Luma3DS. Para 
+  ma-access ang mga setting, patayin ang console at pagkatapos ay pindutin ang 
+  {select_button} habang pinapagana {power_button} ang console. Maaari mo itong 
+  gawin matapos maisulat ang mga patch.
+str_update_patches_error_desc: May nagkamali habang ina-update ang mga patch. 
+  Mangyaring i-report ang isyung ito sa GitLab, GBAtemp o Discord. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Matagumpay ang pag-update ng mga patch! 
+  Magre-restart na ngayon ang iyong console.
+str_integrations: Mga Integrasyon
+str_integrations_message: Ang mga third-party na integrasyon ay labas sa 
+  moderasyon ng NetPass. Gamitin sa sarili mong panganib!
+str_report_source: 'Pinagmulan: %s'
+str_report_source_unknown: Hindi kilalang pinagmulan
+str_settings_misc: Iba pa
+str_settings_about: Tungkol sa
+str_about_lead_dev: Pangunahing Developer
+str_about_reports: Sistema ng Pag-report
+str_about_graphics: Sining at Grapika
+str_about_music: Musika
+str_about_localisation: Lokalisasyon
+str_about_netpass_community: Ang komunidad ng NetPass
+str_about_special_thanks: Espesyal na Pasasalamat
+str_about_special_thanks_txt: Ang komunidad ng 3DS homebrew para sa lahat ng 
+  reverse-engineering at dokumentasyon
+str_about_production_cat: Production na pusa
+str_scan_qr: I-scan ang QR Code
+str_x_switch_camera: '{x_button} Palitan ang Camera'
+str_prompt_verify: Sigurado ka bang nais mong i-verify ang 3DS na ito?
+str_welcome: Maligayang pagdating sa NetPass
+str_welcome_message: Bago simulan ang NetPass, mangyaring basahin at tanggapin 
+  ang aming mga patakaran at patakaran sa privacy.
+str_view_rules: Tingnan ang mga Patakaran
+str_view_privacy: Tingnan ang Patakaran sa Privacy
+str_continue: Magpatuloy
+str_bad_os_version: "Kinakailangan ng NetPass ang 3DS OS 11.15.0 o mas bago upang
+  gumana nang maayos. Sa kasamaang-palad, mukhang gumagamit ka ng mas lumang bersyon.
+  Mangyaring mag-update at pagkatapos ay simulan muli ang NetPass.\n\nPindutin ang
+  anumang key upang lumabas"
+str_update_patches_poweroff_clear_desc: Matagumpay na naalis ang mga patch! 
+  Magre-restart na ngayon ang iyong console.
+str_bg_music: BGM
+str_prompt_dl_pass: Sigurado ka bang nais mong i-download ang pass na ito?
+str_report_integration: Ang mensaheng ito ay nagmumula sa isang integration. 
+  Upang i-report ito, mangyaring i-message ang moderation team ng nasabing 
+  integration.
+str_skip: Laktawan
+str_install: I-install
+str_remove: Alisin
+str_banned: "Bawal kang gumamit ng NetPass. Dahilan:\n%s\n\nSimula ng ban: %s\nKatapusan
+  ng ban: %s"
+str_date: '%d/%m/%Y'
+str_date_time: '%d %b %Y %I:%M:%S %p'
+str_new_version: "May bagong bersyon ng NetPass na available:\nv%d.%d.%d!\n\nGusto
+  mo bang i-update ang NetPass ngayon?"
+str_enter_event_location: Sigurado ka bang nais mong pumasok sa event na "%s"?
+str_at_event_location: Nasa isang espesyal na event ka.
+str_artist_copyright: Artwork © %s
+str_new_version_failed: Nabigo ang pag-install ng bagong bersyon. Maaari mo pa 
+  rin itong i-install muli sa pamamagitan ng Universal Updater o sa pamamagitan 
+  ng QR-Code.
+str_report_list_empty: Walang laman ang listahan ng mga report.
+str_logging: 'Mga Log:'
+str_logging_none: Wala
+str_logging_screen: Screen
+str_logging_file: File
+str_downloading: Nagda-download...
+str_failed_to_authenticate: Nabigong ma-authenticate! Pakisubukang muli mamaya. 
+  Kung magpapatuloy ang problema, mangyaring makipag-ugnayan! 
+  https://netpass.cafe
