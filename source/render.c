@@ -24,6 +24,7 @@
 #include <math.h>
 #include "render.h"
 #include "api.h"
+#include "strings.h"
 #include "utils.h"
 
 static C2D_SpriteSheet spr_cursor = 0;
@@ -88,9 +89,14 @@ void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z,
 	float xNeg = x - outlineWidth;
 	float yPos = y + outlineWidth;
 	float yNeg = y - outlineWidth;
+	
+	scaleX *= getFontScale(text);
+	scaleY *= getFontScale(text);
 
 	va_list args;
 	va_start(args, outlineClr);
+	double width = flags & C2D_WordWrap ? va_arg(args, double) : 0.;
+	va_end(args);
 
 	// Outline
 	int steps = 3 + outlineWidth;
@@ -99,14 +105,28 @@ void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z,
 		for (float j = yNeg; j <= yPos; j += stepSize) {
 			if (i != xNeg && i != xPos && j != yNeg && j != yPos) continue;
 			if (round(i) == round(x) && round(j) == round(y)) continue;
-			C2D_DrawText(text, C2D_WithColor | flags, i, j, z, scaleX, scaleY, outlineClr, args);
+			C2D_DrawText(text, C2D_WithColor | flags, i, j, z, scaleX, scaleY, outlineClr, width);
 		}
 	}
 
 	// Actual text
-	C2D_DrawText(text, C2D_WithColor | flags, x, y, z, scaleX, scaleY, textClr, args);
+	C2D_DrawText(text, C2D_WithColor | flags, x, y, z, scaleX, scaleY, textClr, width);
+}
 
+void renderPlainText(C2D_Text* text, float x, float y, float scale, u32 clr) {
+	renderPlainTextFlags(text, 0, x, y, scale, clr);
+}
+
+void renderPlainTextFlags(C2D_Text* text, u32 flags, float x, float y, float scale, u32 clr, ...) {
+	va_list args;
+	va_start(args, clr);
+	if (!(flags & ~(C2D_AlignLeft | C2D_AlignCenter | C2D_AlignJustified | C2D_AlignRight))) {
+		flags |= C2D_AlignLeft;
+	}
+	double width = flags & C2D_WordWrap ? va_arg(args, double) : 0.;
 	va_end(args);
+	scale *= getFontScale(text);
+	C2D_DrawText(text, C2D_WithColor | flags, x, y, 0, scale, scale, clr ? clr : clr_black, width);
 }
 
 void renderText(C2D_Text* text, float x, float y, float scale, u32 clr) {
@@ -116,8 +136,9 @@ void renderText(C2D_Text* text, float x, float y, float scale, u32 clr) {
 void renderTextFlags(C2D_Text* text, u32 flags, float x, float y, float scale, u32 clr, ...) {
 	va_list args;
 	va_start(args, clr);
-	renderTextWithOutline(text, flags, x, y, 0, scale, scale, scale * 3., clr_white, clr ? clr : clr_netpass_green, args);
+	double width = flags & C2D_WordWrap ? va_arg(args, double) : 0.;
 	va_end(args);
+	renderTextWithOutline(text, flags, x, y, 0, scale, scale, scale * 3., clr_white, clr ? clr : clr_netpass_green, width);
 }
 
 void renderCursor(float x, float y, float scale) {

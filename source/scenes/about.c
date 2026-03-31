@@ -80,16 +80,16 @@ static void init(Scene* sc) {
 static void render(Scene* sc) {
 	if (!_data) return;
 	int ycursor = 2 + _data->y_offset;
-	C2D_DrawText(&_data->go_back, C2D_AlignLeft, 10, ycursor, 0, 0.5, 0.5);
+	renderPlainText(&_data->go_back, 10, ycursor, 0.5, 0);
 	ycursor += 14;
 	for (int i = 0; i < NUM_CREDIT_CATAGORIES; i++) {
-		C2D_DrawText(&_data->credits[i].name, C2D_AlignLeft, 10, ycursor, 0, 0.7, 0.7);
+		renderPlainText(&_data->credits[i].name, 10, ycursor, 0.7, 0);
 		ycursor += 21;
-		C2D_DrawText(&_data->credits[i].entries, C2D_AlignLeft | C2D_WordWrap, 40, ycursor, 0, 0.5, 0.5, 350.);
+		renderPlainTextFlags(&_data->credits[i].entries, C2D_WordWrap, 40, ycursor, 0.5, 0, 350.);
 		ycursor += 14*_data->credits[i].height;
 	}
 	ycursor += 20;
-	C2D_DrawText(&_data->netpass_website, C2D_AlignLeft, _data->website_x, ycursor, 0, 0.7, 0.7);
+	renderPlainText(&_data->netpass_website, _data->website_x, ycursor, 0.7, 0);
 	ycursor += 300;
 	C2D_Image img = C2D_SpriteSheetGetImage(_data->laura, 0);
 	C2D_DrawImageAt(img, 0, ycursor, 0, NULL, 1, 1);

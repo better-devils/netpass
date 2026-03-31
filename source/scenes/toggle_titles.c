@@ -72,16 +72,16 @@ static void render(Scene* sc) {
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
 	u32 offClr = C2D_Color32(200, 10, 10, 0xff);
-	C2D_DrawText(&_data->g_header, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
-	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WithColor, 11, 40, 0, 0.5, 0.5, clr);
+	renderPlainText(&_data->g_header, 10, 10, 1, clr);
+	renderPlainText(&_data->g_subtext, 11, 40, 0.5, clr);
 	int i = 0;
 	for (; i < _data->number_games; i++) {
 		bool isIgnored = isTitleIgnored(_data->title_ids[i]);
 		u32 correctClr = isIgnored ? offClr : onClr;
-		C2D_DrawText(&_data->g_on_off[!isIgnored], C2D_AlignLeft | C2D_WithColor, 30, 60 + (i * 14), 0, 0.5, 0.5, correctClr);
-		C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 70, 60 + (i * 14), 0, 0.5, 0.5, correctClr);
+		renderPlainText(&_data->g_on_off[!isIgnored], 30, 60 + (i * 14), 0.5, correctClr);
+		renderPlainText(&_data->g_game_titles[i], 70, 60 + (i * 14), 0.5, correctClr);
 	}
-	C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 60 + (i*14), 0, 0.5, 0.5, clr);
+	renderPlainText(&_data->g_back, 30, 60 + (i*14), 0.5, clr);
 	
 	int x = 22;
 	int y = _data->cursor*14 + 60 + 3;

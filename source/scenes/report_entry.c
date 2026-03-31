@@ -274,18 +274,18 @@ static void render(Scene* sc) {
 		return;
 	}
 	int ycursor = 2 + _data->y_offset;
-	C2D_DrawText(&_data->go_back, C2D_AlignLeft, 10, ycursor, 0, 0.5, 0.5);
+	renderPlainText(&_data->go_back, 10, ycursor, 0.5, 0);
 	ycursor += 14;
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, ycursor, 0, 1, 1);
+	renderPlainText(&_data->g_title, 10, ycursor, 1, 0);
 	ycursor += 28;
-	C2D_DrawText(&_data->source_name, C2D_AlignLeft, 10, ycursor, 0, 0.5, 0.5);
+	renderPlainText(&_data->source_name, 10, ycursor, 0.5, 0);
 	ycursor += 18;
 	for (int i = 0; i < _data->msgs->count; i++) {
 		ReportMessagesEntry* entry = &_data->msgs->entries[i];
-		C2D_DrawText(&_data->g_game_names[i], C2D_AlignLeft, 20, ycursor, 0, 0.5, 0.5);
+		renderPlainText(&_data->g_game_names[i], 20, ycursor, 0.5, 0);
 		ycursor += 14;
 		if (entry->mii) {
-			C2D_DrawText(&_data->g_mii_names[i], C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+			renderPlainText(&_data->g_mii_names[i], 40, ycursor, 0.5, 0);
 			ycursor += 14;
 		}
 		switch (entry->title_id) {
@@ -300,29 +300,29 @@ static void render(Scene* sc) {
 			}
 			case TITLE_MARIO_KART_7: {
 				SETUP_EXDATA_RENDER(ExtraDataMarioKart7);
-				C2D_DrawText(&ex_data->greeting, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				renderPlainText(&ex_data->greeting, 40, ycursor, 0.5, 0);
 				ycursor += 14;
 				break;
 			}
 			case TITLE_MII_PLAZA: {
 				SETUP_EXDATA_RENDER(ExtraDataMiiPlaza);
-				C2D_DrawText(&ex_data->last_game, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				renderPlainText(&ex_data->last_game, 40, ycursor, 0.5, 0);
 				ycursor += 14;
-				C2D_DrawText(&ex_data->country, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				renderPlainText(&ex_data->country, 40, ycursor, 0.5, 0);
 				ycursor += 14;
-				C2D_DrawText(&ex_data->greeting, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				renderPlainText(&ex_data->greeting, 40, ycursor, 0.5, 0);
 				ycursor += 14;
 				if (*(u8*)&ex_data->custom_message) {
-					C2D_DrawText(&ex_data->custom_message, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+					renderPlainText(&ex_data->custom_message, 40, ycursor, 0.5, 0);
 					ycursor += 14;
-					C2D_DrawText(&ex_data->custom_reply, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+					renderPlainText(&ex_data->custom_message, 40, ycursor, 0.5, 0);
 					ycursor += 14;
 				}
 				break;
 			}
 			case TITLE_TOMODACHI_LIFE: {
 				SETUP_EXDATA_RENDER(ExtraDataTomodachiLife);
-				C2D_DrawText(&ex_data->island_name, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				renderPlainText(&ex_data->island_name, 40, ycursor, 0.5, 0);
 				ycursor += 14;
 				break;
 			}

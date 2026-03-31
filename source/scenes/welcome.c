@@ -46,10 +46,10 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	if (!_data) return;
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
-	C2D_DrawText(&_data->g_subtitle, C2D_AlignLeft | C2D_WordWrap, 11, 40, 0, 0.5, 0.5, 369.);
+	renderPlainText(&_data->g_title, 10, 10, 1, 0);
+	renderPlainTextFlags(&_data->g_subtitle, C2D_WordWrap, 11, 40, 0.5, 369.);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 74 + (i * 25), 0, 1, 1);
+		renderPlainText(&_data->g_entries[i], 30, 74 + (i * 25), 1, 0);
 	}
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;

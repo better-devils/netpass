@@ -51,6 +51,7 @@ void renderBottomScene(Scene* scene);
 #include "api.h"
 #include "cecd.h"
 #include "boss.h"
+#include "render.h"
 #include "strings.h"
 #include "config.h"
 #include "utils.h"

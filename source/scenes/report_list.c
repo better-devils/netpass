@@ -90,7 +90,7 @@ static void render(Scene* sc) {
 	for (int i = 0; i < _data->num_entries; i++) {
 		int x = 35 + i*14 - _data->offset;
 		if (x > -14 && x < 240) {
-			C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, x, 0, 0.5, 0.5, clr);
+			renderPlainText(&_data->g_entries[i], 30, x, 0.5, clr);
 		}
 	}
 	int x = 22;

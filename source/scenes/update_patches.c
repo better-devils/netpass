@@ -64,32 +64,32 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	if (!_data) return;
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
+	renderPlainText(&_data->g_title, 10, 10, 1, 0);
 	if (_data->state == Question) {
-		C2D_DrawText(&_data->g_description, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
+		renderPlainTextFlags(&_data->g_description, C2D_WordWrap, 30, 38, 0.5, 0, 350.f);
 		if (sc->next_scene) {
 			// only two menu entries
-			C2D_DrawText(&_data->g_install, C2D_AlignLeft, 30, 172, 0, 0.75, 0.75);
-			C2D_DrawText(&_data->g_skip, C2D_AlignLeft, 30, 191, 0, 0.75, 0.75);
+			renderPlainText(&_data->g_install, 30, 172, 0.75, 0);
+			renderPlainText(&_data->g_skip, 30, 191, 0.75, 0);
 		} else {
 			// all three menu entries
-			C2D_DrawText(&_data->g_install, C2D_AlignLeft, 30, 172, 0, 0.75, 0.75);
-			C2D_DrawText(&_data->g_remove, C2D_AlignLeft, 30, 191, 0, 0.75, 0.75);
-			C2D_DrawText(&_data->g_back, C2D_AlignLeft, 30, 210, 0, 0.75, 0.75);
+			renderPlainText(&_data->g_install, 30, 172, 0.75, 0);
+			renderPlainText(&_data->g_remove, 30, 191, 0.75, 0);
+			renderPlainText(&_data->g_back, 30, 210, 0.75, 0);
 		}
 		int x = 13;
 		int y = 172 + 1 + _data->cursor*19 + 5;
 		u32 clr = C2D_Color32(0, 0, 0, 0xff);
 		C2D_DrawTriangle(x, y, clr, x, y + 13, clr, x + 11, y + 7, clr, 0);
 	} else if (_data->state == Poweroff) {
-		C2D_DrawText(&_data->g_description_poweroff, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
-		C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, 370, 200, 0, 1, 1);
+		renderPlainTextFlags(&_data->g_description_poweroff, C2D_WordWrap, 30, 38, 0.5, 0, 350.f);
+		renderPlainTextFlags(&_data->g_a_ok, C2D_AlignRight, 370, 200, 1, 0);
 	} else if (_data->state == Poweroff_Clear) {
-		C2D_DrawText(&_data->g_description_poweroff_clear, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
-		C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, 370, 200, 0, 1, 1);
+		renderPlainTextFlags(&_data->g_description_poweroff_clear, C2D_WordWrap, 30, 38, 0.5, 0, 350.f);
+		renderPlainTextFlags(&_data->g_a_ok, C2D_AlignRight, 370, 200, 1, 0);
 	} else {
-		C2D_DrawText(&_data->g_description_error, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
-		C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, 370, 200, 0, 1, 1);
+		renderPlainTextFlags(&_data->g_description_error, C2D_WordWrap, 30, 38, 0.5, 0, 350.f);
+		renderPlainTextFlags(&_data->g_a_ok, C2D_AlignRight, 370, 200, 1, 0);
 	}
 }
 

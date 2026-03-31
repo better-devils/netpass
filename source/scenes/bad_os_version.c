@@ -35,7 +35,7 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	if (!_data) return;
-	C2D_DrawText(&_data->text, C2D_AlignLeft | C2D_WordWrap, 10, 10, 0, 0.7, 0.7, 369.);
+	renderPlainTextFlags(&_data->text, C2D_WordWrap, 10, 10, 0.7, 0, 369.);
 }
 
 static void exit_scene(Scene* sc) {

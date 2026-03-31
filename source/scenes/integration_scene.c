@@ -66,16 +66,16 @@ static void render(Scene* sc) {
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
 	u32 offClr = C2D_Color32(200, 10, 10, 0xff);
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
-	C2D_DrawText(&_data->g_subtitle, C2D_AlignLeft | C2D_WithColor | C2D_WordWrap, 11, 40, 0, 0.5, 0.5, clr, 369.);
+	renderPlainText(&_data->g_title, 10, 10, 1, clr);
+	renderPlainTextFlags(&_data->g_subtitle, C2D_WordWrap, 11, 40, 0.5, clr, 369.);
 	int i = 0;
 	for (;i < _data->list->header.count; i++) {
 		bool is_on = _data->list->entries[i].enabled;
 		u32 correctClr = is_on ? onClr : offClr;
-		C2D_DrawText(&_data->g_on_off[is_on], C2D_AlignLeft | C2D_WithColor, 30, 74 + (i * 14), 0, 0.5, 0.5, correctClr);
-		C2D_DrawText(&_data->integration_names[i], C2D_AlignLeft | C2D_WithColor, 70, 74 + (i * 14), 0, 0.5, 0.5, correctClr);
+		renderPlainText(&_data->g_on_off[is_on], 30, 74 + (i * 14), 0.5, correctClr);
+		renderPlainText(&_data->integration_names[i], 70, 74 + (i * 14), 0.5, correctClr);
 	}
-	C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 74 + (i*14), 0, 0.5, 0.5, clr);
+	renderPlainText(&_data->g_back, 30, 74 + (i*14), 0.5, clr);
 	
 	int x = 22;
 	int y = _data->cursor*14 + 74 + 3;

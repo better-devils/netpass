@@ -217,8 +217,8 @@ static void render(Scene* sc) {
 	C2D_DrawImageAt((C2D_Image){ &_data->tex, &subt3x }, 0, 0, 0, NULL, 1, 1);
 	
 	C2D_DrawRectSolid(0, SCREEN_TOP_HEIGHT - 17, 0, SCREEN_TOP_WIDTH, 17, clr_netpass_green);
-	C2D_DrawText(&_data->g_b_back, C2D_AlignLeft | C2D_WithColor, 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_white);
-	C2D_DrawText(&_data->g_x_switch_camera, C2D_AlignCenter | C2D_WithColor, SCREEN_TOP_WIDTH / 2, SCREEN_TOP_HEIGHT - 16, 0, 0.5, 0.5, clr_white);
+	renderPlainText(&_data->g_b_back, 2, SCREEN_TOP_HEIGHT - 16, 0.5, clr_white);
+	renderPlainTextFlags(&_data->g_x_switch_camera, C2D_AlignCenter, SCREEN_TOP_WIDTH / 2, SCREEN_TOP_HEIGHT - 16, 0.5, clr_white);
 }
 
 static void exit_scene(Scene* sc) {

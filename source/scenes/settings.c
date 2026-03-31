@@ -79,14 +79,14 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	if (!_data) return;
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
+	renderPlainText(&_data->g_title, 10, 10, 1, 0);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
+		renderPlainText(&_data->g_entries[i], 30, 10 + (i+1)*25, 1, 0);
 	}
-	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + _data->lang_width, 35 + 50, 0, 1, 1);
+	renderPlainText(&_data->g_languages[_data->selected_language + 1], 35 + _data->lang_width, 35 + 50, 1, 0);
 	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
 	u32 offClr = C2D_Color32(200, 10, 10, 0xff);
-	C2D_DrawText(&_data->g_on_off[config.bg_music], C2D_AlignLeft | C2D_WithColor, 35 + _data->bg_music_width, 35 + 75, 0, 1, 1, config.bg_music ? onClr : offClr);
+	renderPlainText(&_data->g_on_off[config.bg_music], 35 + _data->bg_music_width, 35 + 75, 1, config.bg_music ? onClr : offClr);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;

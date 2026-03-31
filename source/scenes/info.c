@@ -53,8 +53,8 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
-	C2D_DrawText(&_data->g_info, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 0.7f, 0.7f, (WIDTH - MARGIN - 5) * 1.f);
-	C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 0, 1, 1);
+	renderPlainTextFlags(&_data->g_info, C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0.7f, 0, (WIDTH - MARGIN - 5) * 1.f);
+	renderPlainTextFlags(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 1, 0);
 }
 
 static void exit_scene(Scene* sc) {

@@ -60,12 +60,12 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	if (!_data) return;
-	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
+	renderPlainText(&_data->g_title, 10, 10, 1, 0);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
+		renderPlainText(&_data->g_entries[i], 30, 10 + (i+1)*25, 1, 0);
 	}
 	
-	C2D_DrawText(&_data->g_logs[config.log_output], C2D_AlignLeft, 30 + _data->logs_width + 3, 10 + 7*25, 0, 1, 1);
+	renderPlainText(&_data->g_logs[config.log_output], 30 + _data->logs_width + 3, 10 + 7*25, 1, 0);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;

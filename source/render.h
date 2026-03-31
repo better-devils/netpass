@@ -47,6 +47,8 @@ void renderInit(void);
 void renderExit(void);
 
 void renderTextWithOutline(C2D_Text* text, u32 flags, float x, float y, float z, float scaleX, float scaleY, float outlineWidth, u32 textClr, u32 outlineClr, ...);
+void renderPlainText(C2D_Text* text, float x, float y, float scale, u32 clr);
+void renderPlainTextFlags(C2D_Text* text, u32 flags, float x, float y, float scale, u32 clr, ...);
 void renderText(C2D_Text* text, float x, float y, float scale, u32 clr);
 void renderTextFlags(C2D_Text* text, u32 flags, float x, float y, float scale, u32 clr, ...);
 void renderCursor(float x, float y, float scale);
