@@ -84,7 +84,7 @@ static void init(Scene* sc) {
 	_data->laura_img = C2D_SpriteSheetGetImage(_data->laura, 0);
 	content_height += _data->laura_img.subtex->height;
 	_data->y_min = -(content_height - SCREEN_TOP_HEIGHT);
-	if (_data->y_min > 0) _data->y_min = 0;
+	if (_data->y_min > _data->y_max) _data->y_min = _data->y_max;
 }
 
 static void render(Scene* sc) {
