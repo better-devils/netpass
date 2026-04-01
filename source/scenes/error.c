@@ -98,6 +98,7 @@ static void init(Scene* sc) {
 
 static void render(Scene* sc) {
 	if (!_data) return;
+	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, 0xFFFFFFFF);
 	renderText(&_data->g_origin, MARGIN + 5, MARGIN + 5, 0.5, 0);
 	renderPlainTextFlags(&_data->g_title, C2D_WordWrap, MARGIN + 5, MARGIN + 5 + 25, 0.5, 0, (WIDTH - 2*MARGIN - 10) * 1.f);
 	renderPlainTextFlags(&_data->g_subtext, C2D_WordWrap, MARGIN + 5, MARGIN + 5 + 50, 0.5, 0, (WIDTH - 2*MARGIN - 10) * 1.f);
