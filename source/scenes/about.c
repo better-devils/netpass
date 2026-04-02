@@ -62,7 +62,7 @@ static void init(Scene* sc) {
 	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
 	_data->y_offset = 0;
-	_data->y_max = _data->y_offset;
+	_data->y_max = SCREEN_TOP_HEIGHT;
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 150);
 	int content_height = 2 + 20 + 20 + 300; // initial + margins around content + margin above laura
 	for (int i = 0; i < NUM_CREDIT_CATAGORIES; i++) {
@@ -83,7 +83,7 @@ static void init(Scene* sc) {
 	_data->laura = C2D_SpriteSheetLoad("romfs:/gfx/laura.t3x");
 	_data->laura_img = C2D_SpriteSheetGetImage(_data->laura, 0);
 	content_height += _data->laura_img.subtex->height;
-	_data->y_min = -(content_height - SCREEN_TOP_HEIGHT);
+	_data->y_min = -content_height;
 	if (_data->y_min > _data->y_max) _data->y_min = _data->y_max;
 }
 
