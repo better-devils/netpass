@@ -20,6 +20,7 @@ It is important to note that NetPass does not replace StreetPass, it simply supp
 
 ## Installation
 It is highly recommended that you download the latest `.3dsx` or `.cia` release of NetPass via [Universal Updater](https://github.com/Universal-Team/Universal-Updater). Alternatively, you can scan the QR code below to download the latest `.cia` release of NetPass via FBI:
+
 ![QR Code](https://gitlab.com/3ds-netpass/netpass/-/raw/release_builds/qr.png){width=400px}
 
 ## Licenses
@@ -103,7 +104,7 @@ To compile as `.3dsx`:
 make
 ```
 
-To compile as `.cia` (and `.3dsx`):
+To compile as `.cia`:
 ```bash
 make cia
 ```
@@ -111,10 +112,7 @@ make cia
 You will find the compiled binaries in the ``./out/`` directory.
 
 > [!TIP]
-> The debug version of the NetPass application can be compiled instead by appending `DEBUG=1` to the beginning of the above commands. For example, to compile the debug version as `.cia`, use:
-> ```bash
-> DEBUG=1 make cia
-> ```
+> The debug version of the NetPass application can be compiled instead by setting the `DEBUG` environment variable to `1`.
 
 ### For the sysmodule patches
 ```bash
