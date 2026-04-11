@@ -126,3 +126,6 @@ str_downloading: Lädt herunter ...
 str_failed_to_authenticate: Authentifizierung fehlgeschlagen! Bitte versuche es 
   später noch einmal! Falls das Problem bestehen bleibt, melde dich bitte! 
   https://netpass.cafe
+str_already_registered: "Fehler: Konsole bereits registriert!\n\nFalls du einen Emulator
+  benutzt oder benutzt hast, dann achte darauf, sdmc:/config/netpass/nid_pwd.bin zwischen
+  dem Emulator und der Konsole abzugleichen."
