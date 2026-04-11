@@ -122,3 +122,6 @@ str_downloading: Dina-download...
 str_failed_to_authenticate: Nabigo ang pagpapatunay! Mangyaring subukan muli 
   mamaya. Kung magpatuloy ang problema, manyaring makipag-ugnay sa amin! 
   https://netpass.cafe
+str_already_registered: "Error: Nakarehistro na ang console na ito!\n\nKung ikaw ay
+  gumagamit o gumamit ng emulator, siguraduhing i-sync ang sdmc:/config/netpass/nid_pwd.bin
+  sa pagitan ng emulator at ng console."
