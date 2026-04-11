@@ -33,6 +33,7 @@
 #include "integration.h"
 #include "scenes/download_progress.h"
 #include "scenes/info.h"
+#include "scenes/settings.h"
 #include "scenes/switch.h"
 #include "render.h"
 #include "utils.h"
@@ -139,6 +140,13 @@ static Scene* load_new_version(Scene* scene) {
 }
 
 static Scene* initial_scene(void) {
+	if (ping_res == -423) {
+		// console had already been registered
+		Scene* scene = getSettingsScene();
+		Scene* info_scene = getInfoScene(str_already_registered);
+		info_scene->pop_scene = scene;
+		return info_scene;
+	}
 	if (R_FAILED(ping_res)) {
 		// something not working
 		_e(ping_res);
@@ -170,7 +178,7 @@ static Scene* initial_scene(void) {
 	return scene;
 }
 
-static Result check_initernet_call(char* url, CurlReply** reply) {
+static Result check_internet_call(char* url, CurlReply** reply) {
 	int check_count = 0;
 	int max_count = 100;
 	while (true) {
@@ -236,7 +244,7 @@ static void initial_load(void) {
 		// we gotta register
 		logln(INFO, "First time opening NetPass, registering console...");
 		snprintf(url, 50, "%s/register", BASE_URL);
-		ping_res = _e(check_initernet_call(url, &reply));
+		ping_res = check_internet_call(url, &reply);
 		if (R_FAILED(ping_res)) {
 			logln(INFO, "Failed to register: %08lx", ping_res);
 			return;
@@ -273,7 +281,7 @@ static void initial_load(void) {
 	}
 	// next, we gotta wait for having internet
 	snprintf(url, 50, "%s/ping2", BASE_URL);
-	ping_res = _e(check_initernet_call(url, &reply));
+	ping_res = _e(check_internet_call(url, &reply));
 	if (R_FAILED(ping_res)) return;
 	readPingResponse(&ping_response, reply->ptr, reply->len);
 	curlFreeHandler(reply->offset);
