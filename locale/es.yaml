@@ -121,3 +121,6 @@ str_logging_file: Archivo
 str_downloading: Descargando...
 str_failed_to_authenticate: ¡Error al autenticar! Intenta de nuevo más tarde. Si
   el problema persiste, contactanos! https://netpass.cafe
+str_already_registered: "Error: ¡La consola ya está registrada!\n\nSi estás usando
+  o has usado un emulador, asegúrate de sincronizar sdmc:/config/netpass/nid_pwd.bin
+  entre el emulador y la consola."
