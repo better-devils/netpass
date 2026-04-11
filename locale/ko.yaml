@@ -106,3 +106,5 @@ str_logging_file: 파일
 str_downloading: 다운로드 중...
 str_failed_to_authenticate: 인증에 실패했습니다! 나중에 다시 시도해 주세요. 만약 문제가 지속될 경우 문의해 주시기 
   바랍니다! https://netpass.cafe
+str_already_registered: "오류: 콘솔이 이미 등록되어 있습니다!\n\n에뮬레이터를 사용 중이거나 사용한 적이 있다면, 에뮬레이터와
+  콘솔 간에 sdmc:/config/netpass/nid_pwd.bin 파일이 동기화되어 있는지 확인해 주세요."
