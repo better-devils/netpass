@@ -116,3 +116,8 @@ str_logging_none: Nenhum
 str_logging_screen: Tela
 str_logging_file: Arquivo
 str_downloading: Baixando...
+str_failed_to_authenticate: Falha na autenticação! Por favor tente novamente 
+  depois. Se o problema persistir, contate-nos! https://netpass.cafe
+str_already_registered: "Erro: Console já registrado!\n\nSe você estiver usando/já
+  usou um emulador, por favor sincronize o sdmc:/config/netpass/nid_pwd.bin entre
+  o emulador e o console."
