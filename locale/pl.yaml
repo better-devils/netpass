@@ -121,3 +121,6 @@ str_logging_file: Plik
 str_downloading: Pobieranie...
 str_failed_to_authenticate: Autoryzacja nieudana! Proszę spróbuj ponownie 
   później. Jeżeli problem się powtarza, proszę daj znać! https://netpass.cafe
+str_already_registered: "Błąd: Konsola jest już zarejestrowana!\n\nJeżeli używasz
+  używasz lub używałeś emulatora, upewnij się by zsynchronizować sdmc:/config/netpass/nid_pwd.bin
+  pomiędzy emulatorem i konsolą."
