@@ -108,3 +108,5 @@ str_logging_file: ファイル
 str_downloading: ダウンロード中...
 str_failed_to_authenticate: 認証に失敗しました！後でもう一度お試しください。問題が解決しない場合は、こちらまでご連絡ください： 
   https://netpass.cafe
+str_already_registered: "エラー：コンソールはすでに登録されています！\n\nエミュレーターを使用している、または過去に使用したことがある場合は、エミュレーターと実機本体の間で
+  sdmc:/config/netpass/nid_pwd.bin を同期していることを確認してください。"
