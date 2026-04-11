@@ -123,3 +123,6 @@ str_logging_file: File
 str_downloading: Download in corso...
 str_failed_to_authenticate: Autenticazione fallita! Riprova più tardi. Se il 
   problema persiste, contattaci! https://netpass.cafe
+str_already_registered: "Errore: Console già registrata!\n\nSe stai usando, o hai
+  usato un emulatore in passato, assicurati di aver sincronizzato il file sdmc:/config/netpass/nid_pwd.bin
+  tra l'emulatore e la console."
