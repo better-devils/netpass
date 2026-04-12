@@ -115,3 +115,8 @@ str_logging_none: Inga
 str_logging_screen: Skärm
 str_logging_file: Fil
 str_downloading: Laddar ner...
+str_failed_to_authenticate: Autentisering misslyckades! Var god, försök igen 
+  senare. Om problemet kvarstår, vänligen nå ut till https://netpass.cafe
+str_already_registered: "Fel: Konsolen är redan registrerad!\n\nOm du använder eller
+  har använt en emulator, vänligen se till att synkronisera sdmc:/config/netpass/nid_pwd.bin
+  mellan emulatorn och konsolen."
