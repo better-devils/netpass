@@ -100,13 +100,13 @@ str_new_version: "新しいNetPassの更新があります\nv%d.%d.%d!\n\n今か
 str_enter_event_location: イベント"%s"に参加しますか？
 str_new_version_failed: 新しいバージョンをインストールするのが失敗しました。またUniversal 
   UpdaterかQRコードでインストールしてみてください。
-str_report_list_empty: 報告リストは今空です。
+str_report_list_empty: 今、報告リストは空です。
 str_logging: 'ログ:'
 str_logging_none: 無し
 str_logging_screen: 画面
 str_logging_file: ファイル
 str_downloading: ダウンロード中...
-str_failed_to_authenticate: 認証に失敗しました！後でもう一度お試しください。問題が解決しない場合は、こちらまでご連絡ください： 
+str_failed_to_authenticate: 認証に失敗しました！後でもう一度お試しください。問題が解決しない場合は、リンクまでご連絡ください： 
   https://netpass.cafe
-str_already_registered: "エラー：コンソールはすでに登録されています！\n\nエミュレーターを使用している、または過去に使用したことがある場合は、エミュレーターと実機本体の間で
-  sdmc:/config/netpass/nid_pwd.bin を同期していることを確認してください。"
+str_already_registered: "エラー：本体はすでに登録されています！\n\nエミュレーターを使用している、または過去に使用したことがある場合は、エミュレーターと実機の
+  sdmc:/config/netpass/nid_pwd.bin が同期を取っているのを確認してください。"
