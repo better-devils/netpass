@@ -46,7 +46,7 @@ str_report_mii_plaza_country: '国：%s - %s'
 str_report_mii_plaza_greeting: 'ご挨拶：%s'
 str_report_mii_plaza_custom_message: 'カスタムメッセージ：%s'
 str_report_mii_plaza_custom_reply: 'カスタム返信：%s'
-str_report_tomodachi_life_island_name: '島の名前：'
+str_report_tomodachi_life_island_name: '島の名前： %s'
 str_b_go_back: '{b_button} 戻る'
 str_update_patches: パッチをアップデートする
 str_update_patches_error_desc: パッチの更新時にエラーが発生しました。この問題は NetPassのGitlab、GBAtemp 
@@ -60,7 +60,7 @@ str_update_patches_desc:
   」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押してください。パッチを書き込んだ後でもできます。
 str_integrations_message: "第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください！"
 str_integrations: インテグレーション
-str_report_source_unknown: 未知元
+str_report_source_unknown: 未知な元
 str_report_source: '元：%s'
 str_settings_about: NetPassについて
 str_about_lead_dev: 主要な開発元
