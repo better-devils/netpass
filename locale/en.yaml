@@ -114,5 +114,8 @@ str_logging_none: "None"
 str_logging_screen: "Screen"
 str_logging_file: "File"
 str_downloading: "Downloading..."
-str_failed_to_authenticate: "Failed to authenticate! Please try again later. If the problem persists, please reach out! https://netpass.cafe"
-str_already_registered: "Error: Console already registered!\n\nIf you are using or have used an emulator, please make sure to sync the sdmc:/config/netpass/nid_pwd.bin between the emulator and the console."
+str_failed_to_authenticate: "Failed to authenticate! Please try again later. If the
+  problem persists, please reach out! https://netpass.cafe"
+str_already_registered: "Error: Console already registered!\n\nIf you are using or
+  have used an emulator, please make sure to sync the sdmc:/config/netpass/nid_pwd.bin
+  between the emulator and the console."
