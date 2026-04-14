@@ -105,3 +105,5 @@ str_logging_screen: 屏幕
 str_logging_file: 文件
 str_downloading: 下载中...
 str_failed_to_authenticate: 验证失败！请稍后重试。如果问题持续出现，请于 https://netpass.cafe 寻求帮助！
+str_already_registered: "错误：主机已被注册！\n\n如果你正在使用或曾使用过模拟器，请确保在模拟器和主机间同步 sdmc:/config/netpass/nid_pwd.bin
+  文件。"
