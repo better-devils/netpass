@@ -58,15 +58,15 @@ str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
 str_report_source: 'Source : %s'
 str_update_patches_desc: Pour installer correctement NetPass, quelques patchs de
-  sysmodules vont maintenant être créées. Pour que celles-ci fonctionnent, vous 
+  sysmodules vont maintenant être créées. Pour que ceux-ci fonctionnent, vous 
   devez activer «Enable loading external FIRMs and modules» dans les réglages de
   Luma3DS. Pour y accéder, éteignez la console et maintenez {select_button} 
   pendant que la console s'allume {power_button}. Vous pouvez faire cela après 
-  l’installation des correctifs.
+  l’installation des patchs.
 str_integrations_message: Les intégrations tierces ne sont pas gérées par 
   NetPass. Utilisez-les à vos risques et périls !
-str_update_patches_poweroff_desc: Mise à jour terminée ! Votre console va 
-  maintenant redémarrer.
+str_update_patches_poweroff_desc: Mise à jour des patchs terminée ! Votre 
+  console va maintenant redémarrer.
 str_update_patches_error_desc: Un problème est survenu pendant l'installation 
   des patchs. Merci de prendre le temps de le signaler sur GitLab, GBAtemp ou 
   Discord. https://netpass.cafe/discord
@@ -86,15 +86,15 @@ str_about_special_thanks_txt: La communauté homebrew de la 3DS pour tout le
   travail d'ingénierie inversée et de documentation
 str_about_production_cat: Produchat
 str_welcome: Bienvenue sur NetPass
-str_view_privacy: Voir la pol. de confidentialité
+str_view_privacy: Voir la politique de confidentialité
 str_view_rules: Voir les règles
 str_welcome_message: Avant de démarrer NetPass, veuillez lire et accepter les 
-  règles et la politique de confidentialité.
+  règles ainsi que la politique de confidentialité.
 str_continue: Continuer
 str_bad_os_version: "Votre 3DS nécessite la version 11.15.0 ou plus pour pouvoir utiliser
   NetPass. Malheureusement, vous semblez avoir une version plus ancienne. Veuillez
   la mettre à jour et redémarrer NetPass.\n\nAppuyer sur une touche pour quitter"
-str_update_patches_poweroff_clear_desc: Patchs supprimées ! Votre console va 
+str_update_patches_poweroff_clear_desc: Patchs supprimés ! Votre console va 
   maintenant redémarrer.
 str_bg_music: Musique de fond
 str_prompt_dl_pass: Êtes-vous certain de vouloir télécharger cette rencontre ?
@@ -122,7 +122,7 @@ str_logging_screen: Écran
 str_logging_file: Fichier
 str_downloading: Téléchargement...
 str_failed_to_authenticate: Erreur d'authentification ! Essayez encore plus 
-  tard. Si la problème persiste, laissez-nous un message ! https://netpass.cafe
+  tard. Si le problème persiste, laissez-nous un message ! https://netpass.cafe
 str_already_registered: "Erreur : Console déjà enregistrée !\n\nSi vous utilisez ou
-  avez utilisé un émulateur, veillez à synchroniser le sdmc:/config/netpass/nid_pwd.bin
+  avez utilisé un émulateur, veillez être certain d'avoir synchronisé le sdmc:/config/netpass/nid_pwd.bin
   entre l'émulateur et le console."
