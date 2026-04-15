@@ -19,6 +19,7 @@
 
 #include "welcome.h"
 #include "../config.h"
+#include "info.h"
 #define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (STR_WELCOME_LEN + STR_WELCOME_MESSAGE_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_CONTINUE_LEN)
 
@@ -47,7 +48,7 @@ static void init(Scene* sc) {
 static void render(Scene* sc) {
 	if (!_data) return;
 	renderPlainText(&_data->g_title, 10, 10, 1, 0);
-	renderPlainTextFlags(&_data->g_subtitle, C2D_WordWrap, 11, 40, 0.5, 369.);
+	renderPlainTextFlags(&_data->g_subtitle, C2D_WordWrap, 11, 40, 0.5, 0, 369.);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
 		renderPlainText(&_data->g_entries[i], 30, 74 + (i * 25), 1, 0);
 	}
@@ -90,12 +91,15 @@ static SceneResult process(Scene* sc) {
 }
 
 Scene* getWelcomeScene(Scene* next_scene) {
+	Scene* popup = getInfoScene(str_backup_nid_pwd);
+	if (!popup) return NULL;
 	Scene* scene = createScene(0);
 	if (!scene) return NULL;
 	scene->init = init;
 	scene->render_top = render;
 	scene->exit = exit_scene;
 	scene->process = process;
-	scene->next_scene = next_scene;
+	popup->pop_scene = next_scene;
+	scene->next_scene = popup;
 	return scene;
 }
