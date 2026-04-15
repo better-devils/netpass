@@ -123,3 +123,6 @@ str_downloading: Letöltés...
 str_failed_to_authenticate: Sikertelen autentikáció! Kérjük próbáld újra később.
   Ha a probléma tartósan fenn áll, vedd fel velünk a kapcsolatot! 
   https://netpass.cafe
+str_already_registered: "Hiba: A konzol már regisztrált!\n\nHa használsz, vagy használtál
+  emulátort, kérjük legyél biztos abban, hogy szikronizálod az sdmc:/config/netpass/nid_pwd.bin
+  fájlt az emulátor és a konzol között."
