@@ -121,3 +121,6 @@ str_logging_file: Soubor
 str_downloading: Stahování...
 str_failed_to_authenticate: Autentizace se nezdařila! Prosím, zkuste to znovu 
   později. Pokud problém přetrvává, kontaktujte nás! https://netpass.cafe
+str_already_registered: "Chyba: Konzole je již zaregistrována\n\nPokud používáte nebo
+  jste používali emulátor, prosím synchronizujte sdmc:/config/netpass/nid_pwd.bin
+  mezi emulátorem a konzolí."
