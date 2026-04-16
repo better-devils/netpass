@@ -126,3 +126,5 @@ str_failed_to_authenticate: Autenticazione fallita! Riprova più tardi. Se il
 str_already_registered: "Errore: Console già registrata!\n\nSe stai usando, o hai
   usato un emulatore in passato, assicurati di aver sincronizzato il file sdmc:/config/netpass/nid_pwd.bin
   tra l'emulatore e la console."
+str_backup_nid_pwd: "Netpass creerà il file seguente per autenticare la tua console,
+  assicurati di crearne un backup!\nsdmc:/config/netpass/nid_pwd.bin"
