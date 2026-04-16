@@ -126,8 +126,8 @@ str_failed_to_authenticate: Erreur d'authentification ! Essayez encore plus
 str_already_registered: "Erreur : Console déjà enregistrée !\n\nSi vous utilisez ou
   avez utilisé un émulateur, veillez être certain d'avoir synchronisé le sdmc:/config/netpass/nid_pwd.bin
   entre l'émulateur et le console."
-str_backup_nid_pwd: "NetPass va créer le fichier suivant afin d'authentifier votre
-  console, alors êtes certain d'effectuer une copie de sécurité!\nsdmc:/config/netpass/nid_pwd.bin"
+str_backup_nid_pwd: "NetPass créera le fichier suivant afin d'authentifier votre console,
+  alors veuillez être certain d'effectuer une copie de sécurité !\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: NetPass ne peut marcher correctement que si l'heure du système est
   correcte. Veuillez le faire !
 str_time_correct: Êtes-vous certain que la date et l'heure sont réglées 
