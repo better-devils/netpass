@@ -125,3 +125,13 @@ str_failed_to_authenticate: Nabigo ang pagpapatunay! Mangyaring subukan muli
 str_already_registered: "Error: Nakarehistro na ang console na ito!\n\nKung ikaw ay
   gumagamit o gumamit ng emulator, siguraduhing i-sync ang sdmc:/config/netpass/nid_pwd.bin
   sa pagitan ng emulator at ng console."
+str_time_correct: Sigurado ka ba na ang oras at petsa ay tama?
+str_backup_nid_pwd: "Gagawa ang Netpass ng sumusunod na file upang patunayan ang iyong
+  console, siguraduhing i-back up ito!\nsmdc:/config/netpass/nid_pwd.bin"
+str_time_success: Matagumpay na itinakda ang oras! Mag-rerestart na ang 
+  NetPass...
+str_time_failed: Nabigo sa pagtakda ng oras!
+str_scam_warning: Ang Netpass ay libre at open source na software. Kung ikaw ay 
+  nagbayad para sa pag-install nito, ikaw ay niloko at dapat humingi ng refund.
+str_set_time: Ang NetPass ay gumagana lamang nang maayos kung tama ang 
+  pagkatakda ng oras ng sistema. Manyaring gawin ito!
