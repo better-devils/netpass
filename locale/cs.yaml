@@ -124,3 +124,12 @@ str_failed_to_authenticate: Autentizace se nezdařila! Prosím, zkuste to znovu
 str_already_registered: "Chyba: Konzole je již zaregistrována\n\nPokud používáte nebo
   jste používali emulátor, prosím synchronizujte sdmc:/config/netpass/nid_pwd.bin
   mezi emulátorem a konzolí."
+str_backup_nid_pwd: "NetPass vytvoří následující soubor pro autentizaci Vaší konzole.
+  Tento soubor si zazálohujte!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass funguje správně pouze když je systémový čas nastaven 
+  správně. Prosím nastavte jej!
+str_time_correct: Jste si jisti, že datum a čas jsou správně nastaveny?
+str_time_success: Čas úspěšně nastaven! Nyní restartuji NetPass...
+str_time_failed: Nastavení času selhalo!
+str_scam_warning: NetPass je volný a open source software. Pokud jste zaplatili 
+  za jeho instalaci, byli jste podvedeni a měli byste zažádat o odškodnění.
