@@ -129,3 +129,13 @@ str_failed_to_authenticate: Authentifizierung fehlgeschlagen! Bitte versuche es
 str_already_registered: "Fehler: Konsole bereits registriert!\n\nFalls du einen Emulator
   benutzt oder benutzt hast, dann achte darauf, sdmc:/config/netpass/nid_pwd.bin zwischen
   dem Emulator und der Konsole abzugleichen."
+str_scam_warning: NetPass ist ein kostenloses Anwendungsprogramm mit offenem 
+  Quelltext. Wenn du für die Installation bezahlt hast wurdest du abgezockt und 
+  solltest eine Rückerstattung verlangen.
+str_time_correct: Bist du dir sicher, dass Datum und Uhrzeit stimmen?
+str_time_success: Zeit erfolgreich umgestellt! Starte NetPass neu...
+str_time_failed: Zeitumstellung fehlgeschlagen!
+str_set_time: NetPass kann nur richtig funktionieren, wenn Systemzeit und -datum
+  richtig eingestellt sind! Bitte tue das!
+str_backup_nid_pwd: "NetPass wird die folgende Datei erstellen, um deine Konsole zu
+  authentifizieren, also mache bitte eine Sicherungskopie!\nsdmc:/config/netpass/nid_pwd.bin"
