@@ -121,3 +121,12 @@ str_failed_to_authenticate: Falha na autenticação! Por favor tente novamente
 str_already_registered: "Erro: Console já registrado!\n\nSe você estiver usando/já
   usou um emulador, por favor sincronize o sdmc:/config/netpass/nid_pwd.bin entre
   o emulador e o console."
+str_backup_nid_pwd: "NetPass irá criar o seguinte arquivo para autenticar o seu console,
+  por favor, tenha certeza de fazer o backup dele!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass só funciona corretamente se o horário do sistema estiver 
+  configurado corretamente. Por favor, faça isso!
+str_time_correct: Tem certeza de que o horário e a data estão corretos?
+str_time_success: Horário definido com sucesso! Reiniciando NetPass...
+str_time_failed: Falha ao configurar o horário!
+str_scam_warning: NetPass é um software open source grátis. Se você pagou pela 
+  instalação voce foi enganado/roubado e deve exigir um reembolso.
