@@ -21,7 +21,7 @@
 #include "../config.h"
 #include "info.h"
 #define _data ((DataStruct*)sc->d)
-#define TEXT_BUF_LEN (STR_WELCOME_LEN + STR_WELCOME_MESSAGE_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_CONTINUE_LEN)
+#define TEXT_BUF_LEN (STR_WELCOME_LEN + STR_WELCOME_MESSAGE_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_CONTINUE_LEN + STR_SCAM_WARNING_LEN)
 
 #define NUM_ENTRIES 3
 
@@ -29,6 +29,7 @@ typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_title;
 	C2D_Text g_subtitle;
+	C2D_Text g_scam_warning;
 	C2D_Text g_entries[NUM_ENTRIES];
 	int cursor;
 } DataStruct;
@@ -39,6 +40,7 @@ static void init(Scene* sc) {
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_welcome);
 	TextLangParse(&_data->g_subtitle, _data->g_staticBuf, str_welcome_message);
+	TextLangParse(&_data->g_scam_warning, _data->g_staticBuf, str_scam_warning);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_view_rules);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_view_privacy);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_continue);
@@ -49,12 +51,13 @@ static void render(Scene* sc) {
 	if (!_data) return;
 	renderPlainText(&_data->g_title, 10, 10, 1, 0);
 	renderPlainTextFlags(&_data->g_subtitle, C2D_WordWrap, 11, 40, 0.5, 0, 369.);
+	renderPlainTextFlags(&_data->g_scam_warning, C2D_WordWrap, 11, 69, 0.5, 0, 369.);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
-		renderPlainText(&_data->g_entries[i], 30, 74 + (i * 25), 1, 0);
+		renderPlainText(&_data->g_entries[i], 30, 114 + (i * 25), 1, 0);
 	}
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
-	int y = _data->cursor*25 + 74 + 5;
+	int y = _data->cursor*25 + 114 + 5;
 	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
 }
 

@@ -124,3 +124,4 @@ str_set_time: "NetPass only works properly if the system time is set correctly. 
 str_time_correct: "Are you sure the time and date are correct?"
 str_time_success: "Time set successfully! Restarting netpass now..."
 str_time_failed: "Failed setting the time!"
+str_scam_warning: "NetPass is free and open source software. If you have payed to install it you have been scammed and should demand a refund."

@@ -19,7 +19,7 @@
 
 #include "about.h"
 #define _data ((DataStruct*)sc->d)
-#define TEXT_BUF_LEN (STR_B_GO_BACK_LEN + STR_ABOUT_LEAD_DEV_LEN + STR_ABOUT_REPORTS_LEN + STR_ABOUT_GRAPHICS_LEN + STR_ABOUT_MUSIC_LEN + STR_ABOUT_LOCALISATION_LEN + STR_ABOUT_NETPASS_COMMUNITY_LEN + STR_ABOUT_PRODUCTION_CAT_LEN + STR_ABOUT_SPECIAL_THANKS_LEN + STR_ABOUT_SPECIAL_THANKS_TXT_LEN)
+#define TEXT_BUF_LEN (STR_B_GO_BACK_LEN + STR_ABOUT_LEAD_DEV_LEN + STR_ABOUT_REPORTS_LEN + STR_ABOUT_GRAPHICS_LEN + STR_ABOUT_MUSIC_LEN + STR_ABOUT_LOCALISATION_LEN + STR_ABOUT_NETPASS_COMMUNITY_LEN + STR_ABOUT_PRODUCTION_CAT_LEN + STR_ABOUT_SPECIAL_THANKS_LEN + STR_ABOUT_SPECIAL_THANKS_TXT_LEN + STR_SCAM_WARNING_LEN)
 #define NUM_CREDIT_CATAGORIES 7
 
 typedef struct {
@@ -49,6 +49,7 @@ typedef struct {
 	C2D_TextBuf g_staticBuf;
 	Category credits[NUM_CREDIT_CATAGORIES];
 	int y_offset;
+	C2D_Text scam_warning;
 	C2D_Text netpass_website;
 	C2D_Text go_back;
 	float website_x;
@@ -71,6 +72,7 @@ static void init(Scene* sc) {
 	}
 	C2D_TextParse(&_data->netpass_website, _data->g_staticBuf, "https://netpass.cafe");
 	TextLangParse(&_data->go_back, _data->g_staticBuf, str_b_go_back);
+	TextLangParse(&_data->scam_warning, _data->g_staticBuf, str_scam_warning);
 	float width;
 	get_text_dimensions(&_data->netpass_website, 0.7, 0.7, &width, 0);
 	_data->website_x = (SCREEN_TOP_WIDTH - width) / 2;
@@ -89,6 +91,8 @@ static void render(Scene* sc) {
 		ycursor += 14*_data->credits[i].height;
 	}
 	ycursor += 20;
+	renderPlainTextFlags(&_data->scam_warning, C2D_AlignCenter | C2D_WordWrap, (int)(SCREEN_TOP_WIDTH/2), ycursor, 0.5, 0, 350.);
+	ycursor += 60;
 	renderPlainText(&_data->netpass_website, _data->website_x, ycursor, 0.7, 0);
 	ycursor += 300;
 	C2D_Image img = C2D_SpriteSheetGetImage(_data->laura, 0);
