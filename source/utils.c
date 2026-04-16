@@ -923,6 +923,7 @@ static u64 getAvailableSpace(void) {
 	return (u64)st.f_bsize * (u64)st.f_bavail;
 }
 
+// cppcheck-suppress unusedFunction
 Result get_cia_info(const char* cia_filename, AM_TitleEntry* info) {
 	Result res = 0;
 	

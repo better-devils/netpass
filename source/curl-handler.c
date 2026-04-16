@@ -23,6 +23,7 @@
 #include "hmac_sha256/hmac_sha256.h"
 #include "log.h"
 #include "utils.h"
+#include <ctype.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -117,16 +118,28 @@ static int xferinfo_callback(void *ptr, curl_off_t dltotal, curl_off_t dlnow, cu
 
 static size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 	struct CurlHandle *h = ptr;
-	char buf[size*nmemb + 1];
-	memcpy(buf, data, size*nmemb);
-	buf[size*nmemb] = '\0';
-	static const char header_name[] = "3ds-netpass-msg: ";
-	if (strncmp(header_name, buf, strlen(header_name)) == 0) {
-		logln(INFO, "%s", buf + strlen(header_name));
+	char header_name[size*nmemb + 1];
+	memcpy(header_name, data, size*nmemb);
+	header_name[size*nmemb] = '\0';
+	
+	char* header_value = strchr(header_name, ':');
+	if (!header_value) return size*nmemb;
+	*header_value = 0;
+	header_value++;
+	if (!*header_value) return size*nmemb;
+	header_value++;
+	
+	int header_name_len = strlen(header_name);
+	for (int i = 0; i < header_name_len; i++) header_name[i] = tolower(header_name[i]);
+	
+	if (strcmp("date", header_name) == 0) {
+		h->reply.date = curl_getdate(header_value, NULL);
 	}
-	static const char slot_header_name[] = "x-spr-slot00-result: ";
-	if (strncmp(slot_header_name, buf, strlen(slot_header_name)) == 0) {
-		char* ptr = buf + strlen(slot_header_name);
+	if (strcmp("3ds-netpass-msg", header_name) == 0) {
+		logln(INFO, "%s", header_value);
+	}
+	if (strcmp("x-spr-slot00-result", header_name) == 0) {
+		char* ptr = header_value;
 		ptr = strchr(ptr, ',');
 		if (ptr) {
 			ptr++;

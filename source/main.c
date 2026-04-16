@@ -33,6 +33,7 @@
 #include "integration.h"
 #include "scenes/download_progress.h"
 #include "scenes/info.h"
+#include "scenes/loading.h"
 #include "scenes/settings.h"
 #include "scenes/switch.h"
 #include "render.h"
@@ -40,7 +41,8 @@
 
 static Result ping_res = 0;
 static PingResponse ping_response = {0};
-static char* filename_3dsx = 0;
+char* filename_3dsx = 0;
+static time_t server_date = -1;
 
 static Scene* load_not_authenticated(void) {
 	Scene* scene = getSettingsScene();
@@ -92,22 +94,8 @@ static Scene* load_new_version(Scene* scene) {
 				return getInfoScene(str_new_version_failed);
 			}
 			// things were successful, let's restart!
-			return getLoadingScene(getStopScene(), lambda(void, (void) {
+			return getLoadingScene(getRestartScene(), lambda(void, (void) {
 				aptSetHomeAllowed(true);
-				if (filename_3dsx) return;
-				AM_TitleEntry info;
-				get_cia_info(filename_cia, &info);
-				Result res = 0;
-				res = _e(APT_PrepareToDoApplicationJump(0, info.titleID, get_title_destination(info.titleID)));
-				if (R_FAILED(res)) goto fail;
-				u8 param[0x300];
-				u8 hmac[0x20];
-				res = _e(APT_DoApplicationJump(param, sizeof(param), hmac));
-				if (R_FAILED(res)) goto fail;
-			fail:
-				while(true) {
-					svcSleepThread(100000000);
-				}
 			}));
 		})), lambda(void, (void) {
 			if (filename_3dsx) {
@@ -147,14 +135,35 @@ static Scene* initial_scene(void) {
 		info_scene->pop_scene = scene;
 		return info_scene;
 	}
-	if (R_FAILED(ping_res)) {
+	if (R_FAILED(ping_res) || !ping_response.is_authenticated) {
 		// something not working
-		_e(ping_res);
-		return getSettingsScene();
-	}
-	if (!ping_response.is_authenticated) {
-		// we aren't authenticated
-		return load_not_authenticated();
+		return getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+			if (server_date > -1) {
+				logln(INFO, "time to set the time!");
+				return getSetTimeScene(server_date);
+			}
+			if (R_FAILED(ping_res)) {
+				_e(ping_res);
+				return getSettingsScene();
+			}
+			return load_not_authenticated();
+		})), lambda(void, (void) {
+			CurlReply* reply;
+			Result res = httpRequest("GET", "http://netpass.cafe/conntest", 0, 0, &reply, 0);
+			if (R_FAILED(res)) {
+				curlFreeHandler(reply->offset);
+				if (R_SUCCEEDED(ping_res)) ping_res = res;
+				return;
+			}
+			time_t date = reply->date;
+			curlFreeHandler(reply->offset);
+			if (date == -1) return;
+			time_t now = time(NULL);
+			
+			if (llabs(now - date) > 60*60*18) {
+				server_date = date;
+			}
+		}));
 	}
 	if (ping_response.ban.is_banned) {
 		// we are banned

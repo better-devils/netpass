@@ -120,3 +120,7 @@ str_already_registered: "Error: Console already registered!\n\nIf you are using 
   have used an emulator, please make sure to sync the sdmc:/config/netpass/nid_pwd.bin
   between the emulator and the console."
 str_backup_nid_pwd: "NetPass will create the following file to authenticate your console, so please make sure to back it up!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: "NetPass only works properly if the system time is set correctly. Please do so!"
+str_time_correct: "Are you sure the time and date are correct?"
+str_time_success: "Time set successfully! Restarting netpass now..."
+str_time_failed: "Failed setting the time!"
