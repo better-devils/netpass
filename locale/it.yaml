@@ -128,3 +128,10 @@ str_already_registered: "Errore: Console già registrata!\n\nSe stai usando, o h
   tra l'emulatore e la console."
 str_backup_nid_pwd: "Netpass creerà il file seguente per autenticare la tua console,
   assicurati di crearne un backup!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: Netpass funziona correttamente solo se l'orologio del sistema è 
+  corretto. Assicurati che lo sia!
+str_time_correct: Sei sicuro che la data e l'ora della console siano corrette?
+str_time_success: Ora impostata con successo! Riavvio di NetPass in corso...
+str_time_failed: Impostazione dell'orario fallita!
+str_scam_warning: NetPass è un software gratuito e open source. Se hai pagato 
+  per averlo, chiedi immediatamente un rimborso.
