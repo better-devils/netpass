@@ -110,3 +110,10 @@ str_failed_to_authenticate: 認証に失敗しました！後でもう一度お�
   https://netpass.cafe
 str_already_registered: "エラー：本体はすでに登録されています！\n\nエミュレーターを使用している、または過去に使用したことがある場合は、エミュレーターと実機の
   sdmc:/config/netpass/nid_pwd.bin が同期を取っているのを確認してください。"
+str_backup_nid_pwd: "NetPassが自分の本体を認証するため、このファイルを作成しますので、バックアップしてください!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: 本体の時計は正しく掛けないのでNetPassを使えません. 正しく掛けてください!
+str_time_correct: 日付と時間は本当に正しいでしょうか？
+str_time_success: 時間を掛けるのは成功しました! 今からNetpassがリスタートします...
+str_time_failed: 時間を掛けるのを失敗しました!
+str_scam_warning: 
+  NetPassはオープンソースで無料ソフトウェアです。このソフトをインストールするためにお金を払ってしまったばい、詐欺で返金を求めてください。
