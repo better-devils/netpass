@@ -124,3 +124,10 @@ str_failed_to_authenticate: Autoryzacja nieudana! Proszę spróbuj ponownie
 str_already_registered: "Błąd: Konsola jest już zarejestrowana!\n\nJeżeli używasz
   używasz lub używałeś emulatora, upewnij się by zsynchronizować sdmc:/config/netpass/nid_pwd.bin
   pomiędzy emulatorem i konsolą."
+str_backup_nid_pwd: "NetPass stworzy poniższy plik by zautentykować konsole, więc
+  upewnij się, by stworzyć jego kopię bezpieczeństwa!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass działa poprawnie tylko, gdy czas systemowy jest ustawiony 
+  poprawnie. Proszę zrób to!
+str_time_correct: Jesteś pewien, że czas i data są poprawne?
+str_time_success: Czas ustawiony poprawnie! Restartuje NetPass'a teraz...
+str_time_failed: Ustawienie czasu nieudane!
