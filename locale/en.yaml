@@ -119,9 +119,12 @@ str_failed_to_authenticate: "Failed to authenticate! Please try again later. If 
 str_already_registered: "Error: Console already registered!\n\nIf you are using or
   have used an emulator, please make sure to sync the sdmc:/config/netpass/nid_pwd.bin
   between the emulator and the console."
-str_backup_nid_pwd: "NetPass will create the following file to authenticate your console, so please make sure to back it up!\nsdmc:/config/netpass/nid_pwd.bin"
-str_set_time: "NetPass only works properly if the system time is set correctly. Please do so!"
+str_backup_nid_pwd: "NetPass will create the following file to authenticate your console,
+  so please make sure to back it up!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: "NetPass only works properly if the system time is set correctly. Please
+  do so!"
 str_time_correct: "Are you sure the time and date are correct?"
-str_time_success: "Time set successfully! Restarting netpass now..."
+str_time_success: "Time set successfully! Restarting NetPass now..."
 str_time_failed: "Failed setting the time!"
-str_scam_warning: "NetPass is free and open source software. If you have payed to install it you have been scammed and should demand a refund."
+str_scam_warning: "NetPass is free and open source software. If you have payed to
+  install it you have been scammed and should demand a refund."
