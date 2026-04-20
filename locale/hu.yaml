@@ -126,3 +126,13 @@ str_failed_to_authenticate: Sikertelen autentikáció! Kérjük próbáld újra 
 str_already_registered: "Hiba: A konzol már regisztrált!\n\nHa használsz, vagy használtál
   emulátort, kérjük legyél biztos abban, hogy szikronizálod az sdmc:/config/netpass/nid_pwd.bin
   fájlt az emulátor és a konzol között."
+str_backup_nid_pwd: "A NetPass létre fogja hozni a következő fájlt, hogy autentikálja
+  a konzolod, így kérjük ne felejts el róla mentést készíteni!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: A NetPass csak akkor működik megfelelően, ha a rendszeridő jól 
+  lett beállítva. Kérjük állítsd be jól!
+str_time_correct: Biztos vagy benne, hogy az idő és a dátum helyes?
+str_time_success: Az idő sikeresen beállításra került! A NetPass újraindítása 
+  most...
+str_time_failed: Sikertelen az idő beállítása!
+str_scam_warning: A NetPass egy ingyenes, nyílt forrású szoftver. Ha fizettél a 
+  telepítéséért, akkor átvertek és javasolt visszaigénylést kérned.
