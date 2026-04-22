@@ -57,8 +57,8 @@ str_update_patches_error_desc: Algo salió mal al actualizar los parches. Por
 str_update_patches_poweroff_desc: ¡La actualización de los parches se realizó 
   correctamente! Ahora tu consola se reiniciará.
 str_update_patches_desc: Para instalar NetPass correctamente, se crearán algunos
-  parches de sysmodule. Para que funcionen, debe habilitar "Enable loading 
-  external FIRMs and modules" en la configuración de Luma3DS. Para ver la 
+  parches de sysmodule. Para que funcionen, debe habilitar «Enable loading 
+  external FIRMs and modules» en la configuración de Luma3DS. Para ver la 
   configuración, apague la consola y luego presione {select_button} mientras 
   enciende {power_button} la consola. Puede hacer esto después de que se 
   escriban los parches.
@@ -68,7 +68,7 @@ str_integrations_message: Las integraciones de terceros quedan fuera de la
   moderación de NetPass. ¡Úsala bajo tu propio riesgo!
 str_report_source_unknown: Fuente desconocida
 str_report_source: 'Fuente: %s'
-str_settings_misc: Misceláneo
+str_settings_misc: Varios
 str_settings_about: Acerca de
 str_about_lead_dev: Desarrollador Principal
 str_about_reports: Sistema de Denuncias
@@ -92,7 +92,7 @@ str_welcome_message: Antes de iniciar NetPass, por favor lee y acepta nuestras
 str_bad_os_version: "NetPass requiere 3DS OS 11.15.0 o mayor para funcionar correctamente.
   Desafortunadamente, parece que estás usando una versión mas antigua. Por favor,
   actualice y luego inicie NetPass nuevamente.\n\nPresione cualquier botón para salir"
-str_bg_music: Música BG
+str_bg_music: Música de fondo
 str_update_patches_poweroff_clear_desc: ¡Parches eliminados con éxito! Su 
   consola se reiniciará.
 str_prompt_dl_pass: ¿Estas seguro que quieres descargar este pase?
@@ -104,7 +104,7 @@ str_remove: Eliminar
 str_skip: Omitir
 str_banned: "Se te ha restringido el uso de NetPass. Razón:\n%s\n\nDesde: %s\nHasta:
   %s"
-str_new_version: "Nueva Versión de NetPass disponible:\n¡v%d.%d.%d!\n\n¿Quieres actualizar
+str_new_version: "Nueva versión de NetPass disponible:\n¡v%d.%d.%d!\n\n¿Quieres actualizar
   ahora NetPass?"
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_date: '%d/%m/%Y'
@@ -131,6 +131,5 @@ str_set_time: NetPass solo funciona correctamente si la hora del sistema está
 str_time_correct: ¿Seguro que la fecha y hora son correctas?
 str_time_success: ¡Hora establecida con éxito! Reiniciando NetPass...
 str_time_failed: ¡Error al ajustar la hora!
-str_scam_warning: NetPass es software libre y de código abierto. Si has pagado 
-  por su instalación, has sido víctima de un fraude y deberías pedir un 
-  reembolso.
+str_scam_warning: NetPass es gratuito y de código abierto. Si has pagado por su 
+  instalación, has sido víctima de un fraude y deberías pedir un reembolso.
