@@ -1,6 +1,6 @@
 str_loading: "正在加载    "
 str_libcurl_error: "libCURL 错误 (%d): %s"
-str_libcurl_date_and_time: '请确保系统的日期和时间是正确的！'
+str_libcurl_date_and_time: '请确保主机的的日期和时间设定正确！'
 str_httpstatus_error: 'HTTP 状态码 %d'
 str_3ds_error: '3DS 错误码 %08lx'
 str_at_home: '你正在家中。'
@@ -33,7 +33,7 @@ str_back_alley_pay: 购买瞬缘连接信息 {playcoin}%d
 str_back_alley: 后巷
 str_back_alley_message: 让我们获取一些新的瞬缘连接吧！
 str_check_inboxes: 检查瞬缘连接收件箱
-str_toggle_titles: 切换游戏
+str_toggle_titles: 游戏列表
 str_toggle_titles_on: (启用)
 str_toggle_titles_off: (禁用)
 str_toggle_titles_message: 按 {a_button} 切换是否交换瞬缘连接信息。
@@ -69,17 +69,17 @@ str_about_localisation: 本地化
 str_about_netpass_community: NetPass社区
 str_about_special_thanks: 特别鸣谢
 str_scan_qr: 扫描二维码
-str_update_patches_desc: 为了正常安装NetPass， 软件将会在系统模块（sysmodule）创建一些补丁。 
-  你需要在Luma3DS设置中启用 "Enable loading external FIRMs and modules" 才能使补丁正常工作。 
-  你可以通过关闭主机， 按住 {select_button} 并开机 {power_button} 的方式打开Luma3DS设置菜单。 
-  你可以在补丁写入完成后再进行该操作。
+str_update_patches_desc: 为了正常安装NetPass， 软件将会创建一些系统模块补丁（sysmodule 
+  patches），为了使补丁正常工作，你需要在Luma3DS设置中启用"Enable loading external FIRMs and 
+  modules"这个选项。 你可以关机之后先按住 {select_button}，再按下 {power_button} 
+  开机来进入Luma3DS设置。也可以先装好补丁，然后再去打开。
 str_update_patches_error_desc: 
   更新补丁时出错。请在GitLab、GBAtemp或Discord上报告该问题。https://netpass.cafe/discord
 str_b_cancel: '{b_button} 取消'
 str_bg_music: 背景音乐
 str_update_patches_poweroff_clear_desc: 成功移除补丁！主机现在将会重启。
-str_bad_os_version: "为了让 NetPass 正常工作， 3DS 操作系统需要至少 11.15.0 版本。 不幸的是，你似乎正在使用一个更老的系统版本。
-  请升级后再重新打开 NetPass。\n\n按任意键退出"
+str_bad_os_version: "NetPass 需要至少 11.15.0 版本的3DS系统，当前系统版本似乎过老， 请升级系统后再重新打开 NetPass。\n\
+  \n按任意键退出"
 str_welcome: 欢迎来到 NetPass
 str_welcome_message: 在使用 NetPass 前，请阅读并接受我们的规则与隐私条款。
 str_view_rules: 查看规则
@@ -93,7 +93,7 @@ str_report_integration: 该信息来自某个集成插件。 请向该插件的�
 str_date: '%Y年%m月%d日(%A)'
 str_date_time: '%Y年%m月%d日(%A) %H:%M:%S'
 str_banned: "你已经被NetPass封禁。原因：\n%s\n\n起始时间：%s\n结束时间：%s"
-str_new_version: "新的 NetPass 版本可用。\nv%d.%d.%d！\n\n你想现在升级 NetPass 吗？"
+str_new_version: "NetPass有更新：\nv%d.%d.%d！\n\n要现在就更新吗？"
 str_enter_event_location: 是否确定要进入"%s"活动？
 str_at_event_location: 你正在特殊活动中。
 str_artist_copyright: 美术 © %s
@@ -109,7 +109,7 @@ str_already_registered: "错误：主机已被注册！\n\n如果你正在使用
   文件。"
 str_backup_nid_pwd: "为了验证你的主机，NetPass 将会创建以下文件，请确保将该文件备份！\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: NetPass 只有在系统时间正确设置的情况下才能正常工作。请进行调整！
-str_time_correct: 你确定日期和时间已设置正确吗？
+str_time_correct: 你确定日期和时间是对的吗？
 str_time_success: 设置时间成功！正在重启 NetPass...
 str_time_failed: 设置时间失败！
-str_scam_warning: NetPass 是免费开源软件。如果你为了安装本软件进行付费，则意味着你被骗了，且应当要求出售方进行退款。
+str_scam_warning: NetPass 是免费且开源的软件。如果你是花钱买来的，那么恭喜你交了智商税，请去找卖家要求退款。
