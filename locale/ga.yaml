@@ -35,3 +35,67 @@ str_back_alley: Caolsráid ar ais
 str_back_alley_pay: Ceannaigh pas {playcoin}%d
 str_date: '%d %b %Y'
 str_date_time: '%d %b %Y %I:%M:%S%p'
+str_back_alley_message: Faigh níos mó pasanna go dian!
+str_check_inboxes: Seiceáil boscaí istigh
+str_toggle_titles: Scoránaigh Cluichí
+str_toggle_titles_message: Cuir brú ar an gcnaipe A chun babhtáil pasanna a 
+  thosú nó a stopadh.
+str_toggle_titles_on: (AIR)
+str_toggle_titles_off: (AS)
+str_report_mii_name: 'Ainm an Mii: %s'
+str_report_mario_kart_7_greeting: 'Beannú: %s'
+str_report_mii_plaza_last_game: 'An cluiche a imríodh is déanaí: %s'
+str_report_mii_plaza_country: 'Tír: %s - %s'
+str_report_mii_plaza_greeting: 'Beannú: %s'
+str_report_mii_plaza_custom_message: 'Do theachtaireacht saincheaptha: %s'
+str_report_mii_plaza_custom_reply: 'A bhfreagra saincheaptha: %s'
+str_report_tomodachi_life_island_name: 'Ainm an oileáin: %s'
+str_b_go_back: '{b_button} Téigh Ar Ais'
+str_b_cancel: '{b_button} Cealaigh'
+str_a_ok: '{a_button} Ceart go leor'
+str_update_patches: Nuashonraigh paistí
+str_update_patches_desc: Chun NetPass a shuiteáil i gceart, cruthófar roinnt 
+  paistí "sysmodule" anois. Beidh ort "Enable loading external FIRMs and 
+  modules" sna socruithe Luma3DS a chumasú, ionas go mbeidh na paistí seo ag 
+  obair. Chun na socruithe seo a fháil, múch an consól, agus ansin, brúigh 
+  {select_button}, agus an consól á chur ar siúl {power_button}. Is féidir leat 
+  é seo a dhéanamh tar éis scríobh na bpaistí.
+str_update_patches_error_desc: Tharla earráid nuair a bhí na paistí á nuashonrú.
+  Tuairiscigh an fhadhb seo ar GitLab, GBAtemp nó Discord, le do thoil. 
+  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Bhí rath ar nuashonrú na bpaistí! Atosófar an 
+  consól anois.
+str_integrations: Comhcheangail
+str_integrations_message: Tá comhcheangail tríú páirtí taobh amuigh de 
+  mhodhnóireacht NetPass. Bain úsáid astu ar do phriacal féin!
+str_report_source: 'Foinse: %s'
+str_report_source_unknown: Foinse anaithnid
+str_settings_misc: Ilchineálach
+str_settings_about: Faoi NetPass
+str_about_lead_dev: Príomhfhorbróir
+str_about_graphics: Ealaín agus Grafaicí
+str_about_music: Ceol
+str_about_localisation: Logánú
+str_about_netpass_community: An pobal NetPass
+str_about_special_thanks: Míle Buíochas le
+str_about_special_thanks_txt: Pobal na mbogearraí baile 3DS as a gcuid 
+  ais-innealtóireachta agus a gcáipéisí
+str_about_production_cat: Cat táirgeachta
+str_scan_qr: Scan Cód QR
+str_x_switch_camera: '{x_button} Athraigh an Ceamara'
+str_prompt_verify: An bhfuil tú cinnte gur mhaith leat an 3DS seo a fhíorú?
+str_welcome: Fáilte chuig NetPass
+str_view_rules: Féach ar na Rialacha
+str_view_privacy: Féach ar an bPolasaí Príobháideachais
+str_continue: Lean ar aghaidh
+str_update_patches_poweroff_clear_desc: Bhí rath ar bhaineadh na bpaistí! 
+  Atosófar an consól anois.
+str_bg_music: Ceol an chúlra
+str_prompt_dl_pass: An bhfuil tú cinnte gur mhaith leat an pas seo a íoslódáil?
+str_report_integration: Tá an teachtaireacht seo ag teacht ó chomhcheangal, Chun
+  é a thuairisciú, seol teachtaireacht chuig an fhoireann modhnóireachta den 
+  gcomhcheangal sin.
+str_skip: Scipeáil
+str_install: Suiteáil
+str_remove: Bain
+str_artist_copyright: Obair ealaíne © %s
