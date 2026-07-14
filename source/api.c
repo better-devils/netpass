@@ -83,6 +83,7 @@ Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 		resp->message.message = 0;
 	}
 	resp->is_authenticated = qr_read_bool(&buffer);
+	resp->is_registered = qr_read_bool(&buffer);
 	return 0;
 }
 

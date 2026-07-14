@@ -42,3 +42,4 @@ void curlFreeHandler(int offset);
 Result httpRequest(const char* method, const char* url, int size, u8* body, CurlReply** reply, const char* filename);
 u8* getMacBuf(void);
 void getMacStr(char value[13]);
+void resetCurlRegistrationCache(void);

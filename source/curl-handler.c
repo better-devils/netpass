@@ -157,6 +157,11 @@ void curlFreeHandler(int offset) {
 	handles[offset].status = CURL_HANDLE_STATUS_RESET;
 }
 
+void resetCurlRegistrationCache(void) {
+	memset(nid_password, 0, sizeof(nid_password));
+	sent_extra_ident = false;
+}
+
 Result httpRequest(const char* method, const char* url, int size, u8* body, CurlReply** reply, const char* filename) {
 	Result res = 0;
 	int curl_handle_slot = 0;

@@ -295,6 +295,15 @@ static void initial_load(void) {
 	readPingResponse(&ping_response, reply->ptr, reply->len);
 	curlFreeHandler(reply->offset);
 	if (ping_response.ban.is_banned || !ping_response.is_authenticated) return;
+	if (!ping_response.is_registered) {
+		// something is weird, we aren't registered? let's try this again
+		logln(WARN, "The server said we aren't registered, re-registering...");
+		unlink(PATH_NID_PWD);
+		unlink(PATH_NID_PWD_BAK);
+		resetCurlRegistrationCache();
+		initial_load();
+		return;
+	}
 	_e(waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE));
 	initTitleData();
 	doSlotExchangeRetry(true);
