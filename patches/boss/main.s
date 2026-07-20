@@ -231,6 +231,8 @@ fail_get_nex_pwd_no_close_archivehandle:
 ; This way, we redirect SpotPass requests to our server.
 ; For example, "https://npdl.cdn.nintendowifi.net/some/path" should be turned into "https://api.netpass.cafe/npdl/some/path"
 
+; For Nintendo Video support we need to turn "http://pubXX-p.est.c.app.nintendowifi.net/some/path" into "https://api.netpass.cafe/pubXX-p/some/path"
+
 strncmp equ 0x125148
 strncpy equ 0x126C08
 strlen equ 0x12775c
@@ -265,12 +267,12 @@ BOSS_ConvertAakamaitoNPDL_SecondEnding equ 0x10B1FE
 .area 0x18
 .db 0, 0 ; zero-termination of "string"
 ConvertAakamaitoNPDL_NewFirstEnding:
-  push {r4, r5, r6, r7, lr}
+  push {r4, r5, r6, r7, r8, lr}
   bl sub_10C104 ; Call the original method
   b BranchToPatchSpotpassUrl
 
 ConvertAakamaitoNPDL_NewSecondEnding:
-  push {r4, r5, r6, r7, lr}
+  push {r4, r5, r6, r7, r8, lr}
   blx strncpy ; Call the original method
 
 BranchToPatchSpotpassUrl:
@@ -380,17 +382,17 @@ PatchSpotpassUrl_cont2:
 
   ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
   cmp r1, 'n' ; Is it an 'n'?
-  bne PatchSpotpassUrl_SkipPatch_Redirect2 ; If not, we have nothing to patch, move on
+  bne PatchSpotpassUrl_Video_Redirect2 ; If not, we have nothing to patch, move on
 
   add r0, r0, 1 ; Increment the reusable index
   ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
   cmp r1, 'p' ; Is it an 'p'?
-  bne PatchSpotpassUrl_SkipPatch_Redirect2 ; If not, we have nothing to patch, move on
+  bne PatchSpotpassUrl_Video_Redirect2 ; If not, we have nothing to patch, move on
 
   bl PatchSpotpassUrl_cont3
 
-PatchSpotpassUrl_SkipPatch_Redirect2:
-  bl PatchSpotpassUrl_SkipPatch
+PatchSpotpassUrl_Video_Redirect2:
+  bl PatchSpotpassUrl_Video
 
 .endarea
 
@@ -403,15 +405,15 @@ PatchSpotpassUrl_cont3:
 PatchSpotpassUrl_FindEndSubdomainLoop_NextIteration:
   add r0, r0, 1 ; Increment the reusable index
   cmp r0, r6
-  bge PatchSpotpassUrl_SkipPatch_Redirect3
+  bge PatchSpotpassUrl_Video_Redirect3
 
   ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
 
   cmp r1, 0 ; Is it null?
-  beq PatchSpotpassUrl_SkipPatch_Redirect3 ; If so, we have nothing to patch, move on
+  beq PatchSpotpassUrl_Video_Redirect3 ; If so, we have nothing to patch, move on
   
   cmp r1, '/' ; Is it a slash?
-  beq PatchSpotpassUrl_SkipPatch_Redirect3 ; If so, we have nothing to patch, move on
+  beq PatchSpotpassUrl_Video_Redirect3 ; If so, we have nothing to patch, move on
   
   cmp r1, '.' ; Is it a dot?
   bne PatchSpotpassUrl_FindEndSubdomainLoop_NextIteration ; If not, move to the next iteration
@@ -424,8 +426,8 @@ PatchSpotpassUrl_FindEndSubdomainLoop_EndLoop:
 
   bl PatchSpotpassUrl_cont4
 
-PatchSpotpassUrl_SkipPatch_Redirect3:
-  bl PatchSpotpassUrl_SkipPatch
+PatchSpotpassUrl_Video_Redirect3:
+  bl PatchSpotpassUrl_Video
 
 .endarea
 
@@ -452,6 +454,8 @@ PatchSpotpassUrl_cont4:
   add r7, r7, r2 ; Make our index point to the path part of the URL
   blx strncmp
 
+  cmp r0, 0 ; Is the result 0
+  bne PatchSpotpassUrl_Video_Redirect1 ; If not, then it means we're not looking at the domain we want to patch, so move on
   bl PatchSpotpassUrl_cont5
 
 .align
@@ -464,11 +468,10 @@ initialSpotpassUrlPtr:
 .area 0x34
 .db 0, 0 ; zero-termination of "string"
 PatchSpotpassUrl_cont5:
-  cmp r0, 0 ; Is the result 0?
-  bne PatchSpotpassUrl_SkipPatch ; If not, then it means we're not looking at the domain we want to patch, so move on
-  
+  ldr r3, [newSpotpassUrlPtr]
+PatchSpotpassUrl_Apply:
   ; Copy the URL to the temporary buffer
-
+  mov r8, r3
   mov r0, r5 ; Temporary buffer
   mov r1, r4 ; URL buffer
   mov r2, r6 ; URL/Temporary buffer size
@@ -479,24 +482,17 @@ PatchSpotpassUrl_cont5:
   mov r0, r4 ; URL Buffer
   mov r1, r6 ; URL/Temporary buffer size
   ldr r2, [newSpotpassUrlPatternPtr] ; Pattern
-  ldr r3, [newSpotpassUrlPtr] ; Custom BOSS URL
+  mov r3, r8
   add r4, r5, r7 ; Temporary buffer + length of the original prefix = rest of URL
   str r4, [sp, 4]
   add r4, sp, 8 ; Subdomain buffer
   str r4, [sp, 0]
   bl snprintf
-  
-PatchSpotpassUrl_SkipPatch:
-  ; Move the stack pointer to its original position
 
-  add sp, r6
-  add sp, 0x18
+  bl PatchSpotpassUrl_SkipPatch
 
-  ; Restore the registers we've saved and return to the patched function
-
-  pop {r0, r1, r2, r3}
-  pop {r4, r5, r6, r7, pc}
-
+PatchSpotpassUrl_Video_Redirect1:
+  bl PatchSpotpassUrl_Video
 .align
 newSpotpassUrlPtr:
   .word newSpotpassUrl
@@ -505,6 +501,141 @@ newSpotpassUrlPatternPtr:
 
 .endarea
 
+.org 0x111878
+.area 0x2C
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_Video:
+  mov r0, r4 ; original url
+  ldr r1, [initialNintendoVideoProtocolPtr]
+  mov r2, 7
+  blx strncmp
+  
+  cmp r0, 0
+  bne PatchSpotpassUrl_SkipPatch_Redirect2 ; if we do not match, we return
+
+  add r0, r0, 7
+  ; Now, r0 contains the index to the subdomain part of the URL
+  ; Make sure it starts with "pub"
+  ; 
+  mov r2, r0 ; Back up the index of the subdomain
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
+  cmp r1, 'p'
+  bne PatchSpotpassUrl_SkipPatch_Redirect2
+
+  add r0, r0, 1
+  ;ldrb r1, [r4, r0]
+  ;cmp r1, 'u'
+  ;bne PatchSpotpassUrl_SkipPatch_Redirect2
+
+  add r0, r0, 1
+  bl PatchSpotpassUrl_Video_cont1
+  
+PatchSpotpassUrl_SkipPatch_Redirect2:
+  bl PatchSpotpassUrl_SkipPatch
+
+.align
+initialNintendoVideoProtocolPtr:
+  .word initialNintendoVideoProtocol
+.endarea
+
+.org 0x1154BC
+.area 0x24
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_Video_cont1:
+  ldrb r1, [r4, r0]
+  cmp r1, 'b'
+  bne PatchSpotpassUrl_SkipPatch_Redirect3
+
+  ; now we know that the subdomain starts with "pub", so loop until we find the dot
+PatchSpotpassUrl_Video_FindEndSubdomainLoop_NextIteration:
+  add r0, r0, 1
+  cmp r0, r6
+  bge PatchSpotpassUrl_SkipPatch_Redirect3
+
+  ldrb r1, [r4, r0] ; Read the r0'th character of the URL buffer
+  cmp r1, 0
+  beq PatchSpotpassUrl_SkipPatch_Redirect3
+  cmp r1, '/'
+  beq PatchSpotpassUrl_SkipPatch_Redirect3
+  cmp r1, '.'
+  bne PatchSpotpassUrl_Video_FindEndSubdomainLoop_NextIteration
+
+  bl PatchSpotpassUrl_Video_cont2
+
+PatchSpotpassUrl_SkipPatch_Redirect3:
+  bl PatchSpotpassUrl_SkipPatch
+.endarea
+
+.org 0x1225D0
+.area 0x18
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_Video_cont2:
+  ; ok, we know that the subdomain part start is correct
+  add r0, r0, 1 ; skip the dot
+  mov r7, r0 ; Back-up the index to the end of the subdomain
+  
+  add r1, r4, r2 ; URL buffer + Subdomain index
+  sub r2, r0, r2 ; End of subdomain index - subdomain index
+  add r0, sp, 8 ; Subdomain buffer
+  blx strncpy
+  
+  bl PatchSpotpassUrl_Video_cont3
+.endarea
+
+.org 0x122BEC
+.area 0x18
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_Video_cont3:
+  ; Get the length of the domain we want to patch
+  ldr r0, [initialNintendoVideoUrlPtr] ; Pointer to the original domain
+  blx strlen
+  mov r2, r0 ; Save its length into r2
+  ; Check that the domain of the URL is the one we're targeting
+  mov r0, r7 ; Get back the index to the end of the subdomain
+  add r0, r4, r0 ; Get the pointer this corresponds to in the URL buffer
+  ldr r1, [initialNintendoVideoUrlPtr] ; Index to compare to
+
+  bl PatchSpotpassUrl_Video_cont4
+
+.align
+initialNintendoVideoUrlPtr:
+  .word initialNintendoVideoUrl
+.endarea
+
+.org 0x122F04
+.area 0x20
+.db 0, 0 ; zero-termination of "string"
+PatchSpotpassUrl_Video_cont4:
+  add r7, r7, r2 ; Make our index point to the path part of the URL
+  blx strncmp
+  cmp r0, 0 ; Is the result 0?
+  bne PatchSpotpassUrl_SkipPatch_Redirect4
+  
+  ldr r3, [newNintendoVideoUrlPtr]
+  bl PatchSpotpassUrl_Apply
+
+PatchSpotpassUrl_SkipPatch_Redirect4:
+  bl PatchSpotpassUrl_SkipPatch
+.align
+newNintendoVideoUrlPtr:
+  .word newNintendoVideoUrl
+.endarea
+
+.org 0x123158
+.area 0x20
+.db 0, 0 ; zero-termination of "string"
+
+PatchSpotpassUrl_SkipPatch:
+  ; Move the stack pointer to its original position
+  
+  add sp, r6
+  add sp, 0x18
+  
+  ; Restore the registers we've saved and return to the patched function
+  
+  pop {r0, r1, r2, r3}
+  pop {r4, r5, r6, r7, r8, pc}
+.endarea
 
 ; When the server returns a 30X (redirect), the path part is copied into the URL buffer, but with an artificial limit of 0x40 bytes, which breaks URLs considering it's super short.
 ; The buffer it's stored into already is larger, so just increase it that limit to 0xFC, it should have us covered.
@@ -538,9 +669,14 @@ newSpotpassUrlPatternPtr:
 ;   - 0x113694
 ;   - 0x113818
 ;   - 0x1138D8
+;   - 0x111878
+;   - 0x1154BC
+;   - 0x1225D0
+;   - 0x122F04
+;   - 0x123158
 ; Free strings:
-;  - 00111878, 001154BC, 001225D0, 00122BEC, 00122F04, 00123158, 0012984C, 001299C0, 0012EC74, 0012F0BC, 0012F1A8, 0012F1E0, 0013B3FC
-;        0x2C,     0x24,     0x18,     0x18,     0x20,     0x20,     0x28,     0x2C,     0x18,     0x30,     0x38,     0x20,     0x18
+;  - 0012984C, 001299C0, 0012EC74, 0012F0BC, 0012F1A8, 0012F1E0, 0013B3FC
+;        0x28,     0x2C,     0x18,     0x30,     0x38,     0x20,     0x18
 
 
 ;;;
@@ -554,6 +690,15 @@ initialSpotpassUrl:
   .align 4
 newSpotpassUrl:
   .asciiz "https://api.netpass.cafe/"
+  .align 4
+initialNintendoVideoProtocol:
+  .asciiz "http://"
+  .align 4
+initialNintendoVideoUrl:
+  .asciiz "est.c.app.nintendowifi.net"
+  .align 4
+newNintendoVideoUrl:
+  .asciiz "https://api.netpass.cafe/v/"
   .align 4
 newSpotpassUrlPattern:
   .asciiz "%s%s%s"
