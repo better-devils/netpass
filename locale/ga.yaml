@@ -16,7 +16,7 @@ str_settings: 'Socruithe'
 str_download_data: 'Íoslódáil sonraí pearsanta'
 str_delete_data: 'Scrios sonraí pearsanta'
 str_back: 'Ar ais'
-str_language: 'Béarla'
+str_language: 'Gaeilge'
 str_goto_beach: 'Téigh go dtí an Trá'
 str_at_beach: 'Tá tú ag an Trá.'
 str_goto_arcade: 'Téigh go dtí an Stuara'
@@ -122,14 +122,14 @@ str_already_registered: "Earráid: Consól cláraithe cheana féin!\n\nMá tá t
   idir an t-aithriseoir agus an consól."
 str_backup_nid_pwd: "Cruthóidh NetPass an comhad seo a leanas chun do chonsól a fhíordheimhniú,
   mar sin, déan cóip chúltaca de!\nsdmc:/config/netpass/nid_pwd.bin"
-str_time_correct: An bhfuil tú cinnte go bhfuil an t-am agus an dáta ceart?
+str_time_correct: An bhfuil tú cinnte go bhfuil an t-am agus an dáta i gceart?
 str_time_success: Rath ar shocrú ama! NetPass á athosú anois...
-str_time_failed: Theip ar shocrú ama!
+str_time_failed: Teipeadh ar shocrú ama!
 str_banned: "Cuireadh cosc ort úsáid as NetPass. Fáth:\n%s\n\nTús an choisc: %s\n\
   Deireadh an choisc: %s"
-str_new_version_failed: Theip ar shuiteáil an leagáin nua. Is féidir leat é a 
+str_new_version_failed: Teipeadh ar shuiteáil an leagáin nua. Is féidir leat é a
   thriail arís trí Universal Updater nó trí Cód QR.
-str_failed_to_authenticate: Theip ar fhiordheimhniú. Bain triail as arís níos 
+str_failed_to_authenticate: Teipeadh ar fhiordheimhniú. Bain triail as arís níos
   déanaí. Má leanann an fhadbh ar aghaidh, téigh i dteagmháil linn! 
   https://netpass.cafe
 str_set_time: Ní oibríonn NetPass i gceart ach amháin má tá an t-am córais 
