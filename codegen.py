@@ -1,4 +1,4 @@
-import os, yaml, json, struct, requests
+import os, yaml, json, struct, requests, budoux
 from io import BytesIO
 from zipfile import ZipFile
 
@@ -36,9 +36,19 @@ replace_map = {
 def l(s):
 	return (language_map[s] if s in language_map else s).upper()
 
-def _s(s):
+budoux_parser_traditional_chinese = budoux.load_default_traditional_chinese_parser()
+budoux_parser_simplified_chinese = budoux.load_default_simplified_chinese_parser()
+budoux_parser_japanese = budoux.load_default_japanese_parser()
+
+def _s(lang, s):
 	for r, p in replace_map.items():
 		s = s.replace(f"{{{r}}}", p)
+	if lang == "zh_Hant":
+		s = "\u200b".join(budoux_parser_traditional_chinese.parse(s))
+	elif lang == "zh_Hans":
+		s = "\u200b".join(budoux_parser_simplified_chinese.parse(s))
+	elif lang == "ja":
+		s = "\u200b".join(budoux_parser_japanese.parse(s))
 	return s
 
 print("Fetching locales...")
@@ -64,7 +74,7 @@ for file in os.listdir(SRCDIR):
 			if this_lang_strings > total_lang_strings*0.5 or l(language) in NINTENDO_LANGUAGES:
 				translations[language] = strs
 				for key in translations[language].keys():
-					translations[language][key] = _s(translations[language][key])
+					translations[language][key] = _s(language, translations[language][key])
 
 headerfile = "#pragma once\n\n#include <3ds.h>\n"
 headerfile += f"#define NUM_NINTENDO_LANGUAGES {len(NINTENDO_LANGUAGES)}\n"
@@ -129,31 +139,31 @@ for lang in lang_keys:
 	with localezip.open(f"cldr-dates-full/main/{langfile}/ca-generic.json") as file:
 		d = json.loads(file.read())
 		d = d["main"][langfile]["dates"]["calendars"]["iso8601"]
-		
+
 		# month abbr
 		if "%b" in formatstr:
 			lc_time[lang]["months_abbr"] = []
 			for i in range(12):
 				lc_time[lang]["months_abbr"].append(d["months"]["format"]["abbreviated"][str(i + 1)])
-		
+
 		# month
 		if "%B" in formatstr:
 			lc_time[lang]["months"] = []
 			for i in range(12):
 				lc_time[lang]["months"].append(d["months"]["format"]["wide"][str(i + 1)])
-		
+
 		# weekday abbr
 		if "%a" in formatstr:
 			lc_time[lang]["weekdays_abbr"] = []
 			for i in ("sun", "mon", "tue", "wed", "thu", "fri", "sat"):
 				lc_time[lang]["weekdays_abbr"].append(d["days"]["format"]["abbreviated"][i])
-		
+
 		# weekday abbr
 		if "%A" in formatstr:
 			lc_time[lang]["weekdays"] = []
 			for i in ("sun", "mon", "tue", "wed", "thu", "fri", "sat"):
 				lc_time[lang]["weekdays"].append(d["days"]["format"]["wide"][i])
-		
+
 		# am/pm
 		if "%p" in formatstr:
 			lc_time[lang]["ampm"] = []

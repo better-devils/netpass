@@ -49,7 +49,9 @@ You need to have the following tools installed and added in your ``PATH`` enviro
 - [Python](https://www.python.org)
   - [Python-PyYAML](https://pypi.org/project/PyYAML/)
   - [Python-Requests](https://pypi.org/project/requests/)
+  - [BudouX](https://pypi.org/project/budoux/)
 - [Bannertool](https://github.com/diasurgical/bannertool/releases)
+- [Citro2D](https://github.com/Sorunome/citro2d/tree/soru/better-line-break): We use a modified Citro2D, you have to build it from here
 
 #### Additional prerequisite to build the `.cia` file
  - Makerom: You need the `makerom` executable in your `PATH` environment variable
