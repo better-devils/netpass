@@ -36,6 +36,7 @@
 #include "scenes/loading.h"
 #include "scenes/settings.h"
 #include "scenes/switch.h"
+#include "spotpass.h"
 #include "render.h"
 #include "utils.h"
 
@@ -67,7 +68,7 @@ static Scene* load_is_banned(void) {
 	} else {
 		strncpy(ban_end, "N/A", sizeof(ban_end));
 	}
-	
+
 	Scene* scene = getSettingsScene();
 	char* message = malloc(1000);
 	if (message) {
@@ -88,39 +89,125 @@ static Scene* load_new_version(Scene* scene) {
 		C2D_Font font = _font(str_new_version);
 		static const char* filename_cia = "sdmc:/config/netpass/netpass.cia";
 		static const char* filename_3dsx_tmp = "sdmc:/config/netpass/netpass.3dsx";
-		Scene* version_scene = getPromptSceneStr(message, font, getDownloadProgressScene(&reply_new_version, getSwitchScene(lambda(Scene*, (void) {
-			curlFreeHandler(reply_new_version->offset);
-			if (R_FAILED(ping_res)) {
-				return getInfoScene(str_new_version_failed);
+
+		u32 version;
+		u32 ns_data_id = filename_3dsx ? 0x1 : 0x2;
+		Result res = bossGetNsDataHeaderInfo(ns_data_id, 0x5, &version, 4);
+		bool use_boss = false;
+		if (R_SUCCEEDED(res)) {
+			u8 major = version >> 10;
+			u8 minor = version >> 4 & 0b111111;
+			u8 patch = version & 0b1111;
+			if (major == ping_response.version.major &&
+				minor == ping_response.version.minor &&
+				patch == ping_response.version.patch) {
+				use_boss = true;
+			} else {
+				bossDeleteNsData(ns_data_id);
 			}
-			// things were successful, let's restart!
-			return getLoadingScene(getRestartScene(), lambda(void, (void) {
-				aptSetHomeAllowed(true);
-			}));
-		})), lambda(void, (void) {
-			if (filename_3dsx) {
-				// this is easy, just download and overwrite the file
-				// we first download it to a different file to prevent weird glitches with music and whatnot
-				mkdir_p(filename_3dsx_tmp);
-				logln(DEBUG, "filename: %s\n", filename_3dsx);
-				logln(DEBUG, "tmp filename: %s\n", filename_3dsx_tmp);
-				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, &reply_new_version, filename_3dsx_tmp));
+		}
+
+		Scene* process_scene;
+		if (use_boss) {
+			process_scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+				if (R_FAILED(ping_res)) {
+					aptSetHomeAllowed(true);
+					return getInfoScene(str_new_version_failed);
+				}
+				// things were successful, let's restart!
+				return getLoadingScene(getRestartScene(), lambda(void, (void) {
+					aptSetHomeAllowed(true);
+				}));
+			})), lambda(void, (void) {
+				u32 ns_data_id = filename_3dsx ? 0x1 : 0x2;
+				const char* tmpfile = filename_3dsx ? filename_3dsx_tmp : filename_cia;
+				mkdir_p(tmpfile);
+				u32 size_read;
+				ping_res = _e(bossGetNsDataHeaderInfo(ns_data_id, 0x3, &size_read, 4));
+				s64 size = size_read;
 				if (R_FAILED(ping_res)) return;
-				aptSetHomeAllowed(false);
-				unlink(filename_3dsx);
-				if (cp(filename_3dsx_tmp, filename_3dsx) != 0) {
+				FILE* f = fopen(tmpfile, "wb");
+				if (!f) {
 					ping_res = _e_errno();
 					return;
 				}
-				return;
-			}
-			// ok, we have a cia file. this will be a tad harder.
-			mkdir_p(filename_cia);
-			ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, &reply_new_version, filename_cia));
-			if (R_FAILED(ping_res)) return;
-			aptSetHomeAllowed(false);
-			ping_res = install_cia(filename_cia);
-		})));
+				static const int chunk_size = 1024 * 1024 * 10;
+				u8* buf = malloc(chunk_size);
+				if (!buf) {
+					ping_res = ERROR_OUT_OF_MEMORY;
+					fclose(f);
+					return;
+				}
+				s64 offset = 0;
+				while (size > 0) {
+					logln(INFO, "%d bytes left", size);
+					u32 to_copy = size > chunk_size ? chunk_size : size;
+					u32 read;
+					ping_res = _e(bossReadNsData(ns_data_id, offset, buf, to_copy, &read, NULL));
+					if (R_FAILED(ping_res) || read != to_copy) {
+						free(buf);
+						fclose(f);
+						return;
+					}
+					if (fwrite(buf, to_copy, 1, f) != 1) {
+						free(buf);
+						fclose(f);
+						return;
+					}
+					offset += chunk_size;
+					size -= chunk_size;
+				}
+				free(buf);
+				fclose(f);
+
+				aptSetHomeAllowed(false);
+				if (filename_3dsx) {
+					unlink(filename_3dsx);
+					if (cp(filename_3dsx_tmp, filename_3dsx) != 0) {
+						ping_res = _e_errno();
+						return;
+					}
+					return;
+				}
+				ping_res = install_cia(filename_cia);
+			}));
+		} else {
+			process_scene = getDownloadProgressScene(&reply_new_version, getSwitchScene(lambda(Scene*, (void) {
+				curlFreeHandler(reply_new_version->offset);
+				if (R_FAILED(ping_res)) {
+					aptSetHomeAllowed(true);
+					return getInfoScene(str_new_version_failed);
+				}
+				// things were successful, let's restart!
+				return getLoadingScene(getRestartScene(), lambda(void, (void) {
+					aptSetHomeAllowed(true);
+				}));
+			})), lambda(void, (void) {
+				if (filename_3dsx) {
+					// this is easy, just download and overwrite the file
+					// we first download it to a different file to prevent weird glitches with music and whatnot
+					mkdir_p(filename_3dsx_tmp);
+					logln(DEBUG, "filename: %s\n", filename_3dsx);
+					logln(DEBUG, "tmp filename: %s\n", filename_3dsx_tmp);
+					ping_res = _e(httpRequest("GET", BASE_URL "/netpass.3dsx", 0, 0, &reply_new_version, filename_3dsx_tmp));
+					if (R_FAILED(ping_res)) return;
+					aptSetHomeAllowed(false);
+					unlink(filename_3dsx);
+					if (cp(filename_3dsx_tmp, filename_3dsx) != 0) {
+						ping_res = _e_errno();
+						return;
+					}
+					return;
+				}
+				// ok, we have a cia file. this will be a tad harder.
+				mkdir_p(filename_cia);
+				ping_res = _e(httpRequest("GET", BASE_URL "/netpass.cia", 0, 0, &reply_new_version, filename_cia));
+				if (R_FAILED(ping_res)) return;
+				aptSetHomeAllowed(false);
+				ping_res = install_cia(filename_cia);
+			}));
+		}
+		Scene* version_scene = getPromptSceneStr(message, font, process_scene);
 		version_scene->pop_scene = scene;
 		scene = version_scene;
 	}
@@ -159,7 +246,7 @@ static Scene* initial_scene(void) {
 			curlFreeHandler(reply->offset);
 			if (date == -1) return;
 			time_t now = time(NULL);
-			
+
 			if (llabs(now - date) > 60*60*18) {
 				server_date = date;
 			}
@@ -248,7 +335,7 @@ static void initial_load(void) {
 		if (R_FAILED(ping_res)) return;
 		have_mac_bak = true;
 	}
-	
+
 	if (!have_nid_pwd && !have_nid_pwd_bak) {
 		// we gotta register
 		logln(INFO, "First time opening NetPass, registering console...");
@@ -330,16 +417,16 @@ int main(int nargs, char** argv) {
 	_e(frdInit(false));
 	_e(fsInit());
 	_e(cecdInit());
-	
+
 	if (nargs >= 1) {
 		filename_3dsx = argv[0];
 	}
 
 	configInit(); // must be after cecdInit()
 	logInit(); // must be after configInit();
-	
+
 	bool output_bottom_screen = config.log_output != LogOutputBottomScreen;
-	
+
 	if (!output_bottom_screen) {
 		consoleInit(GFX_BOTTOM, NULL);
 	}
@@ -360,12 +447,12 @@ int main(int nargs, char** argv) {
 
 	logln(DEBUG, "DEBUG ON");
 
-	
+
 	// mount nand so that we can use it for some things
 	{
 		_e(archiveMount(ARCHIVE_NAND_RW, fsMakePath(PATH_EMPTY, ""), "nand"));
 	}
-	
+
 	_e(curlInit());
 	srand(time(NULL));
 
@@ -386,8 +473,10 @@ int main(int nargs, char** argv) {
 		_e(archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b"));
 		_e(FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path));
 	}
-	
+
 	_e(playMusic("home")); // start the default music
+	
+	setupSpotpass(filename_3dsx != 0);
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 	C3D_RenderTarget* bottom = output_bottom_screen ? C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT) : NULL;
@@ -398,14 +487,14 @@ int main(int nargs, char** argv) {
 		Result res = _e(get_os_version(&ver));
 		if (R_FAILED(res)) {
 			logln(INFO, "osGetSystemVersionData res: %08lX", res);
-			
+
 			logln(INFO, "Detected system version (cver): %d.%d.%d%c", ver.mainver, ver.minor, ver.build, ver.region);
 			u8 region;
 			res = CFGU_SecureInfoGetRegion(&region);
 			logln(INFO, "Get region (%08lX): %d", res, region);
 		}
 
-	
+
 		if (SYSTEM_VERSION(ver.mainver, ver.minor, ver.build) < SYSTEM_VERSION(11, 15, 0)) {
 			scene = getBadOsVersionScene();
 		} else {
@@ -413,12 +502,12 @@ int main(int nargs, char** argv) {
 			// as it does not even compile if we were to cast the returns to ints, this is clearly a cppcheck bug
 			// cppcheck-suppress CastAddressToIntegerAtReturn
 			scene = getLoadingScene(getSwitchScene(initial_scene), initial_load);
-		
+
 			if (_PATCHES_VERSION_ > config.patches_version) {
 				logln(INFO, "New patches version to apply!");
 				scene = getUpdatePatchesScene(scene);
 			}
-			
+
 			if (_WELCOME_VERSION_ > config.welcome_version) {
 				logln(INFO, "New Welcome Screen to show!");
 				scene = getWelcomeScene(scene);
@@ -450,7 +539,7 @@ int main(int nargs, char** argv) {
 			}
 			renderTopScene(scene);
 		}
-		
+
 		if (bottom) {
 			C2D_TargetClear(bottom, 0xFFFFFFFF);
 			C2D_SceneBegin(bottom);

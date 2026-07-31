@@ -28,7 +28,7 @@ AccessControlInfo:
   ReleaseKernelMinor            : "57" 
 
   # ExtData
-  UseExtSaveData                : false # enables ExtData       
+  UseExtSaveData                : true # enables ExtData       
   #ExtSaveDataId                : 0x300 # only set this when the ID is different to the UniqueId
 
   # FS:USER Archive Access Permissions

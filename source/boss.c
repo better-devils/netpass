@@ -39,6 +39,16 @@ Result bossGetStorageInfo(u64* exdata_id, u32* boss_size, u8* extdata_type) {
 	return (Result)cmdbuf[1];
 }
 
+Result bossSetOptoutFlag(bool flag) {
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x9, 1, 0);
+	cmdbuf[1] = flag;
+
+	if(R_FAILED(res = svcSendSyncRequest(bossGetSessionHandle()))) return res;
+	return (Result)cmdbuf[1];
+}
+
 Result bossUnregisterTask(char* task_id, u16 step_id) {
 	Result res = 0;
 	u32 size = strlen(task_id)+1;
@@ -76,6 +86,18 @@ Result bossGetTaskIdList(void) {
 	return (Result)cmdbuf[1];
 }
 
+Result bossGetStepIdList(const char* task_id) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0xF, 1, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
 Result bossReceiveProperty(BossPropertyId propertyId, void* buf, u32 size) {
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
@@ -89,7 +111,49 @@ Result bossReceiveProperty(BossPropertyId propertyId, void* buf, u32 size) {
 	return (Result)cmdbuf[1];
 }
 
-Result bossStartTask(char* task_id) {
+Result bossGetTaskInterval(const char* task_id, u32* interval) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x19, 1, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	ret = (Result)cmdbuf[1];
+	if (R_SUCCEEDED(ret) && interval) *interval = cmdbuf[2];
+	return ret;
+}
+
+Result bossGetTaskCount(const char* task_id, u32* count) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x1A, 1, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	ret = (Result)cmdbuf[1];
+	if (R_SUCCEEDED(ret) && count) *count = cmdbuf[2];
+	return ret;
+}
+
+Result bossGetTaskServiceStatus(const char* task_id, u8* service_status) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x1B, 1, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	ret = (Result)cmdbuf[1];
+	if (R_SUCCEEDED(ret) && service_status) *service_status = (u8)cmdbuf[2];
+	return ret;
+}
+
+Result bossStartTask(const char* task_id) {
 	Result res = 0;
 	u32 size = strlen(task_id)+1;
 	u32* cmdbuf = getThreadCommandBuffer();
@@ -102,7 +166,7 @@ Result bossStartTask(char* task_id) {
 	return (Result)cmdbuf[1];
 }
 
-Result bossCancelTask(char* task_id) {
+Result bossCancelTask(const char* task_id) {
 	Result res = 0;
 	u32 size = strlen(task_id)+1;
 	u32* cmdbuf = getThreadCommandBuffer();
@@ -112,5 +176,105 @@ Result bossCancelTask(char* task_id) {
 	cmdbuf[3] = (u32)task_id;
 
 	if(R_FAILED(res = svcSendSyncRequest(bossGetSessionHandle()))) return res;
+	return (Result)cmdbuf[1];
+}
+
+Result bossGetTaskCommErrorCode(const char* task_id, u32* err_code, u32* count, u8* current_step) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x22, 1, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	ret = (Result)cmdbuf[1];
+	if (R_SUCCEEDED(ret)) {
+		if (err_code) *err_code = cmdbuf[2];
+		if (count) *count = cmdbuf[3];
+		if (current_step) *current_step = (u8)cmdbuf[4];
+	}
+	return ret;
+}
+
+Result bossGetTaskStatus(const char* task_id, u8 step_id) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x23, 3, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = true;
+	cmdbuf[3] = step_id;
+	cmdbuf[4] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[5] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossGetTaskError(const char* task_id, u8 step_id) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x24, 2, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = step_id;
+	cmdbuf[3] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[4] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossGetTaskInfo(const char* task_id, u8 step_id) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x25, 2, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = step_id;
+	cmdbuf[3] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[4] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossSetNsDataNewFlag(u32 ns_data_id, bool new) {
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x2B, 2, 0);
+	cmdbuf[1] = ns_data_id;
+	cmdbuf[2] = new;
+
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossGetTaskPriority(const char* task_id, u8* priority) {
+	u32 size = strlen(task_id) + 1; // include 0 pointer
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x34, 1, 2);
+	cmdbuf[1] = size;
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)task_id;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	ret = (Result)cmdbuf[1];
+	if (R_SUCCEEDED(ret) && priority) *priority = (u8)cmdbuf[2];
+	return ret;
+}
+
+Result bossSetAppNewFlag(u64 app_id, bool flag) {
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x404, 1, 0);
+	cmdbuf[1] = flag;
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossGetAppIdList(void) {
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x40A, 0, 0);
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
 	return (Result)cmdbuf[1];
 }

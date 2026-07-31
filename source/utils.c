@@ -242,13 +242,19 @@ Result cp(const char* from_path, const char* to_path) {
 	if (!from) goto fail;
 	to = fopen(to_path, "wb");
 	if (!to) goto fail;
-	buf = malloc(1000);
-	if (!buf) goto fail;
+	
 	fseek(from, 0, SEEK_END);
 	size_t file_size = ftell(from);
 	fseek(from, 0, SEEK_SET);
+	int chunk_size = MIN(1024 * 1024 * 10, file_size);
+	buf = malloc(chunk_size);
+	if (!buf) {
+		chunk_size = 1000;
+		buf = malloc(chunk_size);
+		goto fail;
+	}
 	while (file_size > 0) {
-		size_t write_size = file_size < 1000 ? file_size : 1000;
+		size_t write_size = file_size < chunk_size ? file_size : chunk_size;
 		
 		if (fread(buf, write_size, 1, from) != 1) goto fail;
 		if (fwrite(buf, write_size, 1, to) != 1) goto fail;

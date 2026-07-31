@@ -40,9 +40,22 @@ typedef enum BossPropertyId {
 typedef BossHTTPHeader* BossHTTPHeaders;
 
 Result bossGetStorageInfo(u64* exdata_id, u32* boss_size, u8* extdata_type);
+Result bossSetOptoutFlag(bool flag);
 Result bossUnregisterTask(char* task_id, u16 step_id);
 Result bossReconfigureTask(char* task_id, u16 step_id);
 Result bossGetTaskIdList(void);
+Result bossGetStepIdList(const char* task_id);
 Result bossReceiveProperty(BossPropertyId propertyId, void* buf, u32 size);
-Result bossStartTask(char* task_id);
-Result bossCancelTask(char* task_id);
+Result bossGetTaskInterval(const char* task_id, u32* interval);
+Result bossGetTaskCount(const char* task_id, u32* count);
+Result bossGetTaskServiceStatus(const char* task_id, u8* service_status);
+Result bossStartTask(const char* task_id);
+Result bossCancelTask(const char* task_id);
+Result bossGetTaskCommErrorCode(const char* task_id, u32* err_code, u32* count, u8* current_step);
+Result bossGetTaskStatus(const char* task_id, u8 step_id);
+Result bossGetTaskError(const char* task_id, u8 step_id);
+Result bossGetTaskInfo(const char* task_id, u8 step_id);
+Result bossSetNsDataNewFlag(u32 ns_data_id, bool new);
+Result bossGetTaskPriority(const char* task_id, u8* priority);
+Result bossSetAppNewFlag(u64 app_id, bool flag);
+Result bossGetAppIdList(void);

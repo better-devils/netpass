@@ -16,3 +16,4 @@ patches/*/code.bin
 patches/*/out
 romfs/gfx
 romfs/music
+romfs/netpass.smdh
