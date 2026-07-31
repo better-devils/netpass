@@ -104,24 +104,23 @@ str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić
   skontaktuj się z moderatorami tej integracji.
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
-str_banned: "Zostałeś zbanowany w NetPass'ie. Powód:\n%s\n\nPoczątek bana: %s\nKoniec
-  bana: %s"
-str_new_version: "Nowa Wersja NetPass dostępna:\nv%d.%d.%d!\n\nCzy chcesz zaktualizować
+str_banned: "Nałożono na ciebie bana na NetPassie. Powód:\n%s\n\nOtrzymano: %s\nUpłynie:
+  %s"
+str_new_version: "Dostępna jest nowa wersja NetPass:\nv%d.%d.%d!\n\nCzy chcesz zaktualizować
   NetPass teraz?"
 str_at_event_location: Jesteś na specjalnym wydarzeniu.
-str_artist_copyright: Dzieło © %s
-str_enter_event_location: Czy jesteś pewien, że chcesz dołączyć do wydarzenia 
-  "%s"?
-str_new_version_failed: Instalacja nowej wersji zakończona niepowodzeniem. Wciąż
-  możesz zainstalować ją ponownie przez Universal Updater lub QR-Code.
+str_artist_copyright: Ilustracja © %s
+str_enter_event_location: Czy na pewno chcesz dołączyć do wydarzenia „%s”?
+str_new_version_failed: Instalacja nowej wersji się nie powiodła. Wciąż możesz 
+  zainstalować ją ponownie poprzez Universal Updater lub kod QR.
 str_report_list_empty: Lista zgłoszeń jest pusta.
-str_logging: 'Logi:'
+str_logging: 'Dzienniki:'
 str_logging_none: Brak
 str_logging_screen: Ekran
 str_logging_file: Plik
-str_downloading: Pobieranie...
-str_failed_to_authenticate: Autoryzacja nieudana! Proszę spróbuj ponownie 
-  później. Jeżeli problem się powtarza, proszę daj znać! https://netpass.cafe
+str_downloading: Pobieranie…
+str_failed_to_authenticate: Autoryzacja nieudana! Spróbuj ponownie później. 
+  Jeżeli problem będzie się powtarzał, daj nam znać! https://netpass.cafe
 str_already_registered: "Błąd: Konsola jest już zarejestrowana!\n\nJeżeli używasz
   używasz lub używałeś emulatora, upewnij się by zsynchronizować sdmc:/config/netpass/nid_pwd.bin
   pomiędzy emulatorem i konsolą."
