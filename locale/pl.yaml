@@ -119,18 +119,18 @@ str_logging_none: Brak
 str_logging_screen: Ekran
 str_logging_file: Plik
 str_downloading: Pobieranie…
-str_failed_to_authenticate: Autoryzacja nieudana! Spróbuj ponownie później. 
+str_failed_to_authenticate: Uwierzytelnianie nieudane! Spróbuj ponownie później.
   Jeżeli problem będzie się powtarzał, daj nam znać! https://netpass.cafe
-str_already_registered: "Błąd: Konsola jest już zarejestrowana!\n\nJeżeli używasz
-  używasz lub używałeś emulatora, upewnij się by zsynchronizować sdmc:/config/netpass/nid_pwd.bin
-  pomiędzy emulatorem i konsolą."
-str_backup_nid_pwd: "NetPass stworzy poniższy plik by zautentykować konsole, więc
-  upewnij się, by stworzyć jego kopię bezpieczeństwa!\nsdmc:/config/netpass/nid_pwd.bin"
-str_set_time: NetPass działa poprawnie tylko, gdy czas systemowy jest ustawiony 
-  poprawnie. Proszę zrób to!
-str_time_correct: Jesteś pewien, że czas i data są poprawne?
-str_time_success: Czas ustawiony poprawnie! Restartuje NetPass'a teraz...
-str_time_failed: Ustawienie czasu nieudane!
+str_already_registered: "Błąd: Konsola jest już zarejestrowana!\n\nJeżeli jest lub
+  był używany emulator, pamiętaj, by zsynchronizować sdmc:/config/netpass/nid_pwd.bin
+  pomiędzy emulatorem a konsolą."
+str_backup_nid_pwd: "NetPass utworzy poniższy plik w celu uwierzytelnienia konsoli,
+  dlatego koniecznie wykonaj jego kopię zapasową!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass działa poprawnie tylko przy prawidłowo ustawionym czasie 
+  systemowym. Ustaw go!
+str_time_correct: Czy na pewno czas i data są właściwe?
+str_time_success: Czas ustawiony poprawnie! NetPass zaraz ponownie się uruchomi…
+str_time_failed: Nie udało się ustawić czasu!
 str_scam_warning: NetPass to darmowe i otwarto-źródłowe oprogramowanie. Jeżeli 
   zapłaciłeś za to by je zainstalować zostałeś oszukany i powinieneś domagać się
   zwrotu.
