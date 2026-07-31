@@ -1,6 +1,6 @@
 str_loading: "Ładowanie    "
 str_libcurl_error: "Błąd libCURL (%d): %s"
-str_libcurl_date_and_time: 'Upewnij się, że data i czas na twojej konsoli jest ustawiony
+str_libcurl_date_and_time: 'Upewnij się, że data i czas na twojej konsoli są ustawione
   prawidłowo!'
 str_httpstatus_error: 'Błąd HTTP o kodzie %d'
 str_3ds_error: 'Błąd 3DS o kodzie %08lx'
@@ -131,6 +131,6 @@ str_set_time: NetPass działa poprawnie tylko przy prawidłowo ustawionym czasie
 str_time_correct: Czy na pewno czas i data są właściwe?
 str_time_success: Czas ustawiony poprawnie! NetPass zaraz ponownie się uruchomi…
 str_time_failed: Nie udało się ustawić czasu!
-str_scam_warning: NetPass to darmowe i otwarto-źródłowe oprogramowanie. Jeżeli 
-  zapłaciłeś za to by je zainstalować zostałeś oszukany i powinieneś domagać się
-  zwrotu.
+str_scam_warning: NetPass to darmowe oprogramowanie typu open source. Jeżeli 
+  za instalację pobrano od ciebie opłatę — oszukano cię. Zażądaj zwrotu 
+  pieniędzy.
