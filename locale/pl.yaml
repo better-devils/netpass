@@ -71,8 +71,8 @@ str_update_patches_desc: Aby poprawnie zainstalować NetPass, zostaną teraz
   włączania {power_button} konsoli. Możesz to zrobić po zaaplikowaniu łatek.
 str_settings_misc: Różne
 str_about_localisation: Lokalizacja
-str_about_special_thanks_txt: Społeczności 3ds homebrew za całą inżynierie 
-  wsteczną i dokumentacje
+str_about_special_thanks_txt: Społeczności homebrew 3DS za całą inżynierie 
+  wsteczną i dokumentację
 str_about_lead_dev: Główny deweloper
 str_about_reports: System raportowania
 str_about_graphics: Grafika
@@ -81,13 +81,13 @@ str_about_netpass_community: Społeczność NetPass
 str_about_special_thanks: Specjalne podziękowania
 str_about_production_cat: Kot produkcyjny
 str_settings_about: O aplikacji
-str_scan_qr: Skanuj Kod QR
-str_x_switch_camera: '{x_button} Przełącz Kamerę'
-str_prompt_verify: Jesteś pewien, że chcesz zweryfikować tego 3DS'a?
+str_scan_qr: Skanuj kod QR
+str_x_switch_camera: '{x_button} Przełącz kamerę'
+str_prompt_verify: Czy na pewno chcesz zweryfikować tego 3DSa?
 str_view_rules: Wyświetl Zasady
 str_view_privacy: Wyświetl Politykę Prywatności
 str_continue: Kontynuuj
-str_welcome: Witaj w NetPass
+str_welcome: Witaj w NetPass
 str_welcome_message: Przed uruchomieniem NetPass proszę przeczytać i 
   zaakceptować nasze zasady oraz politykę prywatności.
 str_bad_os_version: "NetPass wymaga wersję systemu 3DS 11.15.0 bądź nowszą aby prawidłowo
