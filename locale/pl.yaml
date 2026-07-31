@@ -84,24 +84,24 @@ str_settings_about: O aplikacji
 str_scan_qr: Skanuj kod QR
 str_x_switch_camera: '{x_button} Przełącz kamerę'
 str_prompt_verify: Czy na pewno chcesz zweryfikować tego 3DSa?
-str_view_rules: Wyświetl Zasady
-str_view_privacy: Wyświetl Politykę Prywatności
+str_view_rules: Wyświetl regulamin
+str_view_privacy: Wyświetl politykę prywatności
 str_continue: Kontynuuj
 str_welcome: Witaj w NetPass
-str_welcome_message: Przed uruchomieniem NetPass proszę przeczytać i 
-  zaakceptować nasze zasady oraz politykę prywatności.
-str_bad_os_version: "NetPass wymaga wersję systemu 3DS 11.15.0 bądź nowszą aby prawidłowo
-  funkcjonować. Niestety wygląda na to że używasz starszej wersji. Proszę zaktualizować
-  i otworzyć NetPass ponownie.\n\nWciśnij dowolny przycisk aby wyjść"
+str_welcome_message: Przed uruchomieniem NetPass należy przeczytać regulamin 
+  i politykę prywaności oraz wyrazić zgodę na ich warunki.
+str_bad_os_version: "NetPass wymaga systemu 3DSa w wersji 11.15.0 lub nowszej, aby
+  działać poprawnie. Niestety wygląda na to, że korzystasz ze starszej wersji. Zaktualizuj
+  system, a następnie uruchom ponownie NetPass.\n\nNaciśnij dowolny przycisk, by wyjść"
 str_update_patches_poweroff_clear_desc: Pomyślnie usunięto łatki! Twoja konsola 
-  uruchomi się teraz ponownie.
-str_bg_music: Muzyka w Tle
-str_prompt_dl_pass: Czy jesteś pewien, że chcesz pobrać to spotkanie?
+  ponownie się teraz uruchomi.
+str_bg_music: Muzyka w tle
+str_prompt_dl_pass: Czy na pewno chcesz pobrać to spotkanie?
 str_remove: Usuń
 str_skip: Pomiń
 str_install: Instaluj
-str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić, 
-  proszę napisać do zespołu moderacji danej integracji.
+str_report_integration: Ta wiadomość pochodzi z integracji. Aby ją zgłosić, 
+  skontaktuj się z moderatorami tej integracji.
 str_date: '%d.%m.%Y'
 str_date_time: '%d.%m.%Y %H:%M:%S'
 str_banned: "Zostałeś zbanowany w NetPass'ie. Powód:\n%s\n\nPoczątek bana: %s\nKoniec
