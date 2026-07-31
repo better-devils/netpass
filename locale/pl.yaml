@@ -55,13 +55,14 @@ str_report_source_unknown: Nieznane źródło
 str_b_cancel: '{b_button} Anuluj'
 str_a_ok: '{a_button} OK'
 str_update_patches: Aktualizuj łatki
-str_update_patches_poweroff_desc: Aktualizacja łatek zakończona sukcesem! Twoja 
-  konsola zostanie teraz ponownie uruchomiona.
+str_update_patches_poweroff_desc: Aktualizacja łatek się powiodła! Twoja konsola
+  zostanie teraz ponownie uruchomiona.
 str_report_mii_plaza_custom_message: 'Twoja spersonalizowana wiadomość: %s'
 str_update_patches_error_desc: Coś poszło nie tak podczas aktualizacji łatek. 
-  Zgłoś ten problem na GitLab, GBAtemp lub Discord. https://netpass.cafe/discord
-str_integrations_message: Integracje stron trzecich są poza moderacją NetPass. 
-  Używaj na własne ryzyko!
+  Zgłoś ten problem na GitLabie, GBAtemp lub Discordzie. 
+  https://netpass.cafe/discord
+str_integrations_message: Integracje z usługami stron trzecich nie podlegają 
+  moderacji NetPass. Korzystasz z nich na własne ryzyko!
 str_report_mii_name: 'Imię Mii: %s'
 str_update_patches_desc: Aby poprawnie zainstalować NetPass, zostaną teraz 
   utworzone łatki do sysmodule. Aby działały, musisz włączyć opcję „Enable 
@@ -72,12 +73,12 @@ str_settings_misc: Różne
 str_about_localisation: Lokalizacja
 str_about_special_thanks_txt: Społeczności 3ds homebrew za całą inżynierie 
   wsteczną i dokumentacje
-str_about_lead_dev: Główny Deweloper
-str_about_reports: System Raportowania
-str_about_graphics: Obrazy i Grafika
+str_about_lead_dev: Główny deweloper
+str_about_reports: System raportowania
+str_about_graphics: Grafika
 str_about_music: Muzyka
 str_about_netpass_community: Społeczność NetPass
-str_about_special_thanks: Specjalne Podziękowania
+str_about_special_thanks: Specjalne podziękowania
 str_about_production_cat: Kot produkcyjny
 str_settings_about: O aplikacji
 str_scan_qr: Skanuj Kod QR
