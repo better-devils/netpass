@@ -39,12 +39,13 @@ typedef enum BossPropertyId {
 
 typedef BossHTTPHeader* BossHTTPHeaders;
 
-Result bossGetStorageInfo(u64* exdata_id, u32* boss_size, u8* extdata_type);
+Result bossGetStorageInfo(u32* storage_size);
 Result bossSetOptoutFlag(bool flag);
 Result bossUnregisterTask(char* task_id, u16 step_id);
 Result bossReconfigureTask(char* task_id, u16 step_id);
 Result bossGetTaskIdList(void);
 Result bossGetStepIdList(const char* task_id);
+Result bossGetNsDataIdList(u32 filter, u32 max_entries, u16 start_index, u32 start_data_id, u32* entries, u16* num_entries, u16* end_index);
 Result bossReceiveProperty(BossPropertyId propertyId, void* buf, u32 size);
 Result bossGetTaskInterval(const char* task_id, u32* interval);
 Result bossGetTaskCount(const char* task_id, u32* count);
@@ -56,6 +57,7 @@ Result bossGetTaskStatus(const char* task_id, u8 step_id);
 Result bossGetTaskError(const char* task_id, u8 step_id);
 Result bossGetTaskInfo(const char* task_id, u8 step_id);
 Result bossSetNsDataNewFlag(u32 ns_data_id, bool new);
+Result bossRegisterStorageEntry(u64 title_id, u32 storage_size, u16 entry_id, u8 media_type);
 Result bossGetTaskPriority(const char* task_id, u8* priority);
 Result bossSetAppNewFlag(u64 app_id, bool flag);
 Result bossGetAppIdList(void);

@@ -25,16 +25,14 @@
 #include <3ds/ipc.h>
 #include <string.h>
 
-Result bossGetStorageInfo(u64* exdata_id, u32* boss_size, u8* extdata_type) {
+Result bossGetStorageInfo(u32* storage_size) {
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x4, 0, 0);
 
 	if(R_FAILED(res = svcSendSyncRequest(bossGetSessionHandle()))) return res;
 
-	memcpy(exdata_id, &cmdbuf[2], sizeof(u64));
-	*boss_size = cmdbuf[4];
-	*extdata_type = cmdbuf[5];
+	if (storage_size) *storage_size = cmdbuf[2];
 
 	return (Result)cmdbuf[1];
 }
@@ -95,6 +93,24 @@ Result bossGetStepIdList(const char* task_id) {
 	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
 	cmdbuf[3] = (u32)task_id;
 	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossGetNsDataIdList(u32 filter, u32 max_entries, u16 start_index, u32 start_data_id, u32* entries, u16* num_entries, u16* end_index) {
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x10, 4, 2);
+	cmdbuf[1] = filter;
+	cmdbuf[2] = max_entries;
+	cmdbuf[3] = start_index;
+	cmdbuf[4] = start_data_id;
+
+	cmdbuf[5] = IPC_Desc_Buffer(max_entries * sizeof(u32), IPC_BUFFER_W);
+	cmdbuf[6] = (u32)entries;
+	
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	if (num_entries) *num_entries = cmdbuf[2];
+	if (end_index) *end_index = cmdbuf[3];
 	return (Result)cmdbuf[1];
 }
 
@@ -244,6 +260,20 @@ Result bossSetNsDataNewFlag(u32 ns_data_id, bool new) {
 	cmdbuf[1] = ns_data_id;
 	cmdbuf[2] = new;
 
+	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
+	return (Result)cmdbuf[1];
+}
+
+Result bossRegisterStorageEntry(u64 title_id, u32 storage_size, u16 entry_id, u8 media_type) {
+	Result ret = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x2F, 5, 0);
+	cmdbuf[1] = (u32) title_id;
+	cmdbuf[2] = (u32) (title_id >> 32);
+	cmdbuf[3] = storage_size;
+	cmdbuf[4] = entry_id;
+	cmdbuf[5] = media_type;
+	
 	if (R_FAILED(ret = svcSendSyncRequest(bossGetSessionHandle()))) return ret;
 	return (Result)cmdbuf[1];
 }

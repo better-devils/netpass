@@ -97,8 +97,11 @@ Result waitForCecdState(bool start, int command, CecStateAbbrev state);
 Result cecdInit(void);
 Result cecdGetState(u32* state);
 Result cecdGetSystemInfo(u32 destbuf_size, void* destbuf);
+Result cecdOpenRawFile(u32 program_id, u32 path_type, u32 open_flag, u32* out_filesize);
+Result cecdReadRawFile(u32 size, u8* buf);
 Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id);
 Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac);
+Result cecdWriteRawFile(u32 size, u8* buf);
 Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id);
 Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac);
 Result cecdStart(CecCommand command);
@@ -125,6 +128,7 @@ Handle cecdGetServHandle(void);
 Result updateStreetpassOutbox(u8* msgbuf);
 bool validateStreetpassMessage(u8* msgbuf);
 Result addStreetpassMessage(u8* msgbuf);
+Result registerStreetpassApplication(u32 title_id);
 
 typedef struct {
 	u32 magic; // 0x42504643 CFPB

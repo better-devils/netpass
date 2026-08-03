@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2026 Sorunome
  *               2026 Silentium
  *
  * This program is free software: you can redistribute it and/or modify
@@ -100,6 +100,42 @@ Result cecdGetState(u32* state) {
 	return res;
 }
 
+Result cecdOpenRawFile(u32 program_id, u32 path_type, u32 open_flag, u32* out_filesize) {
+	waitForNoSpr();
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x01, 3, 2);
+	cmdbuf[1] = program_id;
+	cmdbuf[2] = path_type;
+	cmdbuf[3] = open_flag;
+	
+	cmdbuf[4] = IPC_Desc_CurProcessId();
+	cmdbuf[5] = 0;
+
+	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
+	res = (Result)cmdbuf[1];
+	
+	if (out_filesize) *out_filesize = cmdbuf[2];
+
+	return res;
+}
+
+Result cecdReadRawFile(u32 size, u8* buf) {
+	waitForNoSpr();
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x02, 1, 2);
+	cmdbuf[1] = size;
+
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_W);
+	cmdbuf[3] = (u32)buf;
+
+	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
+	res = (Result)cmdbuf[1];
+
+	return res;
+}
+
 Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id) {
 	waitForNoSpr();
 	Result res = 0;
@@ -137,6 +173,22 @@ Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf
 	cmdbuf[8] = (u32)hmac;
 	cmdbuf[9] = IPC_Desc_Buffer(size, IPC_BUFFER_W);
 	cmdbuf[10] = (u32)buf;
+
+	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
+	res = (Result)cmdbuf[1];
+
+	return res;
+}
+
+Result cecdWriteRawFile(u32 size, u8* buf) {
+	waitForNoSpr();
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x05, 1, 2);
+	cmdbuf[1] = size;
+
+	cmdbuf[2] = IPC_Desc_Buffer(size, IPC_BUFFER_R);
+	cmdbuf[3] = (u32)buf;
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
 	res = (Result)cmdbuf[1];
@@ -690,4 +742,129 @@ Result addStreetpassMessage(u8* msgbuf) {
 cleanup_box:
 	free(boxbuf);
 	return res;
+}
+
+Result registerStreetpassApplication(u32 title_id) {
+	Result res;
+
+	// first, we see if we are already added and if there is space for us
+	{
+		CecMboxListHeader mboxlist;
+		res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mboxlist), (u8*)&mboxlist));
+		if (R_FAILED(res)) return res;
+
+		for (int i = 0; i < mboxlist.num_boxes; i++) {
+			u32 have_title_id = strtol((const char*)mboxlist.box_names[i], NULL, 16);
+			if (have_title_id == title_id) return 0; // all good, already registered
+		}
+
+		if (mboxlist.num_boxes >= 12) return -1; // already full, sorry
+	}
+
+	// now, create the needed folders
+	res = _e(cecdOpenRawFile(title_id, CEC_PATH_MBOX_DIR, 8, NULL));
+	if (R_FAILED(res)) return res;
+	res = _e(cecdOpenRawFile(title_id, CEC_PATH_INBOX_DIR, 8, NULL));
+	if (R_FAILED(res)) return res;
+	res = _e(cecdOpenRawFile(title_id, CEC_PATH_OUTBOX_DIR, 8, NULL));
+	if (R_FAILED(res)) return res;
+
+	// now, create the mbox
+	{
+		CecMBoxInfoHeader mbox = {
+			magic: 0x6363,
+			program_id: title_id,
+			box_type_flags: 0x1,
+			enabled: true,
+		};
+		// TODO: set an actual hmac key
+		memset(mbox.hmac_key, 0, 32);
+		memcpy(mbox.hmac_key, &title_id, 4); // lol
+		res = _e(cecdOpenRawFile(title_id, CEC_PATH_MBOX_INFO, 6, NULL));
+		if (R_FAILED(res)) return res;
+		res = _e(cecdWriteRawFile(sizeof(CecMBoxInfoHeader), (u8*)&mbox));
+		if (R_FAILED(res)) return res;
+	}
+
+	// now, create the inbox
+	{
+		CecBoxInfoHeader inbox = {
+			magic: 0x6262,
+			file_size: sizeof(CecBoxInfoHeader),
+			max_box_size: 262144, // TODO: change
+			box_size: 0,
+			max_num_messages: 25, // TODO: change
+			num_messages: 0,
+			max_batch_size: 25, // TODO: change
+			max_message_size: 102400, // TODO: change
+		};
+		//res = _e(cecdOpenAndWrite(title_id, CEC_PATH_INBOX_INFO, sizeof(CecBoxInfoHeader), (u8*)&inbox));
+		//if (R_FAILED(res)) return res;
+		res = _e(cecdOpenRawFile(title_id, CEC_PATH_INBOX_INFO, (1 << 4) | (1 << 2), NULL));
+		if (R_FAILED(res)) return res;
+		res = _e(cecdWriteRawFile(sizeof(CecBoxInfoHeader), (u8*)&inbox));
+		if (R_FAILED(res)) return res;
+	}
+
+	// now, create the outbox
+	{
+		CecBoxInfoHeader outbox = {
+			magic: 0x6262,
+			file_size: sizeof(CecBoxInfoHeader),
+			max_box_size: 102400, // TODO: change
+			box_size: 0,
+			max_num_messages: 1, // TODO: change
+			num_messages: 0,
+			max_batch_size: 1, // TODO: change
+			max_message_size: 102400, // TODO: change
+		};
+		res = _e(cecdOpenRawFile(title_id, CEC_PATH_OUTBOX_INFO, 6, NULL));
+		if (R_FAILED(res)) return res;
+		res = _e(cecdWriteRawFile(sizeof(CecBoxInfoHeader), (u8*)&outbox));
+		if (R_FAILED(res)) return res;
+
+		CecOBIndex index = {
+			magic: 0x6767,
+			num_messages: 0,
+		};
+		res = _e(cecdOpenRawFile(title_id, CEC_PATH_OUTBOX_INDEX, 6, NULL));
+		if (R_FAILED(res)) return res;
+		res = _e(cecdWriteRawFile(sizeof(CecOBIndex), (u8*)&index));
+		if (R_FAILED(res)) return res;
+	}
+
+	// create the name and icon
+	{
+		// TODO: actual name
+		u8 name[] = {'N', 0, 'e', 0, 't', 0, 'P', 0, 'a', 0, 's', 0, 's', 0, 0, 0};
+		res = _e(cecdOpenRawFile(title_id, CECMESSAGE_BOX_TITLE, 6, NULL));
+		if (R_FAILED(res)) return res;
+		res = _e(cecdWriteRawFile(sizeof(name), name));
+		if (R_FAILED(res)) return res;
+
+		u8* icon = malloc(48*48*2);
+		if (!icon) return ERROR_OUT_OF_MEMORY;
+		// TODO: actual icon
+		memset(icon, 0, 48*48*2);
+		res = _e(cecdOpenRawFile(title_id, CECMESSAGE_BOX_ICON, 6, NULL));
+		if (R_FAILED(res)) {
+			free(icon);
+			return res;
+		}
+		res = _e(cecdWriteRawFile(48*48*2, icon));
+		free(icon);
+		if (R_FAILED(res)) return res;
+	}
+
+	// finally, update mboxlist
+	{
+		CecMboxListHeader mboxlist;
+		res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mboxlist), (u8*)&mboxlist));
+		if (R_FAILED(res)) return res;
+		snprintf((char*)mboxlist.box_names[mboxlist.num_boxes], 0x10, "%08lx", title_id);
+		res = _e(cecdOpenAndWrite(title_id, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mboxlist));
+		if (R_FAILED(res)) return res;
+	}
+	
+	return 0;
 }

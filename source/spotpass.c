@@ -99,25 +99,27 @@ Result setupSpotpass(bool is_3dsx) {
 	// and priv mode so that we can pretend we are always running as cia.
 	// Because of homebrew we can do this! :D
 	const u32 netpass_id = 0xF6574;
+	const u64 full_netpass_id = 0x0004000000000000ull | (netpass_id << 8);
 
 	//cecdOpenRawFile(netpass_lower, CEC_PATH_MBOX_DIR, 8, NULL);
 	
-	Result res = _e(bossInit(0x0004000000000000ull | (netpass_id << 8), false));
+	Result res = _e(bossInit(full_netpass_id, false));
 	if (R_FAILED(res)) return res;
 
 	// Now, setting up storage.
 	{
-		u8* smdh = malloc(SMDH_SIZE);
-		if (!smdh) return _e(ERROR_OUT_OF_MEMORY);
 		// first, we check if we need to set it up at all
 		
 		FS_ExtSaveDataInfo info = {
 			mediaType: MEDIATYPE_SD,
 			saveId: netpass_id,
 		};
+		if (R_FAILED(bossGetStorageInfo(NULL)) || R_FAILED(FSUSER_ReadExtSaveDataIcon(NULL, info, 0, NULL))) {
+			u8* smdh = malloc(SMDH_SIZE);
+			if (!smdh) return _e(ERROR_OUT_OF_MEMORY);
 
-		if (R_FAILED(FSUSER_ReadExtSaveDataIcon(NULL, info, SMDH_SIZE, smdh))) {
 			// Ok, we have to set it up. So, for that we need to read our smdh.
+			logln(INFO, "Setting up spotpass storage...");
 			FILE* f = fopen("romfs:/netpass.smdh", "rb");
 			if (!f) {
 				res = _e_errno();
@@ -138,17 +140,28 @@ Result setupSpotpass(bool is_3dsx) {
 	
 			res = _e(bossSetStorageInfo(netpass_id, -1, MEDIATYPE_SD));
 			if (R_FAILED(res)) return res;
+
+			//res = _e(bossRegisterStorageEntry(netpass_id, -1, 0, MEDIATYPE_SD));
+			//if (R_FAILED(res)) return res;
 		} else {
-			free(smdh);
+			// re-set all the new flags
+			u32 ns_data_id_list[100];
+			u16 entries_read;
+			res = bossGetNsDataIdList(0xFFFFFFFF, 100, 0, 0, ns_data_id_list, &entries_read, NULL);
+			if (R_SUCCEEDED(res)) {
+				for (int i = 0; i < entries_read; i++) {
+					logln(INFO, "Found NS Data id %lx", ns_data_id_list[i]);
+					_e(bossSetNsDataNewFlag(ns_data_id_list[i], false));
+				}
+			}
+			bossSetAppNewFlag(full_netpass_id, false);
 		}
 	}
 	
 	// ok, storage is set up. Now, set up the boss tasks
-	
-	bossSetOptoutFlag(false);
-	bossSetAppNewFlag(0x0004000000000000ull | (netpass_id << 8), false);
-	bossSetNsDataNewFlag(0x1, false);
-	bossSetNsDataNewFlag(0x2, false);
+
+	// TODO: properly handle optout flag
+	_e(bossSetOptoutFlag(false));
 	
 	bossContext* ctx = malloc(sizeof(bossContext));
 	if (!ctx) return _e(ERROR_OUT_OF_MEMORY);
@@ -178,7 +191,7 @@ Result setupSpotpass(bool is_3dsx) {
 
 	// update task
 	snprintf(url, 100, "https://api.netpass.cafe/npdl/p01/nsa/netpass/%s/%s/netpass.%s", update_task, lang, is_3dsx ? "3dsx" : "cia");
-	bossSetupContextDefault(ctx, 60, url);
+	bossSetupContextDefault(ctx, 60*60*6, url);
 	ctx->property[0x0] = 0x7D; // re-set priority
 	strncpy(ctx->property_xd, "3ds-netpass-version", 0x20);
 #ifdef _VERSION_GIT_SHA_
