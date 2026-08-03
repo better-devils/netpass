@@ -157,15 +157,15 @@ static void load(void) {
 			// Open mbox_list now to avoid repeatedly doing it later
 			Result res = 0;
 			CecMboxListHeader mbox_list;
-			res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
-			if (R_FAILED(res)) continue;
+			res = _e(cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list));
+			bool loaded_mbox = R_SUCCEEDED(res);
 			
 			// Read titles ids
 			for (size_t i = 0; i < 24; i++) {
 				sscanf(&value[9*i], "%lx,", &config.title_ids_ignored[i]);
 				
 				// Remove title id if not in mbox_list
-				if (config.title_ids_ignored[i] == 0) continue;
+				if (config.title_ids_ignored[i] == 0 || !loaded_mbox) continue;
 				bool found = false;
 				for (size_t j = 0; j < mbox_list.num_boxes; j++) {
 					u32 title_id = strtol((const char*)mbox_list.box_names[j], NULL, 16);
