@@ -27,23 +27,27 @@
 
 #define SMDH_SIZE 14016
 #define NUM_NEWS_TASKS 5
+#define CUSTOM_IMS_HEADER "3ds-if-modified-since"
 
-Result taskDiffers(const char* task_id, bossContext* ctx, bool* result) {
-	*result = true;
+enum TaskDiffersResult {
+	TaskSame,
+	TaskReconfigure,
+	TaskRedo,
+	TaskCreate,
+};
+
+Result taskDiffers(const char* task_id, bossContext* ctx, enum TaskDiffersResult* result) {
+	// re-doing a task is a more bulletproof (but less nice) thing than
+	// re-configuring it.
+	// So, to determine what to do, we first have to test for all the things that
+	// will require re-doing it completely.
+	*result = TaskCreate;
 
 	// fist load the correct task
 	Result res = bossGetTaskInfo(task_id, 0);
 	if (R_FAILED(res)) return 0; // task does not exist
-	
-	// compare interval
-	u32 interval;
-	res = bossGetTaskInterval(task_id, &interval);
-	if (R_FAILED(res) || interval != ctx->property[0x3]) return res;
 
-	// compare priority
-	u8 priority;
-	res = bossGetTaskPriority(task_id, &priority);
-	if (R_FAILED(res) || priority != ctx->property[0x0]) return res;
+	*result = TaskRedo;
 
 	char* buf = malloc(0x360);
 	if (!buf) return ERROR_OUT_OF_MEMORY;
@@ -64,28 +68,75 @@ Result taskDiffers(const char* task_id, bossContext* ctx, bool* result) {
 	}
 	for (int i = 0; i < 3; i++) {
 		int offset = i*0x120;
-		if (strncmp(buf + offset, ctx->property_xd + offset, 0x20) != 0 || strncmp(buf + offset + 0x20, ctx->property_xd + offset + 0x20, 0x100) != 0) {
+		if (
+			strncmp(buf + offset, ctx->property_xd + offset, 0x20) != 0
+			|| strncmp(buf + offset + 0x20, ctx->property_xd + offset + 0x20, 0x100) != 0
+		) {
+			if (strncmp(buf + offset, CUSTOM_IMS_HEADER, 0x20) == 0) continue;
 			free(buf);
 			return res;
 		}
 	}
 	free(buf);
+	
+	*result = TaskReconfigure;
+	
+	// compare interval
+	u32 interval;
+	res = bossGetTaskInterval(task_id, &interval);
+	if (R_FAILED(res) || interval != ctx->property[0x3]) return res;
+
+	// compare priority
+	u8 priority;
+	res = bossGetTaskPriority(task_id, &priority);
+	if (R_FAILED(res) || priority != ctx->property[0x0]) return res;
 
 	// check if count is too small
 	u32 count;
 	res = bossReceiveProperty(0x4, &count, 4);
 	if (R_FAILED(res) || (count < 10 && ctx->property[0x4] > 10)) return res;
+
 	// ok, all we care about is the same
-	*result = false;
+	*result = TaskSame;
 	return res;
 }
 
 Result upsertTask(const char* task_id, bossContext* ctx) {
-	bool differs;
+	enum TaskDiffersResult differs;
 	Result res = taskDiffers(task_id, ctx, &differs);
-	if (R_FAILED(res) || !differs) return res;
-	logln(INFO, "Updating BOSS task: %s", task_id);
-	bossDeleteTask(task_id, 0);
+	if (R_FAILED(res) || differs == TaskSame) return res;
+	if (differs == TaskReconfigure) {
+		logln(INFO, "Reconfiguring BOSS task: %s", task_id);
+		res = bossSendContextConfig(ctx);
+		if (R_FAILED(res)) return res;
+		return bossReconfigureTask(task_id, 0);
+		
+	}
+	logln(INFO, "Redoing BOSS task: %s", task_id);
+	if (differs != TaskCreate) {
+		// read the old if-modified-since header and copy it to a free header slot
+		res = bossGetTaskStatus(task_id, 0);
+		if (R_FAILED(res)) return res;
+		char* ims = malloc(0x40);
+		if (!ims) return ERROR_OUT_OF_MEMORY;
+		res = bossReceiveProperty(0x2F, ims, 0x40);
+		if (R_FAILED(res)) {
+			free(ims);
+			return res;
+		}
+		
+		if (*ims) {
+			for (int i = 0; i < 3; i++) {
+				int offset = i*0x120;
+				if (*(ctx->property_xd + offset)) continue;
+				strncpy(ctx->property_xd + offset, CUSTOM_IMS_HEADER, 0x20);
+				strncpy(ctx->property_xd + offset + 0x20, ims, 0x40);
+				break;
+			}
+		}
+		bossDeleteTask(task_id, 0);
+		free(ims);
+	}
 	res = bossSendContextConfig(ctx);
 	if (R_FAILED(res)) return res;
 	res = bossRegisterTask(task_id, 0, 0);
@@ -182,7 +233,7 @@ Result setupSpotpass(bool is_3dsx) {
 	// news task
 	for (int i = 0; i < NUM_NEWS_TASKS; i++) {
 		snprintf(url, 100, "https://api.netpass.cafe/npdl/p01/nsa/netpass/news/%s/NEWS%d", lang, i);
-		bossSetupContextDefault(ctx, 60*60*24, url);
+		bossSetupContextDefault(ctx, 60*60*6, url);
 		ctx->property[0x0] = 0x7D; // re-set priority
 		snprintf(url, 100, "news%d", i);
 		res = _e(upsertTask(url, ctx));
@@ -191,7 +242,7 @@ Result setupSpotpass(bool is_3dsx) {
 
 	// update task
 	snprintf(url, 100, "https://api.netpass.cafe/npdl/p01/nsa/netpass/%s/%s/netpass.%s", update_task, lang, is_3dsx ? "3dsx" : "cia");
-	bossSetupContextDefault(ctx, 60*60*6, url);
+	bossSetupContextDefault(ctx, 60*60*24, url);
 	ctx->property[0x0] = 0x7D; // re-set priority
 	strncpy(ctx->property_xd, "3ds-netpass-version", 0x20);
 #ifdef _VERSION_GIT_SHA_

@@ -61,7 +61,7 @@ Result bossUnregisterTask(char* task_id, u16 step_id) {
 	return (Result)cmdbuf[1];
 }
 
-Result bossReconfigureTask(char* task_id, u16 step_id) {
+Result bossReconfigureTask(const char* task_id, u16 step_id) {
 	Result res = 0;
 	u32 size = strlen(task_id)+1;
 	u32* cmdbuf = getThreadCommandBuffer();
