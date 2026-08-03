@@ -124,6 +124,29 @@ Result upsertTask(const char* task_id, bossContext* ctx) {
 			free(ims);
 			return res;
 		}
+		if (!*ims) {
+			// while we don't have an ims header set, mayhaps we had a
+			// backup ims header set that we need to copy over
+			char* headers = malloc(0x360);
+			if (!headers) {
+				free(ims);
+				return ERROR_OUT_OF_MEMORY;
+			}
+			res = bossReceiveProperty(0xD, headers, 0x360);
+			if (R_FAILED(res)) {
+				free(ims);
+				free(headers);
+				return res;
+			}
+			for (int i = 0; i < 3; i++) {
+				int offset = i*0x120;
+				if (strncmp(headers + offset, CUSTOM_IMS_HEADER, 0x20) == 0) {
+					strncpy(ims, headers + offset + 0x20, 0x40-1); // -1 due to 0-byte
+					break;
+				}
+			}
+			free(headers);
+		}
 		
 		if (*ims) {
 			for (int i = 0; i < 3; i++) {
