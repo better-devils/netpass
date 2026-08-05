@@ -103,7 +103,7 @@ str_about_reports: Tuairiscigh Córas
 str_welcome_message: Sula dtosófar NetPass, léigh agus glac lenár rialacha agus 
   ár bpolasaí príobháideachais, le do thoil.
 str_bad_os_version: "Teastaíonn 3DS OS 11.15.0 nó leagán níos nuaí ó NetPass chun
-  bheith ag obair i gceart. Faraor, tá an chuma air go bhfuil tú ag úsáid as leagán
+  bheith ag oibriú i gceart. Faraor, tá an chuma air go bhfuil tú ag úsáid as leagán
   níos sine. Nuashonraigh agus atosaigh NetPass arís, le do thoil.\n\nBrúigh cnaipe
   ar bith chun scor"
 str_new_version: "Leagán nua NetPass ar fáil:\nv%d.%d.%d!\n\nAr mhaith leat NetPass
@@ -137,3 +137,9 @@ str_set_time: Ní oibríonn NetPass i gceart ach amháin má tá an t-am córais
 str_scam_warning: Is feidhmchláir foinse oscailte é NetPass, agus tá sé saor in 
   aisce. Má íoc tú as NetPass, ba sceamáil é agus ba cheart duit aisíocaíocht a 
   lorg.
+str_spotpass: SpotPass
+str_luma_external_firms: Tá an chuma air, go bhfuil na paistí suiteáilte agat, 
+  ach níl siad cumasaithe i Luma3DS fós. Ionas go mbeidh siad ag oibriú, 
+  caithfidh tú "Enable loading external FIRMs and modules" a chumasú sna 
+  socruithe Luma3DS. Chun socruithe a oscailt, múch an consól agus ansin, brúigh
+  {select_button} agus an consól á chasadh air {power_button} .
