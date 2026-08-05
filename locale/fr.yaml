@@ -138,3 +138,8 @@ str_scam_warning: NetPass est un logiciel de source ouverte gratuit. Si vous
   avez payé pour l'installer, vous avez subi une arnaque et devez demander un 
   remboursement.
 str_spotpass: SpotPass
+str_luma_external_firms: Il semble que vous avez installé les patchs mais 
+  qu'elles ne sont pas encore activées dans Luma3DS. Pour que ceux-ci 
+  fonctionnent, vous devez activer «Enable loading external FIRMs and modules» 
+  dans les réglages de Luma3DS. Pour y accéder, éteignez la console et maintenez
+  {select_button} pendant que la console s'allume {power_button}.
