@@ -20,14 +20,170 @@
 #include "boss.h"
 #include "strings.h"
 #include "utils.h"
+#include "api.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define SMDH_SIZE 14016
 #define NUM_NEWS_TASKS 5
 #define CUSTOM_IMS_HEADER "3ds-if-modified-since"
+#define NETPASS_ID (0xF6574)
+#define FULL_NETPASS_ID ((u64)0x0004000000000000ull | (NETPASS_ID << 8))
+
+typedef struct SmdhHeader {
+	u32 magic;
+	u16 version;
+	u16 reserved;
+} SmdhHeader;
+
+typedef struct SmdhTitle {
+	u16 name[0x40];
+	u16 desc[0x80];
+	u16 publisher[0x40];
+} SmdhTitle;
+
+typedef struct SmdhSettings {
+	u8 game_ratings[0x10];
+	u32 region_lock;
+	u8 match_maker_id[0xC];
+	u32 flags;
+	u16 eula_version;
+	u16 reserved;
+	u32 default_frame;
+	u32 cec_id;
+} SmdhSettings;
+
+typedef struct Smdh {
+	SmdhHeader header;
+	SmdhTitle title[0x10];
+	SmdhSettings settings;
+	u8 reserved[0x8];
+	u8 small_icon[0x480];
+	u16 big_icon[0x900];
+} Smdh;
+
+typedef struct SharedSmdh {
+	u8 unc[0x20];
+	SmdhTitle title[0x10];
+	u8 small_icon[0x480];
+	u16 big_icon[0x900];
+} SharedSmdh;
+
+typedef struct {
+	u64 unc;
+	u64 title_id;
+} SharedTitleEntry;
+
+Result setupNotificationIcon(void) {
+	// As our app is hidden from activity the icon won't be in the shared icon cache
+	// so...we have to add it manually
+	Result res = 0;
+	FILE* idb = NULL;
+	FILE* idbt = NULL;
+	SharedTitleEntry* shared_titles = NULL;
+	SharedSmdh* shared_icons = NULL;
+	Smdh* smdh = NULL;
+	FILE* f_smdh = NULL;
+
+	// first we determine the offset
+	idbt = fopen("sharedextdata_b:/idbt.dat", "rb");
+	if (!idbt) goto fail_errno;
+	fseek(idbt, 0, SEEK_END);
+	u64 filesize = ftell(idbt);
+	fseek(idbt, 0, SEEK_SET);
+	int num_shared_titles = filesize / sizeof(SharedTitleEntry);
+	shared_titles = malloc(filesize);
+	if (!shared_titles) {
+		res = ERROR_OUT_OF_MEMORY;
+		goto exit;
+	}
+	if (fread(shared_titles, filesize, 1, idbt) != 1) goto fail_errno;
+	fclose(idbt);
+	idbt = NULL;
+	int found_offset = -1;
+	int free_offset = -1;
+	for (int i = 0; i < num_shared_titles; i++) {
+		if (shared_titles[i].title_id == FULL_NETPASS_ID) {
+			found_offset = i;
+			break;
+		} else if (free_offset == -1 && (!shared_titles[i].title_id || shared_titles[i].title_id == 0xFFFFFFFFFFFFFFFFull)) {
+			free_offset = i;
+		}
+	}
+	// if our application is already in the cache, then nothing to do
+	if (found_offset != -1) goto exit;
+	// if there is also no free slot...error out
+	if (free_offset == -1) {
+		res = -1;
+		goto exit;
+	}
+	// Create the icon in the shared icon cache metadata first
+	logln(INFO, "Icon not in shared icon cache, creating it...");
+	found_offset = free_offset;
+	shared_titles[found_offset].unc = 0;
+	shared_titles[found_offset].title_id = FULL_NETPASS_ID;
+	Handle handle;
+	res = FSUSER_OpenFile(&handle, sharedextdata_b, fsMakePath(PATH_ASCII, "/idbt.dat"), FS_OPEN_WRITE, 0);
+	if (R_FAILED(res)) goto exit;
+	res = FSFILE_Write(handle, NULL, 0, shared_titles, filesize, FS_WRITE_FLUSH);
+	FSFILE_Close(handle);
+	if (R_FAILED(res)) goto exit;
+	free(shared_titles);
+	shared_titles = 0;
+
+	// Now read our own smdh
+	f_smdh = fopen("romfs:/netpass.smdh", "rb");
+	if (!f_smdh) goto fail_errno;
+	smdh = malloc(sizeof(Smdh));
+	if (!smdh) {
+		res = ERROR_OUT_OF_MEMORY;
+		goto exit;
+	}
+	if (fread(smdh, sizeof(Smdh), 1, f_smdh) != 1) goto fail_errno;
+	fclose(f_smdh);
+	f_smdh = NULL;
+
+	// Open the icon database
+	idb = fopen("sharedextdata_b:/idb.dat", "rb");
+	if (!idb) goto fail_errno;
+	fseek(idb, 0, SEEK_END);
+	filesize = ftell(idb);
+	fseek(idb, 0, SEEK_SET);
+	num_shared_titles = filesize / sizeof(SharedSmdh);
+	// do some sanity checks
+	if (num_shared_titles <= found_offset) {
+		res = -2;
+		goto exit;
+	}
+	shared_icons = malloc(filesize);
+	if (!shared_icons) goto fail_errno;
+	if (fread(shared_icons, filesize, 1, idb) != 1) goto fail_errno;
+	fclose(idb);
+	idb = NULL;
+	// ...and copy the icon over to it
+	memcpy(shared_icons[found_offset].title, smdh->title, sizeof(SmdhTitle) * 0x10);
+	memcpy(shared_icons[found_offset].small_icon, smdh->small_icon, 0x480);
+	memcpy(shared_icons[found_offset].big_icon, smdh->big_icon, 0x900*2);
+
+	res = FSUSER_OpenFile(&handle, sharedextdata_b, fsMakePath(PATH_ASCII, "/idb.dat"), FS_OPEN_WRITE, 0);
+	if (R_FAILED(res)) goto exit;
+	res = FSFILE_Write(handle, NULL, 0, shared_icons, filesize, FS_WRITE_FLUSH);
+	FSFILE_Close(handle);
+	if (R_FAILED(res)) goto exit;
+
+	goto exit;
+fail_errno:
+	res = _e_errno();
+exit:
+	if (shared_titles) free(shared_titles);
+	if (shared_icons) free(shared_icons);
+	if (smdh) free(smdh);
+	if (idb) fclose(idb);
+	if (idbt) fclose(idbt);
+	if (f_smdh) fclose(f_smdh);
+	return res;
+}
 
 enum TaskDiffersResult {
 	TaskSame,
@@ -172,12 +328,8 @@ Result setupSpotpass(bool is_3dsx) {
 	// As we may be running via the homebrew menu we need our own id
 	// and priv mode so that we can pretend we are always running as cia.
 	// Because of homebrew we can do this! :D
-	const u32 netpass_id = 0xF6574;
-	const u64 full_netpass_id = 0x0004000000000000ull | (netpass_id << 8);
-
-	//cecdOpenRawFile(netpass_lower, CEC_PATH_MBOX_DIR, 8, NULL);
 	
-	Result res = _e(bossInit(full_netpass_id, false));
+	Result res = _e(bossInit(FULL_NETPASS_ID, false));
 	if (R_FAILED(res)) return res;
 
 	// Now, setting up storage.
@@ -186,10 +338,10 @@ Result setupSpotpass(bool is_3dsx) {
 		
 		FS_ExtSaveDataInfo info = {
 			mediaType: MEDIATYPE_SD,
-			saveId: netpass_id,
+			saveId: NETPASS_ID,
 		};
 		if (R_FAILED(bossGetStorageInfo(NULL)) || R_FAILED(FSUSER_ReadExtSaveDataIcon(NULL, info, 0, NULL))) {
-			u8* smdh = malloc(SMDH_SIZE);
+			Smdh* smdh = malloc(sizeof(Smdh));
 			if (!smdh) return _e(ERROR_OUT_OF_MEMORY);
 
 			// Ok, we have to set it up. So, for that we need to read our smdh.
@@ -200,7 +352,7 @@ Result setupSpotpass(bool is_3dsx) {
 				free(smdh);
 				return res;
 			}
-			if (fread(smdh, SMDH_SIZE, 1, f) != 1) {
+			if (fread(smdh, sizeof(Smdh), 1, f) != 1) {
 				res = _e_errno();
 				fclose(f);
 				free(smdh);
@@ -208,14 +360,14 @@ Result setupSpotpass(bool is_3dsx) {
 			} 
 			fclose(f);
 	
-			res = _e(FSUSER_CreateExtSaveData(info, 42, 42, -1, SMDH_SIZE, (u8*)smdh));
+			res = _e(FSUSER_CreateExtSaveData(info, 42, 42, -1, sizeof(Smdh), (u8*)smdh));
 			free(smdh);
 			if (R_FAILED(res)) return res;
 	
-			res = _e(bossSetStorageInfo(netpass_id, -1, MEDIATYPE_SD));
+			res = _e(bossSetStorageInfo(NETPASS_ID, -1, MEDIATYPE_SD));
 			if (R_FAILED(res)) return res;
 
-			//res = _e(bossRegisterStorageEntry(netpass_id, -1, 0, MEDIATYPE_SD));
+			//res = _e(bossRegisterStorageEntry(NETPASS_ID, -1, 0, MEDIATYPE_SD));
 			//if (R_FAILED(res)) return res;
 		} else {
 			// re-set all the new flags
@@ -228,7 +380,7 @@ Result setupSpotpass(bool is_3dsx) {
 					_e(bossSetNsDataNewFlag(ns_data_id_list[i], false));
 				}
 			}
-			bossSetAppNewFlag(full_netpass_id, false);
+			bossSetAppNewFlag(FULL_NETPASS_ID, false);
 		}
 	}
 	
@@ -282,5 +434,5 @@ Result setupSpotpass(bool is_3dsx) {
 	res = _e(upsertTask(update_task, ctx));
 	if (R_FAILED(res)) return res;
 	
-	return res;
+	return _e(setupNotificationIcon());
 }
