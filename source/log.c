@@ -33,7 +33,7 @@ static const char* const LOG_LEVEL_COLORS[] = { "34", "36", "35", "31" };
 
 static __FILE* log_file = NULL;
 
-void logInit() {
+void logInit(void) {
 	if (config.log_output == LogOutputFile) {
 		log_file = fopen(LOG_FILE_NAME, "w");
 		if (!log_file) {
@@ -45,10 +45,19 @@ void logInit() {
 	}
 }
 
-void logExit() {
+void logExit(void) {
 	if (config.log_output == LogOutputFile && log_file) {
 		fclose(log_file);
 		log_file = NULL;
+	}
+}
+
+void log_prefix(enum LogLevel level) {
+	if (!log_file) return;
+	if (log_file == stdout) {
+		fprintf(log_file, "\x1b[%sm[%s]\x1b[0m ", LOG_LEVEL_COLORS[level], LOG_LEVEL_NAMES[level]);
+	} else {
+		fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
 	}
 }
 
@@ -56,7 +65,7 @@ void logln(enum LogLevel level, const char *restrict format, ...) {
 	if (!log_file || config.log_level < level) return;
 	va_list args;
 	va_start(args, format);
-	log_line_start(level, "");
+	log_prefix(level);
 	vfprintf(log_file, format, args);
 	fputc('\n', log_file);
 	fflush(log_file);
@@ -130,11 +139,7 @@ void log_line_start(enum LogLevel level, const char *restrict format, ...) {
 	if (!log_file) return;
 	va_list args;
 	va_start(args, format);
-	if (log_file == stdout) {
-		fprintf(log_file, "\x1b[%sm[%s]\x1b[0m ", LOG_LEVEL_COLORS[level], LOG_LEVEL_NAMES[level]);
-	} else {
-		fprintf(log_file, "[%s] ", LOG_LEVEL_NAMES[level]);
-	}
+	log_prefix(level);
 	vfprintf(log_file, format, args);
 	fflush(log_file);
 	va_end(args);

@@ -140,7 +140,7 @@ static Scene* load_new_version(Scene* scene) {
 				}
 				s64 offset = 0;
 				while (size > 0) {
-					logln(INFO, "%d bytes left", size);
+					logln(INFO, "%lld bytes left", size);
 					u32 to_copy = size > chunk_size ? chunk_size : size;
 					u32 read;
 					ping_res = _e(bossReadNsData(ns_data_id, offset, buf, to_copy, &read, NULL));

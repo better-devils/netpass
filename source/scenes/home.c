@@ -108,6 +108,7 @@ static void exit_scene(Scene* sc) {
 			C2D_ImageDelete(&_data->background);
 		}
 		free(_data);
+		sc->d = 0;
 	}
 }
 
@@ -142,9 +143,9 @@ static SceneResult process(Scene* sc) {
 			sc->next_scene = getLoadingScene(NULL, lambda(void, (void) {
 				Result res = _e(setLocation(new_location));
 				if (!R_FAILED(res)) {
-					_e(getLocation());
+					getLocation();
+					triggerDownloadInboxes();
 				}
-				triggerDownloadInboxes();
 			}));
 			return scene_push;
 		}

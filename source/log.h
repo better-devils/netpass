@@ -37,18 +37,33 @@ typedef struct LogMessage {
 	char *message;
 } LogMessage;
 
-void logInit();
-void logExit();
+void logInit(void);
+void logExit(void);
 
 // print a line on the log with printf syntax
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 2, 3)))
+#endif
 void logln(enum LogLevel level, const char *restrict format, ...);
 
 // compose a message over multiple function calls, and *then* print it
 LogMessage* log_start(enum LogLevel level);
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 2, 3)))
+#endif
 void log_multi(LogMessage* foo, const char *restrict format, ...);
 void log_end(LogMessage* foo);
 
 // *print* a message bit-by-bit over multiple function calls
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 2, 3)))
+#endif
 void log_line_start(enum LogLevel level, const char *restrict format, ...);
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 1, 2)))
+#endif
 void log_line_continue(const char *restrict format, ...);
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 1, 2)))
+#endif
 void log_line_finish(const char *restrict format, ...);

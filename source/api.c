@@ -199,7 +199,7 @@ static Result downloadSlot(int i, SlotInfo* slotinfo) {
 	if (reply->header != 0xFFFFFFFF) {
 		metadata->send_method = reply->header;
 	}
-	logln(DEBUG, "%08X recv send_method: %d", metadata->title_id, metadata->send_method);
+	logln(DEBUG, "%08lX recv send_method: %d", metadata->title_id, metadata->send_method);
 	u32 http_code = res;
 	if (http_code == 204) {
 		metadata->size = 0;
@@ -494,13 +494,9 @@ Result setLocation(int location) {
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0, 0);
-	if (R_FAILED(res)) {
-		logln(ERROR, "Failed to enter location %d: %ld", location, res);
-		return res;
-	}
+	if (R_FAILED(res)) return res;
 	config.last_location = location;
 	configWrite();
-	logln(INFO, "Entered location %d!", location);
 	return res;
 }
 
@@ -519,9 +515,7 @@ Result setEventLocation(u8 uuid[16]) {
 	char url[80];
 	snprintf(url, 80, "%s/location/%s/enter", BASE_URL, uuidstr);
 	res = httpRequest("PUT", url, 0, 0, 0, 0);
-	if (R_FAILED(res)) {
-		logln(ERROR, "Failed to event enter location %s: %ld", uuidstr, res);
-	}
+	if (R_FAILED(res)) return res;
 	cache_current_location_image();
 	return res;
 }
