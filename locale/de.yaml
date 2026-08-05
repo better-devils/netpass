@@ -140,3 +140,8 @@ str_set_time: NetPass kann nur richtig funktionieren, wenn Systemzeit und -datum
 str_backup_nid_pwd: "NetPass wird die folgende Datei erstellen, um deine Konsole zu
   authentifizieren, also mache bitte eine Sicherungskopie!\nsdmc:/config/netpass/nid_pwd.bin"
 str_spotpass: SpotPass
+str_luma_external_firms: Anscheinend hast du die patches installiert, aber noch 
+  nicht in Luma3DS aktiviert. Damit diese funktionieren, muss "Enable loading 
+  external FIRMs and modules" in den Luma3DS-Einstellungen aktiviert sein. Um 
+  dies zu aktivieren, halte {select_button} gedrückt, während du deine Konsole 
+  startest.
