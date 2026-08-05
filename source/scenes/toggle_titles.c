@@ -35,6 +35,7 @@ typedef struct {
 	C2D_Text g_back;
 	int cursor;
 	int number_games;
+	float width_on_off;
 } DataStruct;
 
 static bool init_gamelist(Scene* sc) {
@@ -65,6 +66,11 @@ static void init(Scene* sc) {
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_on_off[0], _data->g_staticBuf, str_toggle_titles_off);
 	TextLangParse(&_data->g_on_off[1], _data->g_staticBuf, str_toggle_titles_on);
+	float width_on;
+	float width_off;
+	get_text_dimensions(&_data->g_on_off[0], 0.5, 0.5, &width_off, 0);
+	get_text_dimensions(&_data->g_on_off[1], 0.5, 0.5, &width_on, 0);
+	_data->width_on_off = ceilf(MAX(width_on, width_off));
 }
 
 static void render(Scene* sc) {
@@ -79,7 +85,7 @@ static void render(Scene* sc) {
 		bool isIgnored = isTitleIgnored(_data->title_ids[i]);
 		u32 correctClr = isIgnored ? offClr : onClr;
 		renderPlainText(&_data->g_on_off[!isIgnored], 30, 60 + (i * 14), 0.5, correctClr);
-		renderPlainText(&_data->g_game_titles[i], 70, 60 + (i * 14), 0.5, correctClr);
+		renderPlainText(&_data->g_game_titles[i], 35 + _data->width_on_off, 60 + (i * 14), 0.5, correctClr);
 	}
 	renderPlainText(&_data->g_back, 30, 60 + (i*14), 0.5, clr);
 	
