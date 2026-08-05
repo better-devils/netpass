@@ -139,3 +139,4 @@ str_set_time: NetPass kann nur richtig funktionieren, wenn Systemzeit und -datum
   richtig eingestellt sind! Bitte tue das!
 str_backup_nid_pwd: "NetPass wird die folgende Datei erstellen, um deine Konsole zu
   authentifizieren, also mache bitte eine Sicherungskopie!\nsdmc:/config/netpass/nid_pwd.bin"
+str_spotpass: SpotPass
