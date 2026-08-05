@@ -1,108 +1,134 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
-str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
-str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
-str_banned: ""
-str_date: ""
-str_date_time: ""
-str_new_version: ""
-str_enter_event_location: ""
-str_at_event_location: ""
-str_artist_copyright: ""
-str_new_version_failed: ""
-str_report_list_empty: ""
-str_logging: ""
-str_logging_none: ""
-str_logging_screen: ""
-str_logging_file: ""
-str_downloading: ""
-str_failed_to_authenticate: ""
-str_already_registered: ""
-str_backup_nid_pwd: ""
-str_set_time: ""
-str_time_correct: ""
-str_time_success: ""
-str_time_failed: ""
-str_scam_warning: ""
-str_spotpass: ""
+str_loading: "Wrthi'n llwytho…    "
+str_libcurl_error: "Gwall libCURL (%d): %s"
+str_libcurl_date_and_time: 'Gwnewch yn siŵr bod dyddiad ac amser eich system wedi
+  gosod yn gywir!'
+str_httpstatus_error: 'Cod statws HTTP %d'
+str_3ds_error: 'Cod gwall 3DS %08lx'
+str_at_home: 'Rwyt ti Gartre.'
+str_goto_train_station: 'Mynd i''r Orsaf'
+str_at_train_station: 'Rwyt ti yn yr Orsaf.'
+str_goto_plaza: 'Mynd i''r Plaza'
+str_at_plaza: 'Rwyt ti yn y Plaza.'
+str_goto_mall: 'Mynd i''r Canolfan Siopa'
+str_at_mall: 'Rwyt ti yn y Ganolfan Siopa.'
+str_exit: 'Gadael'
+str_settings: 'Gosodiadau'
+str_download_data: 'Lawrlwytho data personol'
+str_delete_data: 'Dileu data personol'
+str_back: 'Nôl'
+str_language: 'Cymraeg'
+str_goto_beach: 'Mynd i''r Traeth'
+str_at_beach: 'Rwyt ti yn y Traeth.'
+str_goto_arcade: 'Mynd i''r Arcêd'
+str_at_arcade: 'Rwyt ti yn yr Arcêd.'
+str_goto_catcafe: 'Mynd i''r Caffi Cathod'
+str_at_catcafe: 'Rwyt ti yn y Caffi Cathod.'
+str_system_language: 'Iaith y system'
+str_language_pick: 'Iaith:'
+str_no_location_twice: 'Dwyt ti ddim yn gallu nodi''r un lleoliad ddwywaith yn olynol!'
+str_report_user: 'Adrodd am ddefnyddiwr'
+str_report_user_hint: 'Adrodd am "%s"'
+str_cancel: 'Canslo'
+str_submit: 'Cyflwyno'
+str_back_alley: 'Y Stryd Gefn'
+str_back_alley_message: 'Gawn ni ruthro mwy o basiau!'
+str_back_alley_pay: "Prynu pas {playcoin}%d"
+str_check_inboxes: 'Gwirio Blychau Derbyn'
+str_toggle_titles: 'Toglo Gemau'
+str_toggle_titles_message: "Pwyswch {a_button} i ddechrau neu stopio cyfnewid pasiau."
+str_toggle_titles_on: "(AR WAITH)"
+str_toggle_titles_off: "(DIFFODD)"
+str_report_mii_name: "Enw'r Mii: %s"
+str_report_mario_kart_7_greeting: "Cyfarchiad: %s"
+str_report_mii_plaza_last_game: "Gêm Ddiwetha: %s"
+str_report_mii_plaza_country: "Gwlad: %s - %s"
+str_report_mii_plaza_greeting: "Cyfarchiad: %s"
+str_report_mii_plaza_custom_message: "Dy neges bersonol: %s"
+str_report_mii_plaza_custom_reply: "Ei hateb bersonol: %s"
+str_report_tomodachi_life_island_name: "Enw'r ynys: %s"
+str_b_go_back: "{b_button} Mynd Nôl"
+str_b_cancel: "{b_button} Canslo"
+str_a_ok: "{a_button} Iawn"
+str_update_patches: "Diweddaru patsiau"
+str_update_patches_desc: "I osod NetPass yn gywir, bydd rhai patsiau sysmodule yn
+  creu nawr. Er mwyn i'r rheina weithio, rhaid i ti alluogi \"Enable loading external
+  FIRMs and modules\" (Galluogi llwytho FIRMau a modiwlau allanol) yn y gosodiadau
+  Luma3DS. I gyrchu'r gosodiadau 'na, diffoddwch y consol, ac wedyn pwyswch {select_button}
+  wrth gychwyn {power_button} y consol. Rwyt ti'n gallu hyn ar ôl i'r patsiau wedi
+  cael ysgrifennu."
+str_update_patches_error_desc: "Aeth rhywbeth yn anghywir wrth ddiweddaru'r patsiau.
+  Adroddwch y broblem 'ma ar GitLab, GBAtemp neu Discord, os gweli di'n dda. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Diweddariad y patsiau wedi llwyddo! Bydd dy gonsol
+  yn ailgychwyn nawr."
+str_integrations: "Integreiddiadau"
+str_integrations_message: "Mae integreiddiadau trydydd-parti i allan o gymedroliad
+  NetPass. Defnyddiwch y rheina ar dy risg dy hun!"
+str_report_source: "Ffynhonnell: %s"
+str_report_source_unknown: "Ffynhonnell anhysbys"
+str_settings_misc: "Amrywiol"
+str_settings_about: "Ynglŷn â"
+str_about_lead_dev: "Prif Ddatblygwr"
+str_about_reports: "System Adrodd"
+str_about_graphics: "Celf a Graffeg"
+str_about_music: "Cerddoriaeth"
+str_about_localisation: "Lleoleiddio"
+str_about_netpass_community: "Y gymuned NetPass"
+str_about_special_thanks: "Diolchau Arbennig"
+str_about_special_thanks_txt: "Y gymuned homebrew 3DS ar gyfer yr holl beirianneg-wrthdro
+  a'r ddogfennaeth"
+str_about_production_cat: "Cath gynhyrchiad"
+str_scan_qr: "Sganio Cod QR"
+str_x_switch_camera: "{x_button} Newid Camerâu"
+str_prompt_verify: "Wyt ti'n siŵr fod di eisiau gwirio'r 3DS 'ma?"
+str_welcome: "Croeso I NetPass"
+str_welcome_message: "Cyn i ti dechrau NetPass, darllenwch a dderbynwch ein rheolau
+  a'n polisi preifatrwydd, os gweli di'n dda."
+str_view_rules: "Gweld y Rheolau"
+str_view_privacy: "Gweld y Polisi Preifatrwydd"
+str_continue: "Parhau"
+str_bad_os_version: "Mae NetPass yn gofyn am fersiwn 3DS OS 11.15.0 neu hwyrach i
+  weithredu'n gywir. Yn anffodus, mae hi'n ymddangos fod di'n defnyddio fersiwn henach.
+  Diweddarwch, os gweli di'n dda, ac wedyn ddechreuwch NetPass eto.\n\nPwysiwch unrhyw
+  fotwm i adael"
+str_update_patches_poweroff_clear_desc: "Tynnwyd y patsiau yn llwyddiannus! Bydd dy
+  gonsol yn ailgychwyn nawr."
+str_bg_music: "Cerddoriaeth Gefndir"
+str_prompt_dl_pass: "Wyt ti'n siŵr fod di eisiau lawrlwytho'r pas 'ma?"
+str_report_integration: "Mae'r neges 'ma'n tarddu o integreiddiad. I'w hadrodd, anfonwch
+  neges at dîm cymedroli'r integreiddiad 'na."
+str_skip: "Sgipio"
+str_install: "Gosod"
+str_remove: "Tynnu"
+str_banned: "Rwyt ti wedi gwahardd rhag defnyddio NetPass. Rheswm:\n%s\n\nDechrau'r
+  gwaharddiad: %s\nDiwedd y gwaharddiad: %s"
+str_date: "%d %b %Y"
+str_date_time: "%d %b %Y %I:%M:%S%p"
+str_new_version: "Mae fersiwn newydd NetPass ar gael:\nfsn%d.%d.%.!\n\nWyt ti eisiau
+  diweddaru NetPass nawr?"
+str_enter_event_location: "Wyt ti'n siŵr fod di eisiau mynd i'r digwyddiad \"%s\"?"
+str_at_event_location: "Rwyt ti yn nigwyddiad arbennig."
+str_artist_copyright: "Gwaith celf © %s"
+str_new_version_failed: "Methodd gosod y fersiwn newydd. Rwyt ti'n gallu ei osod eto
+  o hyd drwy Universal Updater neu gan cod QR."
+str_report_list_empty: "Mae'r rhestr adroddiadau yn wag."
+str_logging: "Logiau:"
+str_logging_none: "Dim"
+str_logging_screen: "Sgrîn"
+str_logging_file: "Ffeil"
+str_downloading: "Wrthi'n lawrlwytho..."
+str_failed_to_authenticate: "Mae'r dilysiad wedi methu! Ceisiwch eto'n hwyrach, os
+  gweli di'n dda. Os bydd y broblem yn parhau, cysylltwch â ni, os gweli di'n dda!
+  https://netpass.cafe"
+str_already_registered: "Gwall: Mae'r consol 'ma eisoes wedi cofrestru!\n\nOs wyt
+  ti'n defnyddio, neu wedi defnyddio, efelychydd, gwnewch yn siŵr o gysoni'r ffeil
+  sdmc:/config/netpass/nid_pwd.bin rhwng yr efelychydd a'r consol, os gweli di'n dda."
+str_backup_nid_pwd: "Bydd Netpass yn creu'r ffeil ganlynol, felly gwnewch yn siŵr
+  o greu copi wrth gefn, os gweli di'n dda!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: "Bydd NetPass yn gweithio'n gywir, dim ond os yw amser y system wedi
+  gosod yn gywir. Gwnewch hynny plîs!"
+str_time_correct: "Wyt ti'n siŵr bod y dyddiad a'r amser yn gywir?"
+str_time_success: "Amser wedi gosod yn llwyddiannus! Wrthi'n ailgychwyn NetPass nawr..."
+str_time_failed: "Mae gosod yr amser wedi methu!"
+str_scam_warning: "Mae NetPass yn meddalwedd am ddim a cod agored. Os wyt ti wedi
+  talu i ei osod, rwyt ti wedi cael dy sgamio, a dylit ti fynnu ail-daliad."
+str_spotpass: "SpotPass"
