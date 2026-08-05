@@ -120,15 +120,21 @@ str_failed_to_authenticate: "Mae'r dilysiad wedi methu! Ceisiwch eto'n hwyrach, 
   gweli di'n dda. Os bydd y broblem yn parhau, cysylltwch â ni, os gweli di'n dda!
   https://netpass.cafe"
 str_already_registered: "Gwall: Mae'r consol 'ma eisoes wedi cofrestru!\n\nOs wyt
-  ti'n defnyddio, neu wedi defnyddio, efelychydd, gwnewch yn siŵr o gysoni'r ffeil
+  ti'n defnyddio, neu wedi defnyddio, efelychydd, gwnewch yn siwr o gysoni'r ffeil
   sdmc:/config/netpass/nid_pwd.bin rhwng yr efelychydd a'r consol, os gweli di'n dda."
-str_backup_nid_pwd: "Bydd Netpass yn creu'r ffeil ganlynol, felly gwnewch yn siŵr
+str_backup_nid_pwd: "Bydd Netpass yn creu'r ffeil ganlynol, felly gwnewch yn siwr
   o greu copi wrth gefn, os gweli di'n dda!\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: "Bydd NetPass yn gweithio'n gywir, dim ond os yw amser y system wedi
   gosod yn gywir. Gwnewch hynny plîs!"
-str_time_correct: "Wyt ti'n siŵr bod y dyddiad a'r amser yn gywir?"
+str_time_correct: "Wyt ti'n siwr bod y dyddiad a'r amser yn gywir?"
 str_time_success: "Amser wedi gosod yn llwyddiannus! Wrthi'n ailgychwyn NetPass nawr..."
 str_time_failed: "Mae gosod yr amser wedi methu!"
 str_scam_warning: "Mae NetPass yn meddalwedd am ddim a cod agored. Os wyt ti wedi
   talu i ei osod, rwyt ti wedi cael dy sgamio, a dylit ti fynnu ail-daliad."
 str_spotpass: "SpotPass"
+str_luma_external_firms: Mae hi'n ymddangos fod di wedi osod y patsiau, ond heb 
+  eu galluogi yn Luma3DS eto. Er mwyn i'r rheina weithio, rhaid i ti alluogi 
+  "Enable loading external FIRMs and modules" (Galluogi llwytho FIRMau a 
+  modiwlau allanol) yn y gosodiadau Luma3DS. I gyrchu'r gosodiadau 'na, 
+  diffoddwch y consol, ac wedyn pwyswch {select_button} wrth gychwyn 
+  {power_button} y consol.
