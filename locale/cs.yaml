@@ -133,3 +133,4 @@ str_time_success: Čas úspěšně nastaven! Nyní restartuji NetPass...
 str_time_failed: Nastavení času selhalo!
 str_scam_warning: NetPass je volný a open source software. Pokud jste zaplatili 
   za jeho instalaci, byli jste podvedeni a měli byste zažádat o odškodnění.
+str_spotpass: SpotPass
