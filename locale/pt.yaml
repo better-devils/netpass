@@ -134,3 +134,4 @@ str_time_success: As definições de data e hora foram guardadas. A reiniciar o
 str_time_failed: Ocorreu um erro ao definir a data e hora!
 str_scam_warning: O NetPass é um software gratuito e de código aberto. Se pagou 
   para o instalar, foi vítima de uma fraude e deve exigir um reembolso.
+str_spotpass: SpotPass
