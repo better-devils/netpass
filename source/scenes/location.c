@@ -27,12 +27,13 @@
 #include <stdlib.h>
 #define _data ((DataStruct*)sc->d)
 #define TEXT_BUF_LEN (MAX(STR_AT_EVENT_LOCATION_LEN, STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
+#define NUM_ENTRIES 5
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_location;
 	C2D_Text g_subtitle;
-	C2D_Text g_entries[5];
+	C2D_Text g_entries[NUM_ENTRIES];
 	C2D_Text artist;
 	C2D_Image background;
 	C2D_SpriteSheet spr;
@@ -148,8 +149,8 @@ static SceneResult process(Scene* sc) {
 	if (_data) {
 		_data->view_bg_only = (kHeld & KEY_L) || (kHeld & KEY_R);
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-		if (_data->cursor < 0) _data->cursor = 3;
-		if (_data->cursor > 3) _data->cursor = 0;
+		if (_data->cursor < 0) _data->cursor = NUM_ENTRIES-1;
+		if (_data->cursor > NUM_ENTRIES-1) _data->cursor = 0;
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {

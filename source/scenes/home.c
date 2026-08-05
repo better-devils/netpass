@@ -24,10 +24,11 @@
 #include "../image_cache.h"
 #include "../render.h"
 #include "../music.h"
+#include "scan_qr.h"
 #define _data ((DataStruct*)sc->d)
-#define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
+#define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
-#define NUM_ENTRIES (NUM_LOCATIONS + 2)
+#define NUM_ENTRIES (NUM_LOCATIONS + 3)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -57,8 +58,9 @@ static void init(Scene* sc) {
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_goto_beach);
 	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_goto_arcade);
 	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_goto_catcafe);
-	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_settings);
-	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_exit);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_scan_qr);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_settings);
+	TextLangParse(&_data->g_entries[8], _data->g_staticBuf, str_exit);
 	
 	if (*location.artist_name) {
 		char string[150];
@@ -121,6 +123,10 @@ static SceneResult process(Scene* sc) {
 		if (_data->cursor < 0) _data->cursor = (NUM_ENTRIES-1);
 		if (_data->cursor > (NUM_ENTRIES-1)) _data->cursor = 0;
 		if (kDown & KEY_A) {
+			if (_data->cursor == NUM_ENTRIES-3) {
+				sc->next_scene = getScanQrScene();
+				return scene_push;
+			}
 			if (_data->cursor == NUM_ENTRIES-2) {
 				sc->next_scene = getSettingsScene();
 				return scene_push;
