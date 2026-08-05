@@ -47,6 +47,16 @@ Result bossSetOptoutFlag(bool flag) {
 	return (Result)cmdbuf[1];
 }
 
+Result bossGetOptoutFlag(bool *flag) {
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0xA, 0, 0);
+
+	if(R_FAILED(res = svcSendSyncRequest(bossGetSessionHandle()))) return res;
+	if (flag) *flag = cmdbuf[2] != 0;
+	return (Result)cmdbuf[1];
+}
+
 Result bossUnregisterTask(char* task_id, u16 step_id) {
 	Result res = 0;
 	u32 size = strlen(task_id)+1;

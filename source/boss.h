@@ -41,6 +41,7 @@ typedef BossHTTPHeader* BossHTTPHeaders;
 
 Result bossGetStorageInfo(u32* storage_size);
 Result bossSetOptoutFlag(bool flag);
+Result bossGetOptoutFlag(bool* flag);
 Result bossUnregisterTask(char* task_id, u16 step_id);
 Result bossReconfigureTask(const char* task_id, u16 step_id);
 Result bossGetTaskIdList(void);

@@ -128,3 +128,4 @@ str_time_success: "Time set successfully! Restarting NetPass now..."
 str_time_failed: "Failed setting the time!"
 str_scam_warning: "NetPass is free and open source software. If you have paid to install
   it you have been scammed and should demand a refund."
+str_spotpass: "SpotPass"

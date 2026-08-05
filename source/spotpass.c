@@ -386,9 +386,6 @@ Result setupSpotpass(bool is_3dsx) {
 	}
 	
 	// ok, storage is set up. Now, set up the boss tasks
-
-	// TODO: properly handle optout flag
-	_e(bossSetOptoutFlag(false));
 	
 	bossContext* ctx = malloc(sizeof(bossContext));
 	if (!ctx) return _e(ERROR_OUT_OF_MEMORY);

@@ -18,6 +18,7 @@
  */
 
 #include "home.h"
+#include "scan_qr.h"
 #include "switch.h"
 #include "../api.h"
 #include "../music.h"
@@ -25,13 +26,13 @@
 #include "../render.h"
 #include <stdlib.h>
 #define _data ((DataStruct*)sc->d)
-#define TEXT_BUF_LEN (MAX(STR_AT_EVENT_LOCATION_LEN, STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
+#define TEXT_BUF_LEN (MAX(STR_AT_EVENT_LOCATION_LEN, STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_location;
 	C2D_Text g_subtitle;
-	C2D_Text g_entries[4];
+	C2D_Text g_entries[5];
 	C2D_Text artist;
 	C2D_Image background;
 	C2D_SpriteSheet spr;
@@ -78,8 +79,9 @@ static void init(Scene* sc) {
 	}
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_check_inboxes);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_back_alley);
-	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_settings);
-	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_exit);
+	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_scan_qr);
+	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_settings);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_exit);
 	
 	if (*location.artist_name) {
 		char string[150];
@@ -118,7 +120,7 @@ static void render(Scene* sc) {
 	if (_data->event_location) {
 		renderText(&_data->g_subtitle, 10, 10 + 25, 1, 0);
 	}
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		renderText(&_data->g_entries[i], 34, 14 + (i+(_data->event_location ? 2 : 1))*25, 1, 0);
 	}
 	int x = 1;
@@ -160,10 +162,14 @@ static SceneResult process(Scene* sc) {
 				return scene_push;
 			}
 			if (_data->cursor == 2) {
+				sc->next_scene = getScanQrScene();
+				return scene_push;
+			}
+			if (_data->cursor == 3) {
 				sc->next_scene = getSettingsScene();
 				return scene_push;
 			}
-			if (_data->cursor == 3) return scene_stop;
+			if (_data->cursor == 4) return scene_stop;
 		}
 		if (location.id == -1) {
 			sc->next_scene = getHomeScene();

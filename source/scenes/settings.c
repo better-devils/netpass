@@ -23,7 +23,7 @@
 #include "misc_settings.h"
 #include <stdlib.h>
 #define _data ((DataStruct*)sc->d)
-#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN + STR_BG_MUSIC_LEN + STR_TOGGLE_TITLES_ON_LEN + STR_TOGGLE_TITLES_OFF_LEN)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN + STR_BG_MUSIC_LEN + STR_TOGGLE_TITLES_ON_LEN + STR_TOGGLE_TITLES_OFF_LEN + STR_SPOTPASS_LEN)
 
 #define NUM_ENTRIES 8
 
@@ -37,7 +37,9 @@ typedef struct {
 	int selected_language;
 	float lang_width;
 	float bg_music_width;
+	float spotpass_width;
 	char prev_music[20];
+	bool spotpass_on;
 } DataStruct;
 
 static void init(Scene* sc) {
@@ -49,14 +51,16 @@ static void init(Scene* sc) {
 	
 	getCurMusic(_data->prev_music);
 	playMusic("settings");
+
+	
 	
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_toggle_titles);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_report_user);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_language_pick);
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_bg_music);
-	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_integrations);
-	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_scan_qr);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_spotpass);
+	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_integrations);
 	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_settings_misc);
 	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
@@ -73,8 +77,11 @@ static void init(Scene* sc) {
 		TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf, str_language,
 			all_languages[_data->selected_language]);
 	}
+	_e(bossGetOptoutFlag(&_data->spotpass_on));
+	_data->spotpass_on = !_data->spotpass_on;
 	get_text_dimensions(&_data->g_entries[2], 1, 1, &_data->lang_width, 0);
 	get_text_dimensions(&_data->g_entries[3], 1, 1, &_data->bg_music_width, 0);
+	get_text_dimensions(&_data->g_entries[4], 1, 1, &_data->spotpass_width, 0);
 }
 
 static void render(Scene* sc) {
@@ -87,6 +94,7 @@ static void render(Scene* sc) {
 	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
 	u32 offClr = C2D_Color32(200, 10, 10, 0xff);
 	renderPlainText(&_data->g_on_off[config.bg_music], 35 + _data->bg_music_width, 35 + 75, 1, config.bg_music ? onClr : offClr);
+	renderPlainText(&_data->g_on_off[_data->spotpass_on], 35 + _data->spotpass_width, 35 + 100, 1, _data->spotpass_on ? onClr : offClr);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
@@ -158,13 +166,14 @@ static SceneResult process(Scene* sc) {
 				return scene_continue;
 			}
 			if (_data->cursor == 4) {
-				// integrations
-				sc->next_scene = getIntegrationScene();
-				return scene_push;
+				// spotpass
+				_e(bossSetOptoutFlag(_data->spotpass_on));
+				_data->spotpass_on = !_data->spotpass_on;
+				return scene_continue;
 			}
 			if (_data->cursor == 5) {
-				// scan qr
-				sc->next_scene = getScanQrScene();
+				// integrations
+				sc->next_scene = getIntegrationScene();
 				return scene_push;
 			}
 			if (_data->cursor == 6) {
