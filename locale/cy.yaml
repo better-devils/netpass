@@ -1,6 +1,6 @@
 str_loading: "Wrthi'n llwytho    "
 str_libcurl_error: "Gwall libCURL (%d): %s"
-str_libcurl_date_and_time: 'Gwnewch yn siŵr bod dyddiad ac amser eich system wedi
+str_libcurl_date_and_time: 'Gwnewch yn siwr bod dyddiad ac amser eich system wedi
   gosod yn gywir!'
 str_httpstatus_error: 'Cod statws HTTP %d'
 str_3ds_error: 'Cod gwall 3DS %08lx'
@@ -66,7 +66,7 @@ str_integrations_message: "Mae integreiddiadau trydydd-parti i allan o gymedroli
 str_report_source: "Ffynhonnell: %s"
 str_report_source_unknown: "Ffynhonnell anhysbys"
 str_settings_misc: "Amrywiol"
-str_settings_about: "Ynglŷn â"
+str_settings_about: "Ynglyn â"
 str_about_lead_dev: "Prif Ddatblygwr"
 str_about_reports: "System Adrodd"
 str_about_graphics: "Celf a Graffeg"
@@ -79,7 +79,7 @@ str_about_special_thanks_txt: "Y gymuned homebrew 3DS ar gyfer yr holl beirianne
 str_about_production_cat: "Cath gynhyrchiad"
 str_scan_qr: "Sganio Cod QR"
 str_x_switch_camera: "{x_button} Newid Camerâu"
-str_prompt_verify: "Wyt ti'n siŵr fod di eisiau gwirio'r 3DS 'ma?"
+str_prompt_verify: "Wyt ti'n siwr fod di eisiau gwirio'r 3DS 'ma?"
 str_welcome: "Croeso I NetPass"
 str_welcome_message: "Cyn i ti dechrau NetPass, darllenwch a dderbynwch ein rheolau
   a'n polisi preifatrwydd, os gweli di'n dda."
@@ -93,7 +93,7 @@ str_bad_os_version: "Mae NetPass yn gofyn am fersiwn 3DS OS 11.15.0 neu hwyrach 
 str_update_patches_poweroff_clear_desc: "Tynnwyd y patsiau yn llwyddiannus! Bydd dy
   gonsol yn ailgychwyn nawr."
 str_bg_music: "Cerddoriaeth Gefndir"
-str_prompt_dl_pass: "Wyt ti'n siŵr fod di eisiau lawrlwytho'r pas 'ma?"
+str_prompt_dl_pass: "Wyt ti'n siwr fod di eisiau lawrlwytho'r pas 'ma?"
 str_report_integration: "Mae'r neges 'ma'n tarddu o integreiddiad. I'w hadrodd, anfonwch
   neges at dîm cymedroli'r integreiddiad 'na."
 str_skip: "Sgipio"
@@ -105,7 +105,7 @@ str_date: "%d %b %Y"
 str_date_time: "%d %b %Y %I:%M:%S%p"
 str_new_version: "Mae fersiwn newydd NetPass ar gael:\nfsn%d.%d.%.!\n\nWyt ti eisiau
   diweddaru NetPass nawr?"
-str_enter_event_location: "Wyt ti'n siŵr fod di eisiau mynd i'r digwyddiad \"%s\"?"
+str_enter_event_location: "Wyt ti'n siwr fod di eisiau mynd i'r digwyddiad \"%s\"?"
 str_at_event_location: "Rwyt ti yn nigwyddiad arbennig."
 str_artist_copyright: "Gwaith celf © %s"
 str_new_version_failed: "Methodd gosod y fersiwn newydd. Rwyt ti'n gallu ei osod eto
