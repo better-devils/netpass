@@ -101,8 +101,8 @@ str_install: "Gosod"
 str_remove: "Tynnu"
 str_banned: "Rwyt ti wedi gwahardd rhag defnyddio NetPass. Rheswm:\n%s\n\nDechrau'r
   gwaharddiad: %s\nDiwedd y gwaharddiad: %s"
-str_date: "%d %b %Y"
-str_date_time: "%d %b %Y %I:%M:%S%p"
+str_date: "%d/%m/%Y"
+str_date_time: "%d/%m/%Y %H:%M:%S"
 str_new_version: "Mae fersiwn newydd NetPass ar gael:\nfsn%d.%d.%.!\n\nWyt ti eisiau
   diweddaru NetPass nawr?"
 str_enter_event_location: "Wyt ti'n siwr fod di eisiau mynd i'r digwyddiad \"%s\"?"
