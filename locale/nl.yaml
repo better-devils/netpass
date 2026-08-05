@@ -106,3 +106,34 @@ str_prompt_dl_pass: Weet je zeker dat je deze pas wilt downloaden?
 str_date_time: '%d-%m-%Y %H:%M:%S'
 str_date: '%d-%m-%Y'
 str_logging_screen: Beeldscherm
+str_banned: "Jij bent verbannen van NetPass. Reden:\n%s\n\nVerbannen van: %s\nVerbannen
+  tot: %s"
+str_new_version: "Nieuwe NetPass versie beschikbaar:\nv%d.%d.%d!\n\nWil je NetPass
+  updaten?"
+str_enter_event_location: Weet je zeker dat je dit event wilt betreden "%s"?
+str_at_event_location: Je bent op een speciaal evenement.
+str_artist_copyright: Kunstwerk © %s
+str_new_version_failed: Het installeren van de nieuwe versie is gefaald. Je kan 
+  de update opnieuwe installeren via Universal Updater of via QR-Code.
+str_report_list_empty: De rapporteer lijst is leeg.
+str_logging: 'Logboek:'
+str_logging_none: Geen
+str_logging_file: Bestand
+str_downloading: Downloaden...
+str_failed_to_authenticate: Authenticatie is gefaald! Probeer het later nog een 
+  keer. Als dit probleem zich blijft voordoen neem dan contact met ons op! 
+  https://netpass.cafe
+str_already_registered: "Foutmelding: Apparaat is al geregistreerd!\n\nAls je gebruikt
+  hebt gemaakt, of gebruik maakt, van een emulator zorg er dan voor dat je de sdmc:/config/netpass/nid_pwd.bin
+  synchroniseerd tussen de emulator en je apparaat."
+str_backup_nid_pwd: "NetPass gaat een bestand maken om je apparaat te authentiseren,
+  zorg ervoor dat je een reservekopie maakt!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass werkt alleen zoals behoren als de systeem tijd correct is 
+  afgesteld. Zorg hiervoor!
+str_time_correct: Weet je zeker dat je datum en tijd juist zijn?
+str_time_success: Je tijd is zojuist veranderd! Herstart NetPass nu...
+str_time_failed: Het goedzetten van je tijd is gefaald!
+str_scam_warning: NetPass is gratis en een open bron software. Als je betaald 
+  hebt om NetPass te installeren ben je opgelicht en kan je het bedrag terug 
+  vragen.
+str_spotpass: SpotPass.
