@@ -75,7 +75,7 @@ typedef struct {
 	u64 title_id;
 } SharedTitleEntry;
 
-Result setupNotificationIcon(void) {
+static Result setupNotificationIcon(void) {
 	// As our app is hidden from activity the icon won't be in the shared icon cache
 	// so...we have to add it manually
 	Result res = 0;
@@ -193,7 +193,7 @@ enum TaskDiffersResult {
 	TaskCreate,
 };
 
-Result taskDiffers(const char* task_id, bossContext* ctx, enum TaskDiffersResult* result) {
+static Result taskDiffers(const char* task_id, bossContext* ctx, enum TaskDiffersResult* result) {
 	// re-doing a task is a more bulletproof (but less nice) thing than
 	// re-configuring it.
 	// So, to determine what to do, we first have to test for all the things that
@@ -258,7 +258,7 @@ Result taskDiffers(const char* task_id, bossContext* ctx, enum TaskDiffersResult
 	return res;
 }
 
-Result upsertTask(const char* task_id, bossContext* ctx) {
+static Result upsertTask(const char* task_id, bossContext* ctx) {
 	enum TaskDiffersResult differs;
 	Result res = taskDiffers(task_id, ctx, &differs);
 	if (R_FAILED(res) || differs == TaskSame) return res;

@@ -52,7 +52,7 @@ void logExit(void) {
 	}
 }
 
-void log_prefix(enum LogLevel level) {
+static void log_prefix(enum LogLevel level) {
 	if (!log_file) return;
 	if (log_file == stdout) {
 		fprintf(log_file, "\x1b[%sm[%s]\x1b[0m ", LOG_LEVEL_COLORS[level], LOG_LEVEL_NAMES[level]);

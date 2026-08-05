@@ -45,6 +45,27 @@ static PingResponse ping_response = {0};
 char* filename_3dsx = 0;
 static time_t server_date = -1;
 
+static bool luma_external_firms_enabled(void) {
+	FILE* f = fopen("sdmc:/luma/config.ini", "r");
+	if (!f) return false;
+	char line[256];
+	while (fgets(line, sizeof(line), f)) {
+		if (strcmp(line, "enable_external_firm_and_modules = 1\n") == 0) {
+			fclose(f);
+			return true;
+		}
+	}
+	fclose(f);
+	return false;
+}
+
+static Scene* check_patches_enabled(void) {
+	if (access("sdmc:/luma/sysmodules/0004013000003402.ips", F_OK) != 0) return NULL;
+
+	if (luma_external_firms_enabled()) return NULL;
+	return getInfoScene(str_luma_external_firms);
+}
+
 static Scene* load_not_authenticated(void) {
 	Scene* scene = getSettingsScene();
 	Scene* info_scene = getInfoScene(str_failed_to_authenticate);
@@ -512,6 +533,14 @@ int main(int nargs, char** argv) {
 				logln(INFO, "New Welcome Screen to show!");
 				scene = getWelcomeScene(scene);
 			}
+		}
+	}
+
+	{
+		Scene* s = check_patches_enabled();
+		if (s) {
+			s->pop_scene = scene;
+			scene = s;
 		}
 	}
 

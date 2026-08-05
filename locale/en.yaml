@@ -129,3 +129,4 @@ str_time_failed: "Failed setting the time!"
 str_scam_warning: "NetPass is free and open source software. If you have paid to install
   it you have been scammed and should demand a refund."
 str_spotpass: "SpotPass"
+str_luma_external_firms: "It appears you have installed the patches but haven't enabled them in Luma3DS yet. For those to work, you need to enable \"Enable loading external FIRMs and modules\" in the Luma3DS settings. To access settings, power off the console and then press {select_button} while powering on {power_button} the console."
