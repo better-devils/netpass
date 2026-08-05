@@ -66,8 +66,8 @@ typedef struct Smdh {
 typedef struct SharedSmdh {
 	u8 unc[0x20];
 	SmdhTitle title[0x10];
-	u8 small_icon[0x480];
-	u16 big_icon[0x900];
+	u16 small_icon[24*24];
+	u16 big_icon[48*48];
 } SharedSmdh;
 
 typedef struct {
@@ -162,9 +162,10 @@ Result setupNotificationIcon(void) {
 	fclose(idb);
 	idb = NULL;
 	// ...and copy the icon over to it
+	memset(shared_icons[found_offset].unc, 0, 0x20);
 	memcpy(shared_icons[found_offset].title, smdh->title, sizeof(SmdhTitle) * 0x10);
-	memcpy(shared_icons[found_offset].small_icon, smdh->small_icon, 0x480);
-	memcpy(shared_icons[found_offset].big_icon, smdh->big_icon, 0x900*2);
+	memcpy(shared_icons[found_offset].small_icon, smdh->small_icon, 24*24*2);
+	memcpy(shared_icons[found_offset].big_icon, smdh->big_icon, 48*48*2);
 
 	res = FSUSER_OpenFile(&handle, sharedextdata_b, fsMakePath(PATH_ASCII, "/idb.dat"), FS_OPEN_WRITE, 0);
 	if (R_FAILED(res)) goto exit;
