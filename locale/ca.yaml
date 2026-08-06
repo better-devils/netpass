@@ -117,3 +117,23 @@ str_logging_none: Cap registre
 str_logging_screen: Pantalla
 str_logging_file: Arxiu
 str_downloading: Descarregant...
+str_failed_to_authenticate: Ha fallat l'autenticació! Si us plau torna a provar 
+  més tard. Si el problema persisteix, contacta'ns! https://netpass.cafe
+str_already_registered: "Error: Consola ja registrada\n\nSi estàs fent servir o has
+  fet servir un emulador, assegura't de sincronitzar l'arxiu sdmc:/config/netpass/nid_pwd.bin
+  entre l'emulador i la consola."
+str_backup_nid_pwd: "NetPass crearà aquest arxiu per autentificar la teva consola,
+  fes-ne una còpia de seguretat!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass només funciona correctament si l'hora del sistema està 
+  configurada correctament. Si us plau, ajusta-la!
+str_time_correct: Estàs segur que l'hora i la data son correctes?
+str_time_success: Hora correctament configurada! Reiniciant NetPass...
+str_time_failed: No s'ha pogut configurar l'hora!
+str_scam_warning: NetPass és programari gratis i lliure. Si has pagat per la 
+  instal·lació, t'han estafat i hauries de reclamar una devolució.
+str_spotpass: SpotPass
+str_luma_external_firms: Sembla que has instal·lat els pedaços però encara no 
+  els has activat a Luma3DS. Per a que funcionin, has d'activar "Enable loading 
+  external FIRMs and modules" (activar carregar FIRMs i mòduls externs) als 
+  ajustos de Luma3DS. Per accedir als ajustos, apaga la consola i després prem 
+  el botó {select_button} mentre encens {power_button} la consola.
