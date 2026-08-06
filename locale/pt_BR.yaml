@@ -130,3 +130,9 @@ str_time_success: Horário definido com sucesso! Reiniciando NetPass...
 str_time_failed: Falha ao configurar o horário!
 str_scam_warning: NetPass é um software open source grátis. Se você pagou pela 
   instalação voce foi enganado/roubado e deve exigir um reembolso.
+str_spotpass: SpotPass
+str_luma_external_firms: Parece que os patches estão instalados, mas ainda não 
+  estão ativados no Luma3DS. Para que funcionem, é preciso ativar a opção 
+  “Enable loading external FIRMs and modules” nas configurações do Luma3DS. Para
+  acessá-las, desligue o console e, em seguida, aperte {select_button} enquanto 
+  liga {power_button} o console.
