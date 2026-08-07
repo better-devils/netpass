@@ -28,8 +28,13 @@ FsUserOpenArchive equ 0x126da0
 FsUserOpenFile equ 0x118bf0
 newArchiveFromHandle equ 0x126d6c
 s_handle_fsuser_2 equ 0x14b1a8
+s_handle_frdu equ 0x14b2f4
 FsUserCloseArchive equ 0x126d30
 CreateFileBuffers equ 0x13d7d8
+GetThreadLocalStorage equ 0x127bc0
+BuildAndWriteIpcHeader equ 0x127a90
+SvcSendSyncRequest equ 0x127a88
+create_string16 equ 0x121e98
 
 CfgsGetLocalFriendCodeSeed equ 0x10d260
 CecdsGetBossUserId equ 0x10a8b0
@@ -51,9 +56,6 @@ memclr equ 0x126ef0
 .org boss_policy_url
   .asciiz "https://api.netpass.cafe/nppl"
 
-.org hpp_domain_addr
-  .asciiz "api.netpass.cafe"
-
 .org reports_url_addr
   .asciiz "https://api.netpass.cafe/npvk/reports"
 
@@ -69,9 +71,33 @@ StackArgsSize equ TempVar + 0x4
 
 ; We overwrite FrduGetMyPassword to instead read from a file in nand
 .org 0x13a8bc ; FrduGetMyPassword
-.area 92
+.area 2
+  b get_nex_pwd_entry
+FrduGetMyPassword_new_entry:
+.endarea
+
+; we need to set up a trampoline to dynamically set the base domain of
+; the hpp url
+.org 0x10f072
+.area 4
+  bl hpp_url_trampoline
+.endarea
+
+.org 0x13ADE0
+.area 0x98
+; this area is actually *not* a string but an unused area
+get_nex_pwd_entry:
+  push {r0, lr}
+  bl UseCustomNex
+  cmp r0, 0
+  pop {r0}
+  bne get_nex_pwd
+
+  push {r0, r1, r4, r5, r6, r7}
+  b FrduGetMyPassword_new_entry
+get_nex_pwd:
 ; buffer is in r0, size is in r1
-  push {r4, r5, r6, lr}
+  push {r4, r5, r6}
   ; r5 will hold our result buffer
   mov r5, r0
   ; r6 will hold our result size
@@ -117,10 +143,36 @@ StackArgsSize equ TempVar + 0x4
   ; build the path args for the file
   ldr r0, [nidPwdPathPtr] ; file path
   str r0, [sp, PathArgs + 4]
+  mov r0, 3 ; path type ascii string
+  str r0, [sp, PathArgs]
+  mov r0, nidPwdPathEnd - nidPwdPath ; the file length
+  str r0, [sp, PathArgs + 8]
+; open the file for reading
+  mov r3, 0b1 ; open flags
+  add r2, sp, PathArgs
+  add r1, sp, FsFilePtr
 
-  b get_nex_cont
+  ldr r0, [sp, FullFilePtr]
+  ldr r4, [r0] ; the pointer to the open file method is in the
+  ldr r4, [r4] ; first four bytes of FsFullFile
+  blx r4
+  cmp r0, 0
+  blt fail_get_nex_pwd0
+  
+; read from the file
+  mov r4, r6 ; read buffer length
+  str r4, [sp, CallArg2]
+  mov r4, r5 ; read buffer
+  str r4, [sp, CallArg1]
+  mov r3, 0 ; file offset
+
+  
+  mov r2, 0
+  add r1, sp, TempVar ; we don't care about how much we actually read
+  
+  bl get_nex_cont
 fail_get_nex_pwd0:
-  b fail_get_nex_pwd
+  bl fail_get_nex_pwd
 .align 4
 nidPwdPathPtr:
   .word nidPwdPath
@@ -130,35 +182,11 @@ nandFileType:
   .word 0x1234567D
 .endarea
 
-
-.org 0x13ADE0
-.area 0x98
-.align 2
+.org 0x12A948
+.area 0x32
+.db 0, 0 ; zero-termination of "string"
 get_nex_cont:
-  mov r0, 3 ; path type ascii string
-  str r0, [sp, PathArgs]
-  mov r0, nidPwdPathEnd - nidPwdPath ; the file length
-  str r0, [sp, PathArgs + 8]
-; open the file for reading
-  mov r3, 0b1 ; open flags
-  add r2, sp, PathArgs
-  add r1, sp, FsFilePtr
-  ldr r0, [sp, FullFilePtr]
-  ;cmp r0, 0
-  ;beq fail_get_nex_pwd
-  ldr r4, [r0] ; the pointer to the open file method is in the
-  ldr r4, [r4] ; first four bytes of FsFullFile
-  blx r4
-  cmp r0, 0
-  blt fail_get_nex_pwd
-; read from the file
-  mov r4, r6 ; read buffer length
-  str r4, [sp, CallArg2]
-  mov r4, r5 ; read buffer
-  str r4, [sp, CallArg1]
-  mov r3, 0 ; file offset
-  mov r2, 0
-  add r1, sp, TempVar ; we don't care about how much we actually read
+  
   ldr r0, [sp, FsFilePtr]
   ;cmp r0, 0
   ;beq fail_get_nex_pwd
@@ -172,13 +200,14 @@ fail_get_nex_pwd:
   ; close file
   ldr r0, [sp, FsFilePtr]
   cmp r0, 0 ; check for null pointer
+
   beq fail_get_nex_pwd_no_close_fsfileptr
   ; close up the file
   ldr r4, [r0] ; the 12th entry in the LUT at the top is
   add r4, 12*4 ; the file close method
   ldr r4, [r4]
   blx r4
-
+  
   ldr r0, [sp, TempVar]
 fail_get_nex_pwd_no_close_fsfileptr:
   str r0, [sp, TempVar]
@@ -187,9 +216,17 @@ fail_get_nex_pwd_no_close_fsfileptr:
   ldr r1, [sp, ArchiveHandle+4]
   orr r0, r1
   cmp r0, 0
-  beq fail_get_nex_pwd_no_close_archivehandle
-  
+  beq fail_get_nex_pwd_no_close_archivehandle0
   ldr r2, [sp, ArchiveHandle]
+  bl get_nex_cont_2
+fail_get_nex_pwd_no_close_archivehandle0:
+  bl fail_get_nex_pwd_no_close_archivehandle
+.endarea
+
+.org 0x10D6C4
+.area 0x2C
+.db 0, 0 ; zero-termination of "string"
+get_nex_cont_2:
   ldr r3, [sp, ArchiveHandle+4]
   mov r1, 0
   add r0, sp, PathArgs + 8 ; user handle is in r0 now
@@ -200,22 +237,23 @@ fail_get_nex_pwd_no_close_archivehandle:
   
   add sp, StackArgsSize ; restore stack pointer
   pop {r4, r5, r6, pc}
-.align 4
-.endarea
 
-.org 0x10D6C4
-.area 0x2C
-.db 0, 0 ; zero-termination of "string"
-.align 2
-; empty area to use
+; our little trampoline to determine which hpp url
+; we should be using
+hpp_url_trampoline:
+  push {r0, lr}
+  bl UseCustomNex
+  cmp r0, 0
+  beq hpp_url_trampoline_skip
+  ldr r1, [customHppDomainPtr]
+hpp_url_trampoline_skip:
+  pop {r0}
+  bl create_string16
+  pop {pc}
+.align
+customHppDomainPtr:
+  .word customHppDomain
 .endarea
-
-.org 0x12A948
-.area 0x32
-.db 0, 0 ; zero-termination of "string"
-; empty area to use
-.endarea
-
 
 ;;;
 ; SpotPass Patches
@@ -517,7 +555,43 @@ newSpotpassUrlPatternPtr:
 .org 0x1154BC
 .area 0x24
 .db 0, 0 ; zero-termination of "string"
+FrduGetMyPlayingGame:
+  push {r3, r4, lr}
+  sub sp, 0x8
+  blx GetThreadLocalStorage
+  add r0, 0x80
+  str r0, [sp, 0x4]
+  mov r0, 0
+  mov r3, r0
+  mov r2, r0
+  str r0, [sp]
+  mov r1, 0xC
+  add r0, sp, 4
+  bl BuildAndWriteIpcHeader
+  bl FrduGetMyPlayingGame_cont
+.endarea
 
+.org 0x122F04
+.area 0x20
+.db 0, 0 ; zero-termination of "string"
+FrduGetMyPlayingGame_cont:
+  ldr r0, [FrduHandlePtr]
+  ldr r0, [r0]
+  blx SvcSendSyncRequest
+  cmp r0, 0
+  blt _FrduGetMyPlayingGame_Exit
+  ldr r0, [sp, 0x4]
+  
+  ldr r1, [r0, 8]
+  ldr r2, [r0, 0xC]
+  ldr r0, [r0, 4]
+  
+_FrduGetMyPlayingGame_Exit:
+  add sp, 0x8
+  pop {r3, r4, pc}
+.align
+FrduHandlePtr:
+  .word s_handle_frdu
 .endarea
 
 .org 0x1225D0
@@ -532,17 +606,45 @@ newSpotpassUrlPatternPtr:
 
 .endarea
 
-.org 0x122F04
-.area 0x20
-.db 0, 0 ; zero-termination of "string"
-
-.endarea
-
 .org 0x123158
 .area 0x20
 .db 0, 0 ; zero-termination of "string"
 
 .endarea
+
+.org 0x12F1A8
+.area 0x38
+.db 0, 0 ; zero-termination of "string"
+UseCustomNex:
+  push {r1, r2, lr}
+  bl FrduGetMyPlayingGame
+  cmp r0, 0
+  blt UseCustomNex_Yes
+  ldr r0, [common_title_upper]
+  cmp r2, r0
+  bne UseCustomNex_Yes
+  ldr r2, [nexTitleExcludeListPtr]
+UseCustomNex_loop:
+  ldr r0, [r2]
+  cmp r0, 0
+  beq UseCustomNex_Yes
+  cmp r1, r0
+  beq UseCustomNex_No
+  add r2, 4
+  b UseCustomNex_loop
+UseCustomNex_No:
+  mov r0, 0
+  pop {r1, r2, pc}
+UseCustomNex_Yes:
+  mov r0, 1
+  pop {r1, r2, pc}
+.align
+common_title_upper:
+  .word 0x00040000
+nexTitleExcludeListPtr:
+  .word nexTitleExcludeList
+.endarea
+
 
 ; When the server returns a 30X (redirect), the path part is copied into the URL buffer, but with an artificial limit of 0x40 bytes, which breaks URLs considering it's super short.
 ; The buffer it's stored into already is larger, so just increase it that limit to 0xFC, it should have us covered.
@@ -582,9 +684,10 @@ newSpotpassUrlPatternPtr:
 ;   - 0x122BEC
 ;   - 0x122F04
 ;   - 0x123158
+;   - 0x12F1A8
 ; Free strings:
-;  - 0012984C, 001299C0, 0012EC74, 0012F0BC, 0012F1A8, 0012F1E0, 0013B3FC
-;        0x28,     0x2C,     0x18,     0x30,     0x38,     0x20,     0x18
+;  - 0012984C, 001299C0, 0012EC74, 0012F0BC, 0012F1E0, 0013B3FC
+;        0x28,     0x2C,     0x18,     0x30,     0x20,     0x18
 
 
 ;;;
@@ -598,7 +701,9 @@ spotpassUrlRewrite:
   .word spotpassGeneralPrefix
   .word spotpassGeneralUrl
   .word spotpassGeneralPath
-
+  
+  .word 0
+  
   .word spotpassVideoPrefix
   .word spotpassVideoUrl
   .word sptopassVideoPath
@@ -619,6 +724,12 @@ sptopassVideoPath:
   .asciiz "/v/"
 
   .align 4
+nexTitleExcludeList:
+  .word 0xC9B00 ; pokemon bank
+  ;.word 0x51800 ; letterbox (for testing only)
+  .word 0
+customHppDomain:
+  .asciiz "api.netpass.cafe"
 newSpotpassUrlPattern:
   .asciiz "https://api.netpass.cafe%s%s%s"
   .align 4
