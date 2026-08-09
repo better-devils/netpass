@@ -285,15 +285,13 @@ BOSS_ConvertAakamaitoNPDL_FirstEnding equ 0x10B1F2
 BOSS_ConvertAakamaitoNPDL_SecondEnding equ 0x10B1FE
 
 .org BOSS_ConvertAakamaitoNPDL_FirstEnding
-.area 0x6
+.area 0x4
   bl ConvertAakamaitoNPDL_NewFirstEnding
-  pop {R3-R7, PC}
 .endarea
 
 .org BOSS_ConvertAakamaitoNPDL_SecondEnding
-.area 0x6
+.area 0x4
   bl ConvertAakamaitoNPDL_NewSecondEnding
-  pop {R3-R7, PC}
 .endarea
 
 ; We need to push call-safe registers to maintain their call safety.
@@ -305,16 +303,27 @@ BOSS_ConvertAakamaitoNPDL_SecondEnding equ 0x10B1FE
 .area 0x18
 .db 0, 0 ; zero-termination of "string"
 ConvertAakamaitoNPDL_NewFirstEnding:
-  push {r4, r5, r6, r7, r8, lr}
+  push {r0-r8, lr}
   bl sub_10C104 ; Call the original method
-  b BranchToPatchSpotpassUrl
+  bl UseCustomNex
+  cmp r0, 0
+  bne ConvertAakamaitoNPDL_NewFirstEnding_do
+  pop {r0-r8, pc}
+ConvertAakamaitoNPDL_NewFirstEnding_do:
+  bl PatchSpotpassUrl
+.endarea
 
+.org 0x1225D0
+.area 0x18
+.db 0, 0 ; zero-termination of "string"
 ConvertAakamaitoNPDL_NewSecondEnding:
-  push {r4, r5, r6, r7, r8, lr}
-  blx strncpy ; Call the original method
-
-BranchToPatchSpotpassUrl:
-  push {r0, r1, r2, r3}
+  push {r0-r8, lr}
+  blx strncpy
+  bl UseCustomNex
+  cmp r0, 0
+  bne ConvertAakamaitoNPDL_NewSecondEnding_do
+  pop {r0-r8, pc}
+ConvertAakamaitoNPDL_NewSecondEnding_do:
   bl PatchSpotpassUrl
 .endarea
 
@@ -545,8 +554,7 @@ PatchSpotpassUrl_SkipPatch:
   
   ; Restore the registers we've saved and return to the patched function
   
-  pop {r0, r1, r2, r3}
-  pop {r4, r5, r6, r7, r8, pc}
+  pop {r0-r8, pc}
 .align
 newSpotpassUrlPatternPtr:
   .word newSpotpassUrlPattern
@@ -592,12 +600,6 @@ _FrduGetMyPlayingGame_Exit:
 .align
 FrduHandlePtr:
   .word s_handle_frdu
-.endarea
-
-.org 0x1225D0
-.area 0x18
-.db 0, 0 ; zero-termination of "string"
-
 .endarea
 
 .org 0x122BEC
@@ -726,7 +728,7 @@ sptopassVideoPath:
   .align 4
 nexTitleExcludeList:
   .word 0xC9B00 ; pokemon bank
-  ;.word 0x51800 ; letterbox (for testing only)
+;  .word 0x51800 ; letterbox (for testing only)
   .word 0
 customHppDomain:
   .asciiz "api.netpass.cafe"
