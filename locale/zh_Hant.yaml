@@ -44,3 +44,70 @@ str_report_mii_plaza_greeting: 賀詞：%s
 str_report_mii_plaza_custom_message: 您的自訂訊息： %s
 str_date: '%Y年%m月%d日(%A)'
 str_date_time: '%Y年%m月%d日(%A) %H:%M:%S'
+str_toggle_titles_message: 按 {a_button} 切換是否交換瞬緣連接信息。
+str_report_mii_plaza_custom_reply: 對方的自定義答覆：%s
+str_report_tomodachi_life_island_name: 島嶼名：%s
+str_b_go_back: '{b_button} 返回'
+str_b_cancel: '{b_button} 取消'
+str_a_ok: '{a_button} 确定'
+str_update_patches: 更新補丁
+str_update_patches_desc: 為了正常安裝NetPass， 軟件將會創建一些系統模塊補丁（sysmodule 
+  patches），為了使補丁正常工作，你需要在Luma3DS設置中啟用"Enable loading external FIRMs and 
+  modules"這個選項。 你可以關機之後先按住 {select_button}，再按下 {power_button} 
+  開機來進入Luma3DS設置。也可以先裝好補丁，然後再去打開。
+str_update_patches_error_desc: 
+  更新補丁時出錯。請在GitLab、GBAtemp或Discord上報告該問題。https://netpass.cafe/discord
+str_update_patches_poweroff_desc: 更新補丁成功！主機將會重啟。
+str_integrations: 集成插件
+str_integrations_message: 第三方集成插件不受NetPass約束。請自行承擔使用風險！
+str_report_source: 來源：%s
+str_report_source_unknown: 未知來源
+str_settings_misc: 雜項
+str_settings_about: 關於
+str_about_lead_dev: 首席開發者
+str_about_reports: 舉報系統
+str_about_graphics: 美術與圖像
+str_about_music: 音樂
+str_about_localisation: 本地化
+str_about_netpass_community: NetPass社區
+str_about_special_thanks: 特別鳴謝
+str_about_special_thanks_txt: 3DS Homebrew社區對所有逆向工程及文檔作出的貢獻
+str_about_production_cat: 伴工貓
+str_scan_qr: 掃描二維碼
+str_x_switch_camera: '{x_button} 切換相機'
+str_prompt_verify: 你確定要驗證該3DS嗎？
+str_welcome: 歡迎來到 NetPass
+str_welcome_message: 在使用 NetPass 前，請閱讀並接受我們的規則與隱私條款。
+str_view_rules: 查看規則
+str_view_privacy: 查看隱私條款
+str_continue: 繼續
+str_bad_os_version: "NetPass 需要至少 11.15.0 版本的3DS系統，當前系統版本似乎過老， 請升級系統后再重新打開 NetPass。\n\
+  \n按任意鍵退出"
+str_update_patches_poweroff_clear_desc: 成功移除補丁！主機現在將會重啟。
+str_bg_music: 背景音樂
+str_prompt_dl_pass: 你確定要下載這個瞬緣連接嗎？
+str_report_integration: 該信息來自某個集成插件。 請向該插件的管理團隊進行報告。
+str_skip: 跳過
+str_install: 安装
+str_remove: 移除
+str_banned: "你已經被NetPass封禁。原因：\n%s\n\n起始時間：%s\n結束時間：%s"
+str_new_version: "NetPass有更新：\nv%d.%d.%d！\n\n要現在就更新嗎？"
+str_enter_event_location: 是否確定要進入"%s"活動？
+str_at_event_location: 你正在特殊活動中。
+str_artist_copyright: 美術 © %s
+str_new_version_failed: 新版本安裝失敗。你仍可以通過 Universal Updater 或二維碼再次安裝。
+str_report_list_empty: 舉報列表為空。
+str_logging: 日誌：
+str_logging_none: 無
+str_logging_screen: 畫面
+str_logging_file: 文件
+str_downloading: 下载中...
+str_failed_to_authenticate: 驗證失敗！請稍後重試。如果問題持續出現，請於 https://netpass.cafe 尋求幫助
+str_already_registered: "錯誤：主機已被註冊！\n\n如果你正在使用或曾使用過模擬器，請確保在模擬器和主機間同步 sdmc:/config/netpass/nid_pwd.bin
+  文件。"
+str_backup_nid_pwd: "為了驗證你的主機，NetPass 將會創建以下文件，請確保將該文件備份！\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: NetPass 只有在系統時間正確設置的情況下才能正常工作。請進行調整！
+str_time_correct: 你確定日期和時間是對的嗎？
+str_time_success: 設置時間成功！正在重啟 NetPass...
+str_time_failed: 設置時間失敗！
+str_scam_warning: NetPass 是免費且開源的軟件。如果你是花錢買來的，那麼恭喜你交了智商稅，請去找賣家要求退款。
