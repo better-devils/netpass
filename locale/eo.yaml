@@ -1,104 +1,122 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
-str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
-str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
-str_banned: ""
-str_date: ""
-str_date_time: ""
-str_new_version: ""
-str_enter_event_location: ""
-str_at_event_location: ""
-str_artist_copyright: ""
-str_new_version_failed: ""
-str_report_list_empty: ""
-str_logging: ""
-str_logging_none: ""
-str_logging_screen: ""
-str_logging_file: ""
-str_downloading: ""
-str_failed_to_authenticate: ""
-str_already_registered: ""
+str_loading: "Ŝargante ...    "
+str_libcurl_error: "libCURLa eraro (%d): %s"
+str_libcurl_date_and_time: 'Vi certigu ke via sistemodato kaj sistemotempo estas korektitaj!'
+str_httpstatus_error: 'HTTPa statokodo %d'
+str_3ds_error: '3DSa erarkodo %08lx'
+str_at_home: 'Vi estas en Domo.'
+str_goto_train_station: 'Iru al Trajnstacio'
+str_at_train_station: 'Vi estas en Trajnstacio.'
+str_goto_plaza: 'Iru al Placo'
+str_at_plaza: 'Vi estas en Placo.'
+str_goto_mall: 'Iru al Magazeno'
+str_at_mall: 'Vi estas en Magazeno.'
+str_exit: 'Eliri'
+str_settings: 'Agordoj'
+str_download_data: 'Elŝuti personaĵadatumojn'
+str_delete_data: 'Forigi personaĵadatumojn'
+str_back: 'Post'
+str_language: 'Esperanto'
+str_goto_beach: 'Iru al Plaĝo'
+str_at_beach: 'Vi estas en Plaĝo.'
+str_goto_arcade: 'Iru al Arkado'
+str_at_arcade: 'Vi estas en Arkado.'
+str_goto_catcafe: 'Iru al Katokafejo'
+str_at_catcafe: 'Vi estas en Katokafejo.'
+str_system_language: 'Sistemolingvo'
+str_language_pick: 'Lingvo:'
+str_no_location_twice: 'Vi ne povas eniri saman ejon dufoje tuj!'
+str_report_user: 'Denunci uzanton'
+str_report_user_hint: 'Denunci "%s"'
+str_cancel: 'Nuligi'
+str_submit: 'Sendi'
+str_back_alley: 'Strateto'
+str_back_alley_message: 'Ni atingu iujn biletojn!'
+str_back_alley_pay: "Aĉeti bileton {playcoin}%d"
+str_check_inboxes: 'Kontroli enkestojn'
+str_toggle_titles: '(Mal)Aktivi ludojn'
+str_toggle_titles_message: "Primus {a_button} por starti aŭ halti biletoŝanĝon."
+str_toggle_titles_on: "(ŝalt.)"
+str_toggle_titles_off: "(esting.)"
+str_report_mii_name: "Miionomo: %s"
+str_report_mario_kart_7_greeting: "Saluto: %s"
+str_report_mii_plaza_last_game: "Lastaludo: %s"
+str_report_mii_plaza_country: "Regiono: %s - %s"
+str_report_mii_plaza_greeting: "Saluto: %s"
+str_report_mii_plaza_custom_message: "Via personaĵamesaĝo: %s"
+str_report_mii_plaza_custom_reply: "Ria personaĵamesaĝo: %s"
+str_report_tomodachi_life_island_name: "Insulonomo: %s"
+str_b_go_back: "{b_button} Retroiri"
+str_b_cancel: "{b_button} Nuligi"
+str_a_ok: "{a_button} Jes"
+str_update_patches: "Ĝisdatigi flikaĵojn"
+str_update_patches_desc: "Por instali Netpass dece, iuj sysmodule-a flikaĵoj estos
+  kreatitaj. Por tiuj funkcias, Vi bezonas ebligi \"Enable loading external FIRMs
+  and modules\" en Luma3DSa Agordoj. Por aliras al agodoj, elŝaltu konzolon kaj primu
+  {select_button} dum vi elŝaltas {power_button} konzolon. Vi povos fari tuj post
+  flikaĵoj estis skribataj."
+str_update_patches_error_desc: "Faris eraro dum ĝisdatigis flikaĵojn. Denunci tia
+  problemo en GitLab, GBAtemp aŭ Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Flikaĵoj ĝisdatigis dece! Via konzolo restartis
+  ĵus."
+str_integrations: "Integrigoj"
+str_integrations_message: "Tripartia intergrigoj estas ekster NetPassamoderacio. Uzu
+  ilin pri viaj riskoj!"
+str_report_source: "Fonto: %s"
+str_report_source_unknown: "Nekonanta fonto"
+str_settings_misc: "Aliaj"
+str_settings_about: "Agnoskoj"
+str_about_lead_dev: "Ĉefa disvolviĝano"
+str_about_reports: "Denunciosistema"
+str_about_graphics: "Arto kaj Grafikoj"
+str_about_music: "Muziko"
+str_about_localisation: "Tradukado"
+str_about_netpass_community: "NetPass-a komuneco"
+str_about_special_thanks: "Agnoskoj Specialaj"
+str_about_special_thanks_txt: "3DS-a hejmefaritakomuneco por ĉiu malinĝeniado kaj
+  dokumentaro"
+str_about_production_cat: "Produktadokato"
+str_scan_qr: "Skani QR-akodon"
+str_x_switch_camera: "{x_button} Ŝanĝi kameraon"
+str_prompt_verify: "Estas certe ke vi volas kontroli tujn 3DSkonzolon?"
+str_welcome: "Saluton al NetPass"
+str_welcome_message: "Antaŭ starti NetPass-on, bonvolu legi kaj akcepti niajn normojn
+  kaj privatecopolitikojn."
+str_view_rules: "Vidi Normojn"
+str_view_privacy: "Vidi Privetecopolitikojn"
+str_continue: "Daŭrigi"
+str_bad_os_version: "NetPass bezonas versio 11.15.0 ce 3DS-a agantasistema aŭ plu
+  por funkcii dece. Bedaŭrinde, ŝajnas ke vi uzas version pli olda. Bonvolu ĝisdatigu
+  kaj restarti Netpass-on.\n\nPrima iu ajn klavojn por eliri"
+str_update_patches_poweroff_clear_desc: "Flikaĵoj forigis dece! Via konzolo ĵus restarti."
+str_bg_music: "Fonamuziko"
+str_prompt_dl_pass: "Vi estas certe ke vi volas malŝarĝi tiun bileton?"
+str_report_integration: "Tiu mesaĝo estas alveninta de una integrigo. Por denunci,
+  bonvolu mesaĝi moderacioteamon de tiu integrigo."
+str_skip: "Ignori"
+str_install: "Instali"
+str_remove: "Forigi"
+str_banned: "Vi estas malpermesanta el uzi NetPass-on. Kaŭzo:\n%s\n\nMalpermesokomenco:
+  %s\nMalpermesofino: %s"
+str_date: "%d-a %b-o de %Y"
+str_date_time: "%d-a %b-o de %Y, la %H kaj %M:%S"
+str_new_version: "Nova NetPass-a versio kontanta:\nv%d.%d.%d!\n\nVi volas ĝisdatigi
+  ĵus Netpass-on?"
+str_enter_event_location: "Vi estas certe ke vi volas eniri eventon \"%s\"?"
+str_at_event_location: "Vi estas en speciala evento."
+str_artist_copyright: "Ilustraĵo © %s"
+str_new_version_failed: "Fari eraron kian instali novan version. Vi povas instali
+  ree per Universal Updater aŭ QR-akodo."
+str_report_list_empty: "Denuncilisto estas vaka."
+str_logging: "Registroj:"
+str_logging_none: "Nenio"
+str_logging_screen: "Ekrano"
+str_logging_file: "Dosiero"
+str_downloading: "Ĝisdatigi..."
+str_failed_to_authenticate: "Fari eraron por aŭtentigi! Bovolu provi ree pli malfue.
+  Se problemo daŭrigas, bovolu kontakti nin! https://netpass.cafe"
+str_already_registered: "Eraro: Konzolo jam estas registrata!\n\nSe vi uzas aŭ uzis
+  imitilo, bonvolu sinkronigu certige sdmc:/config/netpass/nid_pwd.bin inter imitilo
+  kaj konzolo."
 str_backup_nid_pwd: ""
 str_set_time: ""
 str_time_correct: ""
