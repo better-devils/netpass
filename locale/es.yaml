@@ -1,8 +1,9 @@
 str_loading: "Cargando    "
 str_libcurl_error: "Error de libCURL (%d): %s"
-str_libcurl_date_and_time: '¡Asegúrate de que la fecha y hora del sistema sean correctas!'
+str_libcurl_date_and_time: '¡Asegúrate de que la fecha y hora del sistema estén ajustadas
+  correctamente!'
 str_httpstatus_error: 'Código de estado HTTP %d'
-str_3ds_error: 'Código de error de 3DS %08lx'
+str_3ds_error: 'Código de error de la consola 3DS %08lx'
 str_at_home: 'Estás en Casa.'
 str_goto_train_station: 'Ir a la Estación de Tren'
 str_at_train_station: 'Estás en la Estación de Tren.'
@@ -32,7 +33,7 @@ str_submit: Enviar
 str_back_alley: Callejón
 str_back_alley_pay: Compra un pase por {playcoin}%d
 str_back_alley_message: ¡Consigamos más pases!
-str_check_inboxes: Comprobar pases
+str_check_inboxes: Comprobar bandeja de entrada
 str_toggle_titles: Alternar juegos
 str_toggle_titles_on: (SI)
 str_toggle_titles_off: (NO)
@@ -40,7 +41,7 @@ str_toggle_titles_message: Pulsa {a_button} para activar o desactivar la
   búsqueda de pases.
 str_clear_spr_cache: Limpiar cache (SPRelay)
 str_write_patches: Escribir parches
-str_report_mii_name: 'Apodo: %s'
+str_report_mii_name: 'Nombre del Mii: %s'
 str_report_mario_kart_7_greeting: 'Saludo: %s'
 str_report_mii_plaza_greeting: 'Saludo: %s'
 str_report_mii_plaza_custom_message: 'Saludo Personal: %s'
@@ -52,20 +53,20 @@ str_report_mii_plaza_country: 'Región: %s - %s'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Actualizar parches
 str_update_patches_error_desc: Algo salió mal al actualizar los parches. Por 
-  favor, informe este problema en GitLab, GBAtemp o Discord. 
+  favor, informa este problema en GitLab, GBAtemp o Discord. 
   https://netpass.cafe/discord
 str_update_patches_poweroff_desc: ¡La actualización de los parches se realizó 
   correctamente! Ahora tu consola se reiniciará.
 str_update_patches_desc: Para instalar NetPass correctamente, se crearán algunos
-  parches de sysmodule. Para que funcionen, debe habilitar «Enable loading 
+  parches de sysmodule. Para que funcionen, debes habilitar «Enable loading 
   external FIRMs and modules» en la configuración de Luma3DS. Para ver la 
-  configuración, apague la consola y luego presione {select_button} mientras 
-  enciende {power_button} la consola. Puede hacer esto después de que se 
+  configuración, apagua la consola y luego presione {select_button} mientras 
+  enciendes {power_button} la consola. Puedes hacer esto después de que se 
   escriban los parches.
 str_b_cancel: '{b_button} Cancelar'
 str_integrations: Integraciones
 str_integrations_message: Las integraciones de terceros quedan fuera de la 
-  moderación de NetPass. ¡Úsala bajo tu propio riesgo!
+  moderación de NetPass. ¡Úsalas bajo tu propio riesgo!
 str_report_source_unknown: Fuente desconocida
 str_report_source: 'Fuente: %s'
 str_settings_misc: Varios
@@ -105,34 +106,34 @@ str_skip: Omitir
 str_banned: "Se te ha restringido el uso de NetPass. Razón:\n%s\n\nDesde: %s\nHasta:
   %s"
 str_new_version: "Nueva versión de NetPass disponible:\n¡v%d.%d.%d!\n\n¿Quieres actualizar
-  ahora NetPass?"
+  NetPass ahora?"
 str_date_time: '%d/%m/%Y %H:%M:%S'
 str_date: '%d/%m/%Y'
 str_artist_copyright: Ilustración © %s
-str_enter_event_location: ¿Confirmas que quieres entrar al evento "%s"?
-str_at_event_location: Estas en un evento especial.
+str_enter_event_location: ¿Seguro que quieres entrar al evento "%s"?
+str_at_event_location: Estás en un evento especial.
 str_new_version_failed: La instalación de la actualización ha fallado. Puedes 
-  volver a instalarla mediante Universal Updater o el código QR.
+  volver a instalarla mediante Universal Updater o código QR.
 str_report_list_empty: La lista de informes está vacía.
 str_logging: 'Registros:'
-str_logging_none: Nada
+str_logging_none: Ninguno
 str_logging_screen: Pantalla
 str_logging_file: Archivo
 str_downloading: Descargando...
-str_failed_to_authenticate: ¡Error al autenticar! Intenta de nuevo más tarde. Si
-  el problema persiste, contactanos! https://netpass.cafe
+str_failed_to_authenticate: ¡Fallo de autenticación! Intenta de nuevo más tarde.
+  Si el problema persiste, contáctanos! https://netpass.cafe
 str_already_registered: "Error: ¡La consola ya está registrada!\n\nSi estás usando
   o has usado un emulador, asegúrate de sincronizar sdmc:/config/netpass/nid_pwd.bin
   entre el emulador y la consola."
 str_backup_nid_pwd: "NetPass creará el siguiente archivo para autenticar tu consola,
   ¡así que asegúrate de hacerle una copia!\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: NetPass solo funciona correctamente si la hora del sistema está 
-  bien configurada. ¡Hazlo, por favor!
+  bien configurada. ¡Ajústala, por favor!
 str_time_correct: ¿Seguro que la fecha y hora son correctas?
 str_time_success: ¡Hora establecida con éxito! Reiniciando NetPass...
-str_time_failed: ¡Error al ajustar la hora!
-str_scam_warning: NetPass es gratuito y de código abierto. Si has pagado por su 
-  instalación, has sido víctima de un fraude y deberías pedir un reembolso.
+str_time_failed: ¡Hubo un error al ajustar la hora!
+str_scam_warning: NetPass es gratuito y de código abierto. Si has pagado por 
+  instalarlo, has sido estafado y deberías pedir un reembolso.
 str_spotpass: SpotPass
 str_luma_external_firms: Parece que has instalado los parches pero todavía no 
   los has activado en Luma3DS. Para que funcionen, tienes que activar "Enable 
