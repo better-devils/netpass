@@ -117,11 +117,17 @@ str_failed_to_authenticate: "Fari eraron por aŭtentigi! Bovolu provi ree pli ma
 str_already_registered: "Eraro: Konzolo jam estas registrata!\n\nSe vi uzas aŭ uzis
   imitilo, bonvolu sinkronigu certige sdmc:/config/netpass/nid_pwd.bin inter imitilo
   kaj konzolo."
-str_backup_nid_pwd: ""
-str_set_time: ""
-str_time_correct: ""
-str_time_success: ""
-str_time_failed: ""
-str_scam_warning: ""
-str_spotpass: ""
-str_luma_external_firms: ""
+str_backup_nid_pwd: "NetPass kreatos tiu dosiero por aŭtentigi vian konzolon,bonvolu
+  apogu ĝi certige!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: "NetPass nur funkcias dece se sistematempo estas formanta dece. Bonvolu
+  faru!"
+str_time_correct: "Vi estas certige sistemotempo kaj sistemodato estas dece?"
+str_time_success: "Sistemotempo estis fomanta dece! Restari NetPass-on ĵus..."
+str_time_failed: "Faris eraron kiam sistemotempo estis formanta!"
+str_scam_warning: "NetPass estas senkosta kaj aperta programaro. Se vi pagis por instali
+  ĝi, vi estas fraŭdanta kaj vi devas peti remburson."
+str_spotpass: "SpotPass-o"
+str_luma_external_firms: "Ŝajnas ke vi instalis flikaĵoj, sed ne enŝalti ĝi en Luma3DS
+  ankoraŭ. Por funkcii ĝi, vi devas enŝalti \"Enable loading external FIRMs and modules\"\
+  \ en Luma3DS-a agordoj. Por aliri al tiuj agordoj, estingu konzolon kaj permu {select_button}
+  dum ŝalti {power_button} konzolon."
