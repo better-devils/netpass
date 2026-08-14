@@ -134,3 +134,8 @@ str_time_failed: Nastavení času selhalo!
 str_scam_warning: NetPass je volný a open source software. Pokud jste zaplatili 
   za jeho instalaci, byli jste podvedeni a měli byste zažádat o odškodnění.
 str_spotpass: SpotPass
+str_luma_external_firms: Vypadá to, že jste nainstalovali patche ale nezapli je 
+  v Luma3DS. Proto aby patche fungovali, musíte povolit "Enable loading external
+  FIRMs and modules" v nastavení Luma3DS. Pro přístup k nastavení Luma3DS 
+  nejprve vypněte konzoli a pak podržte {select_button} stisknuté a zapněte 
+  konzoli pomocí {power_button}.
