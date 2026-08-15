@@ -137,7 +137,7 @@ str_set_time: Ní oibríonn NetPass i gceart ach amháin má tá an t-am córais
 str_scam_warning: Is feidhmchláir foinse oscailte é NetPass, agus tá sé saor in 
   aisce. Má íoc tú as NetPass, ba sceamáil é agus ba cheart duit aisíocaíocht a 
   lorg.
-str_spotpass: SpotPass
+str_spotpass: Nuacht SpotPass
 str_luma_external_firms: Tá an chuma air, go bhfuil na paistí suiteáilte agat, 
   ach níl siad cumasaithe i Luma3DS fós. Ionas go mbeidh siad ag oibriú, 
   caithfidh tú "Enable loading external FIRMs and modules" a chumasú sna 
