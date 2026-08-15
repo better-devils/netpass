@@ -131,7 +131,7 @@ str_time_success: "Amser wedi gosod yn llwyddiannus! Wrthi'n ailgychwyn NetPass 
 str_time_failed: "Mae gosod yr amser wedi methu!"
 str_scam_warning: "Mae NetPass yn meddalwedd am ddim a cod agored. Os wyt ti wedi
   talu i ei osod, rwyt ti wedi cael dy sgamio, a dylit ti fynnu ail-daliad."
-str_spotpass: "SpotPass"
+str_spotpass: "Newyddion SpotPass"
 str_luma_external_firms: Mae hi'n ymddangos fod di wedi osod y patsiau, ond heb 
   eu galluogi yn Luma3DS eto. Er mwyn i'r rheina weithio, rhaid i ti alluogi 
   "Enable loading external FIRMs and modules" (Galluogi llwytho FIRMau a 
