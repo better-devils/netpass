@@ -114,7 +114,7 @@ str_time_correct: 날짜와 시간이 정확한가요?
 str_time_success: 시간 설정이 완료되었습니다! NetPass를 재시작합니다...
 str_time_failed: 시간을 설정하는 데 실패했습니다!
 str_scam_warning: NetPass는 무료 오픈 소스 소프트웨어입니다. 설치 중 비용을 지불했다면 즉시 환불을 요구하십시오.
-str_spotpass: 어느새 통신
+str_spotpass: 어느새 통신 뉴스
 str_luma_external_firms: 패치를 설치했지만 아직 Luma3DS에서 활성화하지 않은 것 같습니다. 패치가 작동하려면 
   Luma3DS 설정에서 "Enable loading external FIRMs and modules" 옵션을 활성화해야 합니다. 설정에 
   들어가려면 콘솔의 전원을 끈 뒤 {select_button}을 누른 상태에서 {power_button}으로 전원을 켜세요.
