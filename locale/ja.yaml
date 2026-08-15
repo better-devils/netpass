@@ -117,7 +117,7 @@ str_time_success: 時間を掛けるのは成功しました! 今からNetpass�
 str_time_failed: 時間を掛けるのを失敗しました!
 str_scam_warning: 
   NetPassはオープンソースで無料ソフトウェアです。このソフトをインストールするためにお金を払ってしまったばい、詐欺で返金を求めてください。
-str_spotpass: いつの間に通信
+str_spotpass: いつの間にニュース
 str_luma_external_firms: 
   Luma3DSの設定に可能にせずに、パッチがインストールしているそうです。パッチが効くため、Luma3dsの設定に"Enable loading 
   external FIRMs and 
