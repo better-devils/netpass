@@ -136,7 +136,7 @@ str_time_failed: Het goedzetten van je tijd is gefaald!
 str_scam_warning: NetPass is gratis en een open bron software. Als je betaald 
   hebt om NetPass te installeren ben je opgelicht en kan je het bedrag terug 
   vragen.
-str_spotpass: SpotPass
+str_spotpass: SpotPass Nieuws
 str_luma_external_firms: Het lijkt erop dat je de reparaties hebt gedownload 
   maar nog niet ingeschakeld in Luma3DS. Om ze te laten werken klik je op 
   "Enable loading external FIRMs and modules"in de Luma3DS instellingen. Je komt
