@@ -3,28 +3,28 @@ str_libcurl_error: "Napaka v libCURL (%d): %s"
 str_libcurl_date_and_time: 'Preverite, sta datum in ura pravilno nastavljena!'
 str_httpstatus_error: 'HTTP koda %d'
 str_3ds_error: 'Napaka v 3DS %08lx'
-str_at_home: 'Ste doma.'
-str_goto_train_station: 'Pojdite na železniško postajo'
-str_at_train_station: 'Ste na železniški postaji.'
-str_goto_plaza: 'Pojdite na glavni trg'
-str_at_plaza: 'Ste na glavnem trgu.'
-str_goto_mall: 'Pojdite v nakupovalni center'
-str_at_mall: 'Ste v nakupovalnem centru.'
+str_at_home: 'Si doma.'
+str_goto_train_station: 'Pojdi na železniško postajo'
+str_at_train_station: 'Si na železniški postaji.'
+str_goto_plaza: 'Pojdi na glavni trg'
+str_at_plaza: 'Si na glavnem trgu.'
+str_goto_mall: 'Pojdi v nakupovalni center'
+str_at_mall: 'Si v nakupovalnem centru.'
 str_exit: 'Izhod'
 str_settings: 'Nastavitve'
-str_download_data: 'Prenesi osebne podatke'
-str_delete_data: 'Izbriši osebne podatke'
+str_download_data: 'Prenos osebnih podatkov'
+str_delete_data: 'Izbris osebnih podatkov'
 str_back: 'Nazaj'
 str_language: 'Slovenščina'
-str_goto_beach: 'Pojdite na plažo'
-str_at_beach: 'Ste na plaži.'
-str_goto_arcade: 'Pojdite v igralnico'
-str_at_arcade: 'Ste v igralnici'
-str_goto_catcafe: 'Pojdite v mačjo kavarno'
-str_at_catcafe: 'Ste v mačji kavarni.'
+str_goto_beach: 'Pojdi na plažo'
+str_at_beach: 'Si na plaži.'
+str_goto_arcade: 'Pojdi v igralnico'
+str_at_arcade: 'Si v igralnici.'
+str_goto_catcafe: 'Pojdi v mačjo kavarno'
+str_at_catcafe: 'Si v mačji kavarni.'
 str_system_language: 'Sistemski jezik'
 str_language_pick: 'Jezik:'
-str_no_location_twice: 'Ne morete dvakrat zapored na isto lokacijo!'
+str_no_location_twice: 'Ne moreš dvakrat zapored na isto lokacijo!'
 str_report_user: 'Prijavi uporabnika'
 str_report_user_hint: 'Prijavi "%s"'
 str_cancel: 'Prekliči'
@@ -96,7 +96,8 @@ str_report_integration: "To sporočilo izvira iz integacije. Da ga prijavite, pr
 str_skip: "Preskoči"
 str_install: "Instaliraj"
 str_remove: "Odstrani"
-str_banned: "Nimate dovoljenja uporabljati NetPass. Razlog:\n%s"
+str_banned: "Dostop do uporabe NetPass vam je prepovedan. Razlog:\n%s\n\nZačetek prepovedi:
+  %s\nKonec prepovedi: %s"
 str_date: "%d.%m.%Y"
 str_date_time: "%d.%m.%Y ob %H:%M:%S"
 str_new_version: "Nova različica NetPass je na voljo:\nv%d.%d.%d!\n\nŽelite posodobiti
@@ -127,4 +128,8 @@ str_time_failed: "Napaka pri nastavljanju ure!"
 str_scam_warning: "NetPass je prostovoljni in odprtokodni program. Če ste za inštalacijo
   plačali, ste žrtev kraje in nemudoma zahtevajte vračilo."
 str_spotpass: "SpotPass novice"
-str_luma_external_firms: ""
+str_luma_external_firms: "Izgleda da ste instalirali prilagoditve, niste pa jih še
+  omogočili v Luma3DS. Da bodo prilagoditve delovale, morate v Luma3DS nastavitvah
+  omogočiti \"Enable loading external FIRMs and modules\". Za dostop do nastavitev
+  izklopite konzolo in nato pritisnite {select_button} med zagonom {power_button}
+  konzole."
