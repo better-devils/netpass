@@ -1,109 +1,130 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
-str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
-str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
-str_banned: ""
-str_date: ""
-str_date_time: ""
-str_new_version: ""
-str_enter_event_location: ""
-str_at_event_location: ""
-str_artist_copyright: ""
-str_new_version_failed: ""
-str_report_list_empty: ""
-str_logging: ""
-str_logging_none: ""
-str_logging_screen: ""
-str_logging_file: ""
-str_downloading: ""
-str_failed_to_authenticate: ""
-str_already_registered: ""
-str_backup_nid_pwd: ""
-str_set_time: ""
-str_time_correct: ""
-str_time_success: ""
-str_time_failed: ""
-str_scam_warning: ""
-str_spotpass: ""
+str_loading: "Nalagam    "
+str_libcurl_error: "Napaka v libCURL (%d): %s"
+str_libcurl_date_and_time: 'Preverite, sta datum in ura pravilno nastavljena!'
+str_httpstatus_error: 'HTTP koda %d'
+str_3ds_error: 'Napaka v 3DS %08lx'
+str_at_home: 'Ste doma.'
+str_goto_train_station: 'Pojdite na železniško postajo'
+str_at_train_station: 'Ste na železniški postaji.'
+str_goto_plaza: 'Pojdite na glavni trg'
+str_at_plaza: 'Ste na glavnem trgu.'
+str_goto_mall: 'Pojdite v nakupovalni center'
+str_at_mall: 'Ste v nakupovalnem centru.'
+str_exit: 'Izhod'
+str_settings: 'Nastavitve'
+str_download_data: 'Prenesi osebne podatke'
+str_delete_data: 'Izbriši osebne podatke'
+str_back: 'Nazaj'
+str_language: 'Slovenščina'
+str_goto_beach: 'Pojdite na plažo'
+str_at_beach: 'Ste na plaži.'
+str_goto_arcade: 'Pojdite v igralnico'
+str_at_arcade: 'Ste v igralnici'
+str_goto_catcafe: 'Pojdite v mačjo kavarno'
+str_at_catcafe: 'Ste v mačji kavarni.'
+str_system_language: 'Sistemski jezik'
+str_language_pick: 'Jezik:'
+str_no_location_twice: 'Ne morete dvakrat zapored na isto lokacijo!'
+str_report_user: 'Prijavi uporabnika'
+str_report_user_hint: 'Prijavi "%s"'
+str_cancel: 'Prekliči'
+str_submit: 'Pošlji'
+str_back_alley: 'Stranska ulica'
+str_back_alley_message: 'Dajmo si še par passov zrihtat!'
+str_back_alley_pay: "Kupi pass {playcoin}%d"
+str_check_inboxes: 'Preveri dohodne'
+str_toggle_titles: 'Omogoči/onemogoči igre'
+str_toggle_titles_message: "Pritisni {a_button} za začetek in konec izmenjave passov."
+str_toggle_titles_on: "(Vklopljeno)"
+str_toggle_titles_off: "(Izklopljeno)"
+str_report_mii_name: "Mii ime: %s"
+str_report_mario_kart_7_greeting: "Pozdrav: %s"
+str_report_mii_plaza_last_game: "Zadnja igra: %s"
+str_report_mii_plaza_country: "Država: %s - %s"
+str_report_mii_plaza_greeting: "Pozdrav: %s"
+str_report_mii_plaza_custom_message: "Tvoje sporočilo: %s"
+str_report_mii_plaza_custom_reply: "Njihov odgovor: %s"
+str_report_tomodachi_life_island_name: "Ime otoka: %s"
+str_b_go_back: "{b_button} Nazaj"
+str_b_cancel: "{b_button} Prekliči"
+str_a_ok: "{a_button} Ok"
+str_update_patches: "Posodobi prilagoditve"
+str_update_patches_desc: "Za pravilno inštalacijo NetPass bodo zdaj ustvarjene prilagoditve
+  sistemskih modulov. Da bodo te delovale, morate v Luma3DS nastavitvah omogočiti
+  \"Enable loading external FIRMs and modules\". Za dostop do nastavitev izklopite
+  konzolo in nato pritisnite {select_button} med zagonom {power_button} konzole. To
+  lahko naredite potem ko so prilagoditve že instalirane."
+str_update_patches_error_desc: "Napaka med posodabljanjem prilagoditev. Prosimo, prijavite
+  to napako na GitLab, GBAtemp ali Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Prilagoditve uspešno posodobljene! Zdaj se bo konzola
+  ponovno zagnala."
+str_integrations: "Integracije"
+str_integrations_message: "Integracije z drugih virov so izven NetPass moderacije.
+  Uporaba na lastno odgovornost!"
+str_report_source: "Vir: %s"
+str_report_source_unknown: "Neznan vir"
+str_settings_misc: "Drugo"
+str_settings_about: "O aplikaciji"
+str_about_lead_dev: "Glavna razvijalka"
+str_about_reports: "Sistem za prijavo zlorabe"
+str_about_graphics: "Grafika"
+str_about_music: "Glasba"
+str_about_localisation: "Lokalizacija"
+str_about_netpass_community: "NetPass skupnost"
+str_about_special_thanks: "Posebna zahvala"
+str_about_special_thanks_txt: "3DS homebrew skupnosti, za vzvratno inženirstvo in
+  dokumentacijo"
+str_about_production_cat: "Produkcijska muca"
+str_scan_qr: "Skeniraj QR-kodo"
+str_x_switch_camera: "{x_button} Menjaj kamero"
+str_prompt_verify: "Ste prepričani da zaupate temu 3DS-u?"
+str_welcome: "Dobrodošli v NetPass"
+str_welcome_message: "Preden začnete uporabljati NetPass, prosimo da preberete in
+  se strinjate s politiko zasebnosti."
+str_view_rules: "Poglej pravila"
+str_view_privacy: "Poglej politiko zasebnosti"
+str_continue: "Naprej"
+str_bad_os_version: "NetPass potrebuje 3DS OS različico 11.15.0 ali novejšo. Žal izgleda,
+  da uporabljate starejšo verzijo. Prosimo, posodobite in znova odprite NetPass.\n\
+  \nPritisnite katerokoli tipko za izhod"
+str_update_patches_poweroff_clear_desc: "Prilagoditve uspešno odstranjene! Konzola
+  se bo zdaj ponovno zagnala."
+str_bg_music: "Glasba v ozadju"
+str_prompt_dl_pass: "Ste prepričani da želite prenesti ta pass?"
+str_report_integration: "To sporočilo izvira iz integacije. Da ga prijavite, prosimo
+  kontaktirajte podporno ekipo te integracije."
+str_skip: "Preskoči"
+str_install: "Instaliraj"
+str_remove: "Odstrani"
+str_banned: "Nimate dovoljenja uporabljati NetPass. Razlog:\n%s"
+str_date: "%d.%m.%Y"
+str_date_time: "%d.%m.%Y ob %H:%M:%S"
+str_new_version: "Nova različica NetPass je na voljo:\nv%d.%d.%d!\n\nŽelite posodobiti
+  NetPass zdaj?"
+str_enter_event_location: "Ste prepričani da želite vstopiti v dogodek \"%s\"?"
+str_at_event_location: "Ste na posebnem dogodku."
+str_artist_copyright: "Umetnost last © %s"
+str_new_version_failed: "Posodobitev neuspešna. Lahko poskusite ponovno, preko Universal
+  Updater ali preko QR-kode."
+str_report_list_empty: "Seznam prijav je prazen."
+str_logging: "Zapiski:"
+str_logging_none: "Brez"
+str_logging_screen: "Na zaslon"
+str_logging_file: "V datoteko"
+str_downloading: "Prenašam..."
+str_failed_to_authenticate: "Napaka v avtentikaciji! Prosimo, poskusite kasneje. Če
+  se napaka ponovi, nas kontaktirajte! https://netpass.cafe"
+str_already_registered: "Napaka: Konzola je že registrirana!\n\nČe uporabljate ali
+  ste uporabljali emulator, prosimo sinhronizirajte sdmc:/config/netpass/nid_pwd.bin
+  med emulatorjem in konzolo."
+str_backup_nid_pwd: "NetPass bo ustvaril naslednjo datoteko za avtentikacijo konzole.
+  Zagotovite, da bo varno shranjena!\nsdmc:/config/netpass/nid_pwd.bin"
+str_set_time: "NetPass deluje le, če je sistemska ura pravilno nastavljena. Prosimo,
+  da jo nastavite!"
+str_time_correct: "Ste prepričani, da sta datum in ura pravilno nastavljena?"
+str_time_success: "Ura uspešno nastavljena! Zdaj se NetPass ponovno zaganja..."
+str_time_failed: "Napaka pri nastavljanju ure!"
+str_scam_warning: "NetPass je prostovoljni in odprtokodni program. Če ste za inštalacijo
+  plačali, ste žrtev kraje in nemudoma zahtevajte vračilo."
+str_spotpass: "SpotPass novice"
 str_luma_external_firms: ""
