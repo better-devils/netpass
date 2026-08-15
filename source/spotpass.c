@@ -115,7 +115,9 @@ static Result setupNotificationIcon(void) {
 	if (found_offset != -1) goto exit;
 	// if there is also no free slot...error out
 	if (free_offset == -1) {
-		res = -1;
+		//res = -1; // we don't want to display an error in-app
+		// TODO: figure out what to do
+		logln(WARN, "No free space in shared icon cache to add icon");
 		goto exit;
 	}
 	// Create the icon in the shared icon cache metadata first
