@@ -728,6 +728,7 @@ sptopassVideoPath:
   .align 4
 nexTitleExcludeList:
   .word 0xC9B00 ; pokemon bank
+  .word 0xC9C00 ; poke transporter
 ;  .word 0x51800 ; letterbox (for testing only)
   .word 0
 customHppDomain:
