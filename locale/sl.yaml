@@ -32,7 +32,7 @@ str_submit: 'Pošlji'
 str_back_alley: 'Stranska ulica'
 str_back_alley_message: 'Dajmo si še par passov zrihtat!'
 str_back_alley_pay: "Kupi pass {playcoin}%d"
-str_check_inboxes: 'Preveri dohodne'
+str_check_inboxes: 'Osveži'
 str_toggle_titles: 'Omogoči/onemogoči igre'
 str_toggle_titles_message: "Pritisni {a_button} za začetek in konec izmenjave passov."
 str_toggle_titles_on: "(Vklopljeno)"
@@ -81,8 +81,8 @@ str_prompt_verify: "Ste prepričani da zaupate temu 3DS-u?"
 str_welcome: "Dobrodošli v NetPass"
 str_welcome_message: "Preden začnete uporabljati NetPass, prosimo da preberete in
   se strinjate s politiko zasebnosti."
-str_view_rules: "Poglej pravila"
-str_view_privacy: "Poglej politiko zasebnosti"
+str_view_rules: "Pravila"
+str_view_privacy: "Politika zasebnosti"
 str_continue: "Naprej"
 str_bad_os_version: "NetPass potrebuje 3DS OS različico 11.15.0 ali novejšo. Žal izgleda,
   da uporabljate starejšo verzijo. Prosimo, posodobite in znova odprite NetPass.\n\
