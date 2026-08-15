@@ -34,7 +34,7 @@ str_back_alley_message: 'Dajmo si še par passov zrihtat!'
 str_back_alley_pay: "Kupi pass {playcoin}%d"
 str_check_inboxes: 'Osveži'
 str_toggle_titles: 'Omogoči/onemogoči igre'
-str_toggle_titles_message: "Pritisni {a_button} za začetek in konec izmenjave passov."
+str_toggle_titles_message: "Pritisni {a_button} da vklopiš/izklopiš izmenjavo passov."
 str_toggle_titles_on: "(Vklopljeno)"
 str_toggle_titles_off: "(Izklopljeno)"
 str_report_mii_name: "Mii ime: %s"
@@ -108,8 +108,8 @@ str_artist_copyright: "Umetnost last © %s"
 str_new_version_failed: "Posodobitev neuspešna. Lahko poskusite ponovno, preko Universal
   Updater ali preko QR-kode."
 str_report_list_empty: "Seznam prijav je prazen."
-str_logging: "Zapiski:"
-str_logging_none: "Brez"
+str_logging: "Dnevniki:"
+str_logging_none: "Ne shrani"
 str_logging_screen: "Na zaslon"
 str_logging_file: "V datoteko"
 str_downloading: "Prenašam..."
