@@ -31,6 +31,7 @@ typedef struct {
 	C2D_Text g_back;
 	C2D_Text g_on_off[2];
 	C2D_Text* integration_names;
+	float width_on_off;
 } DataStruct;
 
 static void init(Scene* sc) {
@@ -59,6 +60,11 @@ static void init(Scene* sc) {
 	for (int i = 0; i < _data->list->header.count; i++) {
 		C2D_TextParse(&_data->integration_names[i], _data->g_staticBuf, _data->list->entries[i].name);
 	}
+	float width_on;
+	float width_off;
+	get_text_dimensions(&_data->g_on_off[0], 0.5, 0.5, &width_off, 0);
+	get_text_dimensions(&_data->g_on_off[1], 0.5, 0.5, &width_on, 0);
+	_data->width_on_off = ceilf(MAX(width_on, width_off));
 }
 
 static void render(Scene* sc) {
@@ -73,7 +79,7 @@ static void render(Scene* sc) {
 		bool is_on = _data->list->entries[i].enabled;
 		u32 correctClr = is_on ? onClr : offClr;
 		renderPlainText(&_data->g_on_off[is_on], 30, 74 + (i * 14), 0.5, correctClr);
-		renderPlainText(&_data->integration_names[i], 70, 74 + (i * 14), 0.5, correctClr);
+		renderPlainText(&_data->integration_names[i], 35 + _data->width_on_off, 74 + (i * 14), 0.5, correctClr);
 	}
 	renderPlainText(&_data->g_back, 30, 74 + (i*14), 0.5, clr);
 	
