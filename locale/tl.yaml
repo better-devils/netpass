@@ -135,7 +135,7 @@ str_scam_warning: Ang Netpass ay libre at open source na software. Kung ikaw ay
   nagbayad para sa pag-install nito, ikaw ay niloko at dapat humingi ng refund.
 str_set_time: Ang NetPass ay gumagana lamang nang maayos kung tama ang 
   pagkatakda ng oras ng sistema. Manyaring gawin ito!
-str_spotpass: SpotPass
+str_spotpass: Balita sa SpotPass
 str_luma_external_firms: Mukhang na-install mo ang mga patches ngunit hindi mo 
   pa ito na-enable sa Luma3DS. Para gumana ang mga ito, kailangan mong i-enable 
   ang "Enable loading external FIRMs and modules" sa settings ng Luma3DS. Upang 
