@@ -136,3 +136,9 @@ str_time_success: Az idő sikeresen beállításra került! A NetPass újraindí
 str_time_failed: Sikertelen az idő beállítása!
 str_scam_warning: A NetPass egy ingyenes, nyílt forrású szoftver. Ha fizettél a 
   telepítéséért, akkor átvertek és javasolt visszaigénylést kérned.
+str_spotpass: SpotPass Hírek
+str_luma_external_firms: Úgy tűnik, hogy már telepítettél patch-eket, de nem 
+  kapcsoltad őket be még a Luma3DS-ben. Ahhoz, hogy azok működjenek be kell 
+  kapcsolnod az "Enable loading external FIRMs and modules" opciót a Luma3DS 
+  beállításaiban. A beállítások eléréséhez kapcsold ki a konzolod, majd nyomj 
+  {select_button} gombot, miközben bekapcsolod {power_button} a konzolt.
