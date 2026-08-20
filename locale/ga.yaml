@@ -1,4 +1,4 @@
-str_loading: "Á lódáil . . . .    "
+str_loading: "Á lódáil    "
 str_libcurl_error: "Earráid libCURL (%d): %s"
 str_libcurl_date_and_time: 'Bí cinnte go bhfuil dáta agus am do chórais socraithe
   i gceart!'
@@ -57,9 +57,9 @@ str_update_patches: Nuashonraigh paistí
 str_update_patches_desc: Chun NetPass a shuiteáil i gceart, cruthófar roinnt 
   paistí "sysmodule" anois. Beidh ort "Enable loading external FIRMs and 
   modules" sna socruithe Luma3DS a chumasú, ionas go mbeidh na paistí seo ag 
-  obair. Chun na socruithe seo a fháil, múch an consól, agus ansin, brúigh 
-  {select_button}, agus an consól á chur ar siúl {power_button}. Is féidir leat 
-  é seo a dhéanamh tar éis scríobh na bpaistí.
+  feidhmiú. Chun na socruithe seo a fháil, múch an consól, agus ansin, brúigh 
+  {select_button} agus an consól á chur ar siúl {power_button}. Is féidir leat é
+  seo a dhéanamh tar éis scríobh na bpaistí.
 str_update_patches_error_desc: Tharla earráid nuair a bhí na paistí á nuashonrú.
   Tuairiscigh an fhadhb seo ar GitLab, GBAtemp nó Discord, le do thoil. 
   https://netpass.cafe/discord
@@ -86,7 +86,7 @@ str_x_switch_camera: '{x_button} Athraigh an Ceamara'
 str_prompt_verify: An bhfuil tú cinnte gur mhaith leat an 3DS seo a fhíorú?
 str_welcome: Fáilte chuig NetPass
 str_view_rules: Féach ar na Rialacha
-str_view_privacy: Féach ar an bPolasaí Príobháideachais
+str_view_privacy: Féach ar an bPolasaí Príobháide
 str_continue: Lean ar aghaidh
 str_update_patches_poweroff_clear_desc: Bhí rath ar bhaineadh na bpaistí! 
   Atosófar an consól anois.
@@ -112,7 +112,7 @@ str_enter_event_location: An bhfuil tú cinnte gur mhaith leat dul go dtí an
   ócáid "%s"?
 str_at_event_location: Tá tú ag ócáid speisialta.
 str_report_list_empty: Tá liosta na dtuairiscí folamh.
-str_logging: 'Cuntais:'
+str_logging: 'Logaí:'
 str_logging_none: Faic
 str_logging_screen: Scáileán
 str_logging_file: Comhad
