@@ -25,6 +25,7 @@
 typedef struct {
 	int last_location;
 	int language;
+	int gender;
 	u16 year;
 	u8 month;
 	u8 day;

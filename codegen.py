@@ -1,4 +1,4 @@
-import os, yaml, json, struct, requests, budoux
+import os, yaml, json, struct, requests, budoux, re
 from io import BytesIO
 from zipfile import ZipFile
 
@@ -33,6 +33,17 @@ replace_map = {
 	"power_button": "\ue078",
 }
 
+# default: 2
+# -1: autodetermine
+# 0: male
+# 1: female
+# 2: neuter
+gender_default_map = {
+	"pl": -1,
+}
+
+gender_pattern = re.compile(r'{gender:([^/}]+)/([^/}]+)(?:/([^/}]+))?}')
+
 def l(s):
 	return (language_map[s] if s in language_map else s).upper()
 
@@ -50,6 +61,23 @@ def _s(lang, s):
 	elif lang == "ja":
 		s = "\u200b".join(budoux_parser_japanese.parse(s))
 	return s
+
+def dump_string_single(s, gender):
+	return s
+
+def dump_string(s):
+	out = ""
+	matches = gender_pattern.search(s)
+	if matches:
+		out = "{"
+		for i in range(3 if matches.group(3) else 2):
+			out += json.dumps(gender_pattern.sub("\\" + str(i + 1), s), ensure_ascii=False) + ", "
+		if not matches.group(3):
+			out += "0"
+		out += "}"
+	else:
+		out = "{" + json.dumps(s, ensure_ascii=False) + ", 0}"
+	return out
 
 print("Fetching locales...")
 resp = requests.get("https://github.com/unicode-org/cldr-json/releases/download/47.0.0/cldr-47.0.0-json-full.zip").content
@@ -95,7 +123,7 @@ headerfile += f"#define NUM_LANGUAGES {len(lang_keys)}\n"
 headerfile += """
 typedef const struct {
 	const CFG_Language language;
-	const char* text;
+	const char* text[3];
 } LanguageString[NUM_LANGUAGES];
 
 typedef const struct {
@@ -109,6 +137,7 @@ extern const LCTime lc_time_all;
 
 extern const int all_languages[];
 extern const char* all_languages_str[];
+extern const int gender_default_map[];
 
 """
 
@@ -194,15 +223,23 @@ for lang in lang_keys:
 	outfile += f"\"{l(lang)}\", "
 outfile += "};\n"
 
+outfile += f"const int gender_default_map[{len(lang_keys)}] = {{"
+for lang in lang_keys:
+	if lang in gender_default_map:
+		outfile += f"{gender_default_map[lang]}, "
+	else:
+		outfile += "2, "
+outfile += "};\n"
+
 for key in translations["en"].keys():
 	outfile += f"LanguageString {key} = {{\n"
 	headerfile += f"extern LanguageString {key};\n"
 	max_len = 0
 	total_len = 0
 	for lang in lang_keys:
-		string = "0"
+		string = "{0}"
 		if key in translations[lang] and translations[lang][key] != "":
-			string = json.dumps(translations[lang][key], ensure_ascii=False)
+			string = dump_string(translations[lang][key])
 		outfile += f"\t{{CFG_LANGUAGE_{l(lang)}, {string}}},\n"
 		strlen = len(string)
 		max_len = strlen if strlen > max_len else max_len

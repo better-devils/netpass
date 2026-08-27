@@ -438,6 +438,7 @@ int main(int nargs, char** argv) {
 	_e(frdInit(false));
 	_e(fsInit());
 	_e(cecdInit());
+	_e(actInit(false));
 
 	if (nargs >= 1) {
 		filename_3dsx = argv[0];

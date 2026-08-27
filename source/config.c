@@ -44,6 +44,7 @@ static const char config_path[] = "sdmc:/config/netpass/netpass.cfg";
 Config config = {
 	.last_location = -1,
 	.language = -1,
+	.gender = -1,
 	.year = 0,
 	.month = 0,
 	.day = 0,
@@ -114,6 +115,18 @@ static void load(void) {
 						break;
 					}
 				}
+			}
+		} else if (strcmp(key, "GENDER") == 0) {
+			if (strcmp(value, "DEFAULT") == 0) {
+				config.gender = -1;
+			} else if (strcmp(value, "MALE") == 0) {
+				config.gender = 0;
+			} else if (strcmp(value, "FEMALE") == 0) {
+				config.gender = 1;
+			} else if (strcmp(value, "NEUTRAL") == 0) {
+				config.gender = 2;
+			} else {
+				config.gender = atoi(value);
 			}
 		} else if (strcmp(key, "LAST_LOCATION") == 0) {
 			config.last_location = atoi(value);
@@ -214,6 +227,18 @@ void configWrite(void) {
 				break;
 			}
 		}
+	}
+	if (config.gender < 0) {
+		fputs("gender=default\n", f);
+	} else if (config.gender == 0) {
+		fputs("gender=male\n", f);
+	} else if (config.gender == 1) {
+		fputs("gender=female\n", f);
+	} else if (config.gender == 2) {
+		fputs("gender=neutral\n", f);
+	} else {
+		snprintf(line, 250, "gender=%d\n", config.gender);
+		fputs(line, f);
 	}
 	switch (config.log_output) {
 		case LogOutputDisabled:

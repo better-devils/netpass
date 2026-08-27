@@ -19,8 +19,11 @@
 
 #include "strings.h"
 #include "config.h"
+#include "utils.h"
 
 static u8 _language;
+
+static u8 _gender;
 
 static C2D_Font font_default;
 
@@ -56,19 +59,39 @@ void stringsInit(void) {
 		_language = config.language;
 	}
 	font_default = getFontIndex(0);
+	int gender_to_set = config.gender;
+	if (gender_to_set < 0) {
+		gender_to_set = gender_default_map[_language];
+	}
+	if (gender_to_set < 0) {
+		_gender = 2;
+		CFLStoreData mii;
+		if (R_SUCCEEDED(_e(ACT_GetAccountInfo(&mii, sizeof(CFLStoreData), 0xFE, 0x7)))) {
+			_gender = mii.miiData.mii_details.sex ? 1 : 0;
+		}
+	} else {
+		_gender = gender_to_set;
+	}
 }
 
 const char* _s(LanguageString s) {
 	return string_in_language(s, _language);
 }
 
+const char* get_text_gender(const char* const* text, u8 g) {
+	if (text[g]) return text[g];
+	if (g) return get_text_gender(text, g-1);
+	return 0;
+}
+
 const char* string_in_language(LanguageString s, int lang) {
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		if (s[i].language == lang && s[i].text) {
-			return s[i].text;
+		const char* ret;
+		if (s[i].language == lang && (ret = get_text_gender(s[i].text, _gender))) {
+			return ret;
 		}
 	}
-	return s[0].text;
+	return get_text_gender(s[0].text, _gender);
 }
 
 // TODO: figure out the other values needed for chinese simplified
@@ -116,7 +139,7 @@ float getFontScale(C2D_Text* text) {
 
 C2D_Font _font(LanguageString s) {
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		if (s[i].language == _language && s[i].text) {
+		if (s[i].language == _language && s[i].text[0]) {
 			return _get_local_font(_language);
 		}
 	}
@@ -138,14 +161,13 @@ void TextLangParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s
 void TextLangSpecificParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s, int l) {
 	const char* text = 0;
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		if (s[i].language == l && s[i].text) {
-			text = s[i].text;
+		if (s[i].language == l && (text = get_text_gender(s[i].text, _gender))) {
 			break;
 		}
 	}
 	C2D_Font font = _get_local_font(l);
 	if (!text) {
-		text = s[0].text;
+		text = get_text_gender(s[0].text, _gender);
 		font = font_default;
 	}
 	C2D_TextFontParse(staticText, font, staticBuf, text);
