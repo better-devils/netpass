@@ -134,3 +134,9 @@ str_time_failed: Nie udało się ustawić czasu!
 str_scam_warning: NetPass to darmowe oprogramowanie typu open source. Jeżeli 
   za instalację pobrano od ciebie opłatę — oszukano cię. Zażądaj zwrotu 
   pieniędzy.
+str_spotpass: Wiadomości SpotPass
+str_luma_external_firms: Wygląda na to, że zainstalowałeś łatki, ale nie 
+  aktywowałeś ich jeszcze w Luma3DS. By one działały, musisz włączyć "Enable 
+  loading external FIRMs and modules" w ustawieniach Luma3DS. By dostać się do 
+  ustawień, wyłącz konsole i przytrzymaj {select_button} włączając 
+  {power_button} konsole.
