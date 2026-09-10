@@ -35,7 +35,7 @@ TARGET			:=	netpass
 OUTDIR			:=	out
 BUILD			:=	build
 MAIN_SOURCE		:=	source
-SOURCES			:=	$(MAIN_SOURCE) codegen source/scenes source/hmac_sha256 source/quirc/lib source/lodepng
+SOURCES			:=	$(MAIN_SOURCE) codegen source/scenes source/quirc/lib source/lodepng
 DATA			:=	data
 INCLUDES		:=	include
 GRAPHICS		:=	gfx
@@ -104,7 +104,7 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lcitro2d -lcitro3d -lctru -lopusfile -lopus -logg `curl-config --libs` -lm
+LIBS	:= -lcitro2d -lcitro3d -lctru -lopusfile -lopus -logg `curl-config --libs` -lm -llibeedle
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -274,7 +274,7 @@ clean:
 	@rm -fr $(BUILD) $(GFXBUILD) $(MUSICBUILD) $(DEPSDIR) $(OUTDIR) $(TOPDIR)/codegen
 
 submodulecheck:
-	@test -f source/hmac_sha256/hmac_sha256.h || (echo "ERROR: Submodules not pulled!"; exit 1)
+	@test -f source/quirc/lib/quirc.h || (echo "ERROR: Submodules not pulled!"; exit 1)
 
 cppcheck:
 	cppcheck $(CPPCHECK_FLAGS) $(MAIN_SOURCE)

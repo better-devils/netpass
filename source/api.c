@@ -18,7 +18,7 @@
  */
 
 #include "api.h"
-#include "cecd.h"
+#include <libeedle.h>
 #include "utils.h"
 #include "config.h"
 #include "report.h"
@@ -37,7 +37,6 @@
 })
 
 LocationResponse location = {0};
-FS_Archive sharedextdata_b = 0;
 static NetpassTitleData title_data;
 
 Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {

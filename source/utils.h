@@ -34,9 +34,9 @@ typedef struct {
 	int line;
 } ErrorData;
 
-#include "cecd.h"
+#include <libeedle.h>
 #include "scene.h"
-#include "ctr_results.h"
+#include <libeedle/ctr_results.h>
 
 #define _GET_MACRO_MAX_(_1, _2, _3, _4, _5, _6, _7, _8, NAME, ...) NAME
 #define MAX(...) _GET_MACRO_MAX_(__VA_ARGS__, MAX8, MAX7, MAX6, MAX5, MAX4, MAX3, MAX2, MAX1)(__VA_ARGS__)

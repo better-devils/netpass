@@ -20,7 +20,7 @@
 
 #include <3ds.h>
 #include <curl/curl.h>
-#include "cecd.h"
+#include <libeedle.h>
 
 typedef struct {
 	u8 ptr[MAX_SLOT_SIZE];

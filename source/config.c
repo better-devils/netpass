@@ -23,7 +23,7 @@
 #include "log.h"
 #include "strings.h"
 #include "utils.h"
-#include "cecd.h"
+#include <libeedle.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
@@ -32,7 +32,6 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
-#include "boss.h"
 
 #define PATCHES_COPY_DSTDIR "sdmc:/luma/sysmodules/"
 #define PATCHES_COPY_SRCDIR "romfs:/patches/"

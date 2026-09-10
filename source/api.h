@@ -20,7 +20,7 @@
 #pragma once
 
 #include <3ds.h>
-#include "cecd.h"
+#include <libeedle.h>
 
 #define BASE_URL "https://api.netpass.cafe"
 //#define BASE_URL "https://devapi.netpass.cafe"

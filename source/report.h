@@ -20,13 +20,20 @@
 
 #include <3ds.h>
 #include <string.h>
-#include "cecd.h"
-#include "hmac_sha256/sha256.h"
+#include <libeedle.h>
+#include <libeedle/sha256.h>
 
 typedef enum : u8 {
 	REPORT_TYPE_CEC = 0,
 	REPORT_TYPE_BOSS,
 } ReportType;
+
+typedef enum {
+	TITLE_LETTER_BOX     = 0x051600,
+	TITLE_MII_PLAZA      = 0x020800,
+	TITLE_MARIO_KART_7   = 0x030600,
+	TITLE_TOMODACHI_LIFE = 0x08C500,
+} CecTitles;
 
 typedef struct {
 	u32 magic; // 0x5053524e "NRSP"

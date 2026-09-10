@@ -18,7 +18,7 @@
  */
 
 #include "error.h"
-#include "../ctr_results.h"
+#include <libeedle/ctr_results.h>
 #include <curl/curl.h>
 
 #define _data ((DataStruct*)sc->d)

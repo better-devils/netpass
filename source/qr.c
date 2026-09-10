@@ -20,7 +20,7 @@
 #include "qr.h"
 #include <string.h>
 #include "api.h"
-#include "cecd.h"
+#include <libeedle.h>
 #include "curl-handler.h"
 #include "utils.h"
 
@@ -141,7 +141,7 @@ Result qr_dl_pass(QrBuffer* buffer) {
 		res = _e(ERROR_INVALID_MESSAGE);
 		goto fail;
 	}
-	res = _e(addStreetpassMessage(reply->ptr));
+	res = _e(streetpassReceiveMessage((CecMessage*)reply->ptr));
 fail:
 	curlFreeHandler(reply->offset);
 	return res;

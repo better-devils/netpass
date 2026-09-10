@@ -18,9 +18,9 @@
  */
 
 #include "curl-handler.h"
-#include "cecd.h"
+#include <libeedle.h>
 #include "api.h"
-#include "hmac_sha256/hmac_sha256.h"
+#include <libeedle/hmac_sha256.h>
 #include "log.h"
 #include "utils.h"
 #include <ctype.h>

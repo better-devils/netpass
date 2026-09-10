@@ -49,8 +49,7 @@ void renderTopScene(Scene* scene);
 void renderBottomScene(Scene* scene);
 
 #include "api.h"
-#include "cecd.h"
-#include "boss.h"
+#include <libeedle.h>
 #include "render.h"
 #include "strings.h"
 #include "config.h"

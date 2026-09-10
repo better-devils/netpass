@@ -26,7 +26,7 @@
 #include "log.h"
 #include "scene.h"
 #include "api.h"
-#include "cecd.h"
+#include <libeedle.h>
 #include "curl-handler.h"
 #include "config.h"
 #include "music.h"
@@ -483,18 +483,7 @@ int main(int nargs, char** argv) {
 	renderInit(); // must be after romfsInit()
 
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
-	{
-		u32 extdata_lowpathdata[3] = {0};
-		extdata_lowpathdata[0] = MEDIATYPE_NAND;
-		extdata_lowpathdata[1] = 0xf000000b;
-		FS_Path extdata_path = {
-			type: PATH_BINARY,
-			size: 0xC,
-			data: (u8*)extdata_lowpathdata,
-		};
-		_e(archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b"));
-		_e(FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path));
-	}
+	mountSharedExtdataB();
 
 	_e(playMusic("home")); // start the default music
 	

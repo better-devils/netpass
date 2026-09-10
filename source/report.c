@@ -19,8 +19,7 @@
 
 #include "report.h"
 #include "api.h"
-#include "boss.h"
-#include "cecd.h"
+#include <libeedle.h>
 #include "config.h"
 #include "utils.h"
 #include "strings.h"
@@ -43,7 +42,6 @@
 #define LOG_LIST_TMP "sdmc:/config/netpass/log_list.tmp"
 #define LOG_ENTRY_TMP "sdmc:/config/netpass/log_entry.tmp"
 #define LOG_ENTRY_DEC_TMP "sdmc:/config/netpass/log_entry_dec.tmp"
-
 
 #define MAX_REPORT_ENTRIES_LEN 128
 #define REPORT_LIST_MAGIC 0x454C524e
