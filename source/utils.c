@@ -584,6 +584,9 @@ Result __e_errno(const char* func, const char* file, const int line) {
 	if (!eno) {
 		return 0;
 	}
+	if (eno < 0) {
+		return __e(eno, func, file, line);
+	}
 	if (current_errdata.std_errno) {
 		// do nothing if already set
 		return ERROR_ERRNO;

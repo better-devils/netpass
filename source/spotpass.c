@@ -16,18 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <errno.h>
 #include <libeedle.h>
 #include "spotpass.h"
 #include "strings.h"
 #include "utils.h"
 #include "api.h"
+#include "config.h"
+#include "curl-handler.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define NUM_NEWS_TASKS 5
-#define CUSTOM_IMS_HEADER "3ds-if-modified-since"
 #define NETPASS_ID (0xF6574)
 #define FULL_NETPASS_ID ((u64)0x0004000000000000ull | (NETPASS_ID << 8))
 
@@ -40,8 +42,18 @@ Result setupSpotpass(bool is_3dsx) {
 	Result res;
 	BossContext* ctx = NULL;
 	Smdh* smdh = NULL;
+	FILE* f = NULL;
 	smdh = malloc(sizeof(Smdh));
 	if (!smdh) return _e(ERROR_OUT_OF_MEMORY);
+	f = fopen("romfs:/netpass.smdh", "rb");
+	if (!f) {
+		res =_e_errno();
+		goto cleanup;
+	}
+	if (fread(smdh, sizeof(Smdh), 1, f) != 1) {
+		res = _e_errno();
+		goto cleanup;
+	}
 	
 	
 	res = _e(bossInit(FULL_NETPASS_ID, false));
@@ -50,22 +62,15 @@ Result setupSpotpass(bool is_3dsx) {
 	// Now, setting up storage.
 	{
 		// first, we check if we need to set it up at all
-		
-		if (needSetupSpotpassExtData(FULL_NETPASS_ID)) {
+		if (needSetupSpotpassExtData(FULL_NETPASS_ID) || config.smdh_flags != smdh->settings.flags) {
+			logln(INFO, "Setting up spotpass ext data...");
 			res = _e(setupSpotpassExtData(FULL_NETPASS_ID, smdh, 42, 42, -1));
 			if (R_FAILED(res)) goto cleanup;
+			config.smdh_flags = smdh->settings.flags;
+			configWrite();
 		} else {
 			// re-set all the new flags
-			u32 ns_data_id_list[100];
-			u16 entries_read;
-			res = bossGetNsDataIdList(0xFFFFFFFF, 100, 0, 0, ns_data_id_list, &entries_read, NULL);
-			if (R_SUCCEEDED(res)) {
-				for (int i = 0; i < entries_read; i++) {
-					logln(INFO, "Found NS Data id %lx", ns_data_id_list[i]);
-					_e(bossSetNsDataNewFlag(ns_data_id_list[i], false));
-				}
-			}
-			bossSetAppNewFlag(FULL_NETPASS_ID, false);
+			spotpassSetAllRead(FULL_NETPASS_ID);
 		}
 	}
 	
@@ -119,9 +124,20 @@ Result setupSpotpass(bool is_3dsx) {
 	res = _e(upsertSpotpassTask(update_task, ctx));
 	if (R_FAILED(res)) goto cleanup;
 
-	_e(setupSharedIconCache(FULL_NETPASS_ID, smdh));
+	// exbanner task
+	snprintf(url, 100, "https://api.netpass.cafe/npdl/p01/nsa/netpass/exbnr/%s/exbanner", lang);
+	bossSetupContext(ctx, 60*60, url);
+	ctx->priority = 0x7D;
+	strncpy(ctx->httpHeaders[0].name, "3ds-ident", 0x20);
+	getMacStr(url);
+	strncpy(ctx->httpHeaders[0].value, url, 0x100);
+	res = _e(upsertSpotpassTask("exbnr", ctx));
+	if (R_FAILED(res)) goto cleanup;
+
+	_e(updateCachedSmdh(FULL_NETPASS_ID, smdh));
 cleanup:
 	if (smdh) free(smdh);
 	if (ctx) free(ctx);
+	if (f) fclose(f);
 	return res; //return _e(setupNotificationIcon());
 }

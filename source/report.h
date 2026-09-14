@@ -35,6 +35,10 @@ typedef enum {
 	TITLE_TOMODACHI_LIFE = 0x08C500,
 } CecTitles;
 
+typedef enum {
+	TITLE_SWAPDOODLE     = 0x001a2c00,
+} BossTitles;
+
 typedef struct {
 	u32 magic; // 0x5053524e "NRSP"
 	int version; // 2

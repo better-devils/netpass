@@ -33,6 +33,7 @@ typedef struct {
 	int patches_version;
 	int welcome_version;
 	u32 title_ids_ignored[24];
+	u32 smdh_flags;
 	bool bg_music;
 	enum LogOutput log_output;
 	enum LogLevel log_level;

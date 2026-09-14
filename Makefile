@@ -233,7 +233,7 @@ $(CODEGEN_OUTPUTS): codegen.py $(shell find locale)
 	@$(PYTHON) $(TOPDIR)/codegen.py
 
 smdh: $(APP_ICON)
-	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" $(APP_TITLE_INT) -l "$(APP_DESCRIPTION)" $(APP_DESC_INT) -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f visible,allow3d -o $(OUTPUT).smdh
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" $(APP_TITLE_INT) -l "$(APP_DESCRIPTION)" $(APP_DESC_INT) -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f visible,allow3d,extendedbanner -o $(OUTPUT).smdh
 	@cp "$(OUTPUT).smdh" "$(ROMFS)"
 
 cia: 3dsx

@@ -53,6 +53,7 @@ Config config = {
 	.bg_music = 1,
 	.log_output = LogOutputDisabled,
 	.log_level = INFO,
+	.smdh_flags = 0,
 };
 
 void addIgnoredTitle(u32 title_id) {
@@ -143,6 +144,8 @@ static void load(void) {
 			config.patches_version = atoi(value);
 		} else if (strcmp(key, "BG_MUSIC") == 0) {
 			config.bg_music = strcmp(value, "TRUE") == 0;
+		} else if (strcmp(key, "SMDH_FLAGS") == 0) {
+			config.smdh_flags = strtol(value, NULL, 16);
 		} else if (strcmp(key, "LOG_OUTPUT") == 0) {
 			if (strcmp(value, "NONE") == 0) {
 				config.log_output = LogOutputDisabled;
@@ -272,6 +275,9 @@ void configWrite(void) {
 		snprintf(line + 18 + (9*i), 250 - (18 + (9*i)), "%08lx,", config.title_ids_ignored[i]);
 	}
 	snprintf(line + 18 + (9*24), 250 - (18 + (9*24)), "\n");
+	fputs(line, f);
+
+	snprintf(line, 250, "smdh_flags=%08lx", config.smdh_flags);
 	fputs(line, f);
 	
 	fclose(f);
