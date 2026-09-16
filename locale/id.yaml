@@ -33,3 +33,6 @@ str_back_alley: Gang Kramat
 str_back_alley_message: Mari terima lebih pas!
 str_date: '%d/%m/%Y'
 str_date_time: '%d/%m/%Y %H:%M:%S'
+str_about_music: Musik
+str_welcome: Selamat datang ke NetPass
+str_settings_about: Tentang
