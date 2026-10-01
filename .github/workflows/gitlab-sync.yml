@@ -19,12 +19,28 @@ jobs:
 
       - name: Sync main branch and tags from GitLab
         run: |
+          # 1. Temporarily backup the .github folder
+          mkdir -p /tmp/github-sync-backup
+          cp -r .github /tmp/github-sync-backup/
+
+          # 2. Configure Git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add upstream https://gitlab.com/3ds-netpass/netpass.git
+          
+          # 3. Fetch from GitLab and reset main branch
+          git remote add upstream https://gitlab.com/3ds-netpass/netpass.git || true
           git fetch upstream main --tags
           git checkout main
           git reset --hard upstream/main
+
+          # 4. Restore .github folder and commit it back onto main
+          cp -r /tmp/github-sync-backup/.github .
+          git add .github/
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: preserve GitHub Actions workflows [skip ci]"
+          fi
+
+          # 5. Push code and tags to GitHub
           git push origin main --force
           git push origin --tags --force
 
@@ -77,7 +93,7 @@ jobs:
               # Create GitHub release with gh CLI
               cmd = ["gh", "release", "create", tag, "--title", title, "--notes", body]
               cmd.extend(downloaded_assets)
-          
+              
               res = subprocess.run(cmd)
               if res.returncode == 0:
                   print(f"Successfully published release {tag}")
