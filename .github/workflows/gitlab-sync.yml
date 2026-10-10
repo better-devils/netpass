@@ -1,0 +1,107 @@
+name: Sync NetPass from GitLab
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Runs every 6 hours
+  workflow_dispatch: # Allows manual trigger from Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync main branch and tags from GitLab
+        run: |
+          # 1. Temporarily backup the .github folder
+          mkdir -p /tmp/github-sync-backup
+          cp -r .github /tmp/github-sync-backup/
+
+          # 2. Configure Git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 3. Fetch from GitLab and reset main branch
+          git remote add upstream https://gitlab.com/3ds-netpass/netpass.git || true
+          git fetch upstream main --tags
+          git checkout main
+          git reset --hard upstream/main
+
+          # 4. Restore .github folder and commit it back onto main
+          cp -r /tmp/github-sync-backup/.github .
+          git add .github/
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: preserve GitHub Actions workflows [skip ci]"
+          fi
+
+          # 5. Push code and tags to GitHub
+          git push origin main --force
+          git push origin --tags --force
+
+      - name: Sync GitLab Releases and Assets to GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 -c '
+          import json, os, subprocess, urllib.request
+
+          # Fetch releases from GitLab REST API
+          project_id = "3ds-netpass%2Fnetpass"
+          url = f"https://gitlab.com/api/v4/projects/{project_id}/releases"
+
+          req = urllib.request.Request(url, headers={"User-Agent": "GitHub-Sync-Bot"})
+          try:
+              with urllib.request.urlopen(req) as response:
+                  releases = json.loads(response.read().decode())
+          except Exception as e:
+              print(f"Error fetching GitLab releases: {e}")
+              releases = []
+
+          for rel in releases:
+              tag = rel.get("tag_name")
+              title = rel.get("name", tag)
+              body = rel.get("description", "")
+              
+              # Check if release already exists on GitHub
+              check = subprocess.run(["gh", "release", "view", tag], capture_output=True, text=True)
+              if check.returncode == 0:
+                  print(f"Release {tag} already exists on GitHub. Skipping.")
+                  continue
+
+              print(f"Creating GitHub Release for tag: {tag}")
+              
+              # Download assets attached to the GitLab release
+              downloaded_assets = []
+              links = rel.get("assets", {}).get("links", [])
+              for link in links:
+                  asset_url = link.get("url")
+                  asset_name = link.get("name")
+                  if asset_url and asset_name:
+                      print(f"Downloading asset: {asset_name}")
+                      try:
+                          urllib.request.urlretrieve(asset_url, asset_name)
+                          downloaded_assets.append(asset_name)
+                      except Exception as err:
+                          print(f"Failed to download {asset_name}: {err}")
+
+              # Create GitHub release with gh CLI
+              cmd = ["gh", "release", "create", tag, "--title", title, "--notes", body]
+              cmd.extend(downloaded_assets)
+              
+              res = subprocess.run(cmd)
+              if res.returncode == 0:
+                  print(f"Successfully published release {tag}")
+              else:
+                  print(f"Failed to publish release {tag}")
+
+              # Cleanup local downloaded asset files
+              for asset in downloaded_assets:
+                  if os.path.exists(asset):
+                      os.remove(asset)
+          '
