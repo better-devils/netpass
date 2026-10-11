@@ -137,3 +137,8 @@ str_luma_external_firms: Sembla que has instal·lat els pedaços però encara no
   external FIRMs and modules" (activar carregar FIRMs i mòduls externs) als 
   ajustos de Luma3DS. Per accedir als ajustos, apaga la consola i després prem 
   el botó {select_button} mentre encens {power_button} la consola.
+str_warning: "Has rebut un avís: %s\nData: %s\nSi us plau, només rebutja l'avís un
+  cop hagis arreglat el problema!"
+str_b_dismiss_warning: '{b_button} Rebutjar avís!'
+str_warning_dismissed: Avís rebutjat correctament! Si us plau, reinicieu NetPass
+  per tornar al utilitzar-ho.
