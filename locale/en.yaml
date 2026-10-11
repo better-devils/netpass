@@ -133,3 +133,6 @@ str_luma_external_firms: "It appears you have installed the patches but haven't 
   them in Luma3DS yet. For those to work, you need to enable \"Enable loading external
   FIRMs and modules\" in the Luma3DS settings. To access settings, power off the console
   and then press {select_button} while powering on {power_button} the console."
+str_warning: "You received a warning: %s\nTime: %s\nPlease only dismiss the warning after you fixed the issue!"
+str_b_dismiss_warning: "{b_button} Dismissed warning!"
+str_warning_dismissed: "Successfully dismissed the warning! Please restart NetPass to use it again."
