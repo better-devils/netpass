@@ -118,3 +118,6 @@ str_spotpass: 어느새 통신 뉴스
 str_luma_external_firms: 패치를 설치했지만 아직 Luma3DS에서 활성화하지 않은 것 같습니다. 패치가 작동하려면 
   Luma3DS 설정에서 "Enable loading external FIRMs and modules" 옵션을 활성화해야 합니다. 설정에 
   들어가려면 콘솔의 전원을 끈 뒤 {select_button}을 누른 상태에서 {power_button}으로 전원을 켜세요.
+str_warning: "경고가 발생했습니다: %s\n시간: %s\n문제를 해결한 후 경고를 해제하십시오!"
+str_b_dismiss_warning: '{b_button} 경고 해제'
+str_warning_dismissed: 경고가 성공적으로 해제되었습니다! NetPass를 이용하려면 NetPass를 다시 시작하십시오.
