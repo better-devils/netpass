@@ -145,6 +145,6 @@ str_luma_external_firms: Il semble que vous avez installé les patchs mais
   {select_button} pendant que la console s'allume {power_button}.
 str_warning: "Vous avez reçu un avertissement : %s\nDate d'issue : %s\nVeuillez ignorer
   l'avertissement seulement après avoir corrigé le problème !"
-str_b_dismiss_warning: '{b_button} Avertissement ignoré !'
+str_b_dismiss_warning: '{b_button} Ignorer avertissement !'
 str_warning_dismissed: Avertissement ignoré avec succès ! Veuillez redémarrer 
   NetPass pour le réutiliser.
