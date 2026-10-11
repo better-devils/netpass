@@ -140,3 +140,8 @@ str_luma_external_firms: Parece que has instalado los parches pero todavía no
   loading external FIRMs and modules" (activar la carga de FIRMs y módulos 
   externos) en los ajustes de Luma3DS. Para acceder a los ajustes, mantén 
   presionado {select_button} mientras enciendes {power_button} la consola.
+str_warning: "Has recibido un aviso: %s\nFecha: %s\nPor favor, ¡descarta el aviso
+  después de haber arreglado el problema!"
+str_b_dismiss_warning: '{b_button} ¡Descartar aviso!'
+str_warning_dismissed: ¡Aviso descartado correctamente! Por favor, reinicie 
+  NetPass para volver a utilizarlo.
