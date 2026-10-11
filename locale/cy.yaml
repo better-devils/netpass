@@ -125,7 +125,7 @@ str_already_registered: "Gwall: Mae'r consol 'ma eisoes wedi cofrestru!\n\nOs wy
 str_backup_nid_pwd: "Bydd Netpass yn creu'r ffeil ganlynol, felly gwnewch yn siwr
   o greu copi wrth gefn, os gweli di'n dda!\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: "Bydd NetPass yn gweithio'n gywir, dim ond os yw amser y system wedi
-  gosod yn gywir. Gwnewch hynny plîs!"
+  gosod yn gywir. Gwnewch hynny, os gweli di'n dda!"
 str_time_correct: "Wyt ti'n siwr bod y dyddiad a'r amser yn gywir?"
 str_time_success: "Amser wedi gosod yn llwyddiannus! Wrthi'n ailgychwyn NetPass nawr..."
 str_time_failed: "Mae gosod yr amser wedi methu!"
@@ -138,3 +138,8 @@ str_luma_external_firms: Mae hi'n ymddangos fod di wedi osod y patsiau, ond heb
   modiwlau allanol) yn y gosodiadau Luma3DS. I gyrchu'r gosodiadau 'na, 
   diffoddwch y consol, ac wedyn pwyswch {select_button} wrth gychwyn 
   {power_button} y consol.
+str_warning: "Rwyt ti wedi derbyn rhybudd: %s\nAmser: %s\nGwrthodwch y rhybudd yn
+  unig ar ôl i ti wedi datrys y problem, os gweli di'n dda!"
+str_b_dismiss_warning: '{b_button} Wedi gwrthod y rhybudd!'
+str_warning_dismissed: Wedi gwrthod y rhybudd yn llwyddiannus! Ailgychwynwch 
+  NetPass i ddefnyddio ef eto, os gweli di'n dda.
