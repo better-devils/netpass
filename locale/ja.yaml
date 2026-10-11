@@ -122,3 +122,6 @@ str_luma_external_firms:
   Luma3DSの設定に可能にせずに、パッチがインストールしているそうです。パッチが効くため、Luma3dsの設定に"Enable loading 
   external FIRMs and 
   modules"を可能にする必要があります。Luma3DSの設定をアックスするため、3DS本体の電源を切り、{select_button}を押しながら電源を入れてください{power_button}。
+str_warning: "あなたは警告されました: %s\nTime: %s\n問題が解決された後にのみこの警告を無視してください!"
+str_b_dismiss_warning: '{b_button} 警告を無視する!'
+str_warning_dismissed: 警告を無視することは成功しました! NetPassをリスタートすると、また使えます。
