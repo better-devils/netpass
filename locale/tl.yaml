@@ -141,3 +141,8 @@ str_luma_external_firms: Mukhang na-install mo ang mga patches ngunit hindi mo
   ang "Enable loading external FIRMs and modules" sa settings ng Luma3DS. Upang 
   ma-access ang settings, i-shutdown ang console at pagkatapos ay pindutin ang 
   {select_button} habang binubuksan {power_button} ang console.
+str_warning: "May nakuha ka na babala: %s\nOras: %s\nI-dismiss lamang ang babala pagkatapos
+  iresolba ang isyu!"
+str_b_dismiss_warning: '{b_button} I-dismiss ang babala!'
+str_warning_dismissed: Matagumpay na na-dismiss ang babala! Pakirestart ang 
+  Netpass upang magamit ito muli.
