@@ -140,6 +140,6 @@ str_luma_external_firms: Mae hi'n ymddangos fod di wedi osod y patsiau, ond heb
   {power_button} y consol.
 str_warning: "Rwyt ti wedi derbyn rhybudd: %s\nAmser: %s\nGwrthodwch y rhybudd yn
   unig ar ôl i ti wedi datrys y problem, os gweli di'n dda!"
-str_b_dismiss_warning: '{b_button} Wedi gwrthod y rhybudd!'
+str_b_dismiss_warning: '{b_button} Gwrthodwch y rhybudd!'
 str_warning_dismissed: Wedi gwrthod y rhybudd yn llwyddiannus! Ailgychwynwch 
   NetPass i ddefnyddio ef eto, os gweli di'n dda.
