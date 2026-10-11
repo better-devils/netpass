@@ -141,3 +141,8 @@ str_luma_external_firms: Pare che tu abbia installato le patch ma non le abbia
   loading external FIRMs and modules» nelle impostazioni di Luma3DS. Per 
   accedervi spegni la console e premi {select_button} mentre la accendi 
   {power_button}.
+str_warning: "Hai ricevuto un avvertimento: %s\nOra: %s\nAssicurati di aver risolto
+  il problema prima di ignorare questo avvertimento!"
+str_b_dismiss_warning: '{b_button} Ignora avvertimento!'
+str_warning_dismissed: Avvertimento ignorato con successo! Si prega di riavviare
+  NetPass per continuare a utilizzarlo.
