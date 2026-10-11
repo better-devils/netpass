@@ -125,7 +125,7 @@ str_failed_to_authenticate: Authenticatie is gefaald! Probeer het later nog een
   https://netpass.cafe
 str_already_registered: "Foutmelding: Apparaat is al geregistreerd!\n\nAls je gebruikt
   hebt gemaakt, of gebruik maakt, van een emulator zorg er dan voor dat je de sdmc:/config/netpass/nid_pwd.bin
-  synchroniseerd tussen de emulator en je apparaat."
+  synchroniseert tussen de emulator en je apparaat."
 str_backup_nid_pwd: "NetPass gaat een bestand maken om je apparaat te authentiseren,
   zorg ervoor dat je een reservekopie maakt!\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: NetPass werkt alleen zoals behoren als de systeem tijd correct is 
