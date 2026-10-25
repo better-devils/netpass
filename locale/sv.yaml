@@ -130,3 +130,15 @@ str_time_failed: Misslyckades med att ställa in tiden!
 str_scam_warning: NetPass är en gratis mjukvara med öppen källkod. Om du har 
   betalat för att installera den så har du råkat ut för bedrägeri. Kräv genast 
   en återbetalning.
+str_spotpass: Nyheter från SpotPass
+str_luma_external_firms: Det verkar som att du har installerat alla patches men 
+  ännu inte aktiverat dessa i Luma3DS. För att dessa ska fungera så måste du 
+  välja "Enable loading external FIRMs and modules" inne i 
+  Luma3DS-inställningarna. För att åtgärda detta, stäng av din konsol 
+  {power_button} och starta den igen {power_button} medan du håller ner 
+  {select_button}-knappen.
+str_warning: "Du har fått en varning: %s\nTid: %s\nVar vänlig och åtgärda problemet
+  innan du avfärdar denna varning!"
+str_b_dismiss_warning: '{b_button} Avfärda varning!'
+str_warning_dismissed: Avfärdande av varning lyckades! Starta om NetPass för att
+  använda det igen.
