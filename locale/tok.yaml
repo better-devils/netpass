@@ -1,112 +1,119 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
+str_loading: "kama poki    "
+str_libcurl_error: "pakala pi ilo LibCURL (%d): %s"
+str_libcurl_date_and_time: 'o lukin la tenpo pi ilo sina li pona!'
+str_httpstatus_error: 'lukin nimi pi ilo HTTP %d'
+str_3ds_error: 'pakala nimi pi ilo 3DS %08lx'
+str_at_home: 'sina li lon 「tomo」.'
+str_goto_train_station: 'o kama tawa 「tomo pi t.t.l.」'
+str_at_train_station: 'sina lon 「tomo pi t.t.l.」.'
+str_goto_plaza: 'o kama tawa 「leko ma」'
+str_at_plaza: 'sina lon「leko ma」.'
+str_goto_mall: 'o kama tawa 「tomo esun」'
+str_at_mall: 'sina lon 「tomo esun」.'
+str_exit: 'o kama weka'
+str_settings: 'nanpa'
+str_download_data: 'o anpa e nanpa jan mi'
+str_delete_data: 'o weka e nanpa jan mi'
+str_back: 'weka'
+str_language: 'toki pona'
+str_goto_beach: 'o kama tawa 「linja telo」'
+str_at_beach: 'sina lon 「linja telo」.'
+str_goto_arcade: 'o kama tawa 「tomo musi」'
+str_at_arcade: 'sina lon 「tomo musi」.'
+str_goto_catcafe: 'o kama tawa 「tomo pi t.w. en soweli」'
+str_at_catcafe: 'sina lon 「tomo pi t.w. en soweli」.'
+str_system_language: 'toki pi ilo ni'
+str_language_pick: 'toki:'
+str_no_location_twice: 'tenpo tu lon linja la sina ken ala e lon sama!'
+str_report_user: 'toki tan jan'
+str_report_user_hint: 'toki tan "%s"'
+str_cancel: 'monsi'
+str_submit: 'pana'
+str_back_alley: 'nasin monsi'
+str_back_alley_message: 'o esun e lipu mute!'
+str_back_alley_pay: "o esun e lipu {playcoin}%d"
+str_check_inboxes: 'o lukin e poki sina'
+str_toggle_titles: 'musi'
+str_toggle_titles_message: "o lupa e nena {a_button} tan ni, sina ken kama anu sina
+  ken pini ante e lipu."
+str_toggle_titles_on: "(suno)"
+str_toggle_titles_off: "(pmj.)"
+str_report_mii_name: "nimi pi jan Mii: %s"
+str_report_mario_kart_7_greeting: "toki open: %s"
+str_report_mii_plaza_last_game: "musi pini: %s"
+str_report_mii_plaza_country: "ma suli: %s"
+str_report_mii_plaza_greeting: "toki open: %s"
+str_report_mii_plaza_custom_message: "toki jan sina: %s"
+str_report_mii_plaza_custom_reply: "toki jan ona: %s"
+str_report_tomodachi_life_island_name: "nimi pi ma telo: %s"
+str_b_go_back: "{b_button} o kama monsi"
+str_b_cancel: "{b_button} o weka"
+str_a_ok: "{b_button} lon"
+str_update_patches: "{b_button} o ante pona e ilo kipisi"
 str_update_patches_desc: ""
 str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
+str_update_patches_poweroff_desc: "ante pona li pali pona! ilo sina li kama suno sin."
+str_integrations: "ilo wan"
+str_integrations_message: "ilo wan pi jan ante li weka tan pali mi (kulupu Netpass).
+  monsuta la o pali e ni!"
+str_report_source: "open lon: %s"
+str_report_source_unknown: "sola ala open"
+str_settings_misc: "ante"
+str_settings_about: "mama jan"
+str_about_lead_dev: "jan mama ilo suli"
+str_about_reports: "ilo toki"
+str_about_graphics: "sitelen"
+str_about_music: "kalama"
+str_about_localisation: "lon ante"
+str_about_netpass_community: "kulupu jan NetPass"
+str_about_special_thanks: "pona namako"
+str_about_special_thanks_txt: "kulu jan pi ilo pi jan pali tan lipu tan sona monsi"
+str_about_production_cat: "soweli pi jan mama"
+str_scan_qr: "o lukin e sitelen QR"
+str_x_switch_camera: "{x_button} o ante e pakala lukin"
+str_prompt_verify: "sina wile la o awen e ilo 3DS sina?"
+str_welcome: "pona lon ilo NetPass"
 str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
+str_view_rules: "o lukin e nasin lon"
+str_view_privacy: "o lukin e nasin pi nanpa jan"
+str_continue: "o kama sin"
 str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
+str_update_patches_poweroff_clear_desc: "weka pi ilo kipisi li pali pona! ilo sina
+  li kama suno sin."
+str_bg_music: "kalama monsi"
+str_prompt_dl_pass: "sina wile la o kama anpa e lipu ni?"
 str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
+str_skip: "weka"
+str_install: "o kama insa"
+str_remove: "o kama weka"
 str_banned: ""
 str_date: ""
 str_date_time: ""
 str_new_version: ""
-str_enter_event_location: ""
-str_at_event_location: ""
-str_artist_copyright: ""
-str_new_version_failed: ""
-str_report_list_empty: ""
-str_logging: ""
-str_logging_none: ""
-str_logging_screen: ""
-str_logging_file: ""
-str_downloading: ""
-str_failed_to_authenticate: ""
+str_enter_event_location: "sina wile la o kama tawa lon namako 「%s」?"
+str_at_event_location: "sina lon 「lon namako」."
+str_artist_copyright: "sitelen © %s"
+str_new_version_failed: "kama insa pi ilo sin li pali pakala. ilo ni o kama insa sin
+  lon ilo Universal Updater anu lon sitelen nimi QR-Code."
+str_report_list_empty: "lipu pi toki kulupu li weka."
+str_logging: "lipu sona:"
+str_logging_none: "ala"
+str_logging_screen: "sitelen tawa"
+str_logging_file: "lipu ante"
+str_downloading: "kama anpa..."
+str_failed_to_authenticate: "awen pakala! o alasa sinlon tenpo ante. ni li pali sin
+  la o toki tawa mi! https://netpass.cafe"
 str_already_registered: ""
 str_backup_nid_pwd: ""
-str_set_time: ""
-str_time_correct: ""
-str_time_success: ""
-str_time_failed: ""
-str_scam_warning: ""
-str_spotpass: ""
+str_set_time: "ilo tenpo li nanpa pona taso la ilo NetPass li pali pona. o nanpa e
+  tenpo sina!"
+str_time_correct: "sina sona la tenpo ilo li pona?"
+str_time_success: "ilo tenpo li nanpa pona! ilo NetPass li kama suno sin..."
+str_time_failed: "ilo tenpo li pali pakala!"
+str_scam_warning: "ilo NetPass li weka esun li ilo open. sina esun e kama insa pi
+  ilo ni la sina lanpan en sina wile toki monsi e mani sina."
+str_spotpass: "sona sin pi ilo SpotPass"
 str_luma_external_firms: ""
 str_warning: ""
-str_b_dismiss_warning: ""
-str_warning_dismissed: ""
+str_b_dismiss_warning: "{b_button} o weka e toki awen!"
+str_warning_dismissed: "awen weka li pali pona! o kama suno sin e ilo NetPass."
