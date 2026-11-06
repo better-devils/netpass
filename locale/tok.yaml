@@ -33,9 +33,8 @@ str_back_alley: 'nasin monsi'
 str_back_alley_message: 'o esun e lipu mute!'
 str_back_alley_pay: "o esun e lipu {playcoin}%d"
 str_check_inboxes: 'o lukin e poki sina'
-str_toggle_titles: 'musi'
-str_toggle_titles_message: "o lupa e nena {a_button} tan ni, sina ken kama anu sina
-  ken pini ante e lipu."
+str_toggle_titles: 'open/pini e musi'
+str_toggle_titles_message: "o lupa e nena {a_button} tan open anu pini ante e lipu."
 str_toggle_titles_on: "(suno)"
 str_toggle_titles_off: "(pmj.)"
 str_report_mii_name: "nimi pi jan Mii: %s"
@@ -50,12 +49,17 @@ str_b_go_back: "{b_button} o kama monsi"
 str_b_cancel: "{b_button} o weka"
 str_a_ok: "{b_button} lon"
 str_update_patches: "{b_button} o ante pona e ilo kipisi"
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
+str_update_patches_desc: "sina wile kama insa li pali pona la ilo kipisi Sysmodule
+  li kama mama. sina wile pali pona e ilo ni la o open e \"Enable loading external
+  FIRMs and modules\" lon nanpa pi ilo Luma3DS. sina o kama tawa nanpa ni la o kama
+  suno e ilo 3DS sina {power_button} en o lupa e nena {select_button}. ilo kipisi
+  li sitelen la sina ken pali e ni."
+str_update_patches_error_desc: "kama pona pi ilo kipisi li pali pakala. o toki tan
+  ni tawa lipu GitLab tawa lipu anu lipu GBAtemp anu lipu Discord. https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "ante pona li pali pona! ilo sina li kama suno sin."
 str_integrations: "ilo wan"
 str_integrations_message: "ilo wan pi jan ante li weka tan pali mi (kulupu Netpass).
-  monsuta la o pali e ni!"
+  o kepeken monsuta!"
 str_report_source: "open lon: %s"
 str_report_source_unknown: "sola ala open"
 str_settings_misc: "ante"
@@ -73,23 +77,27 @@ str_scan_qr: "o lukin e sitelen QR"
 str_x_switch_camera: "{x_button} o ante e pakala lukin"
 str_prompt_verify: "sina wile la o awen e ilo 3DS sina?"
 str_welcome: "pona lon ilo NetPass"
-str_welcome_message: ""
+str_welcome_message: "tenpo monsi pi sina suno e ilo NetPassla o open tan nasin mi."
 str_view_rules: "o lukin e nasin lon"
 str_view_privacy: "o lukin e nasin pi nanpa jan"
 str_continue: "o kama sin"
-str_bad_os_version: ""
+str_bad_os_version: "ilo NetPass li wile e ilo selo 11.15.0 anu sama pona tan pali
+  pona. pakala la sina jo e ilo selo pakala. o kama pona e ilo selo en o kama suno
+  e ilo NetPass sin\n\no lupa e nena ante tawa weka"
 str_update_patches_poweroff_clear_desc: "weka pi ilo kipisi li pali pona! ilo sina
   li kama suno sin."
 str_bg_music: "kalama monsi"
 str_prompt_dl_pass: "sina wile la o kama anpa e lipu ni?"
-str_report_integration: ""
+str_report_integration: "toki ni li mama tan ilo wan. sina wile toki tan ni la o toki
+  tawa kulupu mama pi ilo ni."
 str_skip: "weka"
 str_install: "o kama insa"
 str_remove: "o kama weka"
-str_banned: ""
-str_date: ""
-str_date_time: ""
-str_new_version: ""
+str_banned: "sina weka e ilo NetPass. tan:\n%s\n\nopen weka: %s\npini weka: %s"
+str_date: "t.su. %d, t.m. %m, t.si. %Y"
+str_date_time: "t.su. %d, t.m. %m, t.si. %Y t.k. %H:%M:%S"
+str_new_version: "mi jo e ilo selo sin pi ilo NetPass:\nis%d.%d.%d!\n\nsina wile kama
+  pona seme tawa ilo selo ni?"
 str_enter_event_location: "sina wile la o kama tawa lon namako 「%s」?"
 str_at_event_location: "sina lon 「lon namako」."
 str_artist_copyright: "sitelen © %s"
@@ -103,8 +111,10 @@ str_logging_file: "lipu ante"
 str_downloading: "kama anpa..."
 str_failed_to_authenticate: "awen pakala! o alasa sinlon tenpo ante. ni li pali sin
   la o toki tawa mi! https://netpass.cafe"
-str_already_registered: ""
-str_backup_nid_pwd: ""
+str_already_registered: "pakala: ilo ni li awen sin!\n\nsina o musi kepeken ilo ante
+  la lipu sdmc:/config/netpass/nid_pwd.bin li wile sama tan ilo ante en ilo ni."
+str_backup_nid_pwd: "ilo NetPass li mama e lipu ni tan awen pi ilo ni la o awen e
+  lipu ni tawa ilo ante!\nsdmc:/config/netpass/nid_pwd.bin"
 str_set_time: "ilo tenpo li nanpa pona taso la ilo NetPass li pali pona. o nanpa e
   tenpo sina!"
 str_time_correct: "sina sona la tenpo ilo li pona?"
