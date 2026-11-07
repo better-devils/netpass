@@ -147,3 +147,4 @@ str_warning: "Je hebt een waarschuwing gekregen: %s\nTijd en datum: %s\nGraag al
 str_b_dismiss_warning: '{b_knop} Negeer waarschuwing!'
 str_warning_dismissed: Waarschuwing succesvol genegeerd! Start NetPass opnieuw 
   op om het weer te kunnen gebruiken.
+str_warning_dismissed_failed: Gefaald om de waarschuiwing weg te halen.
