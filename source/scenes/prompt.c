@@ -20,6 +20,7 @@
 #include "prompt.h"
 
 #define _data ((DataStruct*)sc->d)
+#define _initdata ((InitData*)sc->data)
 #define WIDTH_SCR 400
 #define HEIGHT_SCR 240
 #define MARGIN 20
@@ -27,30 +28,37 @@
 #define HEIGHT (HEIGHT_SCR - 2*MARGIN)
 
 typedef struct {
+	union {
+		C2D_Font font;
+		LanguageString* lang_string;
+	};
+	char* message;
+	Scene* ok;
+	Scene* cancel;
+	LanguageString* ok_string;
+	LanguageString* cancel_string;
+} InitData;
+
+typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_prompt;
 	C2D_Text g_a_ok;
 	C2D_Text g_b_back;
-	char* message;
 } DataStruct;
 
 static void init(Scene* sc) {
-	C2D_Font font = sc->d;
 	sc->d = malloc(sizeof(DataStruct));
 	if (!_data) return;
-	if (font) {
-		font = (void*)((u32)font & 0xFFFFFFFE);
-		_data->message = (void*)sc->data;
-		_data->g_staticBuf = C2D_TextBufNew(strlen(_data->message) + STR_A_OK_LEN + STR_B_GO_BACK_LEN);
-		C2D_TextFontParse(&_data->g_prompt, font, _data->g_staticBuf, (void*)sc->data);
+	if (_initdata->message) {
+		_data->g_staticBuf = C2D_TextBufNew(strlen(_initdata->message) + STR_A_OK_LEN + STR_B_GO_BACK_LEN);
+		C2D_TextFontParse(&_data->g_prompt, _initdata->font, _data->g_staticBuf, _initdata->message);
 		C2D_TextOptimize(&_data->g_prompt);
 	} else {
-		_data->message = 0;
-		_data->g_staticBuf = C2D_TextBufNew(strlen(_s((void*)sc->data)) + STR_A_OK_LEN + STR_B_GO_BACK_LEN);
-		TextLangParse(&_data->g_prompt, _data->g_staticBuf, (void*)sc->data);
+		_data->g_staticBuf = C2D_TextBufNew(strlen(_s(*_initdata->lang_string)) + STR_A_OK_LEN + STR_B_GO_BACK_LEN);
+		TextLangParse(&_data->g_prompt, _data->g_staticBuf, *_initdata->lang_string);
 	}
-	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
-	TextLangParse(&_data->g_b_back, _data->g_staticBuf, str_b_go_back);
+	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, *_initdata->ok_string);
+	TextLangParse(&_data->g_b_back, _data->g_staticBuf, *_initdata->cancel_string);
 }
 
 static void render(Scene* sc) {
@@ -62,50 +70,74 @@ static void render(Scene* sc) {
 
 static void exit_scene(Scene* sc) {
 	if (_data) {
-		if (_data->message) free(_data->message);
+		if (_initdata->message) free(_initdata->message);
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
+	}
+	if (_initdata->ok && _initdata->ok->need_free) {
+		free(_initdata->ok);
+		_initdata->ok = 0;
+	}
+	if (_initdata->cancel && _initdata->cancel->need_free) {
+		free(_initdata->cancel);
+		_initdata->cancel = 0;
 	}
 }
 
 static SceneResult process(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
-	if (kDown & KEY_A) return scene_switch;
+	if (kDown & KEY_A) {
+		if (_initdata->ok) {
+			sc->next_scene = _initdata->ok;
+			_initdata->ok = 0; // something else is handling the freeing now
+			return scene_switch;
+		}
+		return scene_pop;
+	}
 	if (kDown & KEY_B) {
-		if (sc->next_scene->need_free) {
-			free(sc->next_scene);
-			sc->next_scene = 0;
+		if (_initdata->cancel) {
+			sc->next_scene = _initdata->cancel;
+			_initdata->cancel = 0;
+			return scene_switch;
 		}
 		return scene_pop;
 	}
 	return scene_continue;
 }
 
-Scene* getPromptScene(LanguageString s, Scene* success) {
-	Scene* scene = createScene(0);
+Scene* getPromptScene(LanguageString* s, Scene* success) {
+	Scene* scene = createScene(sizeof(InitData));
 	if (!scene) return NULL;
 	scene->init = init;
 	scene->render_top = render;
 	scene->exit = exit_scene;
 	scene->process = process;
-	scene->data = (u32)s;
-	scene->next_scene = success;
 	scene->is_popup = true;
+	((InitData*)scene->data)->lang_string = s;
+	((InitData*)scene->data)->ok = success;
+	((InitData*)scene->data)->ok_string = &str_a_ok;
+	((InitData*)scene->data)->cancel_string = &str_b_go_back;
 	return scene;
 }
 
 Scene* getPromptSceneStr(char* s, C2D_Font font, Scene* success) {
-	Scene* scene = createScene(0);
+	return getPromptSceneStrCustomMsg(s, font, success, &str_a_ok, 0, &str_b_go_back);
+}
+
+Scene* getPromptSceneStrCustomMsg(char* s, C2D_Font font, Scene* ok, LanguageString* ok_string, Scene* cancel, LanguageString* cancel_string) {
+	Scene* scene = createScene(sizeof(InitData));
 	if (!scene) return NULL;
-	memset(scene, 0, sizeof(Scene));
 	scene->init = init;
 	scene->render_top = render;
 	scene->exit = exit_scene;
 	scene->process = process;
-	scene->data = (u32)s;
-	scene->d = (void*)((u32)font | 1);
-	scene->next_scene = success;
 	scene->is_popup = true;
+	((InitData*)scene->data)->message = s;
+	((InitData*)scene->data)->font = font;
+	((InitData*)scene->data)->ok = ok;
+	((InitData*)scene->data)->ok_string = ok_string;
+	((InitData*)scene->data)->cancel = cancel;
+	((InitData*)scene->data)->cancel_string = cancel_string;
 	return scene;
 }

@@ -83,6 +83,22 @@ Result readPingResponse(PingResponse* resp, u8* buf, u32 len) {
 	}
 	resp->is_authenticated = qr_read_bool(&buffer);
 	resp->is_registered = qr_read_bool(&buffer);
+	// read the warn
+	resp->warn.have_warn = qr_read_bool(&buffer);
+	qr_read_align(&buffer, 4);
+	qr_read_object(&buffer, &resp->warn.time, sizeof(CecTimestamp));
+	u32 warn_message_len = qr_peek_u32(&buffer);
+	if (warn_message_len) {
+		char* warn_message = malloc(warn_message_len);
+		if (!warn_message) return ERROR_OUT_OF_MEMORY;
+		qr_read_string(&buffer, warn_message, warn_message_len);
+		resp->warn.message = warn_message;
+		qr_read_align(&buffer, 4);
+	} else {
+		// we need to consume the length
+		qr_read_u32(&buffer);
+		resp->warn.message = 0;
+	}
 	return 0;
 }
 

@@ -107,6 +107,7 @@ Scene* createScene(size_t data_size) {
 			free(scene);
 			return NULL;
 		}
+		memset(data, 0, data_size);
 		scene->data = (u32)data;
 	}
 	return scene;

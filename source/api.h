@@ -73,11 +73,18 @@ typedef struct {
 } PingResponseMessage;
 
 typedef struct {
+	bool have_warn;
+	CecTimestamp time;
+	char* message;
+} PingResponseWarn;
+
+typedef struct {
 	PingResponseVersion version;
 	PingResponseBan ban;
 	PingResponseMessage message;
 	bool is_authenticated;
 	bool is_registered;
+	PingResponseWarn warn;
 } PingResponse;
 
 typedef struct {

@@ -273,7 +273,7 @@ static SceneResult process(Scene* sc) {
 				logln(INFO, "Method: %ld", method);
 				switch (method) {
 					case QR_METHOD_VERIFY: {
-						sc->next_scene = getPromptScene(str_prompt_verify, getLoadingScene(NULL, lambda(void, (void) {
+						sc->next_scene = getPromptScene(&str_prompt_verify, getLoadingScene(NULL, lambda(void, (void) {
 							Result res = qr_verify(qr_buffer);
 							if (R_FAILED(res)) {
 								_e(res);
@@ -314,7 +314,7 @@ static SceneResult process(Scene* sc) {
 						return scene_push;
 					};
 					case QR_METHOD_DL_PASS: {
-						sc->next_scene = getPromptScene(str_prompt_dl_pass, getLoadingScene(NULL, lambda(void, (void) {
+						sc->next_scene = getPromptScene(&str_prompt_dl_pass, getLoadingScene(NULL, lambda(void, (void) {
 							Result res = qr_dl_pass(qr_buffer);
 							if (R_FAILED(res)) {
 								_e(res);

@@ -98,7 +98,7 @@ static SceneResult process(Scene* sc) {
 	if (_data) {
 		if (kDown & KEY_A && _data->cursor == 5) {
 			offset = _data->offset;
-			Scene* new_scene = getPromptScene(str_time_correct, getSwitchScene(lambda(Scene*, (void) {
+			Scene* new_scene = getPromptScene(&str_time_correct, getSwitchScene(lambda(Scene*, (void) {
 				// set the actual time here
 				s64 msY2K = time(NULL) + offset - 946684800;
 				msY2K *= 1000;

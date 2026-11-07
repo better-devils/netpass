@@ -20,5 +20,6 @@
 
 #include "../scene.h"
 
-Scene* getPromptScene(LanguageString s, Scene* success);
+Scene* getPromptScene(LanguageString* s, Scene* success);
 Scene* getPromptSceneStr(char* s, C2D_Font font, Scene* success);
+Scene* getPromptSceneStrCustomMsg(char* s, C2D_Font font, Scene* ok, LanguageString* ok_string, Scene* cancel, LanguageString* cancel_string);

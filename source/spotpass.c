@@ -125,6 +125,7 @@ Result setupSpotpass(bool is_3dsx) {
 	if (R_FAILED(res)) goto cleanup;
 
 	// exbanner task
+	/*
 	snprintf(url, 100, "https://api.netpass.cafe/npdl/p01/nsa/netpass/exbnr/%s/exbanner", lang);
 	bossSetupContext(ctx, 60*60, url);
 	ctx->priority = 0x7D;
@@ -133,6 +134,7 @@ Result setupSpotpass(bool is_3dsx) {
 	strncpy(ctx->httpHeaders[0].value, url, 0x100);
 	res = _e(upsertSpotpassTask("exbnr", ctx));
 	if (R_FAILED(res)) goto cleanup;
+	*/
 
 	_e(updateCachedSmdh(FULL_NETPASS_ID, smdh));
 cleanup:

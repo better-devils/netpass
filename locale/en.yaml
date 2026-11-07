@@ -138,3 +138,4 @@ str_warning: "You received a warning: %s\nTime: %s\nPlease only dismiss the warn
 str_b_dismiss_warning: "{b_button} Dismiss warning!"
 str_warning_dismissed: "Successfully dismissed the warning! Please restart NetPass
   to use it again."
+str_warning_dismissed_failed: "Failed to dismiss warning."

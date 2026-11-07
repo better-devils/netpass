@@ -22,6 +22,7 @@
 #include <citro2d.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h> // TODO: check if needed
 #include "log.h"
 #include "scene.h"
@@ -34,6 +35,7 @@
 #include "scenes/download_progress.h"
 #include "scenes/info.h"
 #include "scenes/loading.h"
+#include "scenes/restart.h"
 #include "scenes/settings.h"
 #include "scenes/switch.h"
 #include "spotpass.h"
@@ -98,6 +100,42 @@ static Scene* load_is_banned(void) {
 		Scene* ban_scene = getInfoSceneStr(message, font);
 		ban_scene->pop_scene = scene;
 		scene = ban_scene;
+	}
+	return scene;
+}
+
+static Scene* load_have_warn(void) {
+	char warn_time[40];
+	struct tm tm = {0};
+	if (ping_response.warn.time.year) {
+		cecTimeToTm(&ping_response.warn.time, &tm);
+		n_strftime(warn_time, sizeof(warn_time), _s(str_date), &tm);
+	} else {
+		strncpy(warn_time, "N/A", sizeof(warn_time));
+	}
+
+	Scene* scene = getSettingsScene();
+	char* message = malloc(1000);
+	if (message) {
+		snprintf(message, 1000, _s(str_warning), ping_response.warn.message, warn_time);
+		C2D_Font font = _font(str_warning);
+		Scene* warn_scene = getPromptSceneStrCustomMsg(message, font, false, &str_a_ok, getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+			if (R_FAILED(ping_res)) {
+				return getInfoScene(str_warning_dismissed_failed);
+			}
+			if (filename_3dsx) {
+				Scene* scene = getInfoScene(str_warning_dismissed);
+				scene->pop_scene = getRestartScene();
+				return scene;
+			}
+			return getRestartScene();
+		})), lambda(void, (void) {
+			char url[80];
+			snprintf(url, 80, "%s/warn/dismiss", BASE_URL);
+			ping_res = _e(httpRequest("GET", url, 0, 0, 0, 0));
+		})), &str_b_dismiss_warning);
+		warn_scene->pop_scene = scene;
+		scene = warn_scene;
 	}
 	return scene;
 }
@@ -276,6 +314,10 @@ static Scene* initial_scene(void) {
 	if (ping_response.ban.is_banned) {
 		// we are banned
 		return load_is_banned();
+	}
+	if (ping_response.warn.have_warn) {
+		// we have a warning
+		return load_have_warn();
 	}
 	bgLoopInit();
 	Scene* scene;
