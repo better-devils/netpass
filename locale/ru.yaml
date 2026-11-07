@@ -142,3 +142,4 @@ str_warning: "Вы получили предупреждение: %s\nВремя
 str_b_dismiss_warning: '{b_button} Закрыть предупреждение!'
 str_warning_dismissed: Предупреждение успешно отклонено! Пожалуйста 
   перезапустите NetPass для повторного использования.
+str_warning_dismissed_failed: Не удалось отклонить предупреждение.
