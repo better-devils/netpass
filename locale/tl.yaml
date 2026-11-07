@@ -146,3 +146,4 @@ str_warning: "May nakuha ka na babala: %s\nOras: %s\nI-dismiss lamang ang babala
 str_b_dismiss_warning: '{b_button} I-dismiss ang babala!'
 str_warning_dismissed: Matagumpay na na-dismiss ang babala! Pakirestart ang 
   Netpass upang magamit ito muli.
+str_warning_dismissed_failed: Nabigong i-dismiss ang babala.
