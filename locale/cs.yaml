@@ -143,3 +143,4 @@ str_warning: "Obdrželi jste varování: %s\nČas: %s\nProsíme o zavření varo
   tom, co jste jej vyřešili!"
 str_b_dismiss_warning: '{b_button} Zrušit varování!'
 str_warning_dismissed: Varování úspěšně zrušeno! Prosím restartujte NetPass.
+str_warning_dismissed_failed: Nepodařilo se zrušit varování.
