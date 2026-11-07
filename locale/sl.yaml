@@ -133,3 +133,9 @@ str_luma_external_firms: "Izgleda da ste instalirali prilagoditve, niste pa jih 
   omogočiti \"Enable loading external FIRMs and modules\". Za dostop do nastavitev
   izklopite konzolo in nato pritisnite {select_button} med zagonom {power_button}
   konzole."
+str_warning: "Prejeli ste opozorilo: %s\nČas: %s\nProsimo, ne odstranite opozorila
+  dokler težava ni razrešena!"
+str_b_dismiss_warning: '{b_button} Odstranite opozorilo!'
+str_warning_dismissed: Opozorilo je uspešno odstranjeno! Prosimo, ponovno 
+  zaženite NetPass.
+str_warning_dismissed_failed: Opozorila ni bilo možno odstraniti.
