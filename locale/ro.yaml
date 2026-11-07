@@ -1,33 +1,34 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
+str_loading: "Se încarcă...    "
+str_libcurl_error: "eroare libCURL (%d): %s"
+str_libcurl_date_and_time: 'Asigură-te că data și timpul consolei tale este setată
+  corect!'
+str_httpstatus_error: 'HTTP cod status %d'
+str_3ds_error: '3DS cod eroare %08lx'
+str_at_home: 'Ești în Casă.'
+str_goto_train_station: 'Mergi la Gară'
+str_at_train_station: 'Ești la Gară.'
+str_goto_plaza: 'Mergi la Plaza'
+str_at_plaza: 'Ești la plaza.'
+str_goto_mall: 'Mergi la Mall'
+str_at_mall: 'Ești la Mall.'
+str_exit: 'Ieși'
+str_settings: 'Setări'
+str_download_data: 'Descarcă datele personale'
+str_delete_data: 'Șterge datele personale'
+str_back: 'Înapoi'
+str_language: 'Română'
+str_goto_beach: 'Mergi la Plajă'
+str_at_beach: 'Ești la plajă.'
+str_goto_arcade: 'Mergi la Sala de Jocuri'
+str_at_arcade: 'Ești la Sala de Jocuri.'
+str_goto_catcafe: 'Mergi la Cafeneaua cu Mâțe'
+str_at_catcafe: 'Ești la Cafeneaua cu Mâțe.'
+str_system_language: 'Limba Sistemului'
+str_language_pick: 'Limba:'
+str_no_location_twice: 'Nu poți să accesezi aceiași locație de 2 ori la rând!'
+str_report_user: 'Raportează un utilizator'
+str_report_user_hint: 'Raportează "%s"'
+str_cancel: 'Anulează'
 str_submit: ''
 str_back_alley: ''
 str_back_alley_message: ''
@@ -37,7 +38,7 @@ str_toggle_titles: ''
 str_toggle_titles_message: ""
 str_toggle_titles_on: ""
 str_toggle_titles_off: ""
-str_report_mii_name: ""
+str_report_mii_name: "Numele Mii-ului: %s"
 str_report_mario_kart_7_greeting: ""
 str_report_mii_plaza_last_game: ""
 str_report_mii_plaza_country: ""
