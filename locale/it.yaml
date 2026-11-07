@@ -146,3 +146,4 @@ str_warning: "Hai ricevuto un avvertimento: %s\nOra: %s\nAssicurati di aver riso
 str_b_dismiss_warning: '{b_button} Ignora avvertimento!'
 str_warning_dismissed: Avvertimento ignorato con successo! Si prega di riavviare
   NetPass per continuare a utilizzarlo.
+str_warning_dismissed_failed: Impossibile ignorare l'avvertimento.
