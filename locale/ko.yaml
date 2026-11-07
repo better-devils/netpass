@@ -121,3 +121,4 @@ str_luma_external_firms: 패치를 설치했지만 아직 Luma3DS에서 활성�
 str_warning: "경고가 발생했습니다: %s\n시간: %s\n문제를 해결한 후 경고를 해제하십시오!"
 str_b_dismiss_warning: '{b_button} 경고 해제'
 str_warning_dismissed: 경고가 성공적으로 해제되었습니다! NetPass를 이용하려면 NetPass를 다시 시작하십시오.
+str_warning_dismissed_failed: 경고 해제를 실패했습니다.
