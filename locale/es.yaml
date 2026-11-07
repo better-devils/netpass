@@ -144,3 +144,4 @@ str_warning: "Has recibido un aviso: %s\nFecha: %s\nPor favor, ¡descarta el avi
 str_b_dismiss_warning: '{b_button} ¡Descartar aviso!'
 str_warning_dismissed: ¡Aviso descartado correctamente! Por favor, reinicie 
   NetPass para volver a utilizarlo.
+str_warning_dismissed_failed: Fallo al descartar el aviso.
