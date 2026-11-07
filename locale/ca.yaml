@@ -142,3 +142,4 @@ str_warning: "Has rebut un avís: %s\nData: %s\nSi us plau, només rebutja l'av�
 str_b_dismiss_warning: '{b_button} Rebutjar avís!'
 str_warning_dismissed: Avís rebutjat correctament! Si us plau, reinicieu NetPass
   per tornar al utilitzar-ho.
+str_warning_dismissed_failed: No s'ha pogut rebutjar l'avís.
