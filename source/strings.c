@@ -89,7 +89,6 @@ const char* get_text_gender(const char* const* text, u8 g) {
 	for (int i = 0; i < g + 1; i++) {
 		if (!text[i]) break;
 		s = text[i];
-		if (i == g) break;
 	}
 	return s;
 }
