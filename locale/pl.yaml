@@ -1,6 +1,6 @@
 str_loading: "Ładowanie    "
 str_libcurl_error: "Błąd libCURL (%d): %s"
-str_libcurl_date_and_time: 'Upewnij się, że data i czas na twojej konsoli są ustawione
+str_libcurl_date_and_time: 'Upewnij się, że data i czas twojej konsoli są ustawione
   prawidłowo!'
 str_httpstatus_error: 'Błąd HTTP o kodzie %d'
 str_3ds_error: 'Błąd 3DS o kodzie %08lx'
@@ -71,7 +71,7 @@ str_update_patches_desc: Aby poprawnie zainstalować NetPass, zostaną teraz
   włączania {power_button} konsoli. Możesz to zrobić po zaaplikowaniu łatek.
 str_settings_misc: Różne
 str_about_localisation: Lokalizacja
-str_about_special_thanks_txt: Społeczności homebrew 3DS za całą inżynierie 
+str_about_special_thanks_txt: Społeczności homebrew 3DS za całą inżynierię 
   wsteczną i dokumentację
 str_about_lead_dev: Główny deweloper
 str_about_reports: System raportowania
@@ -89,7 +89,7 @@ str_view_privacy: Wyświetl politykę prywatności
 str_continue: Kontynuuj
 str_welcome: Witaj w NetPass
 str_welcome_message: Przed uruchomieniem NetPass należy przeczytać regulamin 
-  i politykę prywaności oraz wyrazić zgodę na ich warunki.
+  i politykę prywatności oraz wyrazić zgodę na ich warunki.
 str_bad_os_version: "NetPass wymaga systemu 3DSa w wersji 11.15.0 lub nowszej, aby
   działać poprawnie. Niestety wygląda na to, że korzystasz ze starszej wersji. Zaktualizuj
   system, a następnie uruchom ponownie NetPass.\n\nNaciśnij dowolny przycisk, by wyjść"
@@ -135,13 +135,14 @@ str_scam_warning: NetPass to darmowe oprogramowanie typu open source. Jeżeli
   za instalację pobrano od ciebie opłatę — oszukano cię. Zażądaj zwrotu 
   pieniędzy.
 str_spotpass: Wiadomości SpotPass
-str_luma_external_firms: Wygląda na to, że zainstalowałeś łatki, ale nie 
-  aktywowałeś ich jeszcze w Luma3DS. By one działały, musisz włączyć "Enable 
-  loading external FIRMs and modules" w ustawieniach Luma3DS. By dostać się do 
-  ustawień, wyłącz konsole i przytrzymaj {select_button} włączając 
-  {power_button} konsole.
-str_warning: "Otrzymałeś ostrzeżenie: %s\nCzas: %s\nProszę odrzucić ostrzeżenie dopiero
-  gdy rozwiązaniu problemu!"
+str_luma_external_firms: Wygląda na to, że łatki są zainstalowane, ale jeszcze 
+  nieaktywowane w Luma3DS. By one działały, musisz włączyć „Enable loading 
+  external FIRMs and modules” w ustawieniach Luma3DS. By dostać się do ustawień,
+  wyłącz konsolę i przytrzymaj {select_button}, włączając {power_button} 
+  konsole.
+str_warning: "Otrzymano ostrzeżenie: %s\nCzas: %s\nProszę odrzucić ostrzeżenie dopiero
+  po rozwiązaniu problemu!"
 str_b_dismiss_warning: '{b_button} Odrzuć ostrzeżenie!'
 str_warning_dismissed: Ostrzeżenie zostało pomyślnie usunięte! Proszę uruchom 
   ponownie NetPass, aby móc z niego korzystać.
+str_warning_dismissed_failed: Nie udało się odrzucić ostrzeżenia.
