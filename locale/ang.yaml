@@ -1,13 +1,13 @@
-str_loading: ""
-str_libcurl_error: ""
+str_loading: "Hladende . . . .    "
+str_libcurl_error: "libCURLs gedwola (%d): %s"
 str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
+str_httpstatus_error: 'HTTPs steallcæg %d'
+str_3ds_error: '3DSs gedwolcæg %08lx'
+str_at_home: 'Eart æt Ham.'
+str_goto_train_station: 'Ga to Regolwegas'
+str_at_train_station: 'Eart æt Regolwegum.'
+str_goto_plaza: 'Ga to Ceapstow'
+str_at_plaza: 'Eart æt Ceapstowe.'
 str_goto_mall: ''
 str_at_mall: ''
 str_exit: ''
