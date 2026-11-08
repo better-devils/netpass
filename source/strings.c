@@ -86,7 +86,7 @@ const char* _s(LanguageString s) {
 
 const char* get_text_gender(const char* const* text, u8 g) {
 	const char* s = 0;
-	for (int i = 0; i < g; i++) {
+	for (int i = 0; i < g + 1; i++) {
 		if (!text[i]) break;
 		s = text[i];
 		if (i == g) break;
