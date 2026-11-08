@@ -19,6 +19,7 @@
 
 #include "strings.h"
 #include "config.h"
+#include "log.h"
 #include "utils.h"
 
 static u8 _language;
@@ -61,7 +62,12 @@ void stringsInit(void) {
 	font_default = getFontIndex(0);
 	int gender_to_set = config.gender;
 	if (gender_to_set < 0) {
-		gender_to_set = gender_default_map[_language];
+		for (int i = 0; i < NUM_LANGUAGES; i++) {
+			if (all_languages[i] == _language) {
+				gender_to_set = gender_default_map[i];
+				break;
+			}
+		}
 	}
 	if (gender_to_set < 0) {
 		_gender = 2;
@@ -79,9 +85,13 @@ const char* _s(LanguageString s) {
 }
 
 const char* get_text_gender(const char* const* text, u8 g) {
-	if (text[g]) return text[g];
-	if (g) return get_text_gender(text, g-1);
-	return 0;
+	const char* s = 0;
+	for (int i = 0; i < g; i++) {
+		if (!text[i]) break;
+		s = text[i];
+		if (i == g) break;
+	}
+	return s;
 }
 
 const char* string_in_language(LanguageString s, int lang) {
@@ -166,10 +176,18 @@ void TextLangSpecificParse(C2D_Text* staticText, C2D_TextBuf staticBuf, Language
 		}
 	}
 	C2D_Font font = _get_local_font(l);
+	bool get_fallback = false;
 	if (!text) {
 		text = get_text_gender(s[0].text, _gender);
 		font = font_default;
+		get_fallback = true;
 	}
-	C2D_TextFontParse(staticText, font, staticBuf, text);
-	C2D_TextOptimize(staticText);
+	if ((u32)text < 0x1000) {
+		logln(ERROR, "Attempted to parse text with invalid pointer %p. Language: %d. Got fallback: %s. Gender: %d", text, l, get_fallback ? "true" : "false", _gender);
+		C2D_TextParse(staticText, staticBuf, "STR_E");
+		C2D_TextOptimize(staticText);
+	} else {
+		C2D_TextFontParse(staticText, font, staticBuf, text);
+		C2D_TextOptimize(staticText);
+	}
 }
