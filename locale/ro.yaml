@@ -29,15 +29,15 @@ str_no_location_twice: 'Nu poți să accesezi aceiași locație de 2 ori la rân
 str_report_user: 'Raportează un utilizator'
 str_report_user_hint: 'Raportează "%s"'
 str_cancel: 'Anulează'
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
+str_submit: 'Trimite'
+str_back_alley: 'Alee Lăturalnică'
+str_back_alley_message: 'Hai să negociem niște pass-uri!'
+str_back_alley_pay: "Cumpără un pass {playcoin}%d"
+str_check_inboxes: 'Verifică Inboxul'
+str_toggle_titles: 'Comutează Jocuri'
+str_toggle_titles_message: "Apasă {a_button} pentru a porni sau opri pass-urile."
+str_toggle_titles_on: "(Pornit)"
+str_toggle_titles_off: "(Oprit)"
 str_report_mii_name: "Numele Mii-ului: %s"
 str_report_mario_kart_7_greeting: ""
 str_report_mii_plaza_last_game: ""
