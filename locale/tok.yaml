@@ -127,3 +127,4 @@ str_luma_external_firms: ""
 str_warning: ""
 str_b_dismiss_warning: "{b_button} o weka e toki awen!"
 str_warning_dismissed: "awen weka li pali pona! o kama suno sin e ilo NetPass."
+str_warning_dismissed_failed: pakala tan weka e sitelen.
