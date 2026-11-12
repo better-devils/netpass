@@ -147,3 +147,4 @@ str_warning_dismissed: Sikeresen elrejtetted a figyelmeztetést! Indítsd újra 
   NetPass-t, hogy újra használhasd.
 str_warning: "Egy figyelmeztetést kaptál: %s\nIdőpont: %s\nKérjük csak akkor rejtsd
   el a figyelmeztetést, ha javítottad a problémát!"
+str_warning_dismissed_failed: Sikertelen a figyelmeztetés elrejtése.
