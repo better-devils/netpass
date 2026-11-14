@@ -1,19 +1,26 @@
-**AI Generated code is not allowed in any form in this repo**
+![Banner](Banner.jpg)
+
 # NetPass: a new way to experience StreetPass!
 
 [![Translation status](https://weblate.sorunome.de/widget/netpass/app/svg-badge.svg)](https://weblate.sorunome.de/engage/netpass/)
 [![GitLab Release](https://img.shields.io/gitlab/v/release/3ds-netpass/netpass)](https://gitlab.com/3ds-netpass/netpass/-/releases/permalink/latest/)
 
-
-![QR Code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png){width=400px}  
-Scan QR code to download!
+> AI Generated code is not allowed in any form in this repo
 
 GBAtemp thread: https://gbatemp.net/threads/netpass-a-new-way-to-experience-streetpass.664005/  
 Discord guild: https://netpass.cafe/discord
 
-Introducing NetPass:
+---
+
+<img src="qr.png" width="300">
+
+To install NetPass, either scan this QR code or install via Universal Updater:
+> *QR code never changes and always downloads the latest releases!*
+
+## Introducing NetPass:
 
 In the current state of the world, the 3DS is, sadly, on decline. That makes getting StreetPasses harder and harder, due to fewer and fewer people taking their 3DS with them on a walk. This is where NetPass comes in!  
+
 Unlike StreetPass, NetPass works over the internet. Upon opening NetPass, you can pick various locations to go to, i.e. the train station, or a town plaza. Upon entering a location, you get passes from others who are in the same location! And, while you are at the location, others who enter it can get passes with you. But beware! You can only switch locations once every 10 hours!
 
 ## Licenses
