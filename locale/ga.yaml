@@ -143,3 +143,9 @@ str_luma_external_firms: Tá an chuma air, go bhfuil na paistí suiteáilte agat
   caithfidh tú "Enable loading external FIRMs and modules" a chumasú sna 
   socruithe Luma3DS. Chun socruithe a oscailt, múch an consól agus ansin, brúigh
   {select_button} agus an consól á chasadh air {power_button} .
+str_warning: "Fuair tú rabhaidh: %s\nAm: %s\nNá ruaig an rabhaidh ach nuair atá an
+  fhadhb deisithe agat!"
+str_b_dismiss_warning: '{b_button} Ruaig rabhaidh!'
+str_warning_dismissed: D'éirigh le ruaigeadh an rabhaidh! Athosaigh NetPass chun
+  é a úsáid arís.
+str_warning_dismissed_failed: Teipeadh ar ruaigeadh an rabhaidh.
